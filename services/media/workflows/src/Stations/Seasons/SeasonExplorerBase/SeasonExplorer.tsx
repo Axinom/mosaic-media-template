@@ -64,6 +64,7 @@ export const SeasonExplorer: React.FC<SeasonExplorerProps> = (props) => {
       ),
       size: '80px',
     },
+    { label: 'Title', propertyName: 'title', size: '2fr' },
     { label: 'Index', propertyName: 'index', render: SeasonIndexRenderer },
     {
       label: 'Parent Entity',
@@ -81,6 +82,10 @@ export const SeasonExplorer: React.FC<SeasonExplorerProps> = (props) => {
           return node.tvshowGenres?.title;
         },
       ),
+    },
+    { label: 'Published',
+      propertyName: 'publishedDate',
+      render: DateRenderer 
     },
     { label: 'Created', propertyName: 'createdDate', render: DateRenderer },
     {

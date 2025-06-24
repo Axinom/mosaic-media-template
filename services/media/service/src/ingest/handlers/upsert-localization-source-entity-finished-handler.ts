@@ -82,49 +82,64 @@ export class UpsertLocalizationSourceEntityFinishedHandler extends MediaGuardedT
 
     const inputLocalizations = ingestItem.item.data
       .localizations as IngestLocalization[];
-    const localizations: EntityLocalization[] = inputLocalizations.flatMap(
-      ({ language_tag, ...fields }) => ({
-        language_tag,
-        fields: Object.keys(fields).map((key) => ({
-          field_name: key,
-          field_value: fields[key] as string,
-          state: DEFAULT_LOCALIZATION_STATE,
-        })),
-      }),
-    );
 
-    const messageSettings =
-      LocalizationServiceMultiTenantMessagingSettings.LocalizeEntity;
-    const messagePayload: LocalizeEntityCommand = {
-      service_id: this.config.serviceId,
-      entity_type: payload.entity_type,
-      entity_id: payload.entity_id,
-      localizations,
-    };
+    /**
+     * There's a scenario where the Localization step will still exist even with no input localizations
+     * if the ingest document contains only image localizations.
+     * In this case, we need to update the step status to 'SUCCESS' and skip sending the message to the localization service
+     * since the LocalizeEntity command for image localizations are sent through LocalizableImageIngestFinishedHandler.
+     */
+    if (inputLocalizations !== undefined && inputLocalizations.length > 0) {
+      const localizations: EntityLocalization[] = inputLocalizations.flatMap(
+        ({ language_tag, ...fields }) => ({
+          language_tag,
+          fields: Object.keys(fields).map((key) => ({
+            field_name: key,
+            field_value: fields[key] as string,
+            state: DEFAULT_LOCALIZATION_STATE,
+          })),
+        }),
+      );
 
-    const localizationMessageContext: IngestMessageContext = {
-      ingestItemId: messageContext.ingestItemId,
-      ingestItemStepId: localizationStep.id,
-    };
+      const messageSettings =
+        LocalizationServiceMultiTenantMessagingSettings.LocalizeEntity;
+      const messagePayload: LocalizeEntityCommand = {
+        service_id: this.config.serviceId,
+        entity_type: payload.entity_type,
+        entity_id: payload.entity_id,
+        localizations,
+      };
 
-    await this.storeOutboxMessage<LocalizeEntityCommand>(
-      payload.entity_id,
-      messageSettings,
-      messagePayload,
-      ownerClient,
-      {
-        envelopeOverrides: {
-          auth_token: metadata.authToken,
-          message_context: localizationMessageContext,
+      const localizationMessageContext: IngestMessageContext = {
+        ingestItemId: messageContext.ingestItemId,
+        ingestItemStepId: localizationStep.id,
+      };
+
+      await this.storeOutboxMessage<LocalizeEntityCommand>(
+        payload.entity_id,
+        messageSettings,
+        messagePayload,
+        ownerClient,
+        {
+          envelopeOverrides: {
+            auth_token: metadata.authToken,
+            message_context: localizationMessageContext,
+          },
+          options: {
+            routingKey: messageSettings.getEnvironmentRoutingKey({
+              tenantId: this.config.tenantId,
+              environmentId: this.config.environmentId,
+            }),
+          },
         },
-        options: {
-          routingKey: messageSettings.getEnvironmentRoutingKey({
-            tenantId: this.config.tenantId,
-            environmentId: this.config.environmentId,
-          }),
-        },
-      },
-    );
+      );
+    } else {
+      await update(
+        'ingest_item_steps',
+        { status: 'SUCCESS' },
+        { id: localizationStep.id },
+      ).run(ownerClient);
+    }
   }
 
   public override mapError(error: unknown): Error {

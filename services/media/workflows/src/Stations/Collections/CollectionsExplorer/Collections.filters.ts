@@ -1,10 +1,20 @@
 import {
+  createDateRangeFilterValidators,
   filterToPostGraphileFilter,
   FilterType,
   FilterTypes,
   FilterValues,
+  Option,
 } from '@axinom/mosaic-ui';
-import { CollectionFilter, PublishStatus } from '../../../generated/graphql';
+import { useEffect, useState } from 'react';
+import { validate as isUuid } from 'uuid';
+import { client } from '../../../apolloClient';
+import {
+  CollectionFilter,
+  PublishStatus,
+  useGetAllCountryDataQuery,
+} from '../../../generated/graphql';
+import { transformRange } from '../../../Util/DateRangeTransformer/DateRangeTransformer';
 import { getEnumLabel } from '../../../Util/StringEnumMapper/StringEnumMapper';
 import { CollectionData } from './Collections.types';
 
@@ -15,6 +25,34 @@ export function useCollectionsFilters(): {
     excludeItems?: number[],
   ) => CollectionFilter | undefined;
 } {
+  const { data, error } = useGetAllCountryDataQuery({
+    client,
+    fetchPolicy: 'network-only',
+  });
+  const [allCountryOptions, setAllCountryOptions] = useState<Option[]>([]);
+
+  useEffect(() => {
+    if (error) {
+      setAllCountryOptions([
+        {
+          label: 'Unable to load all country options data.',
+          value: 'FAILED_TO_LOAD_ERROR',
+        },
+      ]);
+    } else {
+      if (data?.allCountryTypes?.nodes !== undefined) {
+        const countries = data.allCountryTypes.nodes.map(({ name, id }) => ({
+          label: name ?? '',
+          value: id,
+        }));
+        setAllCountryOptions(countries);
+      }
+    }
+  }, [data]);
+
+  const [createFromDateFilterValidator, createToDateFilterValidator] =
+    createDateRangeFilterValidators<CollectionData>();
+
   const filterOptions: FilterType<CollectionData>[] = [
     {
       label: 'Title',
@@ -32,19 +70,14 @@ export function useCollectionsFilters(): {
       type: FilterTypes.FreeText,
     },
     {
-      label: 'Language',
-      property: 'languages',
-      type: FilterTypes.FreeText,
-    },
-    {
-      label: 'Type',
-      property: '__typename',
-      type: FilterTypes.FreeText,
-    },
-    {
       label: 'Countries',
       property: 'collectionCountries',
-      type: FilterTypes.FreeText,
+      searchInputPlaceholder: 'Search',
+      type: FilterTypes.SearcheableOptions,
+      optionsProvider: (searchText) =>
+        allCountryOptions?.filter((option) =>
+          option.label.toLowerCase().includes(searchText.toLowerCase()),
+        ),
     },
     {
       label: 'Publishing Status',
@@ -55,6 +88,40 @@ export function useCollectionsFilters(): {
         label: getEnumLabel(PublishStatus[key]),
       })),
     },
+    {
+      label: 'Publication Period (From)',
+      property: 'publishedDate',
+      type: FilterTypes.Date,
+      onValidate: createFromDateFilterValidator('publishedDate'),
+    },
+    {
+      label: 'Publication Period (To)',
+      property: 'publishedDate',
+      type: FilterTypes.Date,
+      onValidate: createToDateFilterValidator('publishedDate'),
+    },
+    {
+      label: 'Creation Period (From)',
+      property: 'createdDate',
+      type: FilterTypes.Date,
+      onValidate: createFromDateFilterValidator('createdDate'),
+    },
+    {
+      label: 'Creation Period (To)',
+      property: 'createdDate',
+      type: FilterTypes.Date,
+      onValidate: createToDateFilterValidator('createdDate'),
+    },
+    {
+      label: 'Publishing ID',
+      property: 'publishingId',
+      type: FilterTypes.FreeText,
+    },
+    {
+      label: 'ID',
+      property: 'id',
+      type: FilterTypes.Numeric,
+    },
   ];
 
   const transformFilters = (
@@ -63,10 +130,30 @@ export function useCollectionsFilters(): {
   ): CollectionFilter | undefined => {
     return filterToPostGraphileFilter<CollectionFilter>(filters, {
       title: 'includesInsensitive',
-      externalId: 'includes',
-      collectionsTags: ['some', 'name', 'includes'],
+      externalId: 'includesInsensitive',
+      publishingId: 'includesInsensitive',
+      collectionsTags: ['some', 'name', 'includesInsensitive'],
       languages: 'equalTo',
-      collectionCountries: 'equalTo',
+      collectionCountries: (value: unknown) => {
+        const code = value as string;
+        if (!isUuid(code)) {
+          return {
+            some: {
+              countryId: {
+                equalTo: code,
+              },
+            },
+          };
+        } else {
+          return {
+            some: {
+              countryGroupId: {
+                equalTo: code,
+              },
+            },
+          };
+        }
+      },
       publishStatus: 'in',
       id: (value) => {
         if (typeof value === 'number') {
@@ -82,6 +169,8 @@ export function useCollectionsFilters(): {
           };
         }
       },
+      createdDate: transformRange,
+      publishedDate: transformRange,
     });
   };
 

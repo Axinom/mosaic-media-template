@@ -305,7 +305,7 @@ BEGIN
                 E'\t\t' || 'END IF;' || E'\n' ||
               E'\t' || 'END LOOP;' || E'\n' ||
               E'\t' || 'INSERT INTO app_hidden.inbox (id, aggregate_type, aggregate_id, message_type, concurrency, payload, created_at)' || E'\n' ||
-              E'\t' || 'VALUES (uuid_generate_v4(), app_hidden.to_kebab_case(''' || entityType || '''), NEW.' || aggregateId || ', ''Localizable'' || app_hidden.to_pascal_case(''' || entityType || ''') || ''Created'', ''parallel'', _payload, NOW());' || E'\n' ||
+              E'\t' || 'VALUES (public.uuid_generate_v4(), app_hidden.to_kebab_case(''' || entityType || '''), NEW.' || aggregateId || ', ''Localizable'' || app_hidden.to_pascal_case(''' || entityType || ''') || ''Created'', ''parallel'', _payload, NOW());' || E'\n' ||
               E'\t' || 'RETURN NEW;' || E'\n' ||
             'END;' || E'\n' ||
             '$body$ LANGUAGE plpgsql volatile;';
@@ -340,7 +340,7 @@ BEGIN
                   E'\t\t\t' || '_payload := _payload || jsonb_build_object(_field, _jsonb_new -> _field);' || E'\n' ||
                 E'\t\t' || 'END LOOP;' || E'\n' ||
                 E'\t\t' || 'INSERT INTO app_hidden.inbox (id, aggregate_type, aggregate_id, message_type, concurrency, payload, metadata, created_at)' || E'\n' ||
-                E'\t\t' || 'VALUES (uuid_generate_v4(), app_hidden.to_kebab_case(''' || entityType || '''), NEW.' || aggregateId || ', ''Localizable'' || app_hidden.to_pascal_case(''' || entityType || ''') || ''Updated'', ''parallel'', _payload, _metadata, NOW());' || E'\n' ||
+                E'\t\t' || 'VALUES (public.uuid_generate_v4(), app_hidden.to_kebab_case(''' || entityType || '''), NEW.' || aggregateId || ', ''Localizable'' || app_hidden.to_pascal_case(''' || entityType || ''') || ''Updated'', ''parallel'', _payload, _metadata, NOW());' || E'\n' ||
               E'\t' || 'END IF;' || E'\n' ||
               E'\t' || 'RETURN NEW;' || E'\n' ||
             'END;' || E'\n' ||
@@ -360,7 +360,7 @@ BEGIN
               E'\t' || 'SELECT jsonb_object_agg(f.field, _jsonb_old -> f.field)' || E'\n' ||
               E'\t' || 'FROM (SELECT unnest(_fields) AS field) as f INTO _payload;' || E'\n' ||
               E'\t' || 'INSERT INTO app_hidden.inbox (id, aggregate_type, aggregate_id, message_type, concurrency, payload, created_at)' || E'\n' ||
-              E'\t' || 'VALUES (uuid_generate_v4(), app_hidden.to_kebab_case(''' || entityType || '''), OLD.' || aggregateId || ', ''Localizable'' || app_hidden.to_pascal_case(''' || entityType || ''') || ''Deleted'', ''parallel'', _payload, NOW());' || E'\n' ||
+              E'\t' || 'VALUES (public.uuid_generate_v4(), app_hidden.to_kebab_case(''' || entityType || '''), OLD.' || aggregateId || ', ''Localizable'' || app_hidden.to_pascal_case(''' || entityType || ''') || ''Deleted'', ''parallel'', _payload, NOW());' || E'\n' ||
               E'\t' || 'RETURN OLD;' || E'\n' ||
             'END;' || E'\n' ||
             '$body$ LANGUAGE plpgsql volatile;';
@@ -502,7 +502,7 @@ BEGIN
 	SELECT jsonb_object_agg(f.field, _jsonb_old -> f.field)
 	FROM (SELECT unnest(_fields) AS field) as f INTO _payload;
 	INSERT INTO app_hidden.inbox (id, aggregate_type, aggregate_id, message_type, concurrency, payload, created_at)
-	VALUES (uuid_generate_v4(), app_hidden.to_kebab_case('COLLECTION'), OLD.id, 'Localizable' || app_hidden.to_pascal_case('COLLECTION') || 'Deleted', 'parallel', _payload, NOW());
+	VALUES (public.uuid_generate_v4(), app_hidden.to_kebab_case('COLLECTION'), OLD.id, 'Localizable' || app_hidden.to_pascal_case('COLLECTION') || 'Deleted', 'parallel', _payload, NOW());
 	RETURN OLD;
 END;
 $$;
@@ -523,7 +523,7 @@ BEGIN
 	SELECT jsonb_object_agg(f.field, _jsonb_old -> f.field)
 	FROM (SELECT unnest(_fields) AS field) as f INTO _payload;
 	INSERT INTO app_hidden.inbox (id, aggregate_type, aggregate_id, message_type, concurrency, payload, created_at)
-	VALUES (uuid_generate_v4(), app_hidden.to_kebab_case('COLLECTION_IMAGE'), OLD.image_id, 'Localizable' || app_hidden.to_pascal_case('COLLECTION_IMAGE') || 'Deleted', 'parallel', _payload, NOW());
+	VALUES (public.uuid_generate_v4(), app_hidden.to_kebab_case('COLLECTION_IMAGE'), OLD.image_id, 'Localizable' || app_hidden.to_pascal_case('COLLECTION_IMAGE') || 'Deleted', 'parallel', _payload, NOW());
 	RETURN OLD;
 END;
 $$;
@@ -549,7 +549,7 @@ BEGIN
 		END IF;
 	END LOOP;
 	INSERT INTO app_hidden.inbox (id, aggregate_type, aggregate_id, message_type, concurrency, payload, created_at)
-	VALUES (uuid_generate_v4(), app_hidden.to_kebab_case('COLLECTION_IMAGE'), NEW.image_id, 'Localizable' || app_hidden.to_pascal_case('COLLECTION_IMAGE') || 'Created', 'parallel', _payload, NOW());
+	VALUES (public.uuid_generate_v4(), app_hidden.to_kebab_case('COLLECTION_IMAGE'), NEW.image_id, 'Localizable' || app_hidden.to_pascal_case('COLLECTION_IMAGE') || 'Created', 'parallel', _payload, NOW());
 	RETURN NEW;
 END;
 $$;
@@ -586,7 +586,7 @@ BEGIN
 			_payload := _payload || jsonb_build_object(_field, _jsonb_new -> _field);
 		END LOOP;
 		INSERT INTO app_hidden.inbox (id, aggregate_type, aggregate_id, message_type, concurrency, payload, metadata, created_at)
-		VALUES (uuid_generate_v4(), app_hidden.to_kebab_case('COLLECTION_IMAGE'), NEW.image_id, 'Localizable' || app_hidden.to_pascal_case('COLLECTION_IMAGE') || 'Updated', 'parallel', _payload, _metadata, NOW());
+		VALUES (public.uuid_generate_v4(), app_hidden.to_kebab_case('COLLECTION_IMAGE'), NEW.image_id, 'Localizable' || app_hidden.to_pascal_case('COLLECTION_IMAGE') || 'Updated', 'parallel', _payload, _metadata, NOW());
 	END IF;
 	RETURN NEW;
 END;
@@ -602,7 +602,7 @@ CREATE FUNCTION app_hidden.localizable_collection_insert() RETURNS trigger
     AS $$
 DECLARE
 	_jsonb_new jsonb := row_to_json(NEW.*);
-	_fields text[] := string_to_array('title,synopsis,description,image_id_cover_1x1,image_id_cover_4x1,image_id_clean_cover_1x1,image_id_clean_cover_4x1,image_id_list_1x1,image_id_list_15x16', ',') || string_to_array('id', ',');
+	_fields text[] := string_to_array('title,synopsis,description,collection_cover,collection_cover_1x1,collection_cover_4x1,collection_clean_cover,collection_clean_cover_1x1,collection_clean_cover_4x1,collection_list,collection_list_1x1,collection_list_15x16', ',') || string_to_array('id', ',');
 	_payload jsonb := '{}'::jsonb;
 	_field text;
 BEGIN
@@ -613,7 +613,7 @@ BEGIN
 		END IF;
 	END LOOP;
 	INSERT INTO app_hidden.inbox (id, aggregate_type, aggregate_id, message_type, concurrency, payload, created_at)
-	VALUES (uuid_generate_v4(), app_hidden.to_kebab_case('COLLECTION'), NEW.id, 'Localizable' || app_hidden.to_pascal_case('COLLECTION') || 'Created', 'parallel', _payload, NOW());
+	VALUES (public.uuid_generate_v4(), app_hidden.to_kebab_case('COLLECTION'), NEW.id, 'Localizable' || app_hidden.to_pascal_case('COLLECTION') || 'Created', 'parallel', _payload, NOW());
 	RETURN NEW;
 END;
 $$;
@@ -630,7 +630,7 @@ DECLARE
 	_jsonb_old jsonb := row_to_json(OLD.*);
 	_jsonb_new jsonb := row_to_json(NEW.*);
 	_required_fields text[] := string_to_array('id', ',');
-	_localizable_fields text[] := string_to_array('title,synopsis,description,image_id_cover_1x1,image_id_cover_4x1,image_id_clean_cover_1x1,image_id_clean_cover_4x1,image_id_list_1x1,image_id_list_15x16', ',');
+	_localizable_fields text[] := string_to_array('title,synopsis,description,collection_cover,collection_cover_1x1,collection_cover_4x1,collection_clean_cover,collection_clean_cover_1x1,collection_clean_cover_4x1,collection_list,collection_list_1x1,collection_list_15x16', ',');
 	_payload jsonb := '{}'::jsonb;
 	_metadata jsonb;
 	_field text;
@@ -650,7 +650,7 @@ BEGIN
 			_payload := _payload || jsonb_build_object(_field, _jsonb_new -> _field);
 		END LOOP;
 		INSERT INTO app_hidden.inbox (id, aggregate_type, aggregate_id, message_type, concurrency, payload, metadata, created_at)
-		VALUES (uuid_generate_v4(), app_hidden.to_kebab_case('COLLECTION'), NEW.id, 'Localizable' || app_hidden.to_pascal_case('COLLECTION') || 'Updated', 'parallel', _payload, _metadata, NOW());
+		VALUES (public.uuid_generate_v4(), app_hidden.to_kebab_case('COLLECTION'), NEW.id, 'Localizable' || app_hidden.to_pascal_case('COLLECTION') || 'Updated', 'parallel', _payload, _metadata, NOW());
 	END IF;
 	RETURN NEW;
 END;
@@ -672,7 +672,7 @@ BEGIN
 	SELECT jsonb_object_agg(f.field, _jsonb_old -> f.field)
 	FROM (SELECT unnest(_fields) AS field) as f INTO _payload;
 	INSERT INTO app_hidden.inbox (id, aggregate_type, aggregate_id, message_type, concurrency, payload, created_at)
-	VALUES (uuid_generate_v4(), app_hidden.to_kebab_case('EPISODE'), OLD.id, 'Localizable' || app_hidden.to_pascal_case('EPISODE') || 'Deleted', 'parallel', _payload, NOW());
+	VALUES (public.uuid_generate_v4(), app_hidden.to_kebab_case('EPISODE'), OLD.id, 'Localizable' || app_hidden.to_pascal_case('EPISODE') || 'Deleted', 'parallel', _payload, NOW());
 	RETURN OLD;
 END;
 $$;
@@ -693,7 +693,7 @@ BEGIN
 	SELECT jsonb_object_agg(f.field, _jsonb_old -> f.field)
 	FROM (SELECT unnest(_fields) AS field) as f INTO _payload;
 	INSERT INTO app_hidden.inbox (id, aggregate_type, aggregate_id, message_type, concurrency, payload, created_at)
-	VALUES (uuid_generate_v4(), app_hidden.to_kebab_case('EPISODE_IMAGE'), OLD.image_id, 'Localizable' || app_hidden.to_pascal_case('EPISODE_IMAGE') || 'Deleted', 'parallel', _payload, NOW());
+	VALUES (public.uuid_generate_v4(), app_hidden.to_kebab_case('EPISODE_IMAGE'), OLD.image_id, 'Localizable' || app_hidden.to_pascal_case('EPISODE_IMAGE') || 'Deleted', 'parallel', _payload, NOW());
 	RETURN OLD;
 END;
 $$;
@@ -719,7 +719,7 @@ BEGIN
 		END IF;
 	END LOOP;
 	INSERT INTO app_hidden.inbox (id, aggregate_type, aggregate_id, message_type, concurrency, payload, created_at)
-	VALUES (uuid_generate_v4(), app_hidden.to_kebab_case('EPISODE_IMAGE'), NEW.image_id, 'Localizable' || app_hidden.to_pascal_case('EPISODE_IMAGE') || 'Created', 'parallel', _payload, NOW());
+	VALUES (public.uuid_generate_v4(), app_hidden.to_kebab_case('EPISODE_IMAGE'), NEW.image_id, 'Localizable' || app_hidden.to_pascal_case('EPISODE_IMAGE') || 'Created', 'parallel', _payload, NOW());
 	RETURN NEW;
 END;
 $$;
@@ -756,7 +756,7 @@ BEGIN
 			_payload := _payload || jsonb_build_object(_field, _jsonb_new -> _field);
 		END LOOP;
 		INSERT INTO app_hidden.inbox (id, aggregate_type, aggregate_id, message_type, concurrency, payload, metadata, created_at)
-		VALUES (uuid_generate_v4(), app_hidden.to_kebab_case('EPISODE_IMAGE'), NEW.image_id, 'Localizable' || app_hidden.to_pascal_case('EPISODE_IMAGE') || 'Updated', 'parallel', _payload, _metadata, NOW());
+		VALUES (public.uuid_generate_v4(), app_hidden.to_kebab_case('EPISODE_IMAGE'), NEW.image_id, 'Localizable' || app_hidden.to_pascal_case('EPISODE_IMAGE') || 'Updated', 'parallel', _payload, _metadata, NOW());
 	END IF;
 	RETURN NEW;
 END;
@@ -772,7 +772,7 @@ CREATE FUNCTION app_hidden.localizable_episode_insert() RETURNS trigger
     AS $$
 DECLARE
 	_jsonb_new jsonb := row_to_json(NEW.*);
-	_fields text[] := string_to_array('title,synopsis,description,image_id_cover_1x1,image_id_cover_16x9,image_id_clean_cover_1x1,image_id_clean_cover_16x9,image_id_list_1x1,image_id_list_9x13,season_id', ',') || string_to_array('id,index,season_id', ',');
+	_fields text[] := string_to_array('title,synopsis,description,episode_cover,episode_cover_1x1,episode_cover_16x9,episode_clean_cover,episode_clean_cover_1x1,episode_clean_cover_16x9,episode_list,episode_list_1x1,episode_list_9x13,season_id', ',') || string_to_array('id,index,season_id', ',');
 	_payload jsonb := '{}'::jsonb;
 	_field text;
 BEGIN
@@ -783,7 +783,7 @@ BEGIN
 		END IF;
 	END LOOP;
 	INSERT INTO app_hidden.inbox (id, aggregate_type, aggregate_id, message_type, concurrency, payload, created_at)
-	VALUES (uuid_generate_v4(), app_hidden.to_kebab_case('EPISODE'), NEW.id, 'Localizable' || app_hidden.to_pascal_case('EPISODE') || 'Created', 'parallel', _payload, NOW());
+	VALUES (public.uuid_generate_v4(), app_hidden.to_kebab_case('EPISODE'), NEW.id, 'Localizable' || app_hidden.to_pascal_case('EPISODE') || 'Created', 'parallel', _payload, NOW());
 	RETURN NEW;
 END;
 $$;
@@ -800,7 +800,7 @@ DECLARE
 	_jsonb_old jsonb := row_to_json(OLD.*);
 	_jsonb_new jsonb := row_to_json(NEW.*);
 	_required_fields text[] := string_to_array('id,index,season_id', ',');
-	_localizable_fields text[] := string_to_array('title,synopsis,description,image_id_cover_1x1,image_id_cover_16x9,image_id_clean_cover_1x1,image_id_clean_cover_16x9,image_id_list_1x1,image_id_list_9x13,season_id', ',');
+	_localizable_fields text[] := string_to_array('title,synopsis,description,episode_cover,episode_cover_1x1,episode_cover_16x9,episode_clean_cover,episode_clean_cover_1x1,episode_clean_cover_16x9,episode_list,episode_list_1x1,episode_list_9x13,season_id', ',');
 	_payload jsonb := '{}'::jsonb;
 	_metadata jsonb;
 	_field text;
@@ -820,7 +820,7 @@ BEGIN
 			_payload := _payload || jsonb_build_object(_field, _jsonb_new -> _field);
 		END LOOP;
 		INSERT INTO app_hidden.inbox (id, aggregate_type, aggregate_id, message_type, concurrency, payload, metadata, created_at)
-		VALUES (uuid_generate_v4(), app_hidden.to_kebab_case('EPISODE'), NEW.id, 'Localizable' || app_hidden.to_pascal_case('EPISODE') || 'Updated', 'parallel', _payload, _metadata, NOW());
+		VALUES (public.uuid_generate_v4(), app_hidden.to_kebab_case('EPISODE'), NEW.id, 'Localizable' || app_hidden.to_pascal_case('EPISODE') || 'Updated', 'parallel', _payload, _metadata, NOW());
 	END IF;
 	RETURN NEW;
 END;
@@ -842,7 +842,7 @@ BEGIN
 	SELECT jsonb_object_agg(f.field, _jsonb_old -> f.field)
 	FROM (SELECT unnest(_fields) AS field) as f INTO _payload;
 	INSERT INTO app_hidden.inbox (id, aggregate_type, aggregate_id, message_type, concurrency, payload, created_at)
-	VALUES (uuid_generate_v4(), app_hidden.to_kebab_case('MOVIE'), OLD.id, 'Localizable' || app_hidden.to_pascal_case('MOVIE') || 'Deleted', 'parallel', _payload, NOW());
+	VALUES (public.uuid_generate_v4(), app_hidden.to_kebab_case('MOVIE'), OLD.id, 'Localizable' || app_hidden.to_pascal_case('MOVIE') || 'Deleted', 'parallel', _payload, NOW());
 	RETURN OLD;
 END;
 $$;
@@ -863,7 +863,7 @@ BEGIN
 	SELECT jsonb_object_agg(f.field, _jsonb_old -> f.field)
 	FROM (SELECT unnest(_fields) AS field) as f INTO _payload;
 	INSERT INTO app_hidden.inbox (id, aggregate_type, aggregate_id, message_type, concurrency, payload, created_at)
-	VALUES (uuid_generate_v4(), app_hidden.to_kebab_case('MOVIE_GENRE'), OLD.id, 'Localizable' || app_hidden.to_pascal_case('MOVIE_GENRE') || 'Deleted', 'parallel', _payload, NOW());
+	VALUES (public.uuid_generate_v4(), app_hidden.to_kebab_case('MOVIE_GENRE'), OLD.id, 'Localizable' || app_hidden.to_pascal_case('MOVIE_GENRE') || 'Deleted', 'parallel', _payload, NOW());
 	RETURN OLD;
 END;
 $$;
@@ -889,7 +889,7 @@ BEGIN
 		END IF;
 	END LOOP;
 	INSERT INTO app_hidden.inbox (id, aggregate_type, aggregate_id, message_type, concurrency, payload, created_at)
-	VALUES (uuid_generate_v4(), app_hidden.to_kebab_case('MOVIE_GENRE'), NEW.id, 'Localizable' || app_hidden.to_pascal_case('MOVIE_GENRE') || 'Created', 'parallel', _payload, NOW());
+	VALUES (public.uuid_generate_v4(), app_hidden.to_kebab_case('MOVIE_GENRE'), NEW.id, 'Localizable' || app_hidden.to_pascal_case('MOVIE_GENRE') || 'Created', 'parallel', _payload, NOW());
 	RETURN NEW;
 END;
 $$;
@@ -926,7 +926,7 @@ BEGIN
 			_payload := _payload || jsonb_build_object(_field, _jsonb_new -> _field);
 		END LOOP;
 		INSERT INTO app_hidden.inbox (id, aggregate_type, aggregate_id, message_type, concurrency, payload, metadata, created_at)
-		VALUES (uuid_generate_v4(), app_hidden.to_kebab_case('MOVIE_GENRE'), NEW.id, 'Localizable' || app_hidden.to_pascal_case('MOVIE_GENRE') || 'Updated', 'parallel', _payload, _metadata, NOW());
+		VALUES (public.uuid_generate_v4(), app_hidden.to_kebab_case('MOVIE_GENRE'), NEW.id, 'Localizable' || app_hidden.to_pascal_case('MOVIE_GENRE') || 'Updated', 'parallel', _payload, _metadata, NOW());
 	END IF;
 	RETURN NEW;
 END;
@@ -948,7 +948,7 @@ BEGIN
 	SELECT jsonb_object_agg(f.field, _jsonb_old -> f.field)
 	FROM (SELECT unnest(_fields) AS field) as f INTO _payload;
 	INSERT INTO app_hidden.inbox (id, aggregate_type, aggregate_id, message_type, concurrency, payload, created_at)
-	VALUES (uuid_generate_v4(), app_hidden.to_kebab_case('MOVIE_IMAGE'), OLD.image_id, 'Localizable' || app_hidden.to_pascal_case('MOVIE_IMAGE') || 'Deleted', 'parallel', _payload, NOW());
+	VALUES (public.uuid_generate_v4(), app_hidden.to_kebab_case('MOVIE_IMAGE'), OLD.image_id, 'Localizable' || app_hidden.to_pascal_case('MOVIE_IMAGE') || 'Deleted', 'parallel', _payload, NOW());
 	RETURN OLD;
 END;
 $$;
@@ -974,7 +974,7 @@ BEGIN
 		END IF;
 	END LOOP;
 	INSERT INTO app_hidden.inbox (id, aggregate_type, aggregate_id, message_type, concurrency, payload, created_at)
-	VALUES (uuid_generate_v4(), app_hidden.to_kebab_case('MOVIE_IMAGE'), NEW.image_id, 'Localizable' || app_hidden.to_pascal_case('MOVIE_IMAGE') || 'Created', 'parallel', _payload, NOW());
+	VALUES (public.uuid_generate_v4(), app_hidden.to_kebab_case('MOVIE_IMAGE'), NEW.image_id, 'Localizable' || app_hidden.to_pascal_case('MOVIE_IMAGE') || 'Created', 'parallel', _payload, NOW());
 	RETURN NEW;
 END;
 $$;
@@ -1011,7 +1011,7 @@ BEGIN
 			_payload := _payload || jsonb_build_object(_field, _jsonb_new -> _field);
 		END LOOP;
 		INSERT INTO app_hidden.inbox (id, aggregate_type, aggregate_id, message_type, concurrency, payload, metadata, created_at)
-		VALUES (uuid_generate_v4(), app_hidden.to_kebab_case('MOVIE_IMAGE'), NEW.image_id, 'Localizable' || app_hidden.to_pascal_case('MOVIE_IMAGE') || 'Updated', 'parallel', _payload, _metadata, NOW());
+		VALUES (public.uuid_generate_v4(), app_hidden.to_kebab_case('MOVIE_IMAGE'), NEW.image_id, 'Localizable' || app_hidden.to_pascal_case('MOVIE_IMAGE') || 'Updated', 'parallel', _payload, _metadata, NOW());
 	END IF;
 	RETURN NEW;
 END;
@@ -1027,7 +1027,7 @@ CREATE FUNCTION app_hidden.localizable_movie_insert() RETURNS trigger
     AS $$
 DECLARE
 	_jsonb_new jsonb := row_to_json(NEW.*);
-	_fields text[] := string_to_array('title,synopsis,description,image_id_cover_1x1,image_id_cover_16x9,image_id_clean_cover_1x1,image_id_clean_cover_16x9,image_id_list_1x1,image_id_list_9x13', ',') || string_to_array('id', ',');
+	_fields text[] := string_to_array('title,synopsis,description,movie_cover,movie_cover_1x1,movie_cover_16x9,movie_clean_cover,movie_clean_cover_1x1,movie_clean_cover_16x9,movie_list,movie_list_1x1,movie_list_9x13', ',') || string_to_array('id', ',');
 	_payload jsonb := '{}'::jsonb;
 	_field text;
 BEGIN
@@ -1038,7 +1038,7 @@ BEGIN
 		END IF;
 	END LOOP;
 	INSERT INTO app_hidden.inbox (id, aggregate_type, aggregate_id, message_type, concurrency, payload, created_at)
-	VALUES (uuid_generate_v4(), app_hidden.to_kebab_case('MOVIE'), NEW.id, 'Localizable' || app_hidden.to_pascal_case('MOVIE') || 'Created', 'parallel', _payload, NOW());
+	VALUES (public.uuid_generate_v4(), app_hidden.to_kebab_case('MOVIE'), NEW.id, 'Localizable' || app_hidden.to_pascal_case('MOVIE') || 'Created', 'parallel', _payload, NOW());
 	RETURN NEW;
 END;
 $$;
@@ -1055,7 +1055,7 @@ DECLARE
 	_jsonb_old jsonb := row_to_json(OLD.*);
 	_jsonb_new jsonb := row_to_json(NEW.*);
 	_required_fields text[] := string_to_array('id', ',');
-	_localizable_fields text[] := string_to_array('title,synopsis,description,image_id_cover_1x1,image_id_cover_16x9,image_id_clean_cover_1x1,image_id_clean_cover_16x9,image_id_list_1x1,image_id_list_9x13', ',');
+	_localizable_fields text[] := string_to_array('title,synopsis,description,movie_cover,movie_cover_1x1,movie_cover_16x9,movie_clean_cover,movie_clean_cover_1x1,movie_clean_cover_16x9,movie_list,movie_list_1x1,movie_list_9x13', ',');
 	_payload jsonb := '{}'::jsonb;
 	_metadata jsonb;
 	_field text;
@@ -1075,7 +1075,7 @@ BEGIN
 			_payload := _payload || jsonb_build_object(_field, _jsonb_new -> _field);
 		END LOOP;
 		INSERT INTO app_hidden.inbox (id, aggregate_type, aggregate_id, message_type, concurrency, payload, metadata, created_at)
-		VALUES (uuid_generate_v4(), app_hidden.to_kebab_case('MOVIE'), NEW.id, 'Localizable' || app_hidden.to_pascal_case('MOVIE') || 'Updated', 'parallel', _payload, _metadata, NOW());
+		VALUES (public.uuid_generate_v4(), app_hidden.to_kebab_case('MOVIE'), NEW.id, 'Localizable' || app_hidden.to_pascal_case('MOVIE') || 'Updated', 'parallel', _payload, _metadata, NOW());
 	END IF;
 	RETURN NEW;
 END;
@@ -1097,7 +1097,7 @@ BEGIN
 	SELECT jsonb_object_agg(f.field, _jsonb_old -> f.field)
 	FROM (SELECT unnest(_fields) AS field) as f INTO _payload;
 	INSERT INTO app_hidden.inbox (id, aggregate_type, aggregate_id, message_type, concurrency, payload, created_at)
-	VALUES (uuid_generate_v4(), app_hidden.to_kebab_case('SEASON'), OLD.id, 'Localizable' || app_hidden.to_pascal_case('SEASON') || 'Deleted', 'parallel', _payload, NOW());
+	VALUES (public.uuid_generate_v4(), app_hidden.to_kebab_case('SEASON'), OLD.id, 'Localizable' || app_hidden.to_pascal_case('SEASON') || 'Deleted', 'parallel', _payload, NOW());
 	RETURN OLD;
 END;
 $$;
@@ -1118,7 +1118,7 @@ BEGIN
 	SELECT jsonb_object_agg(f.field, _jsonb_old -> f.field)
 	FROM (SELECT unnest(_fields) AS field) as f INTO _payload;
 	INSERT INTO app_hidden.inbox (id, aggregate_type, aggregate_id, message_type, concurrency, payload, created_at)
-	VALUES (uuid_generate_v4(), app_hidden.to_kebab_case('SEASON_IMAGE'), OLD.image_id, 'Localizable' || app_hidden.to_pascal_case('SEASON_IMAGE') || 'Deleted', 'parallel', _payload, NOW());
+	VALUES (public.uuid_generate_v4(), app_hidden.to_kebab_case('SEASON_IMAGE'), OLD.image_id, 'Localizable' || app_hidden.to_pascal_case('SEASON_IMAGE') || 'Deleted', 'parallel', _payload, NOW());
 	RETURN OLD;
 END;
 $$;
@@ -1144,7 +1144,7 @@ BEGIN
 		END IF;
 	END LOOP;
 	INSERT INTO app_hidden.inbox (id, aggregate_type, aggregate_id, message_type, concurrency, payload, created_at)
-	VALUES (uuid_generate_v4(), app_hidden.to_kebab_case('SEASON_IMAGE'), NEW.image_id, 'Localizable' || app_hidden.to_pascal_case('SEASON_IMAGE') || 'Created', 'parallel', _payload, NOW());
+	VALUES (public.uuid_generate_v4(), app_hidden.to_kebab_case('SEASON_IMAGE'), NEW.image_id, 'Localizable' || app_hidden.to_pascal_case('SEASON_IMAGE') || 'Created', 'parallel', _payload, NOW());
 	RETURN NEW;
 END;
 $$;
@@ -1181,7 +1181,7 @@ BEGIN
 			_payload := _payload || jsonb_build_object(_field, _jsonb_new -> _field);
 		END LOOP;
 		INSERT INTO app_hidden.inbox (id, aggregate_type, aggregate_id, message_type, concurrency, payload, metadata, created_at)
-		VALUES (uuid_generate_v4(), app_hidden.to_kebab_case('SEASON_IMAGE'), NEW.image_id, 'Localizable' || app_hidden.to_pascal_case('SEASON_IMAGE') || 'Updated', 'parallel', _payload, _metadata, NOW());
+		VALUES (public.uuid_generate_v4(), app_hidden.to_kebab_case('SEASON_IMAGE'), NEW.image_id, 'Localizable' || app_hidden.to_pascal_case('SEASON_IMAGE') || 'Updated', 'parallel', _payload, _metadata, NOW());
 	END IF;
 	RETURN NEW;
 END;
@@ -1197,7 +1197,7 @@ CREATE FUNCTION app_hidden.localizable_season_insert() RETURNS trigger
     AS $$
 DECLARE
 	_jsonb_new jsonb := row_to_json(NEW.*);
-	_fields text[] := string_to_array('title,synopsis,description,image_id_cover_1x1,image_id_cover_16x9,image_id_clean_cover_1x1,image_id_clean_cover_16x9,image_id_list_1x1,image_id_list_9x13,tvshow_id', ',') || string_to_array('id,index,title,tvshow_id', ',');
+	_fields text[] := string_to_array('title,synopsis,description,season_cover,season_cover_1x1,season_cover_16x9,season_clean_cover,season_clean_cover_1x1,season_clean_cover_16x9,season_list,season_list_1x1,season_list_9x13,tvshow_id', ',') || string_to_array('id,index,title,tvshow_id', ',');
 	_payload jsonb := '{}'::jsonb;
 	_field text;
 BEGIN
@@ -1208,7 +1208,7 @@ BEGIN
 		END IF;
 	END LOOP;
 	INSERT INTO app_hidden.inbox (id, aggregate_type, aggregate_id, message_type, concurrency, payload, created_at)
-	VALUES (uuid_generate_v4(), app_hidden.to_kebab_case('SEASON'), NEW.id, 'Localizable' || app_hidden.to_pascal_case('SEASON') || 'Created', 'parallel', _payload, NOW());
+	VALUES (public.uuid_generate_v4(), app_hidden.to_kebab_case('SEASON'), NEW.id, 'Localizable' || app_hidden.to_pascal_case('SEASON') || 'Created', 'parallel', _payload, NOW());
 	RETURN NEW;
 END;
 $$;
@@ -1225,7 +1225,7 @@ DECLARE
 	_jsonb_old jsonb := row_to_json(OLD.*);
 	_jsonb_new jsonb := row_to_json(NEW.*);
 	_required_fields text[] := string_to_array('id,index,title,tvshow_id', ',');
-	_localizable_fields text[] := string_to_array('title,synopsis,description,image_id_cover_1x1,image_id_cover_16x9,image_id_clean_cover_1x1,image_id_clean_cover_16x9,image_id_list_1x1,image_id_list_9x13,tvshow_id', ',');
+	_localizable_fields text[] := string_to_array('title,synopsis,description,season_cover,season_cover_1x1,season_cover_16x9,season_clean_cover,season_clean_cover_1x1,season_clean_cover_16x9,season_list,season_list_1x1,season_list_9x13,tvshow_id', ',');
 	_payload jsonb := '{}'::jsonb;
 	_metadata jsonb;
 	_field text;
@@ -1245,7 +1245,7 @@ BEGIN
 			_payload := _payload || jsonb_build_object(_field, _jsonb_new -> _field);
 		END LOOP;
 		INSERT INTO app_hidden.inbox (id, aggregate_type, aggregate_id, message_type, concurrency, payload, metadata, created_at)
-		VALUES (uuid_generate_v4(), app_hidden.to_kebab_case('SEASON'), NEW.id, 'Localizable' || app_hidden.to_pascal_case('SEASON') || 'Updated', 'parallel', _payload, _metadata, NOW());
+		VALUES (public.uuid_generate_v4(), app_hidden.to_kebab_case('SEASON'), NEW.id, 'Localizable' || app_hidden.to_pascal_case('SEASON') || 'Updated', 'parallel', _payload, _metadata, NOW());
 	END IF;
 	RETURN NEW;
 END;
@@ -1267,7 +1267,7 @@ BEGIN
 	SELECT jsonb_object_agg(f.field, _jsonb_old -> f.field)
 	FROM (SELECT unnest(_fields) AS field) as f INTO _payload;
 	INSERT INTO app_hidden.inbox (id, aggregate_type, aggregate_id, message_type, concurrency, payload, created_at)
-	VALUES (uuid_generate_v4(), app_hidden.to_kebab_case('TVSHOW'), OLD.id, 'Localizable' || app_hidden.to_pascal_case('TVSHOW') || 'Deleted', 'parallel', _payload, NOW());
+	VALUES (public.uuid_generate_v4(), app_hidden.to_kebab_case('TVSHOW'), OLD.id, 'Localizable' || app_hidden.to_pascal_case('TVSHOW') || 'Deleted', 'parallel', _payload, NOW());
 	RETURN OLD;
 END;
 $$;
@@ -1288,7 +1288,7 @@ BEGIN
 	SELECT jsonb_object_agg(f.field, _jsonb_old -> f.field)
 	FROM (SELECT unnest(_fields) AS field) as f INTO _payload;
 	INSERT INTO app_hidden.inbox (id, aggregate_type, aggregate_id, message_type, concurrency, payload, created_at)
-	VALUES (uuid_generate_v4(), app_hidden.to_kebab_case('TVSHOW_GENRE'), OLD.id, 'Localizable' || app_hidden.to_pascal_case('TVSHOW_GENRE') || 'Deleted', 'parallel', _payload, NOW());
+	VALUES (public.uuid_generate_v4(), app_hidden.to_kebab_case('TVSHOW_GENRE'), OLD.id, 'Localizable' || app_hidden.to_pascal_case('TVSHOW_GENRE') || 'Deleted', 'parallel', _payload, NOW());
 	RETURN OLD;
 END;
 $$;
@@ -1314,7 +1314,7 @@ BEGIN
 		END IF;
 	END LOOP;
 	INSERT INTO app_hidden.inbox (id, aggregate_type, aggregate_id, message_type, concurrency, payload, created_at)
-	VALUES (uuid_generate_v4(), app_hidden.to_kebab_case('TVSHOW_GENRE'), NEW.id, 'Localizable' || app_hidden.to_pascal_case('TVSHOW_GENRE') || 'Created', 'parallel', _payload, NOW());
+	VALUES (public.uuid_generate_v4(), app_hidden.to_kebab_case('TVSHOW_GENRE'), NEW.id, 'Localizable' || app_hidden.to_pascal_case('TVSHOW_GENRE') || 'Created', 'parallel', _payload, NOW());
 	RETURN NEW;
 END;
 $$;
@@ -1351,7 +1351,7 @@ BEGIN
 			_payload := _payload || jsonb_build_object(_field, _jsonb_new -> _field);
 		END LOOP;
 		INSERT INTO app_hidden.inbox (id, aggregate_type, aggregate_id, message_type, concurrency, payload, metadata, created_at)
-		VALUES (uuid_generate_v4(), app_hidden.to_kebab_case('TVSHOW_GENRE'), NEW.id, 'Localizable' || app_hidden.to_pascal_case('TVSHOW_GENRE') || 'Updated', 'parallel', _payload, _metadata, NOW());
+		VALUES (public.uuid_generate_v4(), app_hidden.to_kebab_case('TVSHOW_GENRE'), NEW.id, 'Localizable' || app_hidden.to_pascal_case('TVSHOW_GENRE') || 'Updated', 'parallel', _payload, _metadata, NOW());
 	END IF;
 	RETURN NEW;
 END;
@@ -1373,7 +1373,7 @@ BEGIN
 	SELECT jsonb_object_agg(f.field, _jsonb_old -> f.field)
 	FROM (SELECT unnest(_fields) AS field) as f INTO _payload;
 	INSERT INTO app_hidden.inbox (id, aggregate_type, aggregate_id, message_type, concurrency, payload, created_at)
-	VALUES (uuid_generate_v4(), app_hidden.to_kebab_case('TVSHOW_IMAGE'), OLD.image_id, 'Localizable' || app_hidden.to_pascal_case('TVSHOW_IMAGE') || 'Deleted', 'parallel', _payload, NOW());
+	VALUES (public.uuid_generate_v4(), app_hidden.to_kebab_case('TVSHOW_IMAGE'), OLD.image_id, 'Localizable' || app_hidden.to_pascal_case('TVSHOW_IMAGE') || 'Deleted', 'parallel', _payload, NOW());
 	RETURN OLD;
 END;
 $$;
@@ -1399,7 +1399,7 @@ BEGIN
 		END IF;
 	END LOOP;
 	INSERT INTO app_hidden.inbox (id, aggregate_type, aggregate_id, message_type, concurrency, payload, created_at)
-	VALUES (uuid_generate_v4(), app_hidden.to_kebab_case('TVSHOW_IMAGE'), NEW.image_id, 'Localizable' || app_hidden.to_pascal_case('TVSHOW_IMAGE') || 'Created', 'parallel', _payload, NOW());
+	VALUES (public.uuid_generate_v4(), app_hidden.to_kebab_case('TVSHOW_IMAGE'), NEW.image_id, 'Localizable' || app_hidden.to_pascal_case('TVSHOW_IMAGE') || 'Created', 'parallel', _payload, NOW());
 	RETURN NEW;
 END;
 $$;
@@ -1436,7 +1436,7 @@ BEGIN
 			_payload := _payload || jsonb_build_object(_field, _jsonb_new -> _field);
 		END LOOP;
 		INSERT INTO app_hidden.inbox (id, aggregate_type, aggregate_id, message_type, concurrency, payload, metadata, created_at)
-		VALUES (uuid_generate_v4(), app_hidden.to_kebab_case('TVSHOW_IMAGE'), NEW.image_id, 'Localizable' || app_hidden.to_pascal_case('TVSHOW_IMAGE') || 'Updated', 'parallel', _payload, _metadata, NOW());
+		VALUES (public.uuid_generate_v4(), app_hidden.to_kebab_case('TVSHOW_IMAGE'), NEW.image_id, 'Localizable' || app_hidden.to_pascal_case('TVSHOW_IMAGE') || 'Updated', 'parallel', _payload, _metadata, NOW());
 	END IF;
 	RETURN NEW;
 END;
@@ -1452,7 +1452,7 @@ CREATE FUNCTION app_hidden.localizable_tvshow_insert() RETURNS trigger
     AS $$
 DECLARE
 	_jsonb_new jsonb := row_to_json(NEW.*);
-	_fields text[] := string_to_array('title,synopsis,description,image_id_cover_1x1,image_id_cover_16x9,image_id_clean_cover_1x1,image_id_clean_cover_16x9,image_id_list_1x1,image_id_list_9x13', ',') || string_to_array('id', ',');
+	_fields text[] := string_to_array('title,synopsis,description,tvshow_cover,tvshow_cover_1x1,tvshow_cover_16x9,tvshow_clean_cover,tvshow_clean_cover_1x1,tvshow_clean_cover_16x9,tvshow_list,tvshow_list_1x1,tvshow_list_9x13', ',') || string_to_array('id', ',');
 	_payload jsonb := '{}'::jsonb;
 	_field text;
 BEGIN
@@ -1463,7 +1463,7 @@ BEGIN
 		END IF;
 	END LOOP;
 	INSERT INTO app_hidden.inbox (id, aggregate_type, aggregate_id, message_type, concurrency, payload, created_at)
-	VALUES (uuid_generate_v4(), app_hidden.to_kebab_case('TVSHOW'), NEW.id, 'Localizable' || app_hidden.to_pascal_case('TVSHOW') || 'Created', 'parallel', _payload, NOW());
+	VALUES (public.uuid_generate_v4(), app_hidden.to_kebab_case('TVSHOW'), NEW.id, 'Localizable' || app_hidden.to_pascal_case('TVSHOW') || 'Created', 'parallel', _payload, NOW());
 	RETURN NEW;
 END;
 $$;
@@ -1480,7 +1480,7 @@ DECLARE
 	_jsonb_old jsonb := row_to_json(OLD.*);
 	_jsonb_new jsonb := row_to_json(NEW.*);
 	_required_fields text[] := string_to_array('id', ',');
-	_localizable_fields text[] := string_to_array('title,synopsis,description,image_id_cover_1x1,image_id_cover_16x9,image_id_clean_cover_1x1,image_id_clean_cover_16x9,image_id_list_1x1,image_id_list_9x13', ',');
+	_localizable_fields text[] := string_to_array('title,synopsis,description,tvshow_cover,tvshow_cover_1x1,tvshow_cover_16x9,tvshow_clean_cover,tvshow_clean_cover_1x1,tvshow_clean_cover_16x9,tvshow_list,tvshow_list_1x1,tvshow_list_9x13', ',');
 	_payload jsonb := '{}'::jsonb;
 	_metadata jsonb;
 	_field text;
@@ -1500,7 +1500,7 @@ BEGIN
 			_payload := _payload || jsonb_build_object(_field, _jsonb_new -> _field);
 		END LOOP;
 		INSERT INTO app_hidden.inbox (id, aggregate_type, aggregate_id, message_type, concurrency, payload, metadata, created_at)
-		VALUES (uuid_generate_v4(), app_hidden.to_kebab_case('TVSHOW'), NEW.id, 'Localizable' || app_hidden.to_pascal_case('TVSHOW') || 'Updated', 'parallel', _payload, _metadata, NOW());
+		VALUES (public.uuid_generate_v4(), app_hidden.to_kebab_case('TVSHOW'), NEW.id, 'Localizable' || app_hidden.to_pascal_case('TVSHOW') || 'Updated', 'parallel', _payload, _metadata, NOW());
 	END IF;
 	RETURN NEW;
 END;
@@ -1769,6 +1769,54 @@ CREATE FUNCTION app_hidden.tg_collections__check_active_snapshots() RETURNS trig
 CREATE FUNCTION app_hidden.tg_episodes__check_active_snapshots() RETURNS trigger
     LANGUAGE plpgsql STABLE
     AS $$ BEGIN IF EXISTS (SELECT '' FROM app_public.snapshots s INNER JOIN app_public.episodes_snapshots es ON es.snapshot_id = s.id WHERE es.episode_id = OLD.id AND s.snapshot_state IN ('INITIALIZATION', 'VALIDATION', 'PUBLISHED')) THEN perform ax_utils.raise_error('%s with ID %s cannot be deleted as it has active snapshots.', 'ACSNS', 'Episode', OLD.id::text); END IF; RETURN OLD; END; $$;
+
+
+--
+-- Name: tg_ingest_item_steps__localizable_image_ingest_finished(); Type: FUNCTION; Schema: app_hidden; Owner: -
+--
+
+CREATE FUNCTION app_hidden.tg_ingest_item_steps__localizable_image_ingest_finished() RETURNS trigger
+    LANGUAGE plpgsql
+    AS $$
+DECLARE
+	get_localization_step_finished CURSOR FOR
+		SELECT true
+		FROM app_public.ingest_item_steps iis 
+		WHERE iis.ingest_item_id = NEW.ingest_item_id
+		AND "type" = 'LOCALIZATIONS'
+		AND status = 'SUCCESS';
+	
+	get_image_ingest_step_in_progress CURSOR FOR
+		SELECT true
+		FROM app_public.ingest_item_steps iis 
+		WHERE iis.ingest_item_id = NEW.ingest_item_id
+		AND "type" ='IMAGE'
+		AND language_tag IS NOT NULL
+		AND status = 'IN_PROGRESS';
+
+	is_localization_step_finished_ BOOLEAN;
+	is_image_ingest_step_in_progress_ BOOLEAN;
+	payload_ JSONB := '{}'::JSONB;
+    
+BEGIN
+	OPEN get_localization_step_finished;
+	FETCH get_localization_step_finished INTO is_localization_step_finished_;
+	CLOSE get_localization_step_finished;
+
+	OPEN get_image_ingest_step_in_progress;
+	FETCH get_image_ingest_step_in_progress INTO is_image_ingest_step_in_progress_;
+	CLOSE get_image_ingest_step_in_progress;
+
+	-- we only want to send the message if the localization step is finished and no image ingest steps are still in progress
+	IF is_localization_step_finished_ AND is_image_ingest_step_in_progress_ IS NULL THEN
+		payload_ := jsonb_build_object('ingest_item_id', NEW.ingest_item_id);
+		INSERT INTO app_hidden.inbox (id, aggregate_type, aggregate_id, message_type, concurrency, payload, created_at)
+		VALUES (uuid_generate_v4(), app_hidden.to_kebab_case('INGEST'), NEW.ingest_item_id, 'Localizable' || app_hidden.to_pascal_case('IMAGE') || 'IngestFinished', 'parallel', payload_, NOW());
+	END IF;
+
+	RETURN NEW;
+END;
+$$;
 
 
 --
@@ -5157,6 +5205,8 @@ CREATE TABLE app_public.collections (
     languages text[] DEFAULT '{}'::text[],
     asset_subtype app_public.asset_subtype_enum DEFAULT 'COLLECTION'::text NOT NULL,
     extended_field text,
+    ingest_correlation_id integer,
+    publishing_id text,
     CONSTRAINT title_max_length CHECK (ax_utils.constraint_max_length(title, 100, 'The title can only be %2$s characters long.'::text)),
     CONSTRAINT title_not_empty CHECK (ax_utils.constraint_not_empty(title, 'The title cannot be empty.'::text))
 );
@@ -5167,6 +5217,13 @@ CREATE TABLE app_public.collections (
 --
 
 COMMENT ON TABLE app_public.collections IS '@subscription_events_collections COLLECTION_CREATED,COLLECTION_CHANGED,COLLECTION_DELETED';
+
+
+--
+-- Name: COLUMN collections.ingest_correlation_id; Type: COMMENT; Schema: app_public; Owner: -
+--
+
+COMMENT ON COLUMN app_public.collections.ingest_correlation_id IS '@omit';
 
 
 --
@@ -5322,8 +5379,8 @@ CREATE TABLE app_public.episodes (
     rating numeric(18,2),
     extended_field text,
     content_owner text,
-    business_type app_public.business_type_enum DEFAULT 'premium'::text NOT NULL,
     asset_subtype app_public.asset_subtype_enum DEFAULT 'EPISODE'::text NOT NULL,
+    publishing_id text,
     CONSTRAINT title_max_length CHECK (ax_utils.constraint_max_length(title, 100, 'The title can only be %2$s characters long.'::text)),
     CONSTRAINT title_not_empty CHECK (ax_utils.constraint_not_empty(title, 'The title cannot be empty.'::text))
 );
@@ -5434,8 +5491,10 @@ COMMENT ON TABLE app_public.episodes_licenses IS '@subscription_events_episodes 
 --
 
 CREATE TABLE app_public.episodes_licenses_countries (
+    id uuid DEFAULT public.uuid_generate_v4() NOT NULL,
     episodes_license_id integer NOT NULL,
-    code app_public.iso_alpha_two_country_codes_enum NOT NULL
+    country_group_id uuid,
+    country_code text
 );
 
 
@@ -5443,7 +5502,7 @@ CREATE TABLE app_public.episodes_licenses_countries (
 -- Name: TABLE episodes_licenses_countries; Type: COMMENT; Schema: app_public; Owner: -
 --
 
-COMMENT ON TABLE app_public.episodes_licenses_countries IS '@subscription_events_episodes_licenses EPISODE_LICENSE_COUNTRY_CREATED,EPISODE_LICENSE_COUNTRY_CHANGED,EPISODE_LICENSE_COUNTRY_DELETED';
+COMMENT ON TABLE app_public.episodes_licenses_countries IS '@subscription_events_episodes_licenses MovieLicensesCountry_CREATED,MovieLicensesCountry_CHANGED,MovieLicensesCountry_DELETED';
 
 
 --
@@ -5670,7 +5729,8 @@ CREATE TABLE app_public.ingest_item_steps (
     updated_date timestamp with time zone DEFAULT (now() AT TIME ZONE 'utc'::text) NOT NULL,
     created_user text DEFAULT 'Unknown'::text NOT NULL,
     updated_user text DEFAULT 'Unknown'::text NOT NULL,
-    entity_id text
+    entity_id text,
+    language_tag text
 );
 
 
@@ -5870,6 +5930,7 @@ CREATE TABLE app_public.movies (
     content_owner text,
     business_type app_public.business_type_enum DEFAULT 'premium'::text NOT NULL,
     asset_subtype app_public.asset_subtype_enum DEFAULT 'MOVIE'::text NOT NULL,
+    publishing_id text,
     CONSTRAINT title_max_length CHECK (ax_utils.constraint_max_length(title, 100, 'The title can only be %2$s characters long.'::text)),
     CONSTRAINT title_not_empty CHECK (ax_utils.constraint_not_empty(title, 'The title cannot be empty.'::text))
 );
@@ -5980,8 +6041,10 @@ COMMENT ON TABLE app_public.movies_licenses IS '@subscription_events_movies MOVI
 --
 
 CREATE TABLE app_public.movies_licenses_countries (
+    id uuid DEFAULT public.uuid_generate_v4() NOT NULL,
     movies_license_id integer NOT NULL,
-    code app_public.iso_alpha_two_country_codes_enum NOT NULL
+    country_group_id uuid,
+    country_code text
 );
 
 
@@ -5989,7 +6052,7 @@ CREATE TABLE app_public.movies_licenses_countries (
 -- Name: TABLE movies_licenses_countries; Type: COMMENT; Schema: app_public; Owner: -
 --
 
-COMMENT ON TABLE app_public.movies_licenses_countries IS '@subscription_events_movies_licenses MOVIE_LICENSE_COUNTRY_CREATED,MOVIE_LICENSE_COUNTRY_CHANGED,MOVIE_LICENSE_COUNTRY_DELETED';
+COMMENT ON TABLE app_public.movies_licenses_countries IS '@subscription_events_movies_licenses MovieLicensesCountry_CREATED,MovieLicensesCountry_CHANGED,MovieLicensesCountry_DELETED';
 
 
 --
@@ -6145,9 +6208,9 @@ CREATE TABLE app_public.seasons (
     rating numeric(18,2),
     extended_field text,
     content_owner text,
-    business_type app_public.business_type_enum DEFAULT 'premium'::text NOT NULL,
     asset_subtype app_public.asset_subtype_enum DEFAULT 'SEASON'::text NOT NULL,
-    title text NOT NULL
+    title text NOT NULL,
+    publishing_id text
 );
 
 
@@ -6256,8 +6319,10 @@ COMMENT ON TABLE app_public.seasons_licenses IS '@subscription_events_seasons SE
 --
 
 CREATE TABLE app_public.seasons_licenses_countries (
+    id uuid DEFAULT public.uuid_generate_v4() NOT NULL,
     seasons_license_id integer NOT NULL,
-    code app_public.iso_alpha_two_country_codes_enum NOT NULL
+    country_group_id uuid,
+    country_code text
 );
 
 
@@ -6265,7 +6330,7 @@ CREATE TABLE app_public.seasons_licenses_countries (
 -- Name: TABLE seasons_licenses_countries; Type: COMMENT; Schema: app_public; Owner: -
 --
 
-COMMENT ON TABLE app_public.seasons_licenses_countries IS '@subscription_events_seasons_licenses SEASON_LICENSE_COUNTRY_CREATED,SEASON_LICENSE_COUNTRY_CHANGED,SEASON_LICENSE_COUNTRY_DELETED';
+COMMENT ON TABLE app_public.seasons_licenses_countries IS '@subscription_events_seasons_licenses MovieLicensesCountry_CREATED,MovieLicensesCountry_CHANGED,MovieLicensesCountry_DELETED';
 
 
 --
@@ -6487,7 +6552,8 @@ CREATE TABLE app_public.snapshots (
     updated_date timestamp with time zone DEFAULT CURRENT_TIMESTAMP NOT NULL,
     created_user text DEFAULT 'Unknown'::text NOT NULL,
     updated_user text DEFAULT 'Unknown'::text NOT NULL,
-    is_list_snapshot boolean DEFAULT false NOT NULL
+    is_list_snapshot boolean DEFAULT false NOT NULL,
+    is_republish_allowed boolean DEFAULT true
 );
 
 
@@ -6595,6 +6661,7 @@ CREATE TABLE app_public.tvshows (
     content_owner text,
     business_type app_public.business_type_enum DEFAULT 'premium'::text NOT NULL,
     asset_subtype app_public.asset_subtype_enum DEFAULT 'TV_SHOW'::text NOT NULL,
+    publishing_id text,
     CONSTRAINT title_max_length CHECK (ax_utils.constraint_max_length(title, 100, 'The title can only be %2$s characters long.'::text)),
     CONSTRAINT title_not_empty CHECK (ax_utils.constraint_not_empty(title, 'The title cannot be empty.'::text))
 );
@@ -6705,8 +6772,10 @@ COMMENT ON TABLE app_public.tvshows_licenses IS '@subscription_events_tvshows TV
 --
 
 CREATE TABLE app_public.tvshows_licenses_countries (
+    id uuid DEFAULT public.uuid_generate_v4() NOT NULL,
     tvshows_license_id integer NOT NULL,
-    code app_public.iso_alpha_two_country_codes_enum NOT NULL
+    country_group_id uuid,
+    country_code text
 );
 
 
@@ -6714,7 +6783,7 @@ CREATE TABLE app_public.tvshows_licenses_countries (
 -- Name: TABLE tvshows_licenses_countries; Type: COMMENT; Schema: app_public; Owner: -
 --
 
-COMMENT ON TABLE app_public.tvshows_licenses_countries IS '@subscription_events_tvshows_licenses TVSHOW_LICENSE_COUNTRY_CREATED,TVSHOW_LICENSE_COUNTRY_CHANGED,TVSHOW_LICENSE_COUNTRY_DELETED';
+COMMENT ON TABLE app_public.tvshows_licenses_countries IS '@subscription_events_tvshows_licenses MovieLicensesCountry_CREATED,MovieLicensesCountry_CHANGED,MovieLicensesCountry_DELETED';
 
 
 --
@@ -7024,7 +7093,7 @@ ALTER TABLE ONLY app_public.episodes_images
 --
 
 ALTER TABLE ONLY app_public.episodes_licenses_countries
-    ADD CONSTRAINT episodes_licenses_countries_pkey PRIMARY KEY (episodes_license_id, code);
+    ADD CONSTRAINT episodes_licenses_countries_pkey PRIMARY KEY (id);
 
 
 --
@@ -7240,7 +7309,7 @@ ALTER TABLE ONLY app_public.movies_images
 --
 
 ALTER TABLE ONLY app_public.movies_licenses_countries
-    ADD CONSTRAINT movies_licenses_countries_pkey PRIMARY KEY (movies_license_id, code);
+    ADD CONSTRAINT movies_licenses_countries_pkey PRIMARY KEY (id);
 
 
 --
@@ -7360,7 +7429,7 @@ ALTER TABLE ONLY app_public.seasons_images
 --
 
 ALTER TABLE ONLY app_public.seasons_licenses_countries
-    ADD CONSTRAINT seasons_licenses_countries_pkey PRIMARY KEY (seasons_license_id, code);
+    ADD CONSTRAINT seasons_licenses_countries_pkey PRIMARY KEY (id);
 
 
 --
@@ -7536,7 +7605,7 @@ ALTER TABLE ONLY app_public.tvshows_images
 --
 
 ALTER TABLE ONLY app_public.tvshows_licenses_countries
-    ADD CONSTRAINT tvshows_licenses_countries_pkey PRIMARY KEY (tvshows_license_id, code);
+    ADD CONSTRAINT tvshows_licenses_countries_pkey PRIMARY KEY (id);
 
 
 --
@@ -7997,13 +8066,6 @@ CREATE INDEX idx_episodes_index_asc_with_id ON app_public.episodes USING btree (
 --
 
 CREATE INDEX idx_episodes_index_desc_with_id ON app_public.episodes USING btree (index DESC, id);
-
-
---
--- Name: idx_episodes_licenses_countries_code; Type: INDEX; Schema: app_public; Owner: -
---
-
-CREATE INDEX idx_episodes_licenses_countries_code ON app_public.episodes_licenses_countries USING btree (code);
 
 
 --
@@ -8490,13 +8552,6 @@ CREATE INDEX idx_movies_images_movie_id ON app_public.movies_images USING btree 
 
 
 --
--- Name: idx_movies_licenses_countries_code; Type: INDEX; Schema: app_public; Owner: -
---
-
-CREATE INDEX idx_movies_licenses_countries_code ON app_public.movies_licenses_countries USING btree (code);
-
-
---
 -- Name: idx_movies_licenses_countries_movies_license_id; Type: INDEX; Schema: app_public; Owner: -
 --
 
@@ -8697,13 +8752,6 @@ CREATE INDEX idx_seasons_index_asc_with_id ON app_public.seasons USING btree (in
 --
 
 CREATE INDEX idx_seasons_index_desc_with_id ON app_public.seasons USING btree (index DESC, id);
-
-
---
--- Name: idx_seasons_licenses_countries_code; Type: INDEX; Schema: app_public; Owner: -
---
-
-CREATE INDEX idx_seasons_licenses_countries_code ON app_public.seasons_licenses_countries USING btree (code);
 
 
 --
@@ -9309,13 +9357,6 @@ CREATE INDEX idx_tvshows_images_tvshow_id ON app_public.tvshows_images USING btr
 
 
 --
--- Name: idx_tvshows_licenses_countries_code; Type: INDEX; Schema: app_public; Owner: -
---
-
-CREATE INDEX idx_tvshows_licenses_countries_code ON app_public.tvshows_licenses_countries USING btree (code);
-
-
---
 -- Name: idx_tvshows_licenses_countries_tvshows_license_id; Type: INDEX; Schema: app_public; Owner: -
 --
 
@@ -9680,13 +9721,6 @@ CREATE TRIGGER _200_propogate_timestamps AFTER INSERT OR DELETE OR UPDATE ON app
 
 
 --
--- Name: episodes_licenses_countries _200_propogate_timestamps; Type: TRIGGER; Schema: app_public; Owner: -
---
-
-CREATE TRIGGER _200_propogate_timestamps AFTER INSERT OR DELETE OR UPDATE ON app_public.episodes_licenses_countries FOR EACH ROW EXECUTE FUNCTION app_public.tg_episodes_licenses_countries__episodes_licenses_ts_propagtn();
-
-
---
 -- Name: episodes_production_countries _200_propogate_timestamps; Type: TRIGGER; Schema: app_public; Owner: -
 --
 
@@ -9733,13 +9767,6 @@ CREATE TRIGGER _200_propogate_timestamps AFTER INSERT OR DELETE OR UPDATE ON app
 --
 
 CREATE TRIGGER _200_propogate_timestamps AFTER INSERT OR DELETE OR UPDATE ON app_public.movies_licenses FOR EACH ROW EXECUTE FUNCTION app_public.tg_movies_licenses__movies_ts_propagation();
-
-
---
--- Name: movies_licenses_countries _200_propogate_timestamps; Type: TRIGGER; Schema: app_public; Owner: -
---
-
-CREATE TRIGGER _200_propogate_timestamps AFTER INSERT OR DELETE OR UPDATE ON app_public.movies_licenses_countries FOR EACH ROW EXECUTE FUNCTION app_public.tg_movies_licenses_countries__movies_licenses_ts_propagation();
 
 
 --
@@ -9792,13 +9819,6 @@ CREATE TRIGGER _200_propogate_timestamps AFTER INSERT OR DELETE OR UPDATE ON app
 
 
 --
--- Name: seasons_licenses_countries _200_propogate_timestamps; Type: TRIGGER; Schema: app_public; Owner: -
---
-
-CREATE TRIGGER _200_propogate_timestamps AFTER INSERT OR DELETE OR UPDATE ON app_public.seasons_licenses_countries FOR EACH ROW EXECUTE FUNCTION app_public.tg_seasons_licenses_countries__seasons_licenses_ts_propagation();
-
-
---
 -- Name: seasons_production_countries _200_propogate_timestamps; Type: TRIGGER; Schema: app_public; Owner: -
 --
 
@@ -9845,13 +9865,6 @@ CREATE TRIGGER _200_propogate_timestamps AFTER INSERT OR DELETE OR UPDATE ON app
 --
 
 CREATE TRIGGER _200_propogate_timestamps AFTER INSERT OR DELETE OR UPDATE ON app_public.tvshows_licenses FOR EACH ROW EXECUTE FUNCTION app_public.tg_tvshows_licenses__tvshows_ts_propagation();
-
-
---
--- Name: tvshows_licenses_countries _200_propogate_timestamps; Type: TRIGGER; Schema: app_public; Owner: -
---
-
-CREATE TRIGGER _200_propogate_timestamps AFTER INSERT OR DELETE OR UPDATE ON app_public.tvshows_licenses_countries FOR EACH ROW EXECUTE FUNCTION app_public.tg_tvshows_licenses_countries__tvshows_licenses_ts_propagation();
 
 
 --
@@ -10299,21 +10312,21 @@ CREATE TRIGGER _500_gql_episodes_inserted AFTER INSERT ON app_public.episodes FO
 -- Name: episodes_licenses_countries _500_gql_episodes_licenses_countries_deleted; Type: TRIGGER; Schema: app_public; Owner: -
 --
 
-CREATE TRIGGER _500_gql_episodes_licenses_countries_deleted BEFORE DELETE ON app_public.episodes_licenses_countries FOR EACH ROW EXECUTE FUNCTION ax_utils.tg__graphql_subscription('EPISODE_LICENSE_COUNTRY_DELETED', 'graphql:episodes_licenses', 'episodes_license_id');
+CREATE TRIGGER _500_gql_episodes_licenses_countries_deleted BEFORE DELETE ON app_public.episodes_licenses_countries FOR EACH ROW EXECUTE FUNCTION ax_utils.tg__graphql_subscription('MovieLicensesCountry_DELETED', 'graphql:episodes_licenses', 'episodes_license_id');
 
 
 --
 -- Name: episodes_licenses_countries _500_gql_episodes_licenses_countries_inserted; Type: TRIGGER; Schema: app_public; Owner: -
 --
 
-CREATE TRIGGER _500_gql_episodes_licenses_countries_inserted AFTER INSERT ON app_public.episodes_licenses_countries FOR EACH ROW EXECUTE FUNCTION ax_utils.tg__graphql_subscription('EPISODE_LICENSE_COUNTRY_CREATED', 'graphql:episodes_licenses', 'episodes_license_id');
+CREATE TRIGGER _500_gql_episodes_licenses_countries_inserted AFTER INSERT ON app_public.episodes_licenses_countries FOR EACH ROW EXECUTE FUNCTION ax_utils.tg__graphql_subscription('MovieLicensesCountry_CREATED', 'graphql:episodes_licenses', 'episodes_license_id');
 
 
 --
 -- Name: episodes_licenses_countries _500_gql_episodes_licenses_countries_updated; Type: TRIGGER; Schema: app_public; Owner: -
 --
 
-CREATE TRIGGER _500_gql_episodes_licenses_countries_updated AFTER UPDATE ON app_public.episodes_licenses_countries FOR EACH ROW EXECUTE FUNCTION ax_utils.tg__graphql_subscription('EPISODE_LICENSE_COUNTRY_CHANGED', 'graphql:episodes_licenses', 'episodes_license_id');
+CREATE TRIGGER _500_gql_episodes_licenses_countries_updated AFTER UPDATE ON app_public.episodes_licenses_countries FOR EACH ROW EXECUTE FUNCTION ax_utils.tg__graphql_subscription('MovieLicensesCountry_CHANGED', 'graphql:episodes_licenses', 'episodes_license_id');
 
 
 --
@@ -10551,21 +10564,21 @@ CREATE TRIGGER _500_gql_movies_inserted AFTER INSERT ON app_public.movies FOR EA
 -- Name: movies_licenses_countries _500_gql_movies_licenses_countries_deleted; Type: TRIGGER; Schema: app_public; Owner: -
 --
 
-CREATE TRIGGER _500_gql_movies_licenses_countries_deleted BEFORE DELETE ON app_public.movies_licenses_countries FOR EACH ROW EXECUTE FUNCTION ax_utils.tg__graphql_subscription('MOVIE_LICENSE_COUNTRY_DELETED', 'graphql:movies_licenses', 'movies_license_id');
+CREATE TRIGGER _500_gql_movies_licenses_countries_deleted BEFORE DELETE ON app_public.movies_licenses_countries FOR EACH ROW EXECUTE FUNCTION ax_utils.tg__graphql_subscription('MovieLicensesCountry_DELETED', 'graphql:movies_licenses', 'movies_license_id');
 
 
 --
 -- Name: movies_licenses_countries _500_gql_movies_licenses_countries_inserted; Type: TRIGGER; Schema: app_public; Owner: -
 --
 
-CREATE TRIGGER _500_gql_movies_licenses_countries_inserted AFTER INSERT ON app_public.movies_licenses_countries FOR EACH ROW EXECUTE FUNCTION ax_utils.tg__graphql_subscription('MOVIE_LICENSE_COUNTRY_CREATED', 'graphql:movies_licenses', 'movies_license_id');
+CREATE TRIGGER _500_gql_movies_licenses_countries_inserted AFTER INSERT ON app_public.movies_licenses_countries FOR EACH ROW EXECUTE FUNCTION ax_utils.tg__graphql_subscription('MovieLicensesCountry_CREATED', 'graphql:movies_licenses', 'movies_license_id');
 
 
 --
 -- Name: movies_licenses_countries _500_gql_movies_licenses_countries_updated; Type: TRIGGER; Schema: app_public; Owner: -
 --
 
-CREATE TRIGGER _500_gql_movies_licenses_countries_updated AFTER UPDATE ON app_public.movies_licenses_countries FOR EACH ROW EXECUTE FUNCTION ax_utils.tg__graphql_subscription('MOVIE_LICENSE_COUNTRY_CHANGED', 'graphql:movies_licenses', 'movies_license_id');
+CREATE TRIGGER _500_gql_movies_licenses_countries_updated AFTER UPDATE ON app_public.movies_licenses_countries FOR EACH ROW EXECUTE FUNCTION ax_utils.tg__graphql_subscription('MovieLicensesCountry_CHANGED', 'graphql:movies_licenses', 'movies_license_id');
 
 
 --
@@ -10740,21 +10753,21 @@ CREATE TRIGGER _500_gql_seasons_inserted AFTER INSERT ON app_public.seasons FOR 
 -- Name: seasons_licenses_countries _500_gql_seasons_licenses_countries_deleted; Type: TRIGGER; Schema: app_public; Owner: -
 --
 
-CREATE TRIGGER _500_gql_seasons_licenses_countries_deleted BEFORE DELETE ON app_public.seasons_licenses_countries FOR EACH ROW EXECUTE FUNCTION ax_utils.tg__graphql_subscription('SEASON_LICENSE_COUNTRY_DELETED', 'graphql:seasons_licenses', 'seasons_license_id');
+CREATE TRIGGER _500_gql_seasons_licenses_countries_deleted BEFORE DELETE ON app_public.seasons_licenses_countries FOR EACH ROW EXECUTE FUNCTION ax_utils.tg__graphql_subscription('MovieLicensesCountry_DELETED', 'graphql:seasons_licenses', 'seasons_license_id');
 
 
 --
 -- Name: seasons_licenses_countries _500_gql_seasons_licenses_countries_inserted; Type: TRIGGER; Schema: app_public; Owner: -
 --
 
-CREATE TRIGGER _500_gql_seasons_licenses_countries_inserted AFTER INSERT ON app_public.seasons_licenses_countries FOR EACH ROW EXECUTE FUNCTION ax_utils.tg__graphql_subscription('SEASON_LICENSE_COUNTRY_CREATED', 'graphql:seasons_licenses', 'seasons_license_id');
+CREATE TRIGGER _500_gql_seasons_licenses_countries_inserted AFTER INSERT ON app_public.seasons_licenses_countries FOR EACH ROW EXECUTE FUNCTION ax_utils.tg__graphql_subscription('MovieLicensesCountry_CREATED', 'graphql:seasons_licenses', 'seasons_license_id');
 
 
 --
 -- Name: seasons_licenses_countries _500_gql_seasons_licenses_countries_updated; Type: TRIGGER; Schema: app_public; Owner: -
 --
 
-CREATE TRIGGER _500_gql_seasons_licenses_countries_updated AFTER UPDATE ON app_public.seasons_licenses_countries FOR EACH ROW EXECUTE FUNCTION ax_utils.tg__graphql_subscription('SEASON_LICENSE_COUNTRY_CHANGED', 'graphql:seasons_licenses', 'seasons_license_id');
+CREATE TRIGGER _500_gql_seasons_licenses_countries_updated AFTER UPDATE ON app_public.seasons_licenses_countries FOR EACH ROW EXECUTE FUNCTION ax_utils.tg__graphql_subscription('MovieLicensesCountry_CHANGED', 'graphql:seasons_licenses', 'seasons_license_id');
 
 
 --
@@ -10992,21 +11005,21 @@ CREATE TRIGGER _500_gql_tvshows_inserted AFTER INSERT ON app_public.tvshows FOR 
 -- Name: tvshows_licenses_countries _500_gql_tvshows_licenses_countries_deleted; Type: TRIGGER; Schema: app_public; Owner: -
 --
 
-CREATE TRIGGER _500_gql_tvshows_licenses_countries_deleted BEFORE DELETE ON app_public.tvshows_licenses_countries FOR EACH ROW EXECUTE FUNCTION ax_utils.tg__graphql_subscription('TVSHOW_LICENSE_COUNTRY_DELETED', 'graphql:tvshows_licenses', 'tvshows_license_id');
+CREATE TRIGGER _500_gql_tvshows_licenses_countries_deleted BEFORE DELETE ON app_public.tvshows_licenses_countries FOR EACH ROW EXECUTE FUNCTION ax_utils.tg__graphql_subscription('MovieLicensesCountry_DELETED', 'graphql:tvshows_licenses', 'tvshows_license_id');
 
 
 --
 -- Name: tvshows_licenses_countries _500_gql_tvshows_licenses_countries_inserted; Type: TRIGGER; Schema: app_public; Owner: -
 --
 
-CREATE TRIGGER _500_gql_tvshows_licenses_countries_inserted AFTER INSERT ON app_public.tvshows_licenses_countries FOR EACH ROW EXECUTE FUNCTION ax_utils.tg__graphql_subscription('TVSHOW_LICENSE_COUNTRY_CREATED', 'graphql:tvshows_licenses', 'tvshows_license_id');
+CREATE TRIGGER _500_gql_tvshows_licenses_countries_inserted AFTER INSERT ON app_public.tvshows_licenses_countries FOR EACH ROW EXECUTE FUNCTION ax_utils.tg__graphql_subscription('MovieLicensesCountry_CREATED', 'graphql:tvshows_licenses', 'tvshows_license_id');
 
 
 --
 -- Name: tvshows_licenses_countries _500_gql_tvshows_licenses_countries_updated; Type: TRIGGER; Schema: app_public; Owner: -
 --
 
-CREATE TRIGGER _500_gql_tvshows_licenses_countries_updated AFTER UPDATE ON app_public.tvshows_licenses_countries FOR EACH ROW EXECUTE FUNCTION ax_utils.tg__graphql_subscription('TVSHOW_LICENSE_COUNTRY_CHANGED', 'graphql:tvshows_licenses', 'tvshows_license_id');
+CREATE TRIGGER _500_gql_tvshows_licenses_countries_updated AFTER UPDATE ON app_public.tvshows_licenses_countries FOR EACH ROW EXECUTE FUNCTION ax_utils.tg__graphql_subscription('MovieLicensesCountry_CHANGED', 'graphql:tvshows_licenses', 'tvshows_license_id');
 
 
 --
@@ -11119,6 +11132,13 @@ CREATE TRIGGER _500_gql_tvshows_tvshow_genres_updated AFTER UPDATE ON app_public
 --
 
 CREATE TRIGGER _500_gql_tvshows_updated AFTER UPDATE ON app_public.tvshows FOR EACH ROW EXECUTE FUNCTION ax_utils.tg__graphql_subscription('TVSHOW_CHANGED', 'graphql:tvshows', 'id');
+
+
+--
+-- Name: ingest_item_steps _500_localizable_image_ingest_finished; Type: TRIGGER; Schema: app_public; Owner: -
+--
+
+CREATE TRIGGER _500_localizable_image_ingest_finished AFTER UPDATE OF status ON app_public.ingest_item_steps FOR EACH ROW WHEN ((((new.status)::text = 'SUCCESS'::text) AND (((new.type)::text = 'IMAGE'::text) OR ((new.type)::text = 'LOCALIZATIONS'::text)))) EXECUTE FUNCTION app_hidden.tg_ingest_item_steps__localizable_image_ingest_finished();
 
 
 --
@@ -11569,14 +11589,6 @@ ALTER TABLE ONLY app_public.episodes
 
 
 --
--- Name: episodes episodes_business_type_fkey; Type: FK CONSTRAINT; Schema: app_public; Owner: -
---
-
-ALTER TABLE ONLY app_public.episodes
-    ADD CONSTRAINT episodes_business_type_fkey FOREIGN KEY (business_type) REFERENCES app_public.business_type(value);
-
-
---
 -- Name: episodes_casts episodes_casts_episode_id_fkey; Type: FK CONSTRAINT; Schema: app_public; Owner: -
 --
 
@@ -11617,11 +11629,19 @@ ALTER TABLE ONLY app_public.episodes_images
 
 
 --
--- Name: episodes_licenses_countries episodes_licenses_countries_code_fkey; Type: FK CONSTRAINT; Schema: app_public; Owner: -
+-- Name: episodes_licenses_countries episodes_licenses_countries_country_code_fkey; Type: FK CONSTRAINT; Schema: app_public; Owner: -
 --
 
 ALTER TABLE ONLY app_public.episodes_licenses_countries
-    ADD CONSTRAINT episodes_licenses_countries_code_fkey FOREIGN KEY (code) REFERENCES app_public.iso_alpha_two_country_codes(value);
+    ADD CONSTRAINT episodes_licenses_countries_country_code_fkey FOREIGN KEY (country_code) REFERENCES app_public.iso_alpha_two_country_codes(value);
+
+
+--
+-- Name: episodes_licenses_countries episodes_licenses_countries_country_group_id_fkey; Type: FK CONSTRAINT; Schema: app_public; Owner: -
+--
+
+ALTER TABLE ONLY app_public.episodes_licenses_countries
+    ADD CONSTRAINT episodes_licenses_countries_country_group_id_fkey FOREIGN KEY (country_group_id) REFERENCES app_public.country_groups(id);
 
 
 --
@@ -11841,11 +11861,19 @@ ALTER TABLE ONLY app_public.movies_images
 
 
 --
--- Name: movies_licenses_countries movies_licenses_countries_code_fkey; Type: FK CONSTRAINT; Schema: app_public; Owner: -
+-- Name: movies_licenses_countries movies_licenses_countries_country_code_fkey; Type: FK CONSTRAINT; Schema: app_public; Owner: -
 --
 
 ALTER TABLE ONLY app_public.movies_licenses_countries
-    ADD CONSTRAINT movies_licenses_countries_code_fkey FOREIGN KEY (code) REFERENCES app_public.iso_alpha_two_country_codes(value);
+    ADD CONSTRAINT movies_licenses_countries_country_code_fkey FOREIGN KEY (country_code) REFERENCES app_public.iso_alpha_two_country_codes(value);
+
+
+--
+-- Name: movies_licenses_countries movies_licenses_countries_country_group_id_fkey; Type: FK CONSTRAINT; Schema: app_public; Owner: -
+--
+
+ALTER TABLE ONLY app_public.movies_licenses_countries
+    ADD CONSTRAINT movies_licenses_countries_country_group_id_fkey FOREIGN KEY (country_group_id) REFERENCES app_public.country_groups(id);
 
 
 --
@@ -11945,14 +11973,6 @@ ALTER TABLE ONLY app_public.seasons
 
 
 --
--- Name: seasons seasons_business_type_fkey; Type: FK CONSTRAINT; Schema: app_public; Owner: -
---
-
-ALTER TABLE ONLY app_public.seasons
-    ADD CONSTRAINT seasons_business_type_fkey FOREIGN KEY (business_type) REFERENCES app_public.business_type(value);
-
-
---
 -- Name: seasons_casts seasons_casts_season_id_fkey; Type: FK CONSTRAINT; Schema: app_public; Owner: -
 --
 
@@ -11993,11 +12013,19 @@ ALTER TABLE ONLY app_public.seasons_images
 
 
 --
--- Name: seasons_licenses_countries seasons_licenses_countries_code_fkey; Type: FK CONSTRAINT; Schema: app_public; Owner: -
+-- Name: seasons_licenses_countries seasons_licenses_countries_country_code_fkey; Type: FK CONSTRAINT; Schema: app_public; Owner: -
 --
 
 ALTER TABLE ONLY app_public.seasons_licenses_countries
-    ADD CONSTRAINT seasons_licenses_countries_code_fkey FOREIGN KEY (code) REFERENCES app_public.iso_alpha_two_country_codes(value);
+    ADD CONSTRAINT seasons_licenses_countries_country_code_fkey FOREIGN KEY (country_code) REFERENCES app_public.iso_alpha_two_country_codes(value);
+
+
+--
+-- Name: seasons_licenses_countries seasons_licenses_countries_country_group_id_fkey; Type: FK CONSTRAINT; Schema: app_public; Owner: -
+--
+
+ALTER TABLE ONLY app_public.seasons_licenses_countries
+    ADD CONSTRAINT seasons_licenses_countries_country_group_id_fkey FOREIGN KEY (country_group_id) REFERENCES app_public.country_groups(id);
 
 
 --
@@ -12209,11 +12237,19 @@ ALTER TABLE ONLY app_public.tvshows_images
 
 
 --
--- Name: tvshows_licenses_countries tvshows_licenses_countries_code_fkey; Type: FK CONSTRAINT; Schema: app_public; Owner: -
+-- Name: tvshows_licenses_countries tvshows_licenses_countries_country_code_fkey; Type: FK CONSTRAINT; Schema: app_public; Owner: -
 --
 
 ALTER TABLE ONLY app_public.tvshows_licenses_countries
-    ADD CONSTRAINT tvshows_licenses_countries_code_fkey FOREIGN KEY (code) REFERENCES app_public.iso_alpha_two_country_codes(value);
+    ADD CONSTRAINT tvshows_licenses_countries_country_code_fkey FOREIGN KEY (country_code) REFERENCES app_public.iso_alpha_two_country_codes(value);
+
+
+--
+-- Name: tvshows_licenses_countries tvshows_licenses_countries_country_group_id_fkey; Type: FK CONSTRAINT; Schema: app_public; Owner: -
+--
+
+ALTER TABLE ONLY app_public.tvshows_licenses_countries
+    ADD CONSTRAINT tvshows_licenses_countries_country_group_id_fkey FOREIGN KEY (country_group_id) REFERENCES app_public.country_groups(id);
 
 
 --
@@ -12506,14 +12542,14 @@ ALTER TABLE app_public.episodes_licenses_countries ENABLE ROW LEVEL SECURITY;
 -- Name: episodes_licenses_countries episodes_licenses_countries_authorization; Type: POLICY; Schema: app_public; Owner: -
 --
 
-CREATE POLICY episodes_licenses_countries_authorization ON app_public.episodes_licenses_countries USING ((( SELECT ax_utils.user_has_permission('TVSHOWS_VIEW,TVSHOWS_EDIT,ADMIN'::text) AS user_has_permission) AND (1 = 1))) WITH CHECK ((( SELECT ax_utils.user_has_permission('TVSHOWS_EDIT,ADMIN'::text) AS user_has_permission) AND (1 = 1)));
+CREATE POLICY episodes_licenses_countries_authorization ON app_public.episodes_licenses_countries USING ((( SELECT ax_utils.user_has_permission('TVSHOW_READER,TVSHOW_EDITOR,ADMIN'::text) AS user_has_permission) AND (1 = 1))) WITH CHECK ((( SELECT ax_utils.user_has_permission('TVSHOW_EDITOR,ADMIN'::text) AS user_has_permission) AND (1 = 1)));
 
 
 --
 -- Name: episodes_licenses_countries episodes_licenses_countries_authorization_delete; Type: POLICY; Schema: app_public; Owner: -
 --
 
-CREATE POLICY episodes_licenses_countries_authorization_delete ON app_public.episodes_licenses_countries AS RESTRICTIVE FOR DELETE USING (( SELECT ax_utils.user_has_permission('TVSHOWS_EDIT,ADMIN'::text) AS user_has_permission));
+CREATE POLICY episodes_licenses_countries_authorization_delete ON app_public.episodes_licenses_countries AS RESTRICTIVE FOR DELETE USING (( SELECT ax_utils.user_has_permission('TVSHOW_EDITOR,ADMIN'::text) AS user_has_permission));
 
 
 --
@@ -12826,14 +12862,14 @@ ALTER TABLE app_public.movies_licenses_countries ENABLE ROW LEVEL SECURITY;
 -- Name: movies_licenses_countries movies_licenses_countries_authorization; Type: POLICY; Schema: app_public; Owner: -
 --
 
-CREATE POLICY movies_licenses_countries_authorization ON app_public.movies_licenses_countries USING ((( SELECT ax_utils.user_has_permission('MOVIES_VIEW,MOVIES_EDIT,ADMIN'::text) AS user_has_permission) AND (1 = 1))) WITH CHECK ((( SELECT ax_utils.user_has_permission('MOVIES_EDIT,ADMIN'::text) AS user_has_permission) AND (1 = 1)));
+CREATE POLICY movies_licenses_countries_authorization ON app_public.movies_licenses_countries USING ((( SELECT ax_utils.user_has_permission('MOVIE_READER,MOVIE_EDITOR,ADMIN'::text) AS user_has_permission) AND (1 = 1))) WITH CHECK ((( SELECT ax_utils.user_has_permission('MOVIE_EDITOR,ADMIN'::text) AS user_has_permission) AND (1 = 1)));
 
 
 --
 -- Name: movies_licenses_countries movies_licenses_countries_authorization_delete; Type: POLICY; Schema: app_public; Owner: -
 --
 
-CREATE POLICY movies_licenses_countries_authorization_delete ON app_public.movies_licenses_countries AS RESTRICTIVE FOR DELETE USING (( SELECT ax_utils.user_has_permission('MOVIES_EDIT,ADMIN'::text) AS user_has_permission));
+CREATE POLICY movies_licenses_countries_authorization_delete ON app_public.movies_licenses_countries AS RESTRICTIVE FOR DELETE USING (( SELECT ax_utils.user_has_permission('MOVIE_EDITOR,ADMIN'::text) AS user_has_permission));
 
 
 --
@@ -13046,14 +13082,14 @@ ALTER TABLE app_public.seasons_licenses_countries ENABLE ROW LEVEL SECURITY;
 -- Name: seasons_licenses_countries seasons_licenses_countries_authorization; Type: POLICY; Schema: app_public; Owner: -
 --
 
-CREATE POLICY seasons_licenses_countries_authorization ON app_public.seasons_licenses_countries USING ((( SELECT ax_utils.user_has_permission('TVSHOWS_VIEW,TVSHOWS_EDIT,ADMIN'::text) AS user_has_permission) AND (1 = 1))) WITH CHECK ((( SELECT ax_utils.user_has_permission('TVSHOWS_EDIT,ADMIN'::text) AS user_has_permission) AND (1 = 1)));
+CREATE POLICY seasons_licenses_countries_authorization ON app_public.seasons_licenses_countries USING ((( SELECT ax_utils.user_has_permission('TVSHOW_READER,TVSHOW_EDITOR,ADMIN'::text) AS user_has_permission) AND (1 = 1))) WITH CHECK ((( SELECT ax_utils.user_has_permission('TVSHOW_EDITOR,ADMIN'::text) AS user_has_permission) AND (1 = 1)));
 
 
 --
 -- Name: seasons_licenses_countries seasons_licenses_countries_authorization_delete; Type: POLICY; Schema: app_public; Owner: -
 --
 
-CREATE POLICY seasons_licenses_countries_authorization_delete ON app_public.seasons_licenses_countries AS RESTRICTIVE FOR DELETE USING (( SELECT ax_utils.user_has_permission('TVSHOWS_EDIT,ADMIN'::text) AS user_has_permission));
+CREATE POLICY seasons_licenses_countries_authorization_delete ON app_public.seasons_licenses_countries AS RESTRICTIVE FOR DELETE USING (( SELECT ax_utils.user_has_permission('TVSHOW_EDITOR,ADMIN'::text) AS user_has_permission));
 
 
 --
@@ -13690,14 +13726,14 @@ ALTER TABLE app_public.tvshows_licenses_countries ENABLE ROW LEVEL SECURITY;
 -- Name: tvshows_licenses_countries tvshows_licenses_countries_authorization; Type: POLICY; Schema: app_public; Owner: -
 --
 
-CREATE POLICY tvshows_licenses_countries_authorization ON app_public.tvshows_licenses_countries USING ((( SELECT ax_utils.user_has_permission('TVSHOWS_VIEW,TVSHOWS_EDIT,ADMIN'::text) AS user_has_permission) AND (1 = 1))) WITH CHECK ((( SELECT ax_utils.user_has_permission('TVSHOWS_EDIT,ADMIN'::text) AS user_has_permission) AND (1 = 1)));
+CREATE POLICY tvshows_licenses_countries_authorization ON app_public.tvshows_licenses_countries USING ((( SELECT ax_utils.user_has_permission('TVSHOW_READER,TVSHOW_EDITOR,ADMIN'::text) AS user_has_permission) AND (1 = 1))) WITH CHECK ((( SELECT ax_utils.user_has_permission('TVSHOW_EDITOR,ADMIN'::text) AS user_has_permission) AND (1 = 1)));
 
 
 --
 -- Name: tvshows_licenses_countries tvshows_licenses_countries_authorization_delete; Type: POLICY; Schema: app_public; Owner: -
 --
 
-CREATE POLICY tvshows_licenses_countries_authorization_delete ON app_public.tvshows_licenses_countries AS RESTRICTIVE FOR DELETE USING (( SELECT ax_utils.user_has_permission('TVSHOWS_EDIT,ADMIN'::text) AS user_has_permission));
+CREATE POLICY tvshows_licenses_countries_authorization_delete ON app_public.tvshows_licenses_countries AS RESTRICTIVE FOR DELETE USING (( SELECT ax_utils.user_has_permission('TVSHOW_EDITOR,ADMIN'::text) AS user_has_permission));
 
 
 --
@@ -14287,6 +14323,14 @@ GRANT ALL ON FUNCTION app_hidden.tg_collections__check_active_snapshots() TO med
 
 REVOKE ALL ON FUNCTION app_hidden.tg_episodes__check_active_snapshots() FROM PUBLIC;
 GRANT ALL ON FUNCTION app_hidden.tg_episodes__check_active_snapshots() TO media_service_gql_role;
+
+
+--
+-- Name: FUNCTION tg_ingest_item_steps__localizable_image_ingest_finished(); Type: ACL; Schema: app_hidden; Owner: -
+--
+
+REVOKE ALL ON FUNCTION app_hidden.tg_ingest_item_steps__localizable_image_ingest_finished() FROM PUBLIC;
+GRANT ALL ON FUNCTION app_hidden.tg_ingest_item_steps__localizable_image_ingest_finished() TO media_service_gql_role;
 
 
 --
@@ -15562,6 +15606,20 @@ GRANT INSERT(extended_field),UPDATE(extended_field) ON TABLE app_public.collecti
 
 
 --
+-- Name: COLUMN collections.ingest_correlation_id; Type: ACL; Schema: app_public; Owner: -
+--
+
+GRANT UPDATE(ingest_correlation_id) ON TABLE app_public.collections TO media_service_gql_role;
+
+
+--
+-- Name: COLUMN collections.publishing_id; Type: ACL; Schema: app_public; Owner: -
+--
+
+GRANT INSERT(publishing_id),UPDATE(publishing_id) ON TABLE app_public.collections TO media_service_gql_role;
+
+
+--
 -- Name: SEQUENCE collections_id_seq; Type: ACL; Schema: app_public; Owner: -
 --
 
@@ -15744,17 +15802,17 @@ GRANT INSERT(content_owner),UPDATE(content_owner) ON TABLE app_public.episodes T
 
 
 --
--- Name: COLUMN episodes.business_type; Type: ACL; Schema: app_public; Owner: -
---
-
-GRANT INSERT(business_type),UPDATE(business_type) ON TABLE app_public.episodes TO media_service_gql_role;
-
-
---
 -- Name: COLUMN episodes.asset_subtype; Type: ACL; Schema: app_public; Owner: -
 --
 
 GRANT INSERT(asset_subtype),UPDATE(asset_subtype) ON TABLE app_public.episodes TO media_service_gql_role;
+
+
+--
+-- Name: COLUMN episodes.publishing_id; Type: ACL; Schema: app_public; Owner: -
+--
+
+GRANT INSERT(publishing_id),UPDATE(publishing_id) ON TABLE app_public.episodes TO media_service_gql_role;
 
 
 --
@@ -15838,14 +15896,7 @@ GRANT INSERT(is_downloadable),UPDATE(is_downloadable) ON TABLE app_public.episod
 -- Name: TABLE episodes_licenses_countries; Type: ACL; Schema: app_public; Owner: -
 --
 
-GRANT SELECT,INSERT,DELETE ON TABLE app_public.episodes_licenses_countries TO media_service_gql_role;
-
-
---
--- Name: COLUMN episodes_licenses_countries.code; Type: ACL; Schema: app_public; Owner: -
---
-
-GRANT UPDATE(code) ON TABLE app_public.episodes_licenses_countries TO media_service_gql_role;
+GRANT SELECT,INSERT,DELETE,UPDATE ON TABLE app_public.episodes_licenses_countries TO media_service_gql_role;
 
 
 --
@@ -16353,6 +16404,13 @@ GRANT INSERT(asset_subtype),UPDATE(asset_subtype) ON TABLE app_public.movies TO 
 
 
 --
+-- Name: COLUMN movies.publishing_id; Type: ACL; Schema: app_public; Owner: -
+--
+
+GRANT INSERT(publishing_id),UPDATE(publishing_id) ON TABLE app_public.movies TO media_service_gql_role;
+
+
+--
 -- Name: TABLE movies_casts; Type: ACL; Schema: app_public; Owner: -
 --
 
@@ -16433,14 +16491,7 @@ GRANT INSERT(is_downloadable),UPDATE(is_downloadable) ON TABLE app_public.movies
 -- Name: TABLE movies_licenses_countries; Type: ACL; Schema: app_public; Owner: -
 --
 
-GRANT SELECT,INSERT,DELETE ON TABLE app_public.movies_licenses_countries TO media_service_gql_role;
-
-
---
--- Name: COLUMN movies_licenses_countries.code; Type: ACL; Schema: app_public; Owner: -
---
-
-GRANT UPDATE(code) ON TABLE app_public.movies_licenses_countries TO media_service_gql_role;
+GRANT SELECT,INSERT,DELETE,UPDATE ON TABLE app_public.movies_licenses_countries TO media_service_gql_role;
 
 
 --
@@ -16605,13 +16656,6 @@ GRANT INSERT(content_owner),UPDATE(content_owner) ON TABLE app_public.seasons TO
 
 
 --
--- Name: COLUMN seasons.business_type; Type: ACL; Schema: app_public; Owner: -
---
-
-GRANT INSERT(business_type),UPDATE(business_type) ON TABLE app_public.seasons TO media_service_gql_role;
-
-
---
 -- Name: COLUMN seasons.asset_subtype; Type: ACL; Schema: app_public; Owner: -
 --
 
@@ -16623,6 +16667,13 @@ GRANT INSERT(asset_subtype),UPDATE(asset_subtype) ON TABLE app_public.seasons TO
 --
 
 GRANT INSERT(title),UPDATE(title) ON TABLE app_public.seasons TO media_service_gql_role;
+
+
+--
+-- Name: COLUMN seasons.publishing_id; Type: ACL; Schema: app_public; Owner: -
+--
+
+GRANT INSERT(publishing_id),UPDATE(publishing_id) ON TABLE app_public.seasons TO media_service_gql_role;
 
 
 --
@@ -16706,14 +16757,7 @@ GRANT INSERT(is_downloadable),UPDATE(is_downloadable) ON TABLE app_public.season
 -- Name: TABLE seasons_licenses_countries; Type: ACL; Schema: app_public; Owner: -
 --
 
-GRANT SELECT,INSERT,DELETE ON TABLE app_public.seasons_licenses_countries TO media_service_gql_role;
-
-
---
--- Name: COLUMN seasons_licenses_countries.code; Type: ACL; Schema: app_public; Owner: -
---
-
-GRANT UPDATE(code) ON TABLE app_public.seasons_licenses_countries TO media_service_gql_role;
+GRANT SELECT,INSERT,DELETE,UPDATE ON TABLE app_public.seasons_licenses_countries TO media_service_gql_role;
 
 
 --
@@ -16948,6 +16992,13 @@ GRANT INSERT(is_list_snapshot),UPDATE(is_list_snapshot) ON TABLE app_public.snap
 
 
 --
+-- Name: COLUMN snapshots.is_republish_allowed; Type: ACL; Schema: app_public; Owner: -
+--
+
+GRANT INSERT(is_republish_allowed),UPDATE(is_republish_allowed) ON TABLE app_public.snapshots TO media_service_gql_role;
+
+
+--
 -- Name: SEQUENCE snapshots_id_seq; Type: ACL; Schema: app_public; Owner: -
 --
 
@@ -17095,6 +17146,13 @@ GRANT INSERT(asset_subtype),UPDATE(asset_subtype) ON TABLE app_public.tvshows TO
 
 
 --
+-- Name: COLUMN tvshows.publishing_id; Type: ACL; Schema: app_public; Owner: -
+--
+
+GRANT INSERT(publishing_id),UPDATE(publishing_id) ON TABLE app_public.tvshows TO media_service_gql_role;
+
+
+--
 -- Name: TABLE tvshows_casts; Type: ACL; Schema: app_public; Owner: -
 --
 
@@ -17175,14 +17233,7 @@ GRANT INSERT(is_downloadable),UPDATE(is_downloadable) ON TABLE app_public.tvshow
 -- Name: TABLE tvshows_licenses_countries; Type: ACL; Schema: app_public; Owner: -
 --
 
-GRANT SELECT,INSERT,DELETE ON TABLE app_public.tvshows_licenses_countries TO media_service_gql_role;
-
-
---
--- Name: COLUMN tvshows_licenses_countries.code; Type: ACL; Schema: app_public; Owner: -
---
-
-GRANT UPDATE(code) ON TABLE app_public.tvshows_licenses_countries TO media_service_gql_role;
+GRANT SELECT,INSERT,DELETE,UPDATE ON TABLE app_public.tvshows_licenses_countries TO media_service_gql_role;
 
 
 --

@@ -7,12 +7,14 @@ import {
   formatDateTime,
   generateArrayMutationsWithUpdates,
   InfoPanel,
+  ObjectSchemaDefinition,
   Paragraph,
   Section,
 } from '@axinom/mosaic-ui';
 import { useFormikContext } from 'formik';
 import gql from 'graphql-tag';
 import React, { useCallback, useMemo } from 'react';
+import * as Yup from 'yup';
 import { client } from '../../../apolloClient';
 import {
   ContentOwnersDocument,
@@ -28,6 +30,10 @@ import {
   AssetContentOwnersFormData,
   FormDataContentOwners,
 } from './ContentOwners.types';
+
+const validationSchema = Yup.object<ObjectSchemaDefinition>({
+  name: Yup.string().trim().required('Content Owner is required.'),
+});
 
 export const ContentOwners: React.FC = () => {
   const { loading, data, error } = useContentOwnersQuery({
@@ -112,9 +118,9 @@ const Form: React.FC = () => {
       columns={[
         {
           propertyName: 'name',
-          label: 'Title',
+          label: 'Content Owner',
           dataEntryRender: createInputRenderer({
-            placeholder: 'Enter Title',
+            placeholder: 'Enter Content Owner',
           }),
         },
       ]}
@@ -126,6 +132,7 @@ const Form: React.FC = () => {
       stickyHeader={false}
       allowEditing
       allowReordering={false}
+      rowValidationSchema={validationSchema}
     />
   );
 };

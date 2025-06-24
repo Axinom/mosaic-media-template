@@ -14,11 +14,21 @@ query MoviesLicenses(
 
       moviesLicensesCountries {
         nodes {
-          code
+          countryCode
+          countryGroupId
         }
       }
       licenseEnd
       licenseStart
+    }
+  }
+}
+
+query GetAllCountryData {
+  allCountryTypes(orderBy: NAME_ASC) {
+    nodes {
+      name
+      id
     }
   }
 }

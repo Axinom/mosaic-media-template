@@ -4,6 +4,7 @@ import { insert, update } from 'zapatos/db';
 import { collections } from 'zapatos/schema';
 import { DEFAULT_LOCALE_TAG } from '../../../common';
 import {
+  buildBDPublishingId,
   commonPublishValidator,
   SnapshotValidationResult,
 } from '../../../publishing';
@@ -26,6 +27,7 @@ describe('publishingCollectionProcessor', () => {
     collection1 = await insert('collections', {
       title: 'Entity1',
       external_id: 'existing1',
+      publishing_id: buildBDPublishingId("COLLECTION", 'Entity1' , 'existing1')
     }).run(ctx.ownerPool);
   });
 
@@ -70,7 +72,7 @@ describe('publishingCollectionProcessor', () => {
       expect(result).toEqual({
         result: {
           tags: [],
-          content_id: `collection-${collection1.id}`,
+          content_id: `0-8-${collection1.external_id}`,
           images: [],
           related_items: [],
           localizations: [
@@ -119,6 +121,9 @@ describe('publishingCollectionProcessor', () => {
       }).run(ctx.ownerPool);
 
       const season = await insert('seasons', {
+        title: 'Entity1',
+        publishing_id: buildBDPublishingId('SEASON', 'Entity1' , 'existing1'),
+        tvshow_id: tvshow.id,
         index: 1,
         external_id: 'existing1',
       }).run(ctx.ownerPool);
@@ -155,7 +160,7 @@ describe('publishingCollectionProcessor', () => {
       const image: PublishImage = {
         width: 111,
         height: 222,
-        type: 'COVER',
+        type: 'COLLECTION_COVER_1x1',
         path: 'test/path.png',
       };
       const imageWarning: SnapshotValidationResult = {
@@ -218,48 +223,44 @@ describe('publishingCollectionProcessor', () => {
       );
 
       // Assert
+      const expectedImages = [image, ...localizations.filter(l=> !l.is_default_locale).map(l =>
+        {
+         var locImage = Object.assign({}, image);
+         locImage.language_tag = l.language_tag;
+         return locImage;
+       })];
+      const expectedImageValidations = Array(expectedImages.length).fill([imageError, imageWarning]).flat() 
+
       expect(result).toEqual({
         result: {
           tags: ['Tag 1', 'Tag 3'],
-          content_id: `collection-${collection1.id}`,
-          images: [image],
+          content_id: `0-8-${collection1.external_id}`,
+          images: expectedImages,
           related_items: [
             {
-              episode_id: undefined,
-              movie_id: `movie-${movie.id}`,
+              movie_id: `0-0-${movie.external_id}`,
               order_no: 1,
-              relation_type: 'MOVIE',
-              season_id: undefined,
-              tvshow_id: undefined,
+              relation_type: 'MOVIE'
             },
             {
-              episode_id: undefined,
-              movie_id: undefined,
               order_no: 2,
               relation_type: 'TVSHOW',
-              season_id: undefined,
-              tvshow_id: `tvshow-${tvshow.id}`,
+              tvshow_id: `0-6-${tvshow.external_id}`
             },
             {
-              episode_id: undefined,
-              movie_id: undefined,
               order_no: 3,
               relation_type: 'SEASON',
-              season_id: `season-${season.id}`,
-              tvshow_id: undefined,
+              season_id: `0-2-${season.external_id}`
             },
             {
-              episode_id: `episode-${episode.id}`,
-              movie_id: undefined,
+              episode_id: `0-1-${episode.external_id}`,
               order_no: 4,
-              relation_type: 'EPISODE',
-              season_id: undefined,
-              tvshow_id: undefined,
+              relation_type: 'EPISODE'
             },
           ],
           localizations,
         },
-        validation: [imageError, imageWarning, localizationWarning],
+        validation: [...expectedImageValidations, localizationWarning],
       });
     });
   });
@@ -308,7 +309,7 @@ describe('publishingCollectionProcessor', () => {
         {
           result: {
             content_id: '',
-            images: [{ type: 'COVER' }],
+            images: [{ type: 'COLLECTION_COVER_1x1' }],
             related_items: [],
             localizations: [{ title: '' }],
           },
@@ -337,11 +338,6 @@ describe('publishingCollectionProcessor', () => {
         },
         {
           context: 'METADATA',
-          message: `Property 'content_id' should match the pattern "^(collection)-([a-zA-Z0-9_-]+)$".`,
-          severity: 'ERROR',
-        },
-        {
-          context: 'METADATA',
           message: `Property 'path' of the first image is required.`,
           severity: 'ERROR',
         },
@@ -365,8 +361,8 @@ describe('publishingCollectionProcessor', () => {
       const result = await commonPublishValidator(
         {
           result: {
-            content_id: 'collection-1',
-            images: [{ type: 'COVER', width: 0, height: 0, path: '' }],
+            content_id: '0-8-collection-1',
+            images: [{ type: 'COLLECTION_COVER_1x1', width: 0, height: 0, path: '' }],
             related_items: [{}],
             localizations: [
               { title: 123, is_default_locale: 'no', language_tag: null },
@@ -427,7 +423,7 @@ describe('publishingCollectionProcessor', () => {
         {
           context: 'METADATA',
           message:
-            "Property 'title' of the first localization should be of type 'string'.",
+            "Property 'title' of the first localization should be of type 'string,null'.",
           severity: 'ERROR',
         },
       ]);
@@ -438,15 +434,14 @@ describe('publishingCollectionProcessor', () => {
       const result = await commonPublishValidator(
         {
           result: {
-            content_id: 'collection-1',
+            content_id: '0-8-collection-1',
             tags: [],
             images: [],
             related_items: [],
             localizations: [
               {
-                title: 'empty',
                 is_default_locale: true,
-                language_tag: DEFAULT_LOCALE_TAG,
+                language_tag: DEFAULT_LOCALE_TAG
               },
             ],
           },
@@ -468,6 +463,16 @@ describe('publishingCollectionProcessor', () => {
           message: 'At least one related item must be assigned.',
           severity: 'ERROR',
         },
+        {
+          context: "LOCALIZATION",
+          message: "Title is required.",
+          severity: "ERROR",
+        },
+        {
+          context: "LOCALIZATION",
+          message: "Description is required.",
+          severity: "ERROR",
+        }
       ]);
     });
 
@@ -476,13 +481,13 @@ describe('publishingCollectionProcessor', () => {
       const result = await commonPublishValidator(
         {
           result: {
-            content_id: 'collection-1',
+            content_id: '0-8-collection-1',
             related_items: [
               { movie_id: 'movie-1', relation_type: 'MOVIE', order_no: 1 },
             ],
             images: [
               {
-                type: 'COVER',
+                type: 'COLLECTION_COVER_1x1',
                 width: 100,
                 height: 100,
                 path: '/transform/0000000000000000-0000000000000000/9FqubDgdtLaSjXmnBc9UNf.jpg',
@@ -493,6 +498,7 @@ describe('publishingCollectionProcessor', () => {
                 title: 'test',
                 is_default_locale: true,
                 language_tag: DEFAULT_LOCALE_TAG,
+                description: 'some description'
               },
             ],
           },
@@ -533,14 +539,14 @@ describe('publishingCollectionProcessor', () => {
       const result = await commonPublishValidator(
         {
           result: {
-            content_id: 'collection-6',
+            content_id: '0-8-collection-6',
             tags: ['3D', 'SciFi', 'Highlight'],
 
             images: [
               {
                 width: 1800,
                 height: 1012,
-                type: 'COVER',
+                type: 'COLLECTION_COVER_1x1',
                 path: '/transform/0000000000000000-0000000000000000/9FqubDgdtLaSjXmnBc9UNf.jpg',
               },
             ],

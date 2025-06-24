@@ -54,7 +54,7 @@ export const SmartTagsPlugin = makeJSONPgSmartTagsPlugin({
           omit: 'create,update,delete',
         },
       },
-      movie_images: {
+      movie_images_view: {
         description: 'Asset image metadata.',
         attribute: {
           type: {
@@ -105,6 +105,13 @@ export const SmartTagsPlugin = makeJSONPgSmartTagsPlugin({
         },
       },
       movie_videos: {
+        tags: {
+          name: 'movie_videos_data',
+          omitFromQueryRoot: true,
+          omit: 'all',
+        },
+      },
+      movie_videos_view: {
         description: 'Video stream metadata.',
         attribute: {
           type: {
@@ -148,6 +155,7 @@ export const SmartTagsPlugin = makeJSONPgSmartTagsPlugin({
           },
         },
         tags: {
+          name: 'movie_videos',
           omitFromQueryRoot: true,
           omit: 'create,update,delete',
           foreignKey: [
@@ -180,12 +188,16 @@ export const SmartTagsPlugin = makeJSONPgSmartTagsPlugin({
         tags: {
           omitFromQueryRoot: true,
           omit: 'create,update,delete',
+          foreignKey: [
+            '(movie_video_id) references app_public.movie_videos_view (id)|@foreignFieldName cuePoints',
+          ],
         },
         constraint: {
           movie_video_cue_points_movie_video_id_fkey: {
             tags: {
+              omit: true,
               foreignFieldName: 'cuePoints',
-              fieldName: 'video',
+              fieldName: 'videoData',
             },
           },
         },
@@ -270,12 +282,16 @@ export const SmartTagsPlugin = makeJSONPgSmartTagsPlugin({
         tags: {
           omitFromQueryRoot: true,
           omit: 'create,update,delete',
+          foreignKey: [
+            '(movie_video_id) references app_public.movie_videos_view (id)|@foreignFieldName videoStreams',
+          ],
         },
         constraint: {
           movie_video_streams_movie_video_id_fkey: {
             tags: {
+              omit: true,
               foreignFieldName: 'videoStreams',
-              fieldName: 'video',
+              fieldName: 'videoData',
             },
           },
         },
@@ -348,7 +364,7 @@ export const SmartTagsPlugin = makeJSONPgSmartTagsPlugin({
           omit: 'create,update,delete',
         },
       },
-      tvshow_images: {
+      tvshow_images_view: {
         description: 'Asset image metadata.',
         attribute: {
           type: {
@@ -644,7 +660,7 @@ export const SmartTagsPlugin = makeJSONPgSmartTagsPlugin({
             '(tvshow_id) references app_public.tvshow_view (id)|@fieldName tvshow|@foreignFieldName seasons',
         },
       },
-      season_images: {
+      season_images_view: {
         description: 'Asset image metadata.',
         attribute: {
           type: {
@@ -929,7 +945,7 @@ export const SmartTagsPlugin = makeJSONPgSmartTagsPlugin({
             '(season_id) references app_public.season_view (id)|@fieldName season|@foreignFieldName episodes',
         },
       },
-      episode_images: {
+      episode_images_view: {
         description: 'Asset image metadata.',
         attribute: {
           type: {
@@ -980,6 +996,13 @@ export const SmartTagsPlugin = makeJSONPgSmartTagsPlugin({
         },
       },
       episode_videos: {
+        tags: {
+          name: 'episode_videos_data',
+          omitFromQueryRoot: true,
+          omit: 'all',
+        },
+      },
+      episode_videos_view: {
         description: 'Video stream metadata.',
         attribute: {
           type: {
@@ -1023,6 +1046,7 @@ export const SmartTagsPlugin = makeJSONPgSmartTagsPlugin({
           },
         },
         tags: {
+          name: 'episode_videos',
           omitFromQueryRoot: true,
           omit: 'create,update,delete',
           foreignKey: [
@@ -1055,12 +1079,16 @@ export const SmartTagsPlugin = makeJSONPgSmartTagsPlugin({
         tags: {
           omitFromQueryRoot: true,
           omit: 'create,update,delete',
+          foreignKey: [
+            '(episode_video_id) references app_public.episode_videos_view (id)|@foreignFieldName cuePoints',
+          ],
         },
         constraint: {
           episode_video_cue_points_episode_video_id_fkey: {
             tags: {
+              omit: true,
               foreignFieldName: 'cuePoints',
-              fieldName: 'video',
+              fieldName: 'videoData',
             },
           },
         },
@@ -1145,12 +1173,16 @@ export const SmartTagsPlugin = makeJSONPgSmartTagsPlugin({
         tags: {
           omitFromQueryRoot: true,
           omit: 'create,update,delete',
+          foreignKey: [
+            '(episode_video_id) references app_public.episode_videos_view (id)|@foreignFieldName videoStreams',
+          ],
         },
         constraint: {
           episode_video_streams_episode_video_id_fkey: {
             tags: {
+              omit: true,
               foreignFieldName: 'videoStreams',
-              fieldName: 'video',
+              fieldName: 'videoData',
             },
           },
         },
@@ -1188,7 +1220,7 @@ export const SmartTagsPlugin = makeJSONPgSmartTagsPlugin({
           omit: 'create,update,delete',
         },
       },
-      collection_images: {
+      collection_images_view: {
         description: 'Asset image metadata.',
         attribute: {
           type: {

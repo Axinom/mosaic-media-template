@@ -35,23 +35,32 @@ export class LocalizableSeasonImageCreatedDbMessageHandler extends LocalizableMe
   > {
     let fields = {};
     switch (image_type) {
-      case 'COVER_1x1':
-        fields = { image_id_cover_1x1: image_id };
+      case 'SEASON_COVER':
+        fields = { season_cover: image_id };
         break;
-      case 'COVER_16x9':
-        fields = { image_id_cover_16x9: image_id };
+      case 'SEASON_COVER_1x1':
+        fields = { season_cover_1x1: image_id };
         break;
-      case 'CLEAN_COVER_1x1':
-        fields = { image_id_clean_cover_1x1: image_id };
+      case 'SEASON_COVER_16x9':
+        fields = { season_cover_16x9: image_id };
         break;
-      case 'CLEAN_COVER_16x9':
-        fields = { image_id_clean_cover_16x9: image_id };
+      case 'SEASON_CLEAN_COVER':
+        fields = { season_clean_cover: image_id };
         break;
-      case 'LIST_1x1':
-        fields = { image_id_list_1x1: image_id };
+      case 'SEASON_CLEAN_COVER_1x1':
+        fields = { season_clean_cover_1x1: image_id };
         break;
-      case 'LIST_9x13':
-        fields = { image_id_list_9x13: image_id };
+      case 'SEASON_CLEAN_COVER_16x9':
+        fields = { season_clean_cover_16x9: image_id };
+        break;
+      case 'SEASON_LIST':
+        fields = { season_list: image_id };
+        break;
+      case 'SEASON_LIST_1x1':
+        fields = { season_list_1x1: image_id };
+        break;
+      case 'SEASON_LIST_9x13':
+        fields = { season_list_9x13: image_id };
         break;
       default:
         return undefined;
@@ -84,23 +93,32 @@ export class LocalizableSeasonImageUpdatedDbMessageHandler extends LocalizableMe
   > {
     let fields = {};
     switch (image_type) {
-      case 'COVER_1x1':
-        fields = { image_id_cover_1x1: image_id };
+      case 'SEASON_COVER':
+        fields = { season_cover: image_id };
         break;
-      case 'COVER_16x9':
-        fields = { image_id_cover_16x9: image_id };
+      case 'SEASON_COVER_1x1':
+        fields = { season_cover_1x1: image_id };
         break;
-      case 'CLEAN_COVER_1x1':
-        fields = { image_id_clean_cover_1x1: image_id };
+      case 'SEASON_COVER_16x9':
+        fields = { season_cover_16x9: image_id };
         break;
-      case 'CLEAN_COVER_16x9':
-        fields = { image_id_clean_cover_16x9: image_id };
+      case 'SEASON_CLEAN_COVER':
+        fields = { season_clean_cover: image_id };
         break;
-      case 'LIST_1x1':
-        fields = { image_id_list_1x1: image_id };
+      case 'SEASON_CLEAN_COVER_1x1':
+        fields = { season_clean_cover_1x1: image_id };
         break;
-      case 'LIST_9x13':
-        fields = { image_id_list_9x13: image_id };
+      case 'SEASON_CLEAN_COVER_16x9':
+        fields = { season_clean_cover_16x9: image_id };
+        break;
+      case 'SEASON_LIST':
+        fields = { season_list: image_id };
+        break;
+      case 'SEASON_LIST_1x1':
+        fields = { season_list_1x1: image_id };
+        break;
+      case 'SEASON_LIST_9x13':
+        fields = { season_list_9x13: image_id };
         break;
       default:
         return undefined;
@@ -139,23 +157,32 @@ export class LocalizableSeasonImageDeletedDbMessageHandler extends LocalizableMe
     } else {
       let fields = {};
       switch (image_type) {
-        case 'COVER_1x1':
-          fields = { image_id_cover_1x1: '' };
+        case 'SEASON_COVER':
+          fields = { season_cover: '' };
           break;
-        case 'COVER_16x9':
-          fields = { image_id_cover_16x9: '' };
+        case 'SEASON_COVER_1x1':
+          fields = { season_cover_1x1: '' };
           break;
-        case 'CLEAN_COVER_1x1':
-          fields = { image_id_clean_cover_1x1: '' };
+        case 'SEASON_COVER_16x9':
+          fields = { season_cover_16x9: '' };
           break;
-        case 'CLEAN_COVER_16x9':
-          fields = { image_id_clean_cover_16x9: '' };
+        case 'SEASON_CLEAN_COVER':
+          fields = { season_clean_cover: '' };
           break;
-        case 'LIST_1x1':
-          fields = { image_id_list_1x1: '' };
+        case 'SEASON_CLEAN_COVER_1x1':
+          fields = { season_clean_cover_1x1: '' };
           break;
-        case 'LIST_9x13':
-          fields = { image_id_list_9x13: '' };
+        case 'SEASON_CLEAN_COVER_16x9':
+          fields = { season_clean_cover_16x9: '' };
+          break;
+        case 'SEASON_LIST':
+          fields = { season_list: '' };
+          break;
+        case 'SEASON_LIST_1x1':
+          fields = { season_list_1x1: '' };
+          break;
+        case 'SEASON_LIST_9x13':
+          fields = { season_list_9x13: '' };
           break;
         default:
           return undefined;

@@ -1,3 +1,4 @@
+import { isNullOrWhitespace } from '@axinom/mosaic-service-common';
 import Ajv from 'ajv';
 import addFormats from 'ajv-formats';
 import { singularize } from 'graphile-build';
@@ -29,6 +30,43 @@ export function buildPublishingId(
   entityId: number | string,
 ): string {
   return `${singularize(table)}-${entityId}`;
+}
+
+export function buildBDPublishingId(
+  entityType: 'MOVIE' | 'TVSHOW' | 'SEASON' | 'EPISODE' | 'COLLECTION',
+  title: string,
+  externalId?: string | null,
+): string {
+  let contentTypePrefix = '';
+  let contentProviderPrefix = '1';
+  switch (entityType) {
+    case 'MOVIE':
+      contentTypePrefix = '0';
+      break;
+    case 'TVSHOW':
+      contentTypePrefix = '6';
+      break;
+    case 'SEASON':
+      contentTypePrefix = '2';
+      break;
+    case 'EPISODE':
+      contentTypePrefix = '1';
+      break;
+    case 'COLLECTION':
+      contentTypePrefix = '8';
+      contentProviderPrefix = '0';
+      break;
+  }
+  return `${contentProviderPrefix}-${contentTypePrefix}-${
+    !isNullOrWhitespace(externalId) ? externalId : toKebabCase(title)
+  }`;
+}
+
+function toKebabCase(str: string): string {
+  return str
+    .replace(/([a-z])([A-Z])/g, '$1-$2')
+    .replace(/\s+/g, '-')
+    .toLowerCase();
 }
 
 let ajv: Ajv;

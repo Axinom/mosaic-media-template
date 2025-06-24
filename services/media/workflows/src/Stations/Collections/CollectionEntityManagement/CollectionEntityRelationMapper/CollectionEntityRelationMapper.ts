@@ -37,14 +37,6 @@ export const useCollectionRelatedEntities = (
           sortOrder: node.sortOrder,
           entityType: EntityType.Tvshow,
         };
-      } else if (node && node.season) {
-        return {
-          ...node.season,
-          id: node.id,
-          title: `Season ${node.season.index}`,
-          sortOrder: node.sortOrder,
-          entityType: EntityType.Season,
-        };
       } else if (node && node.episode) {
         return {
           ...node.episode,

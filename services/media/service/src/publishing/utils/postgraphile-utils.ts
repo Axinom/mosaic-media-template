@@ -137,3 +137,27 @@ export const getSnapshotPgField = async (
   );
   return row;
 };
+
+/**
+ * Retrieves a snapshot to be returned as a GraphQL API response in a correct format.
+ * Respects graphql properties selection and auto-generated values, e.g. nodeId.
+ */
+export const getRepublishableSnapshotPgField = async (
+  id: number,
+  { pgSql }: Build,
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  graphile: GraphileHelpers<any>,
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+): Promise<any> => {
+  const [row] = await graphile.selectGraphQLResultFromTable(
+    pgSql.fragment`app_public.snapshots`,
+    (tableAlias, queryBuilder) => {
+      queryBuilder.where(
+        pgSql.fragment`${tableAlias}.id = ${pgSql.value(
+          id,
+        )} AND ${tableAlias}.is_republish_allowed = TRUE`,
+      );
+    },
+  );
+  return row;
+};

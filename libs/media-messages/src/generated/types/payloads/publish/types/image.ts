@@ -19,4 +19,8 @@ export interface Image {
    * Height of the image in pixels.
    */
   height?: number | null;
+  /**
+   * Language tag for the image if the image is localized.
+   */
+  language_tag?: string | null;
 }

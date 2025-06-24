@@ -34,12 +34,15 @@ const Form: React.FC<{ imageSelectField: unknown }> = ({
   const customSortedTvshowImageTypes = Object.values(TvshowImageType).sort(
     (a, b) => {
       const order = [
-        'COVER_1X1',
-        'COVER_16X9',
-        'CLEAN_COVER_1X1',
-        'CLEAN_COVER_16X9',
-        'LIST_1X1',
-        'LIST_9X13',
+        'TVSHOW_COVER',
+        'TVSHOW_COVER_1X1',
+        'TVSHOW_COVER_16X9',
+        'TVSHOW_CLEAN_COVER',
+        'TVSHOW_CLEAN_COVER_1X1',
+        'TVSHOW_CLEAN_COVER_16X9',
+        'TVSHOW_LIST',
+        'TVSHOW_LIST_1X1',
+        'TVSHOW_LIST_9X13',
       ];
       return order.indexOf(a) - order.indexOf(b);
     },
@@ -65,7 +68,7 @@ const Form: React.FC<{ imageSelectField: unknown }> = ({
             as={imageSelectField}
             maxItems={1}
             title="Select Image"
-            imageScope="tvshow"
+            imageType={field.toLocaleLowerCase()}
           />
         );
       })}

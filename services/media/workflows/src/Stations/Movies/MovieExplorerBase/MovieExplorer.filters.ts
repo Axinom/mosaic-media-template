@@ -1,4 +1,5 @@
 import {
+  createDateRangeFilterValidators,
   filterToPostGraphileFilter,
   FilterType,
   FilterTypes,
@@ -6,6 +7,7 @@ import {
   Option,
 } from '@axinom/mosaic-ui';
 import { useEffect, useState } from 'react';
+import { validate as isUuid } from 'uuid';
 import { client } from '../../../apolloClient';
 import {
   BusinessType,
@@ -13,6 +15,7 @@ import {
   PublishStatus,
   useGetMoviesFilterOptionsDataQuery,
 } from '../../../generated/graphql';
+import { transformRange } from '../../../Util/DateRangeTransformer/DateRangeTransformer';
 import { getEnumLabel } from '../../../Util/StringEnumMapper/StringEnumMapper';
 import { MovieData } from './MovieExplorer.types';
 
@@ -39,7 +42,10 @@ export function useMoviesFilters(): {
     allCountries: [],
   });
 
-  const { data, error } = useGetMoviesFilterOptionsDataQuery({ client });
+  const { data, error } = useGetMoviesFilterOptionsDataQuery({
+    client,
+    fetchPolicy: 'network-only',
+  });
 
   useEffect(() => {
     if (error) {
@@ -120,7 +126,10 @@ export function useMoviesFilters(): {
         allCountries: countries,
       });
     }
-  }, [data]);
+  }, [data, error]);
+
+  const [createFromDateFilterValidator, createToDateFilterValidator] =
+    createDateRangeFilterValidators<MovieData>();
 
   const filterOptions: FilterType<MovieData>[] = [
     {
@@ -193,6 +202,16 @@ export function useMoviesFilters(): {
       type: FilterTypes.FreeText,
     },
     {
+      label: 'Production Country',
+      property: 'moviesProductionCountries',
+      searchInputPlaceholder: 'Search',
+      type: FilterTypes.SearcheableOptions,
+      optionsProvider: (searchText) =>
+        AllFilterOptions.allCountries.filter((option) =>
+          option.label.toLowerCase().includes(searchText.toLowerCase()),
+        ),
+    },
+    {
       label: 'License Countries',
       property: 'moviesLicenses',
       searchInputPlaceholder: 'Search',
@@ -212,11 +231,6 @@ export function useMoviesFilters(): {
       type: FilterTypes.Options,
     },
     {
-      label: 'Sub Type',
-      property: 'assetSubtype',
-      type: FilterTypes.FreeText,
-    },
-    {
       label: 'Business Type',
       property: 'businessType',
       type: FilterTypes.Options,
@@ -224,6 +238,47 @@ export function useMoviesFilters(): {
         value: BusinessType[key],
         label: getEnumLabel(BusinessType[key]),
       })),
+    },
+    {
+      label: 'Release Period (From)',
+      property: 'released',
+      type: FilterTypes.Date,
+      onValidate: createFromDateFilterValidator('released'),
+    },
+    {
+      label: 'Release Period (To)',
+      property: 'released',
+      type: FilterTypes.Date,
+      onValidate: createToDateFilterValidator('released'),
+    },
+    {
+      label: 'Publication Period (From)',
+      property: 'publishedDate',
+      type: FilterTypes.Date,
+      onValidate: createFromDateFilterValidator('publishedDate'),
+    },
+    {
+      label: 'Publication Period (To)',
+      property: 'publishedDate',
+      type: FilterTypes.Date,
+      onValidate: createToDateFilterValidator('publishedDate'),
+    },
+    {
+      label: 'Creation Period (From)',
+      property: 'createdDate',
+      type: FilterTypes.Date,
+      onValidate: createFromDateFilterValidator('createdDate'),
+    },
+    {
+      label: 'Creation Period (To)',
+      property: 'createdDate',
+      type: FilterTypes.Date,
+      onValidate: createToDateFilterValidator('createdDate'),
+    },
+    {
+      label: 'Publishing ID',
+      property: 'publishingId',
+      type: FilterTypes.FreeText,
     },
   ];
 
@@ -250,7 +305,9 @@ export function useMoviesFilters(): {
       publishStatus: 'in',
       moviesCasts: ['some', 'name', 'includesInsensitive'],
       externalId: 'includesInsensitive',
+      publishingId: 'includesInsensitive',
       contentOwner: 'includesInsensitive',
+      moviesProductionCountries: ['some', 'name', 'includesInsensitive'],
       moviesLicenses: (value: unknown) => {
         const [countryCode, licensesStatus] = value as [string, string];
         if (licensesStatus === 'Valid License') {
@@ -269,12 +326,24 @@ export function useMoviesFilters(): {
               },
             },
           };
+        } else if (!isUuid(countryCode)) {
+          return {
+            some: {
+              moviesLicensesCountries: {
+                some: {
+                  countryCode: {
+                    equalTo: countryCode,
+                  },
+                },
+              },
+            },
+          };
         } else {
           return {
             some: {
               moviesLicensesCountries: {
                 some: {
-                  code: {
+                  countryGroupId: {
                     equalTo: countryCode,
                   },
                 },
@@ -283,22 +352,10 @@ export function useMoviesFilters(): {
           };
         }
       },
-      assetSubtype: 'equalTo',
       businessType: 'in',
-      id: (value) => {
-        if (typeof value === 'number') {
-          // User filter
-          return {
-            equalTo: value,
-            notIn: excludeItems,
-          };
-        } else {
-          // Exclude items
-          return {
-            notIn: excludeItems,
-          };
-        }
-      },
+      released: transformRange,
+      createdDate: transformRange,
+      publishedDate: transformRange,
     });
   };
 

@@ -4,31 +4,10 @@ pr: none
 pool:
   vmImage: 'ubuntu-latest'
 
-parameters:
-  - name: int
-    displayName: Release workflow to INT
-    type: boolean
-    default: true
-  - name: nfn_acceptance
-    displayName: Release workflow to NFN acceptance
-    type: boolean
-    default: false
-  - name: nfn_production
-    displayName: Release workflow to NFN production
-    type: boolean
-    default: false
-  - name: lov_acceptance
-    displayName: Release workflow to LOV acceptance
-    type: boolean
-    default: false
-  - name: lov_production
-    displayName: Release workflow to LOV production
-    type: boolean
-    default: false
-
 variables:
   tag: '$(Build.BuildNumber)'
   serviceId: dc-media-service
+  ID_SERVICE_AUTH_BASE_URL: https://id.service.eu.axinom.net
 
 stages:
   - stage: Build
@@ -76,7 +55,6 @@ stages:
             displayName: Publishing build artifact
           
           - task: Bash@3
-            condition: ${{ eq(parameters.int, true) }}
             displayName:
               'Upload pilet to INT environment'
             inputs:
@@ -86,10 +64,19 @@ stages:
             env:
               MOSAIC_HOSTING_CLIENT_ID: $(mosaicHostingClientIdInt)
               MOSAIC_HOSTING_CLIENT_SECRET: $(mosaicHostingClientSecretInt)
-              ID_SERVICE_AUTH_BASE_URL: https://id.service.eu.axinom.net
 
           - task: Bash@3
-            condition: ${{ eq(parameters.nfn_acceptance, true) }}
+            displayName:
+              'Upload pilet to PERF environment'
+            inputs:
+              targetType: 'inline'
+              script: |
+                yarn mosaic hosting pilet register -i "$(serviceId)" -p "$(Build.ArtifactStagingDirectory)/media-workflows-$(pkgVer).tgz" -m "https://frontends.service.eu.axinom.net"
+            env:
+              MOSAIC_HOSTING_CLIENT_ID: $(mosaicHostingClientIdPerf)
+              MOSAIC_HOSTING_CLIENT_SECRET: $(mosaicHostingClientSecretPerf)
+
+          - task: Bash@3
             displayName:
               'Upload pilet to NFN acceptance environment'
             inputs:
@@ -99,10 +86,19 @@ stages:
             env:
               MOSAIC_HOSTING_CLIENT_ID: $(mosaicHostingClientIdNfnAcc)
               MOSAIC_HOSTING_CLIENT_SECRET: $(mosaicHostingClientSecretNfnAcc)
-              ID_SERVICE_AUTH_BASE_URL: https://id.service.eu.axinom.net
 
           - task: Bash@3
-            condition: ${{ eq(parameters.nfn_production, true) }}
+            displayName:
+              'Upload pilet to NFN migration environment'
+            inputs:
+              targetType: 'inline'
+              script: |
+                yarn mosaic hosting pilet register -i "$(serviceId)" -p "$(Build.ArtifactStagingDirectory)/media-workflows-$(pkgVer).tgz" -m "https://frontends.service.eu.axinom.net"
+            env:
+              MOSAIC_HOSTING_CLIENT_ID: $(mosaicHostingClientIdNfnMigration)
+              MOSAIC_HOSTING_CLIENT_SECRET: $(mosaicHostingClientSecretNfnMigration)
+
+          - task: Bash@3
             displayName:
               'Upload pilet to NFN production environment'
             inputs:
@@ -112,10 +108,8 @@ stages:
             env:
               MOSAIC_HOSTING_CLIENT_ID: $(mosaicHostingClientIdNfnProd)
               MOSAIC_HOSTING_CLIENT_SECRET: $(mosaicHostingClientSecretNfnProd)
-              ID_SERVICE_AUTH_BASE_URL: https://id.service.eu.axinom.net
 
           - task: Bash@3
-            condition: ${{ eq(parameters.lov_acceptance, true) }}
             displayName:
               'Upload pilet to LOV acceptance environment'
             inputs:
@@ -125,12 +119,21 @@ stages:
             env:
               MOSAIC_HOSTING_CLIENT_ID: $(mosaicHostingClientIdLovAcc)
               MOSAIC_HOSTING_CLIENT_SECRET: $(mosaicHostingClientSecretLovAcc)
-              ID_SERVICE_AUTH_BASE_URL: https://id.service.eu.axinom.net
+            
+          - task: Bash@3
+            displayName:
+              'Upload pilet to LOV migration environment'
+            inputs:
+              targetType: 'inline'
+              script: |
+                yarn mosaic hosting pilet register -i "$(serviceId)" -p "$(Build.ArtifactStagingDirectory)/media-workflows-$(pkgVer).tgz" -m "https://frontends.service.eu.axinom.net"
+            env:
+              MOSAIC_HOSTING_CLIENT_ID: $(mosaicHostingClientIdLovMigration)
+              MOSAIC_HOSTING_CLIENT_SECRET: $(mosaicHostingClientSecretLovMigration)
 
           - task: Bash@3
-            condition: ${{ eq(parameters.lov_production, true) }}
             displayName:
-              'Upload pilet to LOV acceptance environment'
+              'Upload pilet to LOV production environment'
             inputs:
               targetType: 'inline'
               script: |
@@ -138,4 +141,3 @@ stages:
             env:
               MOSAIC_HOSTING_CLIENT_ID: $(mosaicHostingClientIdLovProd)
               MOSAIC_HOSTING_CLIENT_SECRET: $(mosaicHostingClientSecretLovProd)
-              ID_SERVICE_AUTH_BASE_URL: https://id.service.eu.axinom.net

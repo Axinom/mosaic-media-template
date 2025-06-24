@@ -90,7 +90,7 @@ export const atLeastOneString = Yup.array(Yup.string()).min(1, oneItemError);
 /**
  * yup validation rule to check that array of objects has at least one object with type `COVER`
  */
-export const requiredCover = Yup.array(
+export const requiredMovieCover = Yup.array(
   Yup.object({
     width: Yup.number().positive(isPositiveNumber).required(isRequired),
     height: Yup.number().positive(isPositiveNumber).required(isRequired),
@@ -99,7 +99,99 @@ export const requiredCover = Yup.array(
 ).test({
   name: 'required_cover',
   message: 'Cover image is not assigned.',
-  test: (images) => !!images && images.some((image) => image.type === 'COVER'),
+  test: (images) => {
+    return (
+      !!images &&
+      images.some(
+        (image) =>
+          image.type === 'MOVIE_COVER_1x1' || image.type === 'MOVIE_COVER_16x9',
+      )
+    );
+  },
+});
+
+export const requiredTvShowCover = Yup.array(
+  Yup.object({
+    width: Yup.number().positive(isPositiveNumber).required(isRequired),
+    height: Yup.number().positive(isPositiveNumber).required(isRequired),
+    type: Yup.string(),
+  }),
+).test({
+  name: 'required_cover',
+  message: 'Cover image is not assigned.',
+  test: (images) => {
+    return (
+      !!images &&
+      images.some(
+        (image) =>
+          image.type === 'TVSHOW_COVER_1x1' ||
+          image.type === 'TVSHOW_COVER_16x9',
+      )
+    );
+  },
+});
+
+export const requiredSeasonCover = Yup.array(
+  Yup.object({
+    width: Yup.number().positive(isPositiveNumber).required(isRequired),
+    height: Yup.number().positive(isPositiveNumber).required(isRequired),
+    type: Yup.string(),
+  }),
+).test({
+  name: 'required_cover',
+  message: 'Cover image is not assigned.',
+  test: (images) => {
+    return (
+      !!images &&
+      images.some(
+        (image) =>
+          image.type === 'SEASON_COVER_1x1' ||
+          image.type === 'SEASON_COVER_16x9',
+      )
+    );
+  },
+});
+
+export const requiredEpisodeCover = Yup.array(
+  Yup.object({
+    width: Yup.number().positive(isPositiveNumber).required(isRequired),
+    height: Yup.number().positive(isPositiveNumber).required(isRequired),
+    type: Yup.string(),
+  }),
+).test({
+  name: 'required_cover',
+  message: 'Cover image is not assigned.',
+  test: (images) => {
+    return (
+      !!images &&
+      images.some(
+        (image) =>
+          image.type === 'EPISODE_COVER_1x1' ||
+          image.type === 'EPISODE_COVER_16x9',
+      )
+    );
+  },
+});
+
+export const requiredCollectionCover = Yup.array(
+  Yup.object({
+    width: Yup.number().positive(isPositiveNumber).required(isRequired),
+    height: Yup.number().positive(isPositiveNumber).required(isRequired),
+    type: Yup.string(),
+  }),
+).test({
+  name: 'required_cover',
+  message: 'Cover image is not assigned.',
+  test: (images) => {
+    return (
+      !!images &&
+      images.some(
+        (image) =>
+          image.type === 'COLLECTION_COVER_1x1' ||
+          image.type === 'COLLECTION_COVER_16x9',
+      )
+    );
+  },
 });
 
 /**
@@ -107,7 +199,7 @@ export const requiredCover = Yup.array(
  * @param supportedTypes - spread array of string types. If `MAIN` is included - videos array musth have a video with `MAIN` type assigned.
  */
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-export const videosValidation = (...supportedTypes: string[]): any => {
+export const videosValidation = (): any => {
   const commonVideosValidation = Yup.array(
     Yup.object({
       length_in_seconds: Yup.number()
@@ -131,49 +223,40 @@ export const videosValidation = (...supportedTypes: string[]): any => {
     }),
   );
 
-  if (supportedTypes.some((t) => t === 'MAIN')) {
-    return commonVideosValidation.test({
-      name: 'required_main_video',
-      message: 'Main video is not assigned.',
-      test: (videos) =>
-        !!videos && videos.some((video) => video.type === 'MAIN'),
-    });
-  }
-  return commonVideosValidation;
+  commonVideosValidation;
 };
 
 /**
- * yup validation rule to check that all licenses to be published are valid.
- * @param atLeastOneLicenseRequired - If true - yup will produce an error for empty array. If false - yup will produce a warning for empty array.
- * @returns
+ * Validation schema to validate a license.
  */
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export const licensesValidation = (atLeastOneLicenseRequired: boolean): any => {
-  return Yup.array(
-    Yup.object({
-      start_time: Yup.date(),
-      end_time: Yup.date().when('start_time', {
-        is: (start: unknown) => !!start,
-        then: (end) =>
-          end.min(Yup.ref('start_time'), (params) => {
-            const identifier = getReadablePath(params.path);
-            return `${identifier} must be greater than start_time.`;
-          }),
-      }),
-      countries: Yup.array(Yup.string()), // Values validation is done using DB FK Constraints
-    }).test({
-      name: 'license_props',
-      message: (params) => {
-        const identifier = getReadablePath(params.path);
-        return `${identifier} must have either start_time, end_time, or at least one country defined.`;
-      },
-      test: (value) =>
-        !!value.start_time ||
-        !!value.end_time ||
-        (!!value.countries && value.countries.length > 0),
-    }),
-  ).min(1, atLeastOneLicenseRequired ? oneItemError : oneItemWarning);
-};
+export const licenseValidationSchema = Yup.object({
+  start_time: Yup.date(),
+  end_time: Yup.date().when('start_time', {
+    is: (start: unknown) => !!start,
+    then: (end) =>
+      end
+        .min(Yup.ref('start_time'), (params) => {
+          const identifier = getReadablePath(params.path);
+          return `${identifier} must be greater than From time.`;
+        })
+        .min(new Date(), 'Until time must be greater than the current date.'),
+    otherwise: (end) =>
+      end.min(new Date(), 'Until time must be greater than the current date.'),
+  }),
+  countries: Yup.array(Yup.string().min(1, 'Country cannot be empty.')).min(
+    1,
+    'At least one country must be present.',
+  ),
+  is_downloadable: Yup.bool(),
+  downloaded_asset_lifespan: Yup.number().when('is_downloadable', {
+    is: true,
+    then: (downloaded_asset_lifespan) =>
+      downloaded_asset_lifespan.min(
+        1,
+        'Downloaded Asset Lifespan must be greater than or equal to 0 when the asset is downloadable.',
+      ),
+  }),
+});
 
 /**
  * Validates passed json object against passed yup validation schema, producing a validation results object with errors and warnings arrays.

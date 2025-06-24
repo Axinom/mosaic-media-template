@@ -399,6 +399,7 @@ export type Collection = {
   languages?: Maybe<Array<Maybe<Scalars['String']['output']>>>;
   publishedDate?: Maybe<Scalars['Datetime']['output']>;
   publishedUser?: Maybe<Scalars['String']['output']>;
+  publishingId?: Maybe<Scalars['String']['output']>;
   publishStatus: PublishStatus;
   synopsis?: Maybe<Scalars['String']['output']>;
   title: Scalars['String']['output'];
@@ -496,6 +497,8 @@ export type CollectionCondition = {
   publishedDate?: InputMaybe<Scalars['Datetime']['input']>;
   /** Checks for equality with the object’s `publishedUser` field. */
   publishedUser?: InputMaybe<Scalars['String']['input']>;
+  /** Checks for equality with the object’s `publishingId` field. */
+  publishingId?: InputMaybe<Scalars['String']['input']>;
   /** Checks for equality with the object’s `publishStatus` field. */
   publishStatus?: InputMaybe<PublishStatus>;
   /** Checks for equality with the object’s `synopsis` field. */
@@ -660,6 +663,8 @@ export type CollectionFilter = {
   publishedDate?: InputMaybe<DatetimeFilter>;
   /** Filter by the object’s `publishedUser` field. */
   publishedUser?: InputMaybe<StringFilter>;
+  /** Filter by the object’s `publishingId` field. */
+  publishingId?: InputMaybe<StringFilter>;
   /** Filter by the object’s `publishStatus` field. */
   publishStatus?: InputMaybe<PublishStatusFilter>;
   /** Filter by the object’s `synopsis` field. */
@@ -673,18 +678,24 @@ export type CollectionFilter = {
 };
 
 export enum CollectionImageType {
-  /** Clean Cover 1x1 */
-  CleanCover_1X1 = 'CLEAN_COVER_1X1',
-  /** Clean Cover 4x1 */
-  CleanCover_4X1 = 'CLEAN_COVER_4X1',
-  /** Cover 1x1 */
-  Cover_1X1 = 'COVER_1X1',
-  /** Cover 4x1 */
-  Cover_4X1 = 'COVER_4X1',
-  /** List 15x16 */
-  List_15X16 = 'LIST_15X16',
-  /** List 1x1 */
-  List_1X1 = 'LIST_1X1'
+  /** Collection Cover */
+  CollectionCleanCover = 'COLLECTION_CLEAN_COVER',
+  /** Collection Clean Cover 1x1 */
+  CollectionCleanCover_1X1 = 'COLLECTION_CLEAN_COVER_1X1',
+  /** Collection Clean Cover 4x1 */
+  CollectionCleanCover_4X1 = 'COLLECTION_CLEAN_COVER_4X1',
+  /** Collection Cover */
+  CollectionCover = 'COLLECTION_COVER',
+  /** Collection Cover 1x1 */
+  CollectionCover_1X1 = 'COLLECTION_COVER_1X1',
+  /** Collection Cover 4x1 */
+  CollectionCover_4X1 = 'COLLECTION_COVER_4X1',
+  /** Collection List */
+  CollectionList = 'COLLECTION_LIST',
+  /** Collection List 15x16 */
+  CollectionList_15X16 = 'COLLECTION_LIST_15X16',
+  /** Collection List 1x1 */
+  CollectionList_1X1 = 'COLLECTION_LIST_1X1'
 }
 
 /** A filter to be used against CollectionImageType fields. All fields are combined with a logical ‘and.’ */
@@ -720,6 +731,7 @@ export type CollectionInput = {
   extendedField?: InputMaybe<Scalars['String']['input']>;
   externalId?: InputMaybe<Scalars['String']['input']>;
   languages?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
+  publishingId?: InputMaybe<Scalars['String']['input']>;
   synopsis?: InputMaybe<Scalars['String']['input']>;
   /**
    * @maxLength(100)
@@ -735,6 +747,7 @@ export type CollectionPatch = {
   extendedField?: InputMaybe<Scalars['String']['input']>;
   externalId?: InputMaybe<Scalars['String']['input']>;
   languages?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
+  publishingId?: InputMaybe<Scalars['String']['input']>;
   synopsis?: InputMaybe<Scalars['String']['input']>;
   /**
    * @maxLength(100)
@@ -1055,6 +1068,8 @@ export enum CollectionsOrderBy {
   PublishedDateDesc = 'PUBLISHED_DATE_DESC',
   PublishedUserAsc = 'PUBLISHED_USER_ASC',
   PublishedUserDesc = 'PUBLISHED_USER_DESC',
+  PublishingIdAsc = 'PUBLISHING_ID_ASC',
+  PublishingIdDesc = 'PUBLISHING_ID_DESC',
   SynopsisAsc = 'SYNOPSIS_ASC',
   SynopsisDesc = 'SYNOPSIS_DESC',
   TitleAsc = 'TITLE_ASC',
@@ -1428,8 +1443,16 @@ export type CountryGroup = {
   countryGroupsCountriesByGroupId: CountryGroupsCountriesConnection;
   createdDate: Scalars['Datetime']['output'];
   createdUser: Scalars['String']['output'];
+  /** Reads and enables pagination through a set of `EpisodesLicensesCountry`. */
+  episodesLicensesCountries: EpisodesLicensesCountriesConnection;
   id: Scalars['UUID']['output'];
+  /** Reads and enables pagination through a set of `MoviesLicensesCountry`. */
+  moviesLicensesCountries: MoviesLicensesCountriesConnection;
   name: Scalars['String']['output'];
+  /** Reads and enables pagination through a set of `SeasonsLicensesCountry`. */
+  seasonsLicensesCountries: SeasonsLicensesCountriesConnection;
+  /** Reads and enables pagination through a set of `TvshowsLicensesCountry`. */
+  tvshowsLicensesCountries: TvshowsLicensesCountriesConnection;
   updatedDate: Scalars['Datetime']['output'];
   updatedUser: Scalars['String']['output'];
 };
@@ -1456,6 +1479,54 @@ export type CountryGroupCountryGroupsCountriesByGroupIdArgs = {
   last?: InputMaybe<Scalars['Int']['input']>;
   offset?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Array<CountryGroupsCountriesOrderBy>>;
+};
+
+
+export type CountryGroupEpisodesLicensesCountriesArgs = {
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
+  condition?: InputMaybe<EpisodesLicensesCountryCondition>;
+  filter?: InputMaybe<EpisodesLicensesCountryFilter>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<EpisodesLicensesCountriesOrderBy>>;
+};
+
+
+export type CountryGroupMoviesLicensesCountriesArgs = {
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
+  condition?: InputMaybe<MoviesLicensesCountryCondition>;
+  filter?: InputMaybe<MoviesLicensesCountryFilter>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<MoviesLicensesCountriesOrderBy>>;
+};
+
+
+export type CountryGroupSeasonsLicensesCountriesArgs = {
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
+  condition?: InputMaybe<SeasonsLicensesCountryCondition>;
+  filter?: InputMaybe<SeasonsLicensesCountryFilter>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<SeasonsLicensesCountriesOrderBy>>;
+};
+
+
+export type CountryGroupTvshowsLicensesCountriesArgs = {
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
+  condition?: InputMaybe<TvshowsLicensesCountryCondition>;
+  filter?: InputMaybe<TvshowsLicensesCountryFilter>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<TvshowsLicensesCountriesOrderBy>>;
 };
 
 /**
@@ -1497,14 +1568,30 @@ export type CountryGroupFilter = {
   createdDate?: InputMaybe<DatetimeFilter>;
   /** Filter by the object’s `createdUser` field. */
   createdUser?: InputMaybe<StringFilter>;
+  /** Filter by the object’s `episodesLicensesCountries` relation. */
+  episodesLicensesCountries?: InputMaybe<CountryGroupToManyEpisodesLicensesCountryFilter>;
+  /** Some related `episodesLicensesCountries` exist. */
+  episodesLicensesCountriesExist?: InputMaybe<Scalars['Boolean']['input']>;
   /** Filter by the object’s `id` field. */
   id?: InputMaybe<UuidFilter>;
+  /** Filter by the object’s `moviesLicensesCountries` relation. */
+  moviesLicensesCountries?: InputMaybe<CountryGroupToManyMoviesLicensesCountryFilter>;
+  /** Some related `moviesLicensesCountries` exist. */
+  moviesLicensesCountriesExist?: InputMaybe<Scalars['Boolean']['input']>;
   /** Filter by the object’s `name` field. */
   name?: InputMaybe<StringFilter>;
   /** Negates the expression. */
   not?: InputMaybe<CountryGroupFilter>;
   /** Checks for any expressions in this list. */
   or?: InputMaybe<Array<CountryGroupFilter>>;
+  /** Filter by the object’s `seasonsLicensesCountries` relation. */
+  seasonsLicensesCountries?: InputMaybe<CountryGroupToManySeasonsLicensesCountryFilter>;
+  /** Some related `seasonsLicensesCountries` exist. */
+  seasonsLicensesCountriesExist?: InputMaybe<Scalars['Boolean']['input']>;
+  /** Filter by the object’s `tvshowsLicensesCountries` relation. */
+  tvshowsLicensesCountries?: InputMaybe<CountryGroupToManyTvshowsLicensesCountryFilter>;
+  /** Some related `tvshowsLicensesCountries` exist. */
+  tvshowsLicensesCountriesExist?: InputMaybe<Scalars['Boolean']['input']>;
   /** Filter by the object’s `updatedDate` field. */
   updatedDate?: InputMaybe<DatetimeFilter>;
   /** Filter by the object’s `updatedUser` field. */
@@ -1694,6 +1781,46 @@ export type CountryGroupToManyCountryGroupsCountryFilter = {
   none?: InputMaybe<CountryGroupsCountryFilter>;
   /** Some related `CountryGroupsCountry` matches the filter criteria. All fields are combined with a logical ‘and.’ */
   some?: InputMaybe<CountryGroupsCountryFilter>;
+};
+
+/** A filter to be used against many `EpisodesLicensesCountry` object types. All fields are combined with a logical ‘and.’ */
+export type CountryGroupToManyEpisodesLicensesCountryFilter = {
+  /** Every related `EpisodesLicensesCountry` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  every?: InputMaybe<EpisodesLicensesCountryFilter>;
+  /** No related `EpisodesLicensesCountry` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  none?: InputMaybe<EpisodesLicensesCountryFilter>;
+  /** Some related `EpisodesLicensesCountry` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  some?: InputMaybe<EpisodesLicensesCountryFilter>;
+};
+
+/** A filter to be used against many `MoviesLicensesCountry` object types. All fields are combined with a logical ‘and.’ */
+export type CountryGroupToManyMoviesLicensesCountryFilter = {
+  /** Every related `MoviesLicensesCountry` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  every?: InputMaybe<MoviesLicensesCountryFilter>;
+  /** No related `MoviesLicensesCountry` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  none?: InputMaybe<MoviesLicensesCountryFilter>;
+  /** Some related `MoviesLicensesCountry` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  some?: InputMaybe<MoviesLicensesCountryFilter>;
+};
+
+/** A filter to be used against many `SeasonsLicensesCountry` object types. All fields are combined with a logical ‘and.’ */
+export type CountryGroupToManySeasonsLicensesCountryFilter = {
+  /** Every related `SeasonsLicensesCountry` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  every?: InputMaybe<SeasonsLicensesCountryFilter>;
+  /** No related `SeasonsLicensesCountry` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  none?: InputMaybe<SeasonsLicensesCountryFilter>;
+  /** Some related `SeasonsLicensesCountry` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  some?: InputMaybe<SeasonsLicensesCountryFilter>;
+};
+
+/** A filter to be used against many `TvshowsLicensesCountry` object types. All fields are combined with a logical ‘and.’ */
+export type CountryGroupToManyTvshowsLicensesCountryFilter = {
+  /** Every related `TvshowsLicensesCountry` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  every?: InputMaybe<TvshowsLicensesCountryFilter>;
+  /** No related `TvshowsLicensesCountry` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  none?: InputMaybe<TvshowsLicensesCountryFilter>;
+  /** Some related `TvshowsLicensesCountry` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  some?: InputMaybe<TvshowsLicensesCountryFilter>;
 };
 
 /** All input for the create `AgeRating` mutation. */
@@ -2195,7 +2322,7 @@ export type CreateEpisodesLicensePayloadEpisodesLicenseEdgeArgs = {
 
 /**
  * All input for the create `EpisodesLicensesCountry` mutation.
- * @permissions: TVSHOWS_EDIT,ADMIN
+ * @permissions: TVSHOW_EDITOR,ADMIN
  */
 export type CreateEpisodesLicensesCountryInput = {
   /**
@@ -2215,6 +2342,8 @@ export type CreateEpisodesLicensesCountryPayload = {
    * unchanged and unused. May be used by a client to track mutations.
    */
   clientMutationId?: Maybe<Scalars['String']['output']>;
+  /** Reads a single `CountryGroup` that is related to this `EpisodesLicensesCountry`. */
+  countryGroup?: Maybe<CountryGroup>;
   /** Reads a single `EpisodesLicense` that is related to this `EpisodesLicensesCountry`. */
   episodesLicense?: Maybe<EpisodesLicense>;
   /** The `EpisodesLicensesCountry` that was created by this mutation. */
@@ -2647,7 +2776,7 @@ export type CreateMoviesLicensePayloadMoviesLicenseEdgeArgs = {
 
 /**
  * All input for the create `MoviesLicensesCountry` mutation.
- * @permissions: MOVIES_EDIT,ADMIN
+ * @permissions: MOVIE_EDITOR,ADMIN
  */
 export type CreateMoviesLicensesCountryInput = {
   /**
@@ -2667,6 +2796,8 @@ export type CreateMoviesLicensesCountryPayload = {
    * unchanged and unused. May be used by a client to track mutations.
    */
   clientMutationId?: Maybe<Scalars['String']['output']>;
+  /** Reads a single `CountryGroup` that is related to this `MoviesLicensesCountry`. */
+  countryGroup?: Maybe<CountryGroup>;
   /** Reads a single `MoviesLicense` that is related to this `MoviesLicensesCountry`. */
   moviesLicense?: Maybe<MoviesLicense>;
   /** The `MoviesLicensesCountry` that was created by this mutation. */
@@ -3029,7 +3160,7 @@ export type CreateSeasonsLicensePayloadSeasonsLicenseEdgeArgs = {
 
 /**
  * All input for the create `SeasonsLicensesCountry` mutation.
- * @permissions: TVSHOWS_EDIT,ADMIN
+ * @permissions: TVSHOW_EDITOR,ADMIN
  */
 export type CreateSeasonsLicensesCountryInput = {
   /**
@@ -3049,6 +3180,8 @@ export type CreateSeasonsLicensesCountryPayload = {
    * unchanged and unused. May be used by a client to track mutations.
    */
   clientMutationId?: Maybe<Scalars['String']['output']>;
+  /** Reads a single `CountryGroup` that is related to this `SeasonsLicensesCountry`. */
+  countryGroup?: Maybe<CountryGroup>;
   /** Our root query field type. Allows us to run any query from our mutation payload. */
   query?: Maybe<Query>;
   /** Reads a single `SeasonsLicense` that is related to this `SeasonsLicensesCountry`. */
@@ -3445,7 +3578,7 @@ export type CreateTvshowsLicensePayloadTvshowsLicenseEdgeArgs = {
 
 /**
  * All input for the create `TvshowsLicensesCountry` mutation.
- * @permissions: TVSHOWS_EDIT,ADMIN
+ * @permissions: TVSHOW_EDITOR,ADMIN
  */
 export type CreateTvshowsLicensesCountryInput = {
   /**
@@ -3465,6 +3598,8 @@ export type CreateTvshowsLicensesCountryPayload = {
    * unchanged and unused. May be used by a client to track mutations.
    */
   clientMutationId?: Maybe<Scalars['String']['output']>;
+  /** Reads a single `CountryGroup` that is related to this `TvshowsLicensesCountry`. */
+  countryGroup?: Maybe<CountryGroup>;
   /** Our root query field type. Allows us to run any query from our mutation payload. */
   query?: Maybe<Query>;
   /** Reads a single `TvshowsLicense` that is related to this `TvshowsLicensesCountry`. */
@@ -4245,7 +4380,7 @@ export type DeleteEpisodesLicensePayloadEpisodesLicenseEdgeArgs = {
 
 /**
  * All input for the `deleteEpisodesLicensesCountry` mutation.
- * @permissions: TVSHOWS_EDIT,ADMIN
+ * @permissions: TVSHOW_EDITOR,ADMIN
  */
 export type DeleteEpisodesLicensesCountryInput = {
   /**
@@ -4253,8 +4388,7 @@ export type DeleteEpisodesLicensesCountryInput = {
    * payload verbatim. May be used to track mutations by the client.
    */
   clientMutationId?: InputMaybe<Scalars['String']['input']>;
-  code: IsoAlphaTwoCountryCodes;
-  episodesLicenseId: Scalars['Int']['input'];
+  id: Scalars['UUID']['input'];
 };
 
 /** The output of our delete `EpisodesLicensesCountry` mutation. */
@@ -4265,6 +4399,8 @@ export type DeleteEpisodesLicensesCountryPayload = {
    * unchanged and unused. May be used by a client to track mutations.
    */
   clientMutationId?: Maybe<Scalars['String']['output']>;
+  /** Reads a single `CountryGroup` that is related to this `EpisodesLicensesCountry`. */
+  countryGroup?: Maybe<CountryGroup>;
   deletedEpisodesLicensesCountryNodeId?: Maybe<Scalars['ID']['output']>;
   /** Reads a single `EpisodesLicense` that is related to this `EpisodesLicensesCountry`. */
   episodesLicense?: Maybe<EpisodesLicense>;
@@ -4722,7 +4858,7 @@ export type DeleteMoviesLicensePayloadMoviesLicenseEdgeArgs = {
 
 /**
  * All input for the `deleteMoviesLicensesCountry` mutation.
- * @permissions: MOVIES_EDIT,ADMIN
+ * @permissions: MOVIE_EDITOR,ADMIN
  */
 export type DeleteMoviesLicensesCountryInput = {
   /**
@@ -4730,8 +4866,7 @@ export type DeleteMoviesLicensesCountryInput = {
    * payload verbatim. May be used to track mutations by the client.
    */
   clientMutationId?: InputMaybe<Scalars['String']['input']>;
-  code: IsoAlphaTwoCountryCodes;
-  moviesLicenseId: Scalars['Int']['input'];
+  id: Scalars['UUID']['input'];
 };
 
 /** The output of our delete `MoviesLicensesCountry` mutation. */
@@ -4742,6 +4877,8 @@ export type DeleteMoviesLicensesCountryPayload = {
    * unchanged and unused. May be used by a client to track mutations.
    */
   clientMutationId?: Maybe<Scalars['String']['output']>;
+  /** Reads a single `CountryGroup` that is related to this `MoviesLicensesCountry`. */
+  countryGroup?: Maybe<CountryGroup>;
   deletedMoviesLicensesCountryNodeId?: Maybe<Scalars['ID']['output']>;
   /** Reads a single `MoviesLicense` that is related to this `MoviesLicensesCountry`. */
   moviesLicense?: Maybe<MoviesLicense>;
@@ -5129,7 +5266,7 @@ export type DeleteSeasonsLicensePayloadSeasonsLicenseEdgeArgs = {
 
 /**
  * All input for the `deleteSeasonsLicensesCountry` mutation.
- * @permissions: TVSHOWS_EDIT,ADMIN
+ * @permissions: TVSHOW_EDITOR,ADMIN
  */
 export type DeleteSeasonsLicensesCountryInput = {
   /**
@@ -5137,8 +5274,7 @@ export type DeleteSeasonsLicensesCountryInput = {
    * payload verbatim. May be used to track mutations by the client.
    */
   clientMutationId?: InputMaybe<Scalars['String']['input']>;
-  code: IsoAlphaTwoCountryCodes;
-  seasonsLicenseId: Scalars['Int']['input'];
+  id: Scalars['UUID']['input'];
 };
 
 /** The output of our delete `SeasonsLicensesCountry` mutation. */
@@ -5149,6 +5285,8 @@ export type DeleteSeasonsLicensesCountryPayload = {
    * unchanged and unused. May be used by a client to track mutations.
    */
   clientMutationId?: Maybe<Scalars['String']['output']>;
+  /** Reads a single `CountryGroup` that is related to this `SeasonsLicensesCountry`. */
+  countryGroup?: Maybe<CountryGroup>;
   deletedSeasonsLicensesCountryNodeId?: Maybe<Scalars['ID']['output']>;
   /** Our root query field type. Allows us to run any query from our mutation payload. */
   query?: Maybe<Query>;
@@ -5609,7 +5747,7 @@ export type DeleteTvshowsLicensePayloadTvshowsLicenseEdgeArgs = {
 
 /**
  * All input for the `deleteTvshowsLicensesCountry` mutation.
- * @permissions: TVSHOWS_EDIT,ADMIN
+ * @permissions: TVSHOW_EDITOR,ADMIN
  */
 export type DeleteTvshowsLicensesCountryInput = {
   /**
@@ -5617,8 +5755,7 @@ export type DeleteTvshowsLicensesCountryInput = {
    * payload verbatim. May be used to track mutations by the client.
    */
   clientMutationId?: InputMaybe<Scalars['String']['input']>;
-  code: IsoAlphaTwoCountryCodes;
-  tvshowsLicenseId: Scalars['Int']['input'];
+  id: Scalars['UUID']['input'];
 };
 
 /** The output of our delete `TvshowsLicensesCountry` mutation. */
@@ -5629,6 +5766,8 @@ export type DeleteTvshowsLicensesCountryPayload = {
    * unchanged and unused. May be used by a client to track mutations.
    */
   clientMutationId?: Maybe<Scalars['String']['output']>;
+  /** Reads a single `CountryGroup` that is related to this `TvshowsLicensesCountry`. */
+  countryGroup?: Maybe<CountryGroup>;
   deletedTvshowsLicensesCountryNodeId?: Maybe<Scalars['ID']['output']>;
   /** Our root query field type. Allows us to run any query from our mutation payload. */
   query?: Maybe<Query>;
@@ -5854,7 +5993,6 @@ export type Episode = {
   __typename?: 'Episode';
   ageRating?: Maybe<Scalars['String']['output']>;
   assetSubtype: AssetSubtype;
-  businessType: BusinessType;
   /** Reads and enables pagination through a set of `CollectionRelation`. */
   collectionRelations: CollectionRelationsConnection;
   contentOwner?: Maybe<Scalars['String']['output']>;
@@ -5887,6 +6025,7 @@ export type Episode = {
   originalTitle?: Maybe<Scalars['String']['output']>;
   publishedDate?: Maybe<Scalars['Datetime']['output']>;
   publishedUser?: Maybe<Scalars['String']['output']>;
+  publishingId?: Maybe<Scalars['String']['output']>;
   publishStatus: PublishStatus;
   rating?: Maybe<Scalars['BigFloat']['output']>;
   released?: Maybe<Scalars['Date']['output']>;
@@ -6036,8 +6175,6 @@ export type EpisodeCondition = {
   ageRating?: InputMaybe<Scalars['String']['input']>;
   /** Checks for equality with the object’s `assetSubtype` field. */
   assetSubtype?: InputMaybe<AssetSubtype>;
-  /** Checks for equality with the object’s `businessType` field. */
-  businessType?: InputMaybe<BusinessType>;
   /** Checks for equality with the object’s `contentOwner` field. */
   contentOwner?: InputMaybe<Scalars['String']['input']>;
   /** Checks for equality with the object’s `createdDate` field. */
@@ -6062,6 +6199,8 @@ export type EpisodeCondition = {
   publishedDate?: InputMaybe<Scalars['Datetime']['input']>;
   /** Checks for equality with the object’s `publishedUser` field. */
   publishedUser?: InputMaybe<Scalars['String']['input']>;
+  /** Checks for equality with the object’s `publishingId` field. */
+  publishingId?: InputMaybe<Scalars['String']['input']>;
   /** Checks for equality with the object’s `publishStatus` field. */
   publishStatus?: InputMaybe<PublishStatus>;
   /** Checks for equality with the object’s `rating` field. */
@@ -6094,8 +6233,6 @@ export type EpisodeFilter = {
   and?: InputMaybe<Array<EpisodeFilter>>;
   /** Filter by the object’s `assetSubtype` field. */
   assetSubtype?: InputMaybe<AssetSubtypeFilter>;
-  /** Filter by the object’s `businessType` field. */
-  businessType?: InputMaybe<BusinessTypeFilter>;
   /** Filter by the object’s `collectionRelations` relation. */
   collectionRelations?: InputMaybe<EpisodeToManyCollectionRelationFilter>;
   /** Some related `collectionRelations` exist. */
@@ -6164,6 +6301,8 @@ export type EpisodeFilter = {
   publishedDate?: InputMaybe<DatetimeFilter>;
   /** Filter by the object’s `publishedUser` field. */
   publishedUser?: InputMaybe<StringFilter>;
+  /** Filter by the object’s `publishingId` field. */
+  publishingId?: InputMaybe<StringFilter>;
   /** Filter by the object’s `publishStatus` field. */
   publishStatus?: InputMaybe<PublishStatusFilter>;
   /** Filter by the object’s `rating` field. */
@@ -6189,18 +6328,24 @@ export type EpisodeFilter = {
 };
 
 export enum EpisodeImageType {
-  /** Clean Cover 16x9 */
-  CleanCover_16X9 = 'CLEAN_COVER_16X9',
-  /** Clean Cover 1x1 */
-  CleanCover_1X1 = 'CLEAN_COVER_1X1',
-  /** Cover 16x9 */
-  Cover_16X9 = 'COVER_16X9',
-  /** Cover 1x1 */
-  Cover_1X1 = 'COVER_1X1',
-  /** List 1x1 */
-  List_1X1 = 'LIST_1X1',
-  /** List 9x13 */
-  List_9X13 = 'LIST_9X13'
+  /** Episode Cover */
+  EpisodeCleanCover = 'EPISODE_CLEAN_COVER',
+  /** Episode Clean Cover 16x9 */
+  EpisodeCleanCover_16X9 = 'EPISODE_CLEAN_COVER_16X9',
+  /** Episode Clean Cover 1x1 */
+  EpisodeCleanCover_1X1 = 'EPISODE_CLEAN_COVER_1X1',
+  /** Episode Cover */
+  EpisodeCover = 'EPISODE_COVER',
+  /** Episode Cover 16x9 */
+  EpisodeCover_16X9 = 'EPISODE_COVER_16X9',
+  /** Episode Cover 1x1 */
+  EpisodeCover_1X1 = 'EPISODE_COVER_1X1',
+  /** Episode List */
+  EpisodeList = 'EPISODE_LIST',
+  /** Episode List 1x1 */
+  EpisodeList_1X1 = 'EPISODE_LIST_1X1',
+  /** Episode List 9x13 */
+  EpisodeList_9X13 = 'EPISODE_LIST_9X13'
 }
 
 /** A filter to be used against EpisodeImageType fields. All fields are combined with a logical ‘and.’ */
@@ -6233,7 +6378,6 @@ export type EpisodeImageTypeFilter = {
 export type EpisodeInput = {
   ageRating?: InputMaybe<Scalars['String']['input']>;
   assetSubtype?: InputMaybe<AssetSubtype>;
-  businessType?: InputMaybe<BusinessType>;
   contentOwner?: InputMaybe<Scalars['String']['input']>;
   description?: InputMaybe<Scalars['String']['input']>;
   extendedField?: InputMaybe<Scalars['String']['input']>;
@@ -6241,6 +6385,7 @@ export type EpisodeInput = {
   index: Scalars['Int']['input'];
   mainVideoId?: InputMaybe<Scalars['UUID']['input']>;
   originalTitle?: InputMaybe<Scalars['String']['input']>;
+  publishingId?: InputMaybe<Scalars['String']['input']>;
   rating?: InputMaybe<Scalars['BigFloat']['input']>;
   released?: InputMaybe<Scalars['Date']['input']>;
   seasonId?: InputMaybe<Scalars['Int']['input']>;
@@ -6257,7 +6402,6 @@ export type EpisodeInput = {
 export type EpisodePatch = {
   ageRating?: InputMaybe<Scalars['String']['input']>;
   assetSubtype?: InputMaybe<AssetSubtype>;
-  businessType?: InputMaybe<BusinessType>;
   contentOwner?: InputMaybe<Scalars['String']['input']>;
   description?: InputMaybe<Scalars['String']['input']>;
   extendedField?: InputMaybe<Scalars['String']['input']>;
@@ -6265,6 +6409,7 @@ export type EpisodePatch = {
   index?: InputMaybe<Scalars['Int']['input']>;
   mainVideoId?: InputMaybe<Scalars['UUID']['input']>;
   originalTitle?: InputMaybe<Scalars['String']['input']>;
+  publishingId?: InputMaybe<Scalars['String']['input']>;
   rating?: InputMaybe<Scalars['BigFloat']['input']>;
   released?: InputMaybe<Scalars['Date']['input']>;
   seasonId?: InputMaybe<Scalars['Int']['input']>;
@@ -6703,7 +6848,7 @@ export type EpisodesLicensesConnection = {
 
 /**
  * A connection to a list of `EpisodesLicensesCountry` values.
- * @permissions: TVSHOWS_VIEW,TVSHOWS_EDIT,ADMIN
+ * @permissions: TVSHOW_READER,TVSHOW_EDITOR,ADMIN
  */
 export type EpisodesLicensesCountriesConnection = {
   __typename?: 'EpisodesLicensesCountriesConnection';
@@ -6728,22 +6873,30 @@ export type EpisodesLicensesCountriesEdge = {
 
 /** Methods to use when ordering `EpisodesLicensesCountry`. */
 export enum EpisodesLicensesCountriesOrderBy {
-  CodeAsc = 'CODE_ASC',
-  CodeDesc = 'CODE_DESC',
+  CountryCodeAsc = 'COUNTRY_CODE_ASC',
+  CountryCodeDesc = 'COUNTRY_CODE_DESC',
+  CountryGroupIdAsc = 'COUNTRY_GROUP_ID_ASC',
+  CountryGroupIdDesc = 'COUNTRY_GROUP_ID_DESC',
   EpisodesLicenseIdAsc = 'EPISODES_LICENSE_ID_ASC',
   EpisodesLicenseIdDesc = 'EPISODES_LICENSE_ID_DESC',
+  IdAsc = 'ID_ASC',
+  IdDesc = 'ID_DESC',
   Natural = 'NATURAL',
   PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
   PrimaryKeyDesc = 'PRIMARY_KEY_DESC'
 }
 
-/** @permissions: TVSHOWS_VIEW,TVSHOWS_EDIT,ADMIN */
+/** @permissions: TVSHOW_READER,TVSHOW_EDITOR,ADMIN */
 export type EpisodesLicensesCountry = {
   __typename?: 'EpisodesLicensesCountry';
-  code: IsoAlphaTwoCountryCodes;
+  countryCode?: Maybe<IsoAlphaTwoCountryCodes>;
+  /** Reads a single `CountryGroup` that is related to this `EpisodesLicensesCountry`. */
+  countryGroup?: Maybe<CountryGroup>;
+  countryGroupId?: Maybe<Scalars['UUID']['output']>;
   /** Reads a single `EpisodesLicense` that is related to this `EpisodesLicensesCountry`. */
   episodesLicense?: Maybe<EpisodesLicense>;
   episodesLicenseId: Scalars['Int']['output'];
+  id: Scalars['UUID']['output'];
 };
 
 /**
@@ -6751,22 +6904,34 @@ export type EpisodesLicensesCountry = {
  * fields are tested for equality and combined with a logical ‘and.’
  */
 export type EpisodesLicensesCountryCondition = {
-  /** Checks for equality with the object’s `code` field. */
-  code?: InputMaybe<IsoAlphaTwoCountryCodes>;
+  /** Checks for equality with the object’s `countryCode` field. */
+  countryCode?: InputMaybe<IsoAlphaTwoCountryCodes>;
+  /** Checks for equality with the object’s `countryGroupId` field. */
+  countryGroupId?: InputMaybe<Scalars['UUID']['input']>;
   /** Checks for equality with the object’s `episodesLicenseId` field. */
   episodesLicenseId?: InputMaybe<Scalars['Int']['input']>;
+  /** Checks for equality with the object’s `id` field. */
+  id?: InputMaybe<Scalars['UUID']['input']>;
 };
 
 /** A filter to be used against `EpisodesLicensesCountry` object types. All fields are combined with a logical ‘and.’ */
 export type EpisodesLicensesCountryFilter = {
   /** Checks for all expressions in this list. */
   and?: InputMaybe<Array<EpisodesLicensesCountryFilter>>;
-  /** Filter by the object’s `code` field. */
-  code?: InputMaybe<IsoAlphaTwoCountryCodesFilter>;
+  /** Filter by the object’s `countryCode` field. */
+  countryCode?: InputMaybe<IsoAlphaTwoCountryCodesFilter>;
+  /** Filter by the object’s `countryGroup` relation. */
+  countryGroup?: InputMaybe<CountryGroupFilter>;
+  /** A related `countryGroup` exists. */
+  countryGroupExists?: InputMaybe<Scalars['Boolean']['input']>;
+  /** Filter by the object’s `countryGroupId` field. */
+  countryGroupId?: InputMaybe<UuidFilter>;
   /** Filter by the object’s `episodesLicense` relation. */
   episodesLicense?: InputMaybe<EpisodesLicenseFilter>;
   /** Filter by the object’s `episodesLicenseId` field. */
   episodesLicenseId?: InputMaybe<IntFilter>;
+  /** Filter by the object’s `id` field. */
+  id?: InputMaybe<UuidFilter>;
   /** Negates the expression. */
   not?: InputMaybe<EpisodesLicensesCountryFilter>;
   /** Checks for any expressions in this list. */
@@ -6775,13 +6940,18 @@ export type EpisodesLicensesCountryFilter = {
 
 /** An input for mutations affecting `EpisodesLicensesCountry` */
 export type EpisodesLicensesCountryInput = {
-  code: IsoAlphaTwoCountryCodes;
+  countryCode?: InputMaybe<IsoAlphaTwoCountryCodes>;
+  countryGroupId?: InputMaybe<Scalars['UUID']['input']>;
   episodesLicenseId: Scalars['Int']['input'];
+  id?: InputMaybe<Scalars['UUID']['input']>;
 };
 
 /** Represents an update to a `EpisodesLicensesCountry`. Fields that are set will be updated. */
 export type EpisodesLicensesCountryPatch = {
-  code?: InputMaybe<IsoAlphaTwoCountryCodes>;
+  countryCode?: InputMaybe<IsoAlphaTwoCountryCodes>;
+  countryGroupId?: InputMaybe<Scalars['UUID']['input']>;
+  episodesLicenseId?: InputMaybe<Scalars['Int']['input']>;
+  id?: InputMaybe<Scalars['UUID']['input']>;
 };
 
 /** A `EpisodesLicense` edge in the connection. */
@@ -6836,8 +7006,6 @@ export enum EpisodesOrderBy {
   AgeRatingDesc = 'AGE_RATING_DESC',
   AssetSubtypeAsc = 'ASSET_SUBTYPE_ASC',
   AssetSubtypeDesc = 'ASSET_SUBTYPE_DESC',
-  BusinessTypeAsc = 'BUSINESS_TYPE_ASC',
-  BusinessTypeDesc = 'BUSINESS_TYPE_DESC',
   ContentOwnerAsc = 'CONTENT_OWNER_ASC',
   ContentOwnerDesc = 'CONTENT_OWNER_DESC',
   CreatedDateAsc = 'CREATED_DATE_ASC',
@@ -6867,6 +7035,8 @@ export enum EpisodesOrderBy {
   PublishedDateDesc = 'PUBLISHED_DATE_DESC',
   PublishedUserAsc = 'PUBLISHED_USER_ASC',
   PublishedUserDesc = 'PUBLISHED_USER_DESC',
+  PublishingIdAsc = 'PUBLISHING_ID_ASC',
+  PublishingIdDesc = 'PUBLISHING_ID_DESC',
   RatingAsc = 'RATING_ASC',
   RatingDesc = 'RATING_DESC',
   ReleasedAsc = 'RELEASED_ASC',
@@ -7453,6 +7623,14 @@ export enum ErrorCodesEnum {
   AuthenticatedManagementSubjectNotFound = 'AUTHENTICATED_MANAGEMENT_SUBJECT_NOT_FOUND',
   /** A Permission Definition or an EndUserAuthorizationConfig was not found to be passed into Postgraphile build options. This is a development time issue. */
   AuthorizationOptionsMisconfigured = 'AUTHORIZATION_OPTIONS_MISCONFIGURED',
+  /** The External ID cannot be updated for %s with ID %s when the media is published. Please unpublish the media first. */
+  CannotUpdateExternalId = 'CANNOT_UPDATE_EXTERNAL_ID',
+  /** The External ID cannot be updated for %s with ID %s. Please unpublish the media or the entity that is referencing this media such as a Season, Episode or Collection first. */
+  CannotUpdateExternalIdForPublishedMedia = 'CANNOT_UPDATE_EXTERNAL_ID_FOR_PUBLISHED_MEDIA',
+  /** The Title cannot be updated for %s with ID %s. The title is used to build the Publishing ID when the External ID is empty. Any changes to the title must be done only after unpublishing the media or the entity that is referencing this media such as a Season, Episode or Collection first. */
+  CannotUpdateTitleForPublishedMedia = 'CANNOT_UPDATE_TITLE_FOR_PUBLISHED_MEDIA',
+  /** Unable to add because of circular relationship between child collection and parent collection */
+  CircularCollectionRelationNotAllowed = 'CIRCULAR_COLLECTION_RELATION_NOT_ALLOWED',
   /** Attempt to create a media snapshot has failed. */
   CreateSnapshotError = 'CREATE_SNAPSHOT_ERROR',
   /** A database operation has failed because of a lock timeout. */
@@ -7461,6 +7639,8 @@ export enum ErrorCodesEnum {
   DatabasePermissionsCheckFailed = 'DATABASE_PERMISSIONS_CHECK_FAILED',
   /** An expected and handled database constraint error has occurred. The actual message will have more information. */
   DatabaseValidationFailed = 'DATABASE_VALIDATION_FAILED',
+  /** The publishing ID for %s with ID %s was not found. */
+  EntityPublishingIdNotFound = 'ENTITY_PUBLISHING_ID_NOT_FOUND',
   /** This is a wrapper error for the original unhandled error of unsupported type. */
   ErrorWrapper = 'ERROR_WRAPPER',
   /** A GraphQL validation error has occurred. Please make sure that the GraphQL request is made with correct syntax or parameters. */
@@ -7477,6 +7657,8 @@ export enum ErrorCodesEnum {
   JwksError = 'JWKS_ERROR',
   /** Passed JWT is not a Mosaic End-User Token. Cannot be verified. */
   JwtIsNotMosaicToken = 'JWT_IS_NOT_MOSAIC_TOKEN',
+  /** License start date cannot be after license end date. */
+  LicenseStartDateCannotBeAfterEndDate = 'LICENSE_START_DATE_CANNOT_BE_AFTER_END_DATE',
   /** Malformed access token received */
   MalformedToken = 'MALFORMED_TOKEN',
   /** %s with ID '%s' was not found. */
@@ -7513,7 +7695,7 @@ export enum ErrorCodesEnum {
   ServiceNotAccessible = 'SERVICE_NOT_ACCESSIBLE',
   /** Could not find a matching signing key to verify the access token. The signing key used to create the token may have been revoked or the Tenant/Environment/Application configuration is erroneous. */
   SigningKeyNotFound = 'SIGNING_KEY_NOT_FOUND',
-  /** The snapshot with ID '%s' was not found. */
+  /** The snapshot with ID '%s' was not found or it is not re-publishable due to Title/External ID change. */
   SnapshotNotFound = 'SNAPSHOT_NOT_FOUND',
   /** An application startup error has occurred. The actual message will have more information. */
   StartupError = 'STARTUP_ERROR',
@@ -7529,6 +7711,8 @@ export enum ErrorCodesEnum {
   UnhandledError = 'UNHANDLED_ERROR',
   /** Attempt to create or update an element failed, as it would have resulted in a duplicate element. */
   UniqueConstraintError = 'UNIQUE_CONSTRAINT_ERROR',
+  /** Unknown collection relation type: %s */
+  UnknownCollectionRelationType = 'UNKNOWN_COLLECTION_RELATION_TYPE',
   /** Attempt to unpublish media has failed. */
   UnpublishError = 'UNPUBLISH_ERROR',
   /** Unable to generate display title for ingest item. Ingest media type '%s' is not supported. */
@@ -8443,6 +8627,7 @@ export type IngestItemStep = {
   /** Reads a single `IngestItem` that is related to this `IngestItemStep`. */
   ingestItem?: Maybe<IngestItem>;
   ingestItemId: Scalars['Int']['output'];
+  languageTag?: Maybe<Scalars['String']['output']>;
   responseMessage?: Maybe<Scalars['String']['output']>;
   status: IngestItemStepStatus;
   subType: Scalars['String']['output'];
@@ -8466,6 +8651,8 @@ export type IngestItemStepCondition = {
   id?: InputMaybe<Scalars['UUID']['input']>;
   /** Checks for equality with the object’s `ingestItemId` field. */
   ingestItemId?: InputMaybe<Scalars['Int']['input']>;
+  /** Checks for equality with the object’s `languageTag` field. */
+  languageTag?: InputMaybe<Scalars['String']['input']>;
   /** Checks for equality with the object’s `responseMessage` field. */
   responseMessage?: InputMaybe<Scalars['String']['input']>;
   /** Checks for equality with the object’s `status` field. */
@@ -8496,6 +8683,8 @@ export type IngestItemStepFilter = {
   ingestItem?: InputMaybe<IngestItemFilter>;
   /** Filter by the object’s `ingestItemId` field. */
   ingestItemId?: InputMaybe<IntFilter>;
+  /** Filter by the object’s `languageTag` field. */
+  languageTag?: InputMaybe<StringFilter>;
   /** Negates the expression. */
   not?: InputMaybe<IngestItemStepFilter>;
   /** Checks for any expressions in this list. */
@@ -8551,6 +8740,8 @@ export enum IngestItemStepsOrderBy {
   IdDesc = 'ID_DESC',
   IngestItemIdAsc = 'INGEST_ITEM_ID_ASC',
   IngestItemIdDesc = 'INGEST_ITEM_ID_DESC',
+  LanguageTagAsc = 'LANGUAGE_TAG_ASC',
+  LanguageTagDesc = 'LANGUAGE_TAG_DESC',
   Natural = 'NATURAL',
   PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
   PrimaryKeyDesc = 'PRIMARY_KEY_DESC',
@@ -8604,10 +8795,14 @@ export type IngestItemStepStatusFilter = {
 };
 
 export enum IngestItemStepType {
+  /** Cue Points */
+  CuePoints = 'CUE_POINTS',
   /** Entity */
   Entity = 'ENTITY',
   /** Image */
   Image = 'IMAGE',
+  /** Image Localizations */
+  ImageLocalizations = 'IMAGE_LOCALIZATIONS',
   /** Localizations */
   Localizations = 'LOCALIZATIONS',
   /** Video */
@@ -8651,6 +8846,8 @@ export type IngestItemToManyIngestItemStepFilter = {
 };
 
 export enum IngestItemType {
+  /** Collection */
+  Collection = 'COLLECTION',
   /** Episode */
   Episode = 'EPISODE',
   /** Movie */
@@ -9498,6 +9695,7 @@ export type Movie = {
   originalTitle?: Maybe<Scalars['String']['output']>;
   publishedDate?: Maybe<Scalars['Datetime']['output']>;
   publishedUser?: Maybe<Scalars['String']['output']>;
+  publishingId?: Maybe<Scalars['String']['output']>;
   publishStatus: PublishStatus;
   rating?: Maybe<Scalars['BigFloat']['output']>;
   released?: Maybe<Scalars['Date']['output']>;
@@ -9668,6 +9866,8 @@ export type MovieCondition = {
   publishedDate?: InputMaybe<Scalars['Datetime']['input']>;
   /** Checks for equality with the object’s `publishedUser` field. */
   publishedUser?: InputMaybe<Scalars['String']['input']>;
+  /** Checks for equality with the object’s `publishingId` field. */
+  publishingId?: InputMaybe<Scalars['String']['input']>;
   /** Checks for equality with the object’s `publishStatus` field. */
   publishStatus?: InputMaybe<PublishStatus>;
   /** Checks for equality with the object’s `rating` field. */
@@ -9766,6 +9966,8 @@ export type MovieFilter = {
   publishedDate?: InputMaybe<DatetimeFilter>;
   /** Filter by the object’s `publishedUser` field. */
   publishedUser?: InputMaybe<StringFilter>;
+  /** Filter by the object’s `publishingId` field. */
+  publishingId?: InputMaybe<StringFilter>;
   /** Filter by the object’s `publishStatus` field. */
   publishStatus?: InputMaybe<PublishStatusFilter>;
   /** Filter by the object’s `rating` field. */
@@ -9959,18 +10161,24 @@ export type MovieGenreToManyMoviesMovieGenreFilter = {
 };
 
 export enum MovieImageType {
-  /** Clean Cover 16x9 */
-  CleanCover_16X9 = 'CLEAN_COVER_16X9',
-  /** Clean Cover 1x1 */
-  CleanCover_1X1 = 'CLEAN_COVER_1X1',
-  /** Cover 16x9 */
-  Cover_16X9 = 'COVER_16X9',
-  /** Cover 1x1 */
-  Cover_1X1 = 'COVER_1X1',
-  /** List 1x1 */
-  List_1X1 = 'LIST_1X1',
-  /** List 9x13 */
-  List_9X13 = 'LIST_9X13'
+  /** MovieClean Cover */
+  MovieCleanCover = 'MOVIE_CLEAN_COVER',
+  /** Movie Clean Cover 16x9 */
+  MovieCleanCover_16X9 = 'MOVIE_CLEAN_COVER_16X9',
+  /** MovieClean Cover 1x1 */
+  MovieCleanCover_1X1 = 'MOVIE_CLEAN_COVER_1X1',
+  /** Movie Cover */
+  MovieCover = 'MOVIE_COVER',
+  /** Movie Cover 16x9 */
+  MovieCover_16X9 = 'MOVIE_COVER_16X9',
+  /** Movie Cover 1x1 */
+  MovieCover_1X1 = 'MOVIE_COVER_1X1',
+  /** Movie List */
+  MovieList = 'MOVIE_LIST',
+  /** Movie List 1x1 */
+  MovieList_1X1 = 'MOVIE_LIST_1X1',
+  /** Movie List 9x13 */
+  MovieList_9X13 = 'MOVIE_LIST_9X13'
 }
 
 /** A filter to be used against MovieImageType fields. All fields are combined with a logical ‘and.’ */
@@ -10010,6 +10218,7 @@ export type MovieInput = {
   externalId?: InputMaybe<Scalars['String']['input']>;
   mainVideoId?: InputMaybe<Scalars['UUID']['input']>;
   originalTitle?: InputMaybe<Scalars['String']['input']>;
+  publishingId?: InputMaybe<Scalars['String']['input']>;
   rating?: InputMaybe<Scalars['BigFloat']['input']>;
   released?: InputMaybe<Scalars['Date']['input']>;
   studio?: InputMaybe<Scalars['String']['input']>;
@@ -10032,6 +10241,7 @@ export type MoviePatch = {
   externalId?: InputMaybe<Scalars['String']['input']>;
   mainVideoId?: InputMaybe<Scalars['UUID']['input']>;
   originalTitle?: InputMaybe<Scalars['String']['input']>;
+  publishingId?: InputMaybe<Scalars['String']['input']>;
   rating?: InputMaybe<Scalars['BigFloat']['input']>;
   released?: InputMaybe<Scalars['Date']['input']>;
   studio?: InputMaybe<Scalars['String']['input']>;
@@ -10469,7 +10679,7 @@ export type MoviesLicensesConnection = {
 
 /**
  * A connection to a list of `MoviesLicensesCountry` values.
- * @permissions: MOVIES_VIEW,MOVIES_EDIT,ADMIN
+ * @permissions: MOVIE_READER,MOVIE_EDITOR,ADMIN
  */
 export type MoviesLicensesCountriesConnection = {
   __typename?: 'MoviesLicensesCountriesConnection';
@@ -10494,8 +10704,12 @@ export type MoviesLicensesCountriesEdge = {
 
 /** Methods to use when ordering `MoviesLicensesCountry`. */
 export enum MoviesLicensesCountriesOrderBy {
-  CodeAsc = 'CODE_ASC',
-  CodeDesc = 'CODE_DESC',
+  CountryCodeAsc = 'COUNTRY_CODE_ASC',
+  CountryCodeDesc = 'COUNTRY_CODE_DESC',
+  CountryGroupIdAsc = 'COUNTRY_GROUP_ID_ASC',
+  CountryGroupIdDesc = 'COUNTRY_GROUP_ID_DESC',
+  IdAsc = 'ID_ASC',
+  IdDesc = 'ID_DESC',
   MoviesLicenseIdAsc = 'MOVIES_LICENSE_ID_ASC',
   MoviesLicenseIdDesc = 'MOVIES_LICENSE_ID_DESC',
   Natural = 'NATURAL',
@@ -10503,10 +10717,14 @@ export enum MoviesLicensesCountriesOrderBy {
   PrimaryKeyDesc = 'PRIMARY_KEY_DESC'
 }
 
-/** @permissions: MOVIES_VIEW,MOVIES_EDIT,ADMIN */
+/** @permissions: MOVIE_READER,MOVIE_EDITOR,ADMIN */
 export type MoviesLicensesCountry = {
   __typename?: 'MoviesLicensesCountry';
-  code: IsoAlphaTwoCountryCodes;
+  countryCode?: Maybe<IsoAlphaTwoCountryCodes>;
+  /** Reads a single `CountryGroup` that is related to this `MoviesLicensesCountry`. */
+  countryGroup?: Maybe<CountryGroup>;
+  countryGroupId?: Maybe<Scalars['UUID']['output']>;
+  id: Scalars['UUID']['output'];
   /** Reads a single `MoviesLicense` that is related to this `MoviesLicensesCountry`. */
   moviesLicense?: Maybe<MoviesLicense>;
   moviesLicenseId: Scalars['Int']['output'];
@@ -10517,8 +10735,12 @@ export type MoviesLicensesCountry = {
  * are tested for equality and combined with a logical ‘and.’
  */
 export type MoviesLicensesCountryCondition = {
-  /** Checks for equality with the object’s `code` field. */
-  code?: InputMaybe<IsoAlphaTwoCountryCodes>;
+  /** Checks for equality with the object’s `countryCode` field. */
+  countryCode?: InputMaybe<IsoAlphaTwoCountryCodes>;
+  /** Checks for equality with the object’s `countryGroupId` field. */
+  countryGroupId?: InputMaybe<Scalars['UUID']['input']>;
+  /** Checks for equality with the object’s `id` field. */
+  id?: InputMaybe<Scalars['UUID']['input']>;
   /** Checks for equality with the object’s `moviesLicenseId` field. */
   moviesLicenseId?: InputMaybe<Scalars['Int']['input']>;
 };
@@ -10527,8 +10749,16 @@ export type MoviesLicensesCountryCondition = {
 export type MoviesLicensesCountryFilter = {
   /** Checks for all expressions in this list. */
   and?: InputMaybe<Array<MoviesLicensesCountryFilter>>;
-  /** Filter by the object’s `code` field. */
-  code?: InputMaybe<IsoAlphaTwoCountryCodesFilter>;
+  /** Filter by the object’s `countryCode` field. */
+  countryCode?: InputMaybe<IsoAlphaTwoCountryCodesFilter>;
+  /** Filter by the object’s `countryGroup` relation. */
+  countryGroup?: InputMaybe<CountryGroupFilter>;
+  /** A related `countryGroup` exists. */
+  countryGroupExists?: InputMaybe<Scalars['Boolean']['input']>;
+  /** Filter by the object’s `countryGroupId` field. */
+  countryGroupId?: InputMaybe<UuidFilter>;
+  /** Filter by the object’s `id` field. */
+  id?: InputMaybe<UuidFilter>;
   /** Filter by the object’s `moviesLicense` relation. */
   moviesLicense?: InputMaybe<MoviesLicenseFilter>;
   /** Filter by the object’s `moviesLicenseId` field. */
@@ -10541,13 +10771,18 @@ export type MoviesLicensesCountryFilter = {
 
 /** An input for mutations affecting `MoviesLicensesCountry` */
 export type MoviesLicensesCountryInput = {
-  code: IsoAlphaTwoCountryCodes;
+  countryCode?: InputMaybe<IsoAlphaTwoCountryCodes>;
+  countryGroupId?: InputMaybe<Scalars['UUID']['input']>;
+  id?: InputMaybe<Scalars['UUID']['input']>;
   moviesLicenseId: Scalars['Int']['input'];
 };
 
 /** Represents an update to a `MoviesLicensesCountry`. Fields that are set will be updated. */
 export type MoviesLicensesCountryPatch = {
-  code?: InputMaybe<IsoAlphaTwoCountryCodes>;
+  countryCode?: InputMaybe<IsoAlphaTwoCountryCodes>;
+  countryGroupId?: InputMaybe<Scalars['UUID']['input']>;
+  id?: InputMaybe<Scalars['UUID']['input']>;
+  moviesLicenseId?: InputMaybe<Scalars['Int']['input']>;
 };
 
 /** A `MoviesLicense` edge in the connection. */
@@ -10713,6 +10948,8 @@ export enum MoviesOrderBy {
   PublishedDateDesc = 'PUBLISHED_DATE_DESC',
   PublishedUserAsc = 'PUBLISHED_USER_ASC',
   PublishedUserDesc = 'PUBLISHED_USER_DESC',
+  PublishingIdAsc = 'PUBLISHING_ID_ASC',
+  PublishingIdDesc = 'PUBLISHING_ID_DESC',
   RatingAsc = 'RATING_ASC',
   RatingDesc = 'RATING_DESC',
   ReleasedAsc = 'RELEASED_ASC',
@@ -13410,8 +13647,7 @@ export type QueryEpisodesLicensesCountriesArgs = {
 
 /** The root query type which gives access points into the data universe. */
 export type QueryEpisodesLicensesCountryArgs = {
-  code: IsoAlphaTwoCountryCodes;
-  episodesLicenseId: Scalars['Int']['input'];
+  id: Scalars['UUID']['input'];
 };
 
 
@@ -13889,8 +14125,7 @@ export type QueryMoviesLicensesCountriesArgs = {
 
 /** The root query type which gives access points into the data universe. */
 export type QueryMoviesLicensesCountryArgs = {
-  code: IsoAlphaTwoCountryCodes;
-  moviesLicenseId: Scalars['Int']['input'];
+  id: Scalars['UUID']['input'];
 };
 
 
@@ -14086,8 +14321,7 @@ export type QuerySeasonsLicensesCountriesArgs = {
 
 /** The root query type which gives access points into the data universe. */
 export type QuerySeasonsLicensesCountryArgs = {
-  code: IsoAlphaTwoCountryCodes;
-  seasonsLicenseId: Scalars['Int']['input'];
+  id: Scalars['UUID']['input'];
 };
 
 
@@ -14321,8 +14555,7 @@ export type QueryTvshowsLicensesCountriesArgs = {
 
 /** The root query type which gives access points into the data universe. */
 export type QueryTvshowsLicensesCountryArgs = {
-  code: IsoAlphaTwoCountryCodes;
-  tvshowsLicenseId: Scalars['Int']['input'];
+  id: Scalars['UUID']['input'];
 };
 
 
@@ -14410,7 +14643,6 @@ export type Season = {
   __typename?: 'Season';
   ageRating?: Maybe<Scalars['String']['output']>;
   assetSubtype: AssetSubtype;
-  businessType: BusinessType;
   /** Reads and enables pagination through a set of `CollectionRelation`. */
   collectionRelations: CollectionRelationsConnection;
   contentOwner?: Maybe<Scalars['String']['output']>;
@@ -14425,6 +14657,7 @@ export type Season = {
   index: Scalars['Int']['output'];
   publishedDate?: Maybe<Scalars['Datetime']['output']>;
   publishedUser?: Maybe<Scalars['String']['output']>;
+  publishingId?: Maybe<Scalars['String']['output']>;
   publishStatus: PublishStatus;
   rating?: Maybe<Scalars['BigFloat']['output']>;
   released?: Maybe<Scalars['Date']['output']>;
@@ -14605,8 +14838,6 @@ export type SeasonCondition = {
   ageRating?: InputMaybe<Scalars['String']['input']>;
   /** Checks for equality with the object’s `assetSubtype` field. */
   assetSubtype?: InputMaybe<AssetSubtype>;
-  /** Checks for equality with the object’s `businessType` field. */
-  businessType?: InputMaybe<BusinessType>;
   /** Checks for equality with the object’s `contentOwner` field. */
   contentOwner?: InputMaybe<Scalars['String']['input']>;
   /** Checks for equality with the object’s `createdDate` field. */
@@ -14627,6 +14858,8 @@ export type SeasonCondition = {
   publishedDate?: InputMaybe<Scalars['Datetime']['input']>;
   /** Checks for equality with the object’s `publishedUser` field. */
   publishedUser?: InputMaybe<Scalars['String']['input']>;
+  /** Checks for equality with the object’s `publishingId` field. */
+  publishingId?: InputMaybe<Scalars['String']['input']>;
   /** Checks for equality with the object’s `publishStatus` field. */
   publishStatus?: InputMaybe<PublishStatus>;
   /** Checks for equality with the object’s `rating` field. */
@@ -14655,8 +14888,6 @@ export type SeasonFilter = {
   and?: InputMaybe<Array<SeasonFilter>>;
   /** Filter by the object’s `assetSubtype` field. */
   assetSubtype?: InputMaybe<AssetSubtypeFilter>;
-  /** Filter by the object’s `businessType` field. */
-  businessType?: InputMaybe<BusinessTypeFilter>;
   /** Filter by the object’s `collectionRelations` relation. */
   collectionRelations?: InputMaybe<SeasonToManyCollectionRelationFilter>;
   /** Some related `collectionRelations` exist. */
@@ -14689,6 +14920,8 @@ export type SeasonFilter = {
   publishedDate?: InputMaybe<DatetimeFilter>;
   /** Filter by the object’s `publishedUser` field. */
   publishedUser?: InputMaybe<StringFilter>;
+  /** Filter by the object’s `publishingId` field. */
+  publishingId?: InputMaybe<StringFilter>;
   /** Filter by the object’s `publishStatus` field. */
   publishStatus?: InputMaybe<PublishStatusFilter>;
   /** Filter by the object’s `rating` field. */
@@ -14750,18 +14983,24 @@ export type SeasonFilter = {
 };
 
 export enum SeasonImageType {
-  /** Clean Cover 16x9 */
-  CleanCover_16X9 = 'CLEAN_COVER_16X9',
-  /** Clean Cover 1x1 */
-  CleanCover_1X1 = 'CLEAN_COVER_1X1',
-  /** Cover 16x9 */
-  Cover_16X9 = 'COVER_16X9',
-  /** Cover 1x1 */
-  Cover_1X1 = 'COVER_1X1',
-  /** List 1x1 */
-  List_1X1 = 'LIST_1X1',
-  /** List 9x13 */
-  List_9X13 = 'LIST_9X13'
+  /** Season Cover */
+  SeasonCleanCover = 'SEASON_CLEAN_COVER',
+  /** Season Clean Cover 16x9 */
+  SeasonCleanCover_16X9 = 'SEASON_CLEAN_COVER_16X9',
+  /** Season Clean Cover 1x1 */
+  SeasonCleanCover_1X1 = 'SEASON_CLEAN_COVER_1X1',
+  /** Season Cover */
+  SeasonCover = 'SEASON_COVER',
+  /** Season Cover 16x9 */
+  SeasonCover_16X9 = 'SEASON_COVER_16X9',
+  /** Season Cover 1x1 */
+  SeasonCover_1X1 = 'SEASON_COVER_1X1',
+  /** Season List */
+  SeasonList = 'SEASON_LIST',
+  /** Season List 1x1 */
+  SeasonList_1X1 = 'SEASON_LIST_1X1',
+  /** Season List 9x13 */
+  SeasonList_9X13 = 'SEASON_LIST_9X13'
 }
 
 /** A filter to be used against SeasonImageType fields. All fields are combined with a logical ‘and.’ */
@@ -14794,12 +15033,12 @@ export type SeasonImageTypeFilter = {
 export type SeasonInput = {
   ageRating?: InputMaybe<Scalars['String']['input']>;
   assetSubtype?: InputMaybe<AssetSubtype>;
-  businessType?: InputMaybe<BusinessType>;
   contentOwner?: InputMaybe<Scalars['String']['input']>;
   description?: InputMaybe<Scalars['String']['input']>;
   extendedField?: InputMaybe<Scalars['String']['input']>;
   externalId?: InputMaybe<Scalars['String']['input']>;
   index: Scalars['Int']['input'];
+  publishingId?: InputMaybe<Scalars['String']['input']>;
   rating?: InputMaybe<Scalars['BigFloat']['input']>;
   released?: InputMaybe<Scalars['Date']['input']>;
   studio?: InputMaybe<Scalars['String']['input']>;
@@ -14812,12 +15051,12 @@ export type SeasonInput = {
 export type SeasonPatch = {
   ageRating?: InputMaybe<Scalars['String']['input']>;
   assetSubtype?: InputMaybe<AssetSubtype>;
-  businessType?: InputMaybe<BusinessType>;
   contentOwner?: InputMaybe<Scalars['String']['input']>;
   description?: InputMaybe<Scalars['String']['input']>;
   extendedField?: InputMaybe<Scalars['String']['input']>;
   externalId?: InputMaybe<Scalars['String']['input']>;
   index?: InputMaybe<Scalars['Int']['input']>;
+  publishingId?: InputMaybe<Scalars['String']['input']>;
   rating?: InputMaybe<Scalars['BigFloat']['input']>;
   released?: InputMaybe<Scalars['Date']['input']>;
   studio?: InputMaybe<Scalars['String']['input']>;
@@ -15252,7 +15491,7 @@ export type SeasonsLicensesConnection = {
 
 /**
  * A connection to a list of `SeasonsLicensesCountry` values.
- * @permissions: TVSHOWS_VIEW,TVSHOWS_EDIT,ADMIN
+ * @permissions: TVSHOW_READER,TVSHOW_EDITOR,ADMIN
  */
 export type SeasonsLicensesCountriesConnection = {
   __typename?: 'SeasonsLicensesCountriesConnection';
@@ -15277,8 +15516,12 @@ export type SeasonsLicensesCountriesEdge = {
 
 /** Methods to use when ordering `SeasonsLicensesCountry`. */
 export enum SeasonsLicensesCountriesOrderBy {
-  CodeAsc = 'CODE_ASC',
-  CodeDesc = 'CODE_DESC',
+  CountryCodeAsc = 'COUNTRY_CODE_ASC',
+  CountryCodeDesc = 'COUNTRY_CODE_DESC',
+  CountryGroupIdAsc = 'COUNTRY_GROUP_ID_ASC',
+  CountryGroupIdDesc = 'COUNTRY_GROUP_ID_DESC',
+  IdAsc = 'ID_ASC',
+  IdDesc = 'ID_DESC',
   Natural = 'NATURAL',
   PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
   PrimaryKeyDesc = 'PRIMARY_KEY_DESC',
@@ -15286,10 +15529,14 @@ export enum SeasonsLicensesCountriesOrderBy {
   SeasonsLicenseIdDesc = 'SEASONS_LICENSE_ID_DESC'
 }
 
-/** @permissions: TVSHOWS_VIEW,TVSHOWS_EDIT,ADMIN */
+/** @permissions: TVSHOW_READER,TVSHOW_EDITOR,ADMIN */
 export type SeasonsLicensesCountry = {
   __typename?: 'SeasonsLicensesCountry';
-  code: IsoAlphaTwoCountryCodes;
+  countryCode?: Maybe<IsoAlphaTwoCountryCodes>;
+  /** Reads a single `CountryGroup` that is related to this `SeasonsLicensesCountry`. */
+  countryGroup?: Maybe<CountryGroup>;
+  countryGroupId?: Maybe<Scalars['UUID']['output']>;
+  id: Scalars['UUID']['output'];
   /** Reads a single `SeasonsLicense` that is related to this `SeasonsLicensesCountry`. */
   seasonsLicense?: Maybe<SeasonsLicense>;
   seasonsLicenseId: Scalars['Int']['output'];
@@ -15300,8 +15547,12 @@ export type SeasonsLicensesCountry = {
  * are tested for equality and combined with a logical ‘and.’
  */
 export type SeasonsLicensesCountryCondition = {
-  /** Checks for equality with the object’s `code` field. */
-  code?: InputMaybe<IsoAlphaTwoCountryCodes>;
+  /** Checks for equality with the object’s `countryCode` field. */
+  countryCode?: InputMaybe<IsoAlphaTwoCountryCodes>;
+  /** Checks for equality with the object’s `countryGroupId` field. */
+  countryGroupId?: InputMaybe<Scalars['UUID']['input']>;
+  /** Checks for equality with the object’s `id` field. */
+  id?: InputMaybe<Scalars['UUID']['input']>;
   /** Checks for equality with the object’s `seasonsLicenseId` field. */
   seasonsLicenseId?: InputMaybe<Scalars['Int']['input']>;
 };
@@ -15310,8 +15561,16 @@ export type SeasonsLicensesCountryCondition = {
 export type SeasonsLicensesCountryFilter = {
   /** Checks for all expressions in this list. */
   and?: InputMaybe<Array<SeasonsLicensesCountryFilter>>;
-  /** Filter by the object’s `code` field. */
-  code?: InputMaybe<IsoAlphaTwoCountryCodesFilter>;
+  /** Filter by the object’s `countryCode` field. */
+  countryCode?: InputMaybe<IsoAlphaTwoCountryCodesFilter>;
+  /** Filter by the object’s `countryGroup` relation. */
+  countryGroup?: InputMaybe<CountryGroupFilter>;
+  /** A related `countryGroup` exists. */
+  countryGroupExists?: InputMaybe<Scalars['Boolean']['input']>;
+  /** Filter by the object’s `countryGroupId` field. */
+  countryGroupId?: InputMaybe<UuidFilter>;
+  /** Filter by the object’s `id` field. */
+  id?: InputMaybe<UuidFilter>;
   /** Negates the expression. */
   not?: InputMaybe<SeasonsLicensesCountryFilter>;
   /** Checks for any expressions in this list. */
@@ -15324,13 +15583,18 @@ export type SeasonsLicensesCountryFilter = {
 
 /** An input for mutations affecting `SeasonsLicensesCountry` */
 export type SeasonsLicensesCountryInput = {
-  code: IsoAlphaTwoCountryCodes;
+  countryCode?: InputMaybe<IsoAlphaTwoCountryCodes>;
+  countryGroupId?: InputMaybe<Scalars['UUID']['input']>;
+  id?: InputMaybe<Scalars['UUID']['input']>;
   seasonsLicenseId: Scalars['Int']['input'];
 };
 
 /** Represents an update to a `SeasonsLicensesCountry`. Fields that are set will be updated. */
 export type SeasonsLicensesCountryPatch = {
-  code?: InputMaybe<IsoAlphaTwoCountryCodes>;
+  countryCode?: InputMaybe<IsoAlphaTwoCountryCodes>;
+  countryGroupId?: InputMaybe<Scalars['UUID']['input']>;
+  id?: InputMaybe<Scalars['UUID']['input']>;
+  seasonsLicenseId?: InputMaybe<Scalars['Int']['input']>;
 };
 
 /** A `SeasonsLicense` edge in the connection. */
@@ -15385,8 +15649,6 @@ export enum SeasonsOrderBy {
   AgeRatingDesc = 'AGE_RATING_DESC',
   AssetSubtypeAsc = 'ASSET_SUBTYPE_ASC',
   AssetSubtypeDesc = 'ASSET_SUBTYPE_DESC',
-  BusinessTypeAsc = 'BUSINESS_TYPE_ASC',
-  BusinessTypeDesc = 'BUSINESS_TYPE_DESC',
   ContentOwnerAsc = 'CONTENT_OWNER_ASC',
   ContentOwnerDesc = 'CONTENT_OWNER_DESC',
   CreatedDateAsc = 'CREATED_DATE_ASC',
@@ -15412,6 +15674,8 @@ export enum SeasonsOrderBy {
   PublishedDateDesc = 'PUBLISHED_DATE_DESC',
   PublishedUserAsc = 'PUBLISHED_USER_ASC',
   PublishedUserDesc = 'PUBLISHED_USER_DESC',
+  PublishingIdAsc = 'PUBLISHING_ID_ASC',
+  PublishingIdDesc = 'PUBLISHING_ID_DESC',
   RatingAsc = 'RATING_ASC',
   RatingDesc = 'RATING_DESC',
   ReleasedAsc = 'RELEASED_ASC',
@@ -16005,6 +16269,7 @@ export type Snapshot = {
   episodesSnapshots: EpisodesSnapshotsConnection;
   id: Scalars['Int']['output'];
   isListSnapshot: Scalars['Boolean']['output'];
+  isRepublishAllowed?: Maybe<Scalars['Boolean']['output']>;
   jobId: Scalars['String']['output'];
   /** Reads and enables pagination through a set of `MoviesSnapshot`. */
   moviesSnapshots: MoviesSnapshotsConnection;
@@ -16141,6 +16406,8 @@ export type SnapshotCondition = {
   id?: InputMaybe<Scalars['Int']['input']>;
   /** Checks for equality with the object’s `isListSnapshot` field. */
   isListSnapshot?: InputMaybe<Scalars['Boolean']['input']>;
+  /** Checks for equality with the object’s `isRepublishAllowed` field. */
+  isRepublishAllowed?: InputMaybe<Scalars['Boolean']['input']>;
   /** Checks for equality with the object’s `jobId` field. */
   jobId?: InputMaybe<Scalars['String']['input']>;
   /** Checks for equality with the object’s `publishedDate` field. */
@@ -16191,6 +16458,8 @@ export type SnapshotFilter = {
   id?: InputMaybe<IntFilter>;
   /** Filter by the object’s `isListSnapshot` field. */
   isListSnapshot?: InputMaybe<BooleanFilter>;
+  /** Filter by the object’s `isRepublishAllowed` field. */
+  isRepublishAllowed?: InputMaybe<BooleanFilter>;
   /** Filter by the object’s `jobId` field. */
   jobId?: InputMaybe<StringFilter>;
   /** Filter by the object’s `moviesSnapshots` relation. */
@@ -16274,6 +16543,8 @@ export enum SnapshotsOrderBy {
   IdDesc = 'ID_DESC',
   IsListSnapshotAsc = 'IS_LIST_SNAPSHOT_ASC',
   IsListSnapshotDesc = 'IS_LIST_SNAPSHOT_DESC',
+  IsRepublishAllowedAsc = 'IS_REPUBLISH_ALLOWED_ASC',
+  IsRepublishAllowedDesc = 'IS_REPUBLISH_ALLOWED_DESC',
   JobIdAsc = 'JOB_ID_ASC',
   JobIdDesc = 'JOB_ID_DESC',
   Natural = 'NATURAL',
@@ -16802,6 +17073,7 @@ export type Tvshow = {
   originalTitle?: Maybe<Scalars['String']['output']>;
   publishedDate?: Maybe<Scalars['Datetime']['output']>;
   publishedUser?: Maybe<Scalars['String']['output']>;
+  publishingId?: Maybe<Scalars['String']['output']>;
   publishStatus: PublishStatus;
   rating?: Maybe<Scalars['BigFloat']['output']>;
   released?: Maybe<Scalars['Date']['output']>;
@@ -17003,6 +17275,8 @@ export type TvshowCondition = {
   publishedDate?: InputMaybe<Scalars['Datetime']['input']>;
   /** Checks for equality with the object’s `publishedUser` field. */
   publishedUser?: InputMaybe<Scalars['String']['input']>;
+  /** Checks for equality with the object’s `publishingId` field. */
+  publishingId?: InputMaybe<Scalars['String']['input']>;
   /** Checks for equality with the object’s `publishStatus` field. */
   publishStatus?: InputMaybe<PublishStatus>;
   /** Checks for equality with the object’s `rating` field. */
@@ -17063,6 +17337,8 @@ export type TvshowFilter = {
   publishedDate?: InputMaybe<DatetimeFilter>;
   /** Filter by the object’s `publishedUser` field. */
   publishedUser?: InputMaybe<StringFilter>;
+  /** Filter by the object’s `publishingId` field. */
+  publishingId?: InputMaybe<StringFilter>;
   /** Filter by the object’s `publishStatus` field. */
   publishStatus?: InputMaybe<PublishStatusFilter>;
   /** Filter by the object’s `rating` field. */
@@ -17354,18 +17630,24 @@ export type TvshowGenreToManyTvshowsTvshowGenreFilter = {
 };
 
 export enum TvshowImageType {
-  /** Clean Cover 16x9 */
-  CleanCover_16X9 = 'CLEAN_COVER_16X9',
-  /** Clean Cover 1x1 */
-  CleanCover_1X1 = 'CLEAN_COVER_1X1',
-  /** Cover 16x9 */
-  Cover_16X9 = 'COVER_16X9',
-  /** Cover 1x1 */
-  Cover_1X1 = 'COVER_1X1',
-  /** List 1x1 */
-  List_1X1 = 'LIST_1X1',
-  /** List 9x13 */
-  List_9X13 = 'LIST_9X13'
+  /** TV Show Cover */
+  TvshowCleanCover = 'TVSHOW_CLEAN_COVER',
+  /** TV Show Clean Cover 16x9 */
+  TvshowCleanCover_16X9 = 'TVSHOW_CLEAN_COVER_16X9',
+  /** TV Show Clean Cover 1x1 */
+  TvshowCleanCover_1X1 = 'TVSHOW_CLEAN_COVER_1X1',
+  /** TV Show Cover */
+  TvshowCover = 'TVSHOW_COVER',
+  /** TV Show Cover 16x9 */
+  TvshowCover_16X9 = 'TVSHOW_COVER_16X9',
+  /** TV Show Cover 1x1 */
+  TvshowCover_1X1 = 'TVSHOW_COVER_1X1',
+  /** TV Show List */
+  TvshowList = 'TVSHOW_LIST',
+  /** TV Show List 1x1 */
+  TvshowList_1X1 = 'TVSHOW_LIST_1X1',
+  /** TV Show List 9x13 */
+  TvshowList_9X13 = 'TVSHOW_LIST_9X13'
 }
 
 /** A filter to be used against TvshowImageType fields. All fields are combined with a logical ‘and.’ */
@@ -17404,6 +17686,7 @@ export type TvshowInput = {
   extendedField?: InputMaybe<Scalars['String']['input']>;
   externalId?: InputMaybe<Scalars['String']['input']>;
   originalTitle?: InputMaybe<Scalars['String']['input']>;
+  publishingId?: InputMaybe<Scalars['String']['input']>;
   rating?: InputMaybe<Scalars['BigFloat']['input']>;
   released?: InputMaybe<Scalars['Date']['input']>;
   studio?: InputMaybe<Scalars['String']['input']>;
@@ -17425,6 +17708,7 @@ export type TvshowPatch = {
   extendedField?: InputMaybe<Scalars['String']['input']>;
   externalId?: InputMaybe<Scalars['String']['input']>;
   originalTitle?: InputMaybe<Scalars['String']['input']>;
+  publishingId?: InputMaybe<Scalars['String']['input']>;
   rating?: InputMaybe<Scalars['BigFloat']['input']>;
   released?: InputMaybe<Scalars['Date']['input']>;
   studio?: InputMaybe<Scalars['String']['input']>;
@@ -17862,7 +18146,7 @@ export type TvshowsLicensesConnection = {
 
 /**
  * A connection to a list of `TvshowsLicensesCountry` values.
- * @permissions: TVSHOWS_VIEW,TVSHOWS_EDIT,ADMIN
+ * @permissions: TVSHOW_READER,TVSHOW_EDITOR,ADMIN
  */
 export type TvshowsLicensesCountriesConnection = {
   __typename?: 'TvshowsLicensesCountriesConnection';
@@ -17887,8 +18171,12 @@ export type TvshowsLicensesCountriesEdge = {
 
 /** Methods to use when ordering `TvshowsLicensesCountry`. */
 export enum TvshowsLicensesCountriesOrderBy {
-  CodeAsc = 'CODE_ASC',
-  CodeDesc = 'CODE_DESC',
+  CountryCodeAsc = 'COUNTRY_CODE_ASC',
+  CountryCodeDesc = 'COUNTRY_CODE_DESC',
+  CountryGroupIdAsc = 'COUNTRY_GROUP_ID_ASC',
+  CountryGroupIdDesc = 'COUNTRY_GROUP_ID_DESC',
+  IdAsc = 'ID_ASC',
+  IdDesc = 'ID_DESC',
   Natural = 'NATURAL',
   PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
   PrimaryKeyDesc = 'PRIMARY_KEY_DESC',
@@ -17896,10 +18184,14 @@ export enum TvshowsLicensesCountriesOrderBy {
   TvshowsLicenseIdDesc = 'TVSHOWS_LICENSE_ID_DESC'
 }
 
-/** @permissions: TVSHOWS_VIEW,TVSHOWS_EDIT,ADMIN */
+/** @permissions: TVSHOW_READER,TVSHOW_EDITOR,ADMIN */
 export type TvshowsLicensesCountry = {
   __typename?: 'TvshowsLicensesCountry';
-  code: IsoAlphaTwoCountryCodes;
+  countryCode?: Maybe<IsoAlphaTwoCountryCodes>;
+  /** Reads a single `CountryGroup` that is related to this `TvshowsLicensesCountry`. */
+  countryGroup?: Maybe<CountryGroup>;
+  countryGroupId?: Maybe<Scalars['UUID']['output']>;
+  id: Scalars['UUID']['output'];
   /** Reads a single `TvshowsLicense` that is related to this `TvshowsLicensesCountry`. */
   tvshowsLicense?: Maybe<TvshowsLicense>;
   tvshowsLicenseId: Scalars['Int']['output'];
@@ -17910,8 +18202,12 @@ export type TvshowsLicensesCountry = {
  * are tested for equality and combined with a logical ‘and.’
  */
 export type TvshowsLicensesCountryCondition = {
-  /** Checks for equality with the object’s `code` field. */
-  code?: InputMaybe<IsoAlphaTwoCountryCodes>;
+  /** Checks for equality with the object’s `countryCode` field. */
+  countryCode?: InputMaybe<IsoAlphaTwoCountryCodes>;
+  /** Checks for equality with the object’s `countryGroupId` field. */
+  countryGroupId?: InputMaybe<Scalars['UUID']['input']>;
+  /** Checks for equality with the object’s `id` field. */
+  id?: InputMaybe<Scalars['UUID']['input']>;
   /** Checks for equality with the object’s `tvshowsLicenseId` field. */
   tvshowsLicenseId?: InputMaybe<Scalars['Int']['input']>;
 };
@@ -17920,8 +18216,16 @@ export type TvshowsLicensesCountryCondition = {
 export type TvshowsLicensesCountryFilter = {
   /** Checks for all expressions in this list. */
   and?: InputMaybe<Array<TvshowsLicensesCountryFilter>>;
-  /** Filter by the object’s `code` field. */
-  code?: InputMaybe<IsoAlphaTwoCountryCodesFilter>;
+  /** Filter by the object’s `countryCode` field. */
+  countryCode?: InputMaybe<IsoAlphaTwoCountryCodesFilter>;
+  /** Filter by the object’s `countryGroup` relation. */
+  countryGroup?: InputMaybe<CountryGroupFilter>;
+  /** A related `countryGroup` exists. */
+  countryGroupExists?: InputMaybe<Scalars['Boolean']['input']>;
+  /** Filter by the object’s `countryGroupId` field. */
+  countryGroupId?: InputMaybe<UuidFilter>;
+  /** Filter by the object’s `id` field. */
+  id?: InputMaybe<UuidFilter>;
   /** Negates the expression. */
   not?: InputMaybe<TvshowsLicensesCountryFilter>;
   /** Checks for any expressions in this list. */
@@ -17934,13 +18238,18 @@ export type TvshowsLicensesCountryFilter = {
 
 /** An input for mutations affecting `TvshowsLicensesCountry` */
 export type TvshowsLicensesCountryInput = {
-  code: IsoAlphaTwoCountryCodes;
+  countryCode?: InputMaybe<IsoAlphaTwoCountryCodes>;
+  countryGroupId?: InputMaybe<Scalars['UUID']['input']>;
+  id?: InputMaybe<Scalars['UUID']['input']>;
   tvshowsLicenseId: Scalars['Int']['input'];
 };
 
 /** Represents an update to a `TvshowsLicensesCountry`. Fields that are set will be updated. */
 export type TvshowsLicensesCountryPatch = {
-  code?: InputMaybe<IsoAlphaTwoCountryCodes>;
+  countryCode?: InputMaybe<IsoAlphaTwoCountryCodes>;
+  countryGroupId?: InputMaybe<Scalars['UUID']['input']>;
+  id?: InputMaybe<Scalars['UUID']['input']>;
+  tvshowsLicenseId?: InputMaybe<Scalars['Int']['input']>;
 };
 
 /** A `TvshowsLicense` edge in the connection. */
@@ -18022,6 +18331,8 @@ export enum TvshowsOrderBy {
   PublishedDateDesc = 'PUBLISHED_DATE_DESC',
   PublishedUserAsc = 'PUBLISHED_USER_ASC',
   PublishedUserDesc = 'PUBLISHED_USER_DESC',
+  PublishingIdAsc = 'PUBLISHING_ID_ASC',
+  PublishingIdDesc = 'PUBLISHING_ID_DESC',
   RatingAsc = 'RATING_ASC',
   RatingDesc = 'RATING_DESC',
   ReleasedAsc = 'RELEASED_ASC',
@@ -19134,7 +19445,7 @@ export type UpdateEpisodesLicensePayloadEpisodesLicenseEdgeArgs = {
 
 /**
  * All input for the `updateEpisodesLicensesCountry` mutation.
- * @permissions: TVSHOWS_EDIT,ADMIN
+ * @permissions: TVSHOW_EDITOR,ADMIN
  */
 export type UpdateEpisodesLicensesCountryInput = {
   /**
@@ -19142,8 +19453,7 @@ export type UpdateEpisodesLicensesCountryInput = {
    * payload verbatim. May be used to track mutations by the client.
    */
   clientMutationId?: InputMaybe<Scalars['String']['input']>;
-  code: IsoAlphaTwoCountryCodes;
-  episodesLicenseId: Scalars['Int']['input'];
+  id: Scalars['UUID']['input'];
   /** An object where the defined keys will be set on the `EpisodesLicensesCountry` being updated. */
   patch: EpisodesLicensesCountryPatch;
 };
@@ -19156,6 +19466,8 @@ export type UpdateEpisodesLicensesCountryPayload = {
    * unchanged and unused. May be used by a client to track mutations.
    */
   clientMutationId?: Maybe<Scalars['String']['output']>;
+  /** Reads a single `CountryGroup` that is related to this `EpisodesLicensesCountry`. */
+  countryGroup?: Maybe<CountryGroup>;
   /** Reads a single `EpisodesLicense` that is related to this `EpisodesLicensesCountry`. */
   episodesLicense?: Maybe<EpisodesLicense>;
   /** The `EpisodesLicensesCountry` that was updated by this mutation. */
@@ -19580,7 +19892,7 @@ export type UpdateMoviesLicensePayloadMoviesLicenseEdgeArgs = {
 
 /**
  * All input for the `updateMoviesLicensesCountry` mutation.
- * @permissions: MOVIES_EDIT,ADMIN
+ * @permissions: MOVIE_EDITOR,ADMIN
  */
 export type UpdateMoviesLicensesCountryInput = {
   /**
@@ -19588,8 +19900,7 @@ export type UpdateMoviesLicensesCountryInput = {
    * payload verbatim. May be used to track mutations by the client.
    */
   clientMutationId?: InputMaybe<Scalars['String']['input']>;
-  code: IsoAlphaTwoCountryCodes;
-  moviesLicenseId: Scalars['Int']['input'];
+  id: Scalars['UUID']['input'];
   /** An object where the defined keys will be set on the `MoviesLicensesCountry` being updated. */
   patch: MoviesLicensesCountryPatch;
 };
@@ -19602,6 +19913,8 @@ export type UpdateMoviesLicensesCountryPayload = {
    * unchanged and unused. May be used by a client to track mutations.
    */
   clientMutationId?: Maybe<Scalars['String']['output']>;
+  /** Reads a single `CountryGroup` that is related to this `MoviesLicensesCountry`. */
+  countryGroup?: Maybe<CountryGroup>;
   /** Reads a single `MoviesLicense` that is related to this `MoviesLicensesCountry`. */
   moviesLicense?: Maybe<MoviesLicense>;
   /** The `MoviesLicensesCountry` that was updated by this mutation. */
@@ -19917,7 +20230,7 @@ export type UpdateSeasonsLicensePayloadSeasonsLicenseEdgeArgs = {
 
 /**
  * All input for the `updateSeasonsLicensesCountry` mutation.
- * @permissions: TVSHOWS_EDIT,ADMIN
+ * @permissions: TVSHOW_EDITOR,ADMIN
  */
 export type UpdateSeasonsLicensesCountryInput = {
   /**
@@ -19925,10 +20238,9 @@ export type UpdateSeasonsLicensesCountryInput = {
    * payload verbatim. May be used to track mutations by the client.
    */
   clientMutationId?: InputMaybe<Scalars['String']['input']>;
-  code: IsoAlphaTwoCountryCodes;
+  id: Scalars['UUID']['input'];
   /** An object where the defined keys will be set on the `SeasonsLicensesCountry` being updated. */
   patch: SeasonsLicensesCountryPatch;
-  seasonsLicenseId: Scalars['Int']['input'];
 };
 
 /** The output of our update `SeasonsLicensesCountry` mutation. */
@@ -19939,6 +20251,8 @@ export type UpdateSeasonsLicensesCountryPayload = {
    * unchanged and unused. May be used by a client to track mutations.
    */
   clientMutationId?: Maybe<Scalars['String']['output']>;
+  /** Reads a single `CountryGroup` that is related to this `SeasonsLicensesCountry`. */
+  countryGroup?: Maybe<CountryGroup>;
   /** Our root query field type. Allows us to run any query from our mutation payload. */
   query?: Maybe<Query>;
   /** Reads a single `SeasonsLicense` that is related to this `SeasonsLicensesCountry`. */
@@ -20289,7 +20603,7 @@ export type UpdateTvshowsLicensePayloadTvshowsLicenseEdgeArgs = {
 
 /**
  * All input for the `updateTvshowsLicensesCountry` mutation.
- * @permissions: TVSHOWS_EDIT,ADMIN
+ * @permissions: TVSHOW_EDITOR,ADMIN
  */
 export type UpdateTvshowsLicensesCountryInput = {
   /**
@@ -20297,10 +20611,9 @@ export type UpdateTvshowsLicensesCountryInput = {
    * payload verbatim. May be used to track mutations by the client.
    */
   clientMutationId?: InputMaybe<Scalars['String']['input']>;
-  code: IsoAlphaTwoCountryCodes;
+  id: Scalars['UUID']['input'];
   /** An object where the defined keys will be set on the `TvshowsLicensesCountry` being updated. */
   patch: TvshowsLicensesCountryPatch;
-  tvshowsLicenseId: Scalars['Int']['input'];
 };
 
 /** The output of our update `TvshowsLicensesCountry` mutation. */
@@ -20311,6 +20624,8 @@ export type UpdateTvshowsLicensesCountryPayload = {
    * unchanged and unused. May be used by a client to track mutations.
    */
   clientMutationId?: Maybe<Scalars['String']['output']>;
+  /** Reads a single `CountryGroup` that is related to this `TvshowsLicensesCountry`. */
+  countryGroup?: Maybe<CountryGroup>;
   /** Our root query field type. Allows us to run any query from our mutation payload. */
   query?: Maybe<Query>;
   /** Reads a single `TvshowsLicense` that is related to this `TvshowsLicensesCountry`. */
@@ -20487,7 +20802,7 @@ export type CollectionQueryVariables = Exact<{
 }>;
 
 
-export type CollectionQuery = { __typename?: 'Query', collection?: { __typename?: 'Collection', title: string, synopsis?: string | null, description?: string | null, externalId?: string | null, languages?: Array<string | null> | null, extendedField?: string | null, assetSubtype: AssetSubtype, id: number, createdDate: any, createdUser: string, updatedDate: any, updatedUser: string, publishStatus: PublishStatus, publishedDate?: any | null, publishedUser?: string | null, collectionCountries: { __typename?: 'CollectionCountriesConnection', nodes: Array<{ __typename?: 'CollectionCountry', id: any, collectionId: number, countryGroupId?: any | null, countryId?: IsoAlphaTwoCountryCodes | null }> }, collectionsTags: { __typename?: 'CollectionsTagsConnection', nodes: Array<{ __typename?: 'CollectionsTag', name: string }> }, collectionsImages: { __typename?: 'CollectionsImagesConnection', nodes: Array<{ __typename?: 'CollectionsImage', imageType: CollectionImageType, imageId: any }> }, movies: { __typename?: 'CollectionRelationsConnection', totalCount: number }, tvshows: { __typename?: 'CollectionRelationsConnection', totalCount: number }, seasons: { __typename?: 'CollectionRelationsConnection', totalCount: number }, episodes: { __typename?: 'CollectionRelationsConnection', totalCount: number } } | null, languages?: { __typename?: 'LanguagesConnection', nodes: Array<{ __typename?: 'Language', code: string, title: string }> } | null, allCountryTypes?: { __typename?: 'AllCountryTypesConnection', nodes: Array<{ __typename?: 'AllCountryType', name?: string | null, id?: string | null }> } | null };
+export type CollectionQuery = { __typename?: 'Query', collection?: { __typename?: 'Collection', title: string, synopsis?: string | null, description?: string | null, externalId?: string | null, publishingId?: string | null, languages?: Array<string | null> | null, extendedField?: string | null, assetSubtype: AssetSubtype, id: number, createdDate: any, createdUser: string, updatedDate: any, updatedUser: string, publishStatus: PublishStatus, publishedDate?: any | null, publishedUser?: string | null, collectionCountries: { __typename?: 'CollectionCountriesConnection', nodes: Array<{ __typename?: 'CollectionCountry', id: any, collectionId: number, countryGroupId?: any | null, countryId?: IsoAlphaTwoCountryCodes | null }> }, collectionsTags: { __typename?: 'CollectionsTagsConnection', nodes: Array<{ __typename?: 'CollectionsTag', name: string }> }, collectionsImages: { __typename?: 'CollectionsImagesConnection', nodes: Array<{ __typename?: 'CollectionsImage', imageType: CollectionImageType, imageId: any }> }, movies: { __typename?: 'CollectionRelationsConnection', totalCount: number }, tvshows: { __typename?: 'CollectionRelationsConnection', totalCount: number }, childCollections: { __typename?: 'CollectionRelationsConnection', totalCount: number }, episodes: { __typename?: 'CollectionRelationsConnection', totalCount: number } } | null, languages?: { __typename?: 'LanguagesConnection', nodes: Array<{ __typename?: 'Language', code: string, title: string }> } | null, allCountryTypes?: { __typename?: 'AllCountryTypesConnection', nodes: Array<{ __typename?: 'AllCountryType', name?: string | null, id?: string | null }> } | null };
 
 export type DeleteCollectionMutationVariables = Exact<{
   input: DeleteCollectionInput;
@@ -20530,7 +20845,7 @@ export type CollectionRelatedEntitiesQueryVariables = Exact<{
 }>;
 
 
-export type CollectionRelatedEntitiesQuery = { __typename?: 'Query', collection?: { __typename?: 'Collection', collectionRelations: { __typename?: 'CollectionRelationsConnection', nodes: Array<{ __typename?: 'CollectionRelation', id: number, sortOrder: number, movie?: { __typename?: 'Movie', title: string, publishStatus: PublishStatus, entityId: number, entityImages: { __typename?: 'MoviesImagesConnection', nodes: Array<{ __typename?: 'MoviesImage', imageId: any }> } } | null, tvshow?: { __typename?: 'Tvshow', title: string, publishStatus: PublishStatus, entityId: number, entityImages: { __typename?: 'TvshowsImagesConnection', nodes: Array<{ __typename?: 'TvshowsImage', imageId: any }> } } | null, season?: { __typename?: 'Season', index: number, publishStatus: PublishStatus, entityId: number, entityImages: { __typename?: 'SeasonsImagesConnection', nodes: Array<{ __typename?: 'SeasonsImage', imageId: any }> } } | null, episode?: { __typename?: 'Episode', title: string, publishStatus: PublishStatus, entityId: number, entityImages: { __typename?: 'EpisodesImagesConnection', nodes: Array<{ __typename?: 'EpisodesImage', imageId: any }> } } | null, childCollection?: { __typename?: 'Collection', title: string, publishStatus: PublishStatus, entityId: number, entityImages: { __typename?: 'CollectionsImagesConnection', nodes: Array<{ __typename?: 'CollectionsImage', imageId: any }> } } | null }> } } | null };
+export type CollectionRelatedEntitiesQuery = { __typename?: 'Query', collection?: { __typename?: 'Collection', collectionRelations: { __typename?: 'CollectionRelationsConnection', nodes: Array<{ __typename?: 'CollectionRelation', id: number, sortOrder: number, movie?: { __typename?: 'Movie', title: string, publishStatus: PublishStatus, entityId: number, entityImages: { __typename?: 'MoviesImagesConnection', nodes: Array<{ __typename?: 'MoviesImage', imageId: any }> } } | null, tvshow?: { __typename?: 'Tvshow', title: string, publishStatus: PublishStatus, entityId: number, entityImages: { __typename?: 'TvshowsImagesConnection', nodes: Array<{ __typename?: 'TvshowsImage', imageId: any }> } } | null, episode?: { __typename?: 'Episode', title: string, publishStatus: PublishStatus, entityId: number, entityImages: { __typename?: 'EpisodesImagesConnection', nodes: Array<{ __typename?: 'EpisodesImage', imageId: any }> } } | null, childCollection?: { __typename?: 'Collection', title: string, publishStatus: PublishStatus, entityId: number, entityImages: { __typename?: 'CollectionsImagesConnection', nodes: Array<{ __typename?: 'CollectionsImage', imageId: any }> } } | null }> } } | null };
 
 export type CollectionImagesQueryVariables = Exact<{
   id: Scalars['Int']['input'];
@@ -20546,7 +20861,7 @@ export type CreateCollectionSnapshotMutationVariables = Exact<{
 
 export type CreateCollectionSnapshotMutation = { __typename?: 'Mutation', createCollectionSnapshot?: { __typename?: 'Snapshot', id: number } | null };
 
-export type CollectionExplorerPropertiesFragment = { __typename: 'Collection', id: number, title: string, description?: string | null, externalId?: string | null, publishedDate?: any | null, createdDate: any, updatedDate: any, updatedUser: string, publishStatus: PublishStatus, languages?: Array<string | null> | null, assetSubtype: AssetSubtype, collectionsTags: { __typename?: 'CollectionsTagsConnection', nodes: Array<{ __typename?: 'CollectionsTag', name: string }> }, collectionCountries: { __typename?: 'CollectionCountriesConnection', nodes: Array<{ __typename?: 'CollectionCountry', collectionId: number, countryGroupId?: any | null, countryId?: IsoAlphaTwoCountryCodes | null }> }, collectionsImages: { __typename?: 'CollectionsImagesConnection', nodes: Array<{ __typename?: 'CollectionsImage', imageId: any }> }, collectionRelations: { __typename?: 'CollectionRelationsConnection', nodes: Array<{ __typename?: 'CollectionRelation', sortOrder: number }> } };
+export type CollectionExplorerPropertiesFragment = { __typename?: 'Collection', id: number, title: string, description?: string | null, externalId?: string | null, publishingId?: string | null, publishedDate?: any | null, createdDate: any, updatedDate: any, updatedUser: string, publishStatus: PublishStatus, assetSubtype: AssetSubtype, collectionsTags: { __typename?: 'CollectionsTagsConnection', nodes: Array<{ __typename?: 'CollectionsTag', name: string }> }, collectionCountries: { __typename?: 'CollectionCountriesConnection', nodes: Array<{ __typename?: 'CollectionCountry', collectionId: number, countryGroupId?: any | null, countryId?: IsoAlphaTwoCountryCodes | null }> }, collectionsImages: { __typename?: 'CollectionsImagesConnection', nodes: Array<{ __typename?: 'CollectionsImage', imageId: any, imageType: CollectionImageType }> }, collectionRelations: { __typename?: 'CollectionRelationsConnection', nodes: Array<{ __typename?: 'CollectionRelation', sortOrder: number }> } };
 
 export type CollectionsQueryVariables = Exact<{
   filter?: InputMaybe<CollectionFilter>;
@@ -20555,12 +20870,12 @@ export type CollectionsQueryVariables = Exact<{
 }>;
 
 
-export type CollectionsQuery = { __typename?: 'Query', filtered?: { __typename?: 'CollectionsConnection', totalCount: number, pageInfo: { __typename?: 'PageInfo', hasNextPage: boolean, endCursor?: any | null }, nodes: Array<{ __typename: 'Collection', id: number, title: string, description?: string | null, externalId?: string | null, publishedDate?: any | null, createdDate: any, updatedDate: any, updatedUser: string, publishStatus: PublishStatus, languages?: Array<string | null> | null, assetSubtype: AssetSubtype, collectionsTags: { __typename?: 'CollectionsTagsConnection', nodes: Array<{ __typename?: 'CollectionsTag', name: string }> }, collectionCountries: { __typename?: 'CollectionCountriesConnection', nodes: Array<{ __typename?: 'CollectionCountry', collectionId: number, countryGroupId?: any | null, countryId?: IsoAlphaTwoCountryCodes | null }> }, collectionsImages: { __typename?: 'CollectionsImagesConnection', nodes: Array<{ __typename?: 'CollectionsImage', imageId: any }> }, collectionRelations: { __typename?: 'CollectionRelationsConnection', nodes: Array<{ __typename?: 'CollectionRelation', sortOrder: number }> } }> } | null, nonFiltered?: { __typename?: 'CollectionsConnection', totalCount: number } | null };
+export type CollectionsQuery = { __typename?: 'Query', filtered?: { __typename?: 'CollectionsConnection', totalCount: number, pageInfo: { __typename?: 'PageInfo', hasNextPage: boolean, endCursor?: any | null }, nodes: Array<{ __typename?: 'Collection', id: number, title: string, description?: string | null, externalId?: string | null, publishingId?: string | null, publishedDate?: any | null, createdDate: any, updatedDate: any, updatedUser: string, publishStatus: PublishStatus, assetSubtype: AssetSubtype, collectionsTags: { __typename?: 'CollectionsTagsConnection', nodes: Array<{ __typename?: 'CollectionsTag', name: string }> }, collectionCountries: { __typename?: 'CollectionCountriesConnection', nodes: Array<{ __typename?: 'CollectionCountry', collectionId: number, countryGroupId?: any | null, countryId?: IsoAlphaTwoCountryCodes | null }> }, collectionsImages: { __typename?: 'CollectionsImagesConnection', nodes: Array<{ __typename?: 'CollectionsImage', imageId: any, imageType: CollectionImageType }> }, collectionRelations: { __typename?: 'CollectionRelationsConnection', nodes: Array<{ __typename?: 'CollectionRelation', sortOrder: number }> } }> } | null, nonFiltered?: { __typename?: 'CollectionsConnection', totalCount: number } | null };
 
 export type CollectionsMutatedSubscriptionVariables = Exact<{ [key: string]: never; }>;
 
 
-export type CollectionsMutatedSubscription = { __typename?: 'Subscription', collectionMutated?: { __typename?: 'CollectionSubscriptionPayload', id: number, eventKey?: CollectionSubscriptionEventKey | null, collection?: { __typename: 'Collection', id: number, title: string, description?: string | null, externalId?: string | null, publishedDate?: any | null, createdDate: any, updatedDate: any, updatedUser: string, publishStatus: PublishStatus, languages?: Array<string | null> | null, assetSubtype: AssetSubtype, collectionsTags: { __typename?: 'CollectionsTagsConnection', nodes: Array<{ __typename?: 'CollectionsTag', name: string }> }, collectionCountries: { __typename?: 'CollectionCountriesConnection', nodes: Array<{ __typename?: 'CollectionCountry', collectionId: number, countryGroupId?: any | null, countryId?: IsoAlphaTwoCountryCodes | null }> }, collectionsImages: { __typename?: 'CollectionsImagesConnection', nodes: Array<{ __typename?: 'CollectionsImage', imageId: any }> }, collectionRelations: { __typename?: 'CollectionRelationsConnection', nodes: Array<{ __typename?: 'CollectionRelation', sortOrder: number }> } } | null } | null };
+export type CollectionsMutatedSubscription = { __typename?: 'Subscription', collectionMutated?: { __typename?: 'CollectionSubscriptionPayload', id: number, eventKey?: CollectionSubscriptionEventKey | null, collection?: { __typename?: 'Collection', id: number, title: string, description?: string | null, externalId?: string | null, publishingId?: string | null, publishedDate?: any | null, createdDate: any, updatedDate: any, updatedUser: string, publishStatus: PublishStatus, assetSubtype: AssetSubtype, collectionsTags: { __typename?: 'CollectionsTagsConnection', nodes: Array<{ __typename?: 'CollectionsTag', name: string }> }, collectionCountries: { __typename?: 'CollectionCountriesConnection', nodes: Array<{ __typename?: 'CollectionCountry', collectionId: number, countryGroupId?: any | null, countryId?: IsoAlphaTwoCountryCodes | null }> }, collectionsImages: { __typename?: 'CollectionsImagesConnection', nodes: Array<{ __typename?: 'CollectionsImage', imageId: any, imageType: CollectionImageType }> }, collectionRelations: { __typename?: 'CollectionRelationsConnection', nodes: Array<{ __typename?: 'CollectionRelation', sortOrder: number }> } } | null } | null };
 
 export type BulkDeleteCollectionsMutationVariables = Exact<{
   filter?: InputMaybe<CollectionFilter>;
@@ -20589,6 +20904,11 @@ export type BulkCreateCollectionSnapshotsMutationVariables = Exact<{
 
 
 export type BulkCreateCollectionSnapshotsMutation = { __typename?: 'Mutation', createCollectionSnapshots?: { __typename?: 'BulkPublishingPayload', affectedIds?: Array<number | null> | null } | null };
+
+export type GetAllCountryDataQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type GetAllCountryDataQuery = { __typename?: 'Query', allCountryTypes?: { __typename?: 'AllCountryTypesConnection', nodes: Array<{ __typename?: 'AllCountryType', name?: string | null, id?: string | null }> } | null };
 
 export type CreateCountryGroupMutationVariables = Exact<{
   input: CreateCountryGroupInput;
@@ -20647,7 +20967,7 @@ export type EpisodeQueryVariables = Exact<{
 }>;
 
 
-export type EpisodeQuery = { __typename?: 'Query', episode?: { __typename?: 'Episode', title: string, originalTitle?: string | null, index: number, synopsis?: string | null, description?: string | null, externalId?: string | null, ageRating?: string | null, contentOwner?: string | null, rating?: any | null, extendedField?: string | null, assetSubtype: AssetSubtype, studio?: string | null, released?: any | null, id: number, createdDate: any, createdUser: string, updatedDate: any, updatedUser: string, mainVideoId?: any | null, publishStatus: PublishStatus, publishedDate?: any | null, publishedUser?: string | null, episodesTags: { __typename?: 'EpisodesTagsConnection', nodes: Array<{ __typename?: 'EpisodesTag', name: string }> }, episodesDirectors: { __typename?: 'EpisodesDirectorsConnection', nodes: Array<{ __typename?: 'EpisodesDirector', name: string }> }, episodesTvshowGenres: { __typename?: 'EpisodesTvshowGenresConnection', nodes: Array<{ __typename?: 'EpisodesTvshowGenre', tvshowGenres?: { __typename?: 'TvshowGenre', title: string } | null }> }, episodesCasts: { __typename?: 'EpisodesCastsConnection', nodes: Array<{ __typename?: 'EpisodesCast', name: string }> }, episodesProductionCountries: { __typename?: 'EpisodesProductionCountriesConnection', nodes: Array<{ __typename?: 'EpisodesProductionCountry', name: string }> }, episodesTrailers: { __typename?: 'EpisodesTrailersConnection', totalCount: number }, episodesImages: { __typename?: 'EpisodesImagesConnection', nodes: Array<{ __typename?: 'EpisodesImage', imageType: EpisodeImageType, imageId: any }> }, season?: { __typename?: 'Season', id: number, index: number, seasonsImages: { __typename?: 'SeasonsImagesConnection', nodes: Array<{ __typename?: 'SeasonsImage', imageId: any }> }, tvshow?: { __typename?: 'Tvshow', title: string } | null } | null } | null, tvshowGenres?: { __typename?: 'TvshowGenresConnection', nodes: Array<{ __typename?: 'TvshowGenre', title: string, id: number }> } | null, ageRatings?: { __typename?: 'AgeRatingsConnection', nodes: Array<{ __typename?: 'AgeRating', name: string, id: any }> } | null, contentOwners?: { __typename?: 'ContentOwnersConnection', nodes: Array<{ __typename?: 'ContentOwner', name: string, id: any }> } | null };
+export type EpisodeQuery = { __typename?: 'Query', episode?: { __typename?: 'Episode', title: string, originalTitle?: string | null, index: number, synopsis?: string | null, description?: string | null, externalId?: string | null, publishingId?: string | null, ageRating?: string | null, contentOwner?: string | null, rating?: any | null, extendedField?: string | null, assetSubtype: AssetSubtype, studio?: string | null, released?: any | null, id: number, createdDate: any, createdUser: string, updatedDate: any, updatedUser: string, mainVideoId?: any | null, publishStatus: PublishStatus, publishedDate?: any | null, publishedUser?: string | null, episodesTags: { __typename?: 'EpisodesTagsConnection', nodes: Array<{ __typename?: 'EpisodesTag', name: string }> }, episodesDirectors: { __typename?: 'EpisodesDirectorsConnection', nodes: Array<{ __typename?: 'EpisodesDirector', name: string }> }, episodesTvshowGenres: { __typename?: 'EpisodesTvshowGenresConnection', nodes: Array<{ __typename?: 'EpisodesTvshowGenre', tvshowGenres?: { __typename?: 'TvshowGenre', title: string } | null }> }, episodesCasts: { __typename?: 'EpisodesCastsConnection', nodes: Array<{ __typename?: 'EpisodesCast', name: string }> }, episodesProductionCountries: { __typename?: 'EpisodesProductionCountriesConnection', nodes: Array<{ __typename?: 'EpisodesProductionCountry', name: string }> }, episodesTrailers: { __typename?: 'EpisodesTrailersConnection', totalCount: number }, episodesImages: { __typename?: 'EpisodesImagesConnection', nodes: Array<{ __typename?: 'EpisodesImage', imageType: EpisodeImageType, imageId: any }> }, season?: { __typename?: 'Season', id: number, index: number, seasonsImages: { __typename?: 'SeasonsImagesConnection', nodes: Array<{ __typename?: 'SeasonsImage', imageId: any }> }, tvshow?: { __typename?: 'Tvshow', title: string } | null } | null } | null, tvshowGenres?: { __typename?: 'TvshowGenresConnection', nodes: Array<{ __typename?: 'TvshowGenre', title: string, id: number }> } | null, ageRatings?: { __typename?: 'AgeRatingsConnection', nodes: Array<{ __typename?: 'AgeRating', name: string, id: any }> } | null, contentOwners?: { __typename?: 'ContentOwnersConnection', nodes: Array<{ __typename?: 'ContentOwner', name: string, id: any }> } | null };
 
 export type UpdateEpisodeMutationVariables = Exact<{
   input: UpdateEpisodeInput;
@@ -20700,14 +21020,6 @@ export type SearchEpisodeCastQueryVariables = Exact<{
 
 export type SearchEpisodeCastQuery = { __typename?: 'Query', getEpisodesCastsValues?: { __typename?: 'GetEpisodesCastsValuesConnection', nodes: Array<string | null> } | null };
 
-export type SearchEpisodeProductionCountriesQueryVariables = Exact<{
-  searchKey: Scalars['String']['input'];
-  limit: Scalars['Int']['input'];
-}>;
-
-
-export type SearchEpisodeProductionCountriesQuery = { __typename?: 'Query', getEpisodesProductionCountriesValues?: { __typename?: 'GetEpisodesProductionCountriesValuesConnection', nodes: Array<string | null> } | null };
-
 export type SearchEpisodeDirectorQueryVariables = Exact<{
   searchKey: Scalars['String']['input'];
   limit: Scalars['Int']['input'];
@@ -20716,7 +21028,7 @@ export type SearchEpisodeDirectorQueryVariables = Exact<{
 
 export type SearchEpisodeDirectorQuery = { __typename?: 'Query', getEpisodesDirectorsValues?: { __typename?: 'GetEpisodesDirectorsValuesConnection', nodes: Array<string | null> } | null };
 
-export type EpisodeExplorerPropertiesFragment = { __typename?: 'Episode', publishStatus: PublishStatus, title: string, index: number, externalId?: string | null, mainVideoId?: any | null, createdDate: any, updatedDate: any, originalTitle?: string | null, assetSubtype: AssetSubtype, released?: any | null, studio?: string | null, publishedDate?: any | null, id: number, ageRating?: string | null, contentOwner?: string | null, season?: { __typename?: 'Season', id: number, index: number, tvshow?: { __typename?: 'Tvshow', title: string } | null } | null, episodesImages: { __typename?: 'EpisodesImagesConnection', nodes: Array<{ __typename?: 'EpisodesImage', imageId: any }> }, episodesTvshowGenres: { __typename?: 'EpisodesTvshowGenresConnection', nodes: Array<{ __typename?: 'EpisodesTvshowGenre', tvshowGenres?: { __typename?: 'TvshowGenre', title: string } | null }> }, episodesTags: { __typename?: 'EpisodesTagsConnection', nodes: Array<{ __typename?: 'EpisodesTag', name: string }> }, episodesCasts: { __typename?: 'EpisodesCastsConnection', nodes: Array<{ __typename?: 'EpisodesCast', name: string }> }, episodesProductionCountries: { __typename?: 'EpisodesProductionCountriesConnection', nodes: Array<{ __typename?: 'EpisodesProductionCountry', name: string }> }, episodesLicenses: { __typename?: 'EpisodesLicensesConnection', nodes: Array<{ __typename?: 'EpisodesLicense', licenseEnd?: any | null, licenseStart?: any | null, episodesLicensesCountries: { __typename?: 'EpisodesLicensesCountriesConnection', nodes: Array<{ __typename?: 'EpisodesLicensesCountry', code: IsoAlphaTwoCountryCodes }> } }> } };
+export type EpisodeExplorerPropertiesFragment = { __typename?: 'Episode', publishStatus: PublishStatus, title: string, index: number, externalId?: string | null, mainVideoId?: any | null, createdDate: any, updatedDate: any, originalTitle?: string | null, assetSubtype: AssetSubtype, released?: any | null, publishedDate?: any | null, id: number, publishingId?: string | null, ageRating?: string | null, contentOwner?: string | null, season?: { __typename?: 'Season', id: number, index: number, tvshow?: { __typename?: 'Tvshow', title: string } | null } | null, episodesImages: { __typename?: 'EpisodesImagesConnection', nodes: Array<{ __typename?: 'EpisodesImage', imageId: any }> }, episodesTvshowGenres: { __typename?: 'EpisodesTvshowGenresConnection', nodes: Array<{ __typename?: 'EpisodesTvshowGenre', tvshowGenres?: { __typename?: 'TvshowGenre', title: string } | null }> }, episodesTags: { __typename?: 'EpisodesTagsConnection', nodes: Array<{ __typename?: 'EpisodesTag', name: string }> }, episodesCasts: { __typename?: 'EpisodesCastsConnection', nodes: Array<{ __typename?: 'EpisodesCast', name: string }> }, episodesProductionCountries: { __typename?: 'EpisodesProductionCountriesConnection', nodes: Array<{ __typename?: 'EpisodesProductionCountry', name: string }> }, episodesLicenses: { __typename?: 'EpisodesLicensesConnection', nodes: Array<{ __typename?: 'EpisodesLicense', licenseEnd?: any | null, licenseStart?: any | null, episodesLicensesCountries: { __typename?: 'EpisodesLicensesCountriesConnection', nodes: Array<{ __typename?: 'EpisodesLicensesCountry', countryCode?: IsoAlphaTwoCountryCodes | null, countryGroupId?: any | null }> } }> } };
 
 export type EpisodesQueryVariables = Exact<{
   filter?: InputMaybe<EpisodeFilter>;
@@ -20725,12 +21037,12 @@ export type EpisodesQueryVariables = Exact<{
 }>;
 
 
-export type EpisodesQuery = { __typename?: 'Query', filtered?: { __typename?: 'EpisodesConnection', totalCount: number, pageInfo: { __typename?: 'PageInfo', hasNextPage: boolean, endCursor?: any | null }, nodes: Array<{ __typename?: 'Episode', publishStatus: PublishStatus, title: string, index: number, externalId?: string | null, mainVideoId?: any | null, createdDate: any, updatedDate: any, originalTitle?: string | null, assetSubtype: AssetSubtype, released?: any | null, studio?: string | null, publishedDate?: any | null, id: number, ageRating?: string | null, contentOwner?: string | null, season?: { __typename?: 'Season', id: number, index: number, tvshow?: { __typename?: 'Tvshow', title: string } | null } | null, episodesImages: { __typename?: 'EpisodesImagesConnection', nodes: Array<{ __typename?: 'EpisodesImage', imageId: any }> }, episodesTvshowGenres: { __typename?: 'EpisodesTvshowGenresConnection', nodes: Array<{ __typename?: 'EpisodesTvshowGenre', tvshowGenres?: { __typename?: 'TvshowGenre', title: string } | null }> }, episodesTags: { __typename?: 'EpisodesTagsConnection', nodes: Array<{ __typename?: 'EpisodesTag', name: string }> }, episodesCasts: { __typename?: 'EpisodesCastsConnection', nodes: Array<{ __typename?: 'EpisodesCast', name: string }> }, episodesProductionCountries: { __typename?: 'EpisodesProductionCountriesConnection', nodes: Array<{ __typename?: 'EpisodesProductionCountry', name: string }> }, episodesLicenses: { __typename?: 'EpisodesLicensesConnection', nodes: Array<{ __typename?: 'EpisodesLicense', licenseEnd?: any | null, licenseStart?: any | null, episodesLicensesCountries: { __typename?: 'EpisodesLicensesCountriesConnection', nodes: Array<{ __typename?: 'EpisodesLicensesCountry', code: IsoAlphaTwoCountryCodes }> } }> } }> } | null, nonFiltered?: { __typename?: 'EpisodesConnection', totalCount: number } | null };
+export type EpisodesQuery = { __typename?: 'Query', filtered?: { __typename?: 'EpisodesConnection', totalCount: number, pageInfo: { __typename?: 'PageInfo', hasNextPage: boolean, endCursor?: any | null }, nodes: Array<{ __typename?: 'Episode', publishStatus: PublishStatus, title: string, index: number, externalId?: string | null, mainVideoId?: any | null, createdDate: any, updatedDate: any, originalTitle?: string | null, assetSubtype: AssetSubtype, released?: any | null, publishedDate?: any | null, id: number, publishingId?: string | null, ageRating?: string | null, contentOwner?: string | null, season?: { __typename?: 'Season', id: number, index: number, tvshow?: { __typename?: 'Tvshow', title: string } | null } | null, episodesImages: { __typename?: 'EpisodesImagesConnection', nodes: Array<{ __typename?: 'EpisodesImage', imageId: any }> }, episodesTvshowGenres: { __typename?: 'EpisodesTvshowGenresConnection', nodes: Array<{ __typename?: 'EpisodesTvshowGenre', tvshowGenres?: { __typename?: 'TvshowGenre', title: string } | null }> }, episodesTags: { __typename?: 'EpisodesTagsConnection', nodes: Array<{ __typename?: 'EpisodesTag', name: string }> }, episodesCasts: { __typename?: 'EpisodesCastsConnection', nodes: Array<{ __typename?: 'EpisodesCast', name: string }> }, episodesProductionCountries: { __typename?: 'EpisodesProductionCountriesConnection', nodes: Array<{ __typename?: 'EpisodesProductionCountry', name: string }> }, episodesLicenses: { __typename?: 'EpisodesLicensesConnection', nodes: Array<{ __typename?: 'EpisodesLicense', licenseEnd?: any | null, licenseStart?: any | null, episodesLicensesCountries: { __typename?: 'EpisodesLicensesCountriesConnection', nodes: Array<{ __typename?: 'EpisodesLicensesCountry', countryCode?: IsoAlphaTwoCountryCodes | null, countryGroupId?: any | null }> } }> } }> } | null, nonFiltered?: { __typename?: 'EpisodesConnection', totalCount: number } | null };
 
 export type EpisodesMutatedSubscriptionVariables = Exact<{ [key: string]: never; }>;
 
 
-export type EpisodesMutatedSubscription = { __typename?: 'Subscription', episodeMutated?: { __typename?: 'EpisodeSubscriptionPayload', id: number, eventKey?: EpisodeSubscriptionEventKey | null, episode?: { __typename?: 'Episode', publishStatus: PublishStatus, title: string, index: number, externalId?: string | null, mainVideoId?: any | null, createdDate: any, updatedDate: any, originalTitle?: string | null, assetSubtype: AssetSubtype, released?: any | null, studio?: string | null, publishedDate?: any | null, id: number, ageRating?: string | null, contentOwner?: string | null, season?: { __typename?: 'Season', id: number, index: number, tvshow?: { __typename?: 'Tvshow', title: string } | null } | null, episodesImages: { __typename?: 'EpisodesImagesConnection', nodes: Array<{ __typename?: 'EpisodesImage', imageId: any }> }, episodesTvshowGenres: { __typename?: 'EpisodesTvshowGenresConnection', nodes: Array<{ __typename?: 'EpisodesTvshowGenre', tvshowGenres?: { __typename?: 'TvshowGenre', title: string } | null }> }, episodesTags: { __typename?: 'EpisodesTagsConnection', nodes: Array<{ __typename?: 'EpisodesTag', name: string }> }, episodesCasts: { __typename?: 'EpisodesCastsConnection', nodes: Array<{ __typename?: 'EpisodesCast', name: string }> }, episodesProductionCountries: { __typename?: 'EpisodesProductionCountriesConnection', nodes: Array<{ __typename?: 'EpisodesProductionCountry', name: string }> }, episodesLicenses: { __typename?: 'EpisodesLicensesConnection', nodes: Array<{ __typename?: 'EpisodesLicense', licenseEnd?: any | null, licenseStart?: any | null, episodesLicensesCountries: { __typename?: 'EpisodesLicensesCountriesConnection', nodes: Array<{ __typename?: 'EpisodesLicensesCountry', code: IsoAlphaTwoCountryCodes }> } }> } } | null } | null };
+export type EpisodesMutatedSubscription = { __typename?: 'Subscription', episodeMutated?: { __typename?: 'EpisodeSubscriptionPayload', id: number, eventKey?: EpisodeSubscriptionEventKey | null, episode?: { __typename?: 'Episode', publishStatus: PublishStatus, title: string, index: number, externalId?: string | null, mainVideoId?: any | null, createdDate: any, updatedDate: any, originalTitle?: string | null, assetSubtype: AssetSubtype, released?: any | null, publishedDate?: any | null, id: number, publishingId?: string | null, ageRating?: string | null, contentOwner?: string | null, season?: { __typename?: 'Season', id: number, index: number, tvshow?: { __typename?: 'Tvshow', title: string } | null } | null, episodesImages: { __typename?: 'EpisodesImagesConnection', nodes: Array<{ __typename?: 'EpisodesImage', imageId: any }> }, episodesTvshowGenres: { __typename?: 'EpisodesTvshowGenresConnection', nodes: Array<{ __typename?: 'EpisodesTvshowGenre', tvshowGenres?: { __typename?: 'TvshowGenre', title: string } | null }> }, episodesTags: { __typename?: 'EpisodesTagsConnection', nodes: Array<{ __typename?: 'EpisodesTag', name: string }> }, episodesCasts: { __typename?: 'EpisodesCastsConnection', nodes: Array<{ __typename?: 'EpisodesCast', name: string }> }, episodesProductionCountries: { __typename?: 'EpisodesProductionCountriesConnection', nodes: Array<{ __typename?: 'EpisodesProductionCountry', name: string }> }, episodesLicenses: { __typename?: 'EpisodesLicensesConnection', nodes: Array<{ __typename?: 'EpisodesLicense', licenseEnd?: any | null, licenseStart?: any | null, episodesLicensesCountries: { __typename?: 'EpisodesLicensesCountriesConnection', nodes: Array<{ __typename?: 'EpisodesLicensesCountry', countryCode?: IsoAlphaTwoCountryCodes | null, countryGroupId?: any | null }> } }> } } | null } | null };
 
 export type GetEpisodesFilterOptionsDataQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -20751,7 +21063,7 @@ export type EpisodesLicensesQueryVariables = Exact<{
 }>;
 
 
-export type EpisodesLicensesQuery = { __typename?: 'Query', episodesLicenses?: { __typename?: 'EpisodesLicensesConnection', totalCount: number, pageInfo: { __typename?: 'PageInfo', hasNextPage: boolean, endCursor?: any | null }, nodes: Array<{ __typename?: 'EpisodesLicense', id: number, licenseEnd?: any | null, licenseStart?: any | null, episodesLicensesCountries: { __typename?: 'EpisodesLicensesCountriesConnection', nodes: Array<{ __typename?: 'EpisodesLicensesCountry', code: IsoAlphaTwoCountryCodes }> } }> } | null };
+export type EpisodesLicensesQuery = { __typename?: 'Query', episodesLicenses?: { __typename?: 'EpisodesLicensesConnection', totalCount: number, pageInfo: { __typename?: 'PageInfo', hasNextPage: boolean, endCursor?: any | null }, nodes: Array<{ __typename?: 'EpisodesLicense', id: number, licenseEnd?: any | null, licenseStart?: any | null, episodesLicensesCountries: { __typename?: 'EpisodesLicensesCountriesConnection', nodes: Array<{ __typename?: 'EpisodesLicensesCountry', countryCode?: IsoAlphaTwoCountryCodes | null, countryGroupId?: any | null }> } }> } | null };
 
 export type CreateEpisodesLicenseMutationVariables = Exact<{
   input: CreateEpisodesLicenseInput;
@@ -20760,12 +21072,17 @@ export type CreateEpisodesLicenseMutationVariables = Exact<{
 
 export type CreateEpisodesLicenseMutation = { __typename?: 'Mutation', createEpisodesLicense?: { __typename?: 'CreateEpisodesLicensePayload', episodesLicense?: { __typename?: 'EpisodesLicense', id: number } | null } | null };
 
+export type GetAllCountryTypesDataQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type GetAllCountryTypesDataQuery = { __typename?: 'Query', allCountryTypes?: { __typename?: 'AllCountryTypesConnection', nodes: Array<{ __typename?: 'AllCountryType', name?: string | null, id?: string | null }> } | null };
+
 export type EpisodesLicenseQueryVariables = Exact<{
   id: Scalars['Int']['input'];
 }>;
 
 
-export type EpisodesLicenseQuery = { __typename?: 'Query', episodesLicense?: { __typename?: 'EpisodesLicense', episodeId: number, licenseEnd?: any | null, licenseStart?: any | null, createdDate: any, createdUser: string, updatedDate: any, updatedUser: string, isDownloadable: boolean, downloadedAssetLifespan?: number | null, episodesLicensesCountries: { __typename?: 'EpisodesLicensesCountriesConnection', nodes: Array<{ __typename?: 'EpisodesLicensesCountry', code: IsoAlphaTwoCountryCodes }> } } | null };
+export type EpisodesLicenseQuery = { __typename?: 'Query', episodesLicense?: { __typename?: 'EpisodesLicense', episodeId: number, licenseEnd?: any | null, licenseStart?: any | null, createdDate: any, createdUser: string, updatedDate: any, updatedUser: string, isDownloadable: boolean, downloadedAssetLifespan?: number | null, episodesLicensesCountries: { __typename?: 'EpisodesLicensesCountriesConnection', nodes: Array<{ __typename?: 'EpisodesLicensesCountry', countryCode?: IsoAlphaTwoCountryCodes | null, countryGroupId?: any | null, id: any }> } } | null, allCountryTypes?: { __typename?: 'AllCountryTypesConnection', nodes: Array<{ __typename?: 'AllCountryType', name?: string | null, id?: string | null }> } | null };
 
 export type UpdateEpisodesLicenseMutationVariables = Exact<{
   input: UpdateEpisodesLicenseInput;
@@ -20937,7 +21254,7 @@ export type MovieQueryVariables = Exact<{
 }>;
 
 
-export type MovieQuery = { __typename?: 'Query', movie?: { __typename?: 'Movie', title: string, originalTitle?: string | null, synopsis?: string | null, description?: string | null, externalId?: string | null, ageRating?: string | null, businessType: BusinessType, contentOwner?: string | null, rating?: any | null, extendedField?: string | null, assetSubtype: AssetSubtype, released?: any | null, studio?: string | null, mainVideoId?: any | null, id: number, createdDate: any, createdUser: string, updatedDate: any, updatedUser: string, publishStatus: PublishStatus, publishedDate?: any | null, publishedUser?: string | null, moviesTags: { __typename?: 'MoviesTagsConnection', nodes: Array<{ __typename?: 'MoviesTag', name: string }> }, moviesMovieGenres: { __typename?: 'MoviesMovieGenresConnection', nodes: Array<{ __typename?: 'MoviesMovieGenre', movieGenres?: { __typename?: 'MovieGenre', title: string } | null }> }, moviesCasts: { __typename?: 'MoviesCastsConnection', nodes: Array<{ __typename?: 'MoviesCast', name: string }> }, moviesDirectors: { __typename?: 'MoviesDirectorsConnection', nodes: Array<{ __typename?: 'MoviesDirector', name: string }> }, moviesProductionCountries: { __typename?: 'MoviesProductionCountriesConnection', nodes: Array<{ __typename?: 'MoviesProductionCountry', name: string }> }, moviesTrailers: { __typename?: 'MoviesTrailersConnection', totalCount: number }, moviesImages: { __typename?: 'MoviesImagesConnection', nodes: Array<{ __typename?: 'MoviesImage', imageType: MovieImageType, imageId: any }> } } | null, movieGenres?: { __typename?: 'MovieGenresConnection', nodes: Array<{ __typename?: 'MovieGenre', title: string, id: number }> } | null, ageRatings?: { __typename?: 'AgeRatingsConnection', nodes: Array<{ __typename?: 'AgeRating', name: string, id: any }> } | null, contentOwners?: { __typename?: 'ContentOwnersConnection', nodes: Array<{ __typename?: 'ContentOwner', name: string, id: any }> } | null };
+export type MovieQuery = { __typename?: 'Query', movie?: { __typename?: 'Movie', title: string, originalTitle?: string | null, synopsis?: string | null, description?: string | null, externalId?: string | null, publishingId?: string | null, ageRating?: string | null, businessType: BusinessType, contentOwner?: string | null, rating?: any | null, extendedField?: string | null, assetSubtype: AssetSubtype, released?: any | null, studio?: string | null, mainVideoId?: any | null, id: number, createdDate: any, createdUser: string, updatedDate: any, updatedUser: string, publishStatus: PublishStatus, publishedDate?: any | null, publishedUser?: string | null, moviesTags: { __typename?: 'MoviesTagsConnection', nodes: Array<{ __typename?: 'MoviesTag', name: string }> }, moviesMovieGenres: { __typename?: 'MoviesMovieGenresConnection', nodes: Array<{ __typename?: 'MoviesMovieGenre', movieGenres?: { __typename?: 'MovieGenre', title: string } | null }> }, moviesCasts: { __typename?: 'MoviesCastsConnection', nodes: Array<{ __typename?: 'MoviesCast', name: string }> }, moviesDirectors: { __typename?: 'MoviesDirectorsConnection', nodes: Array<{ __typename?: 'MoviesDirector', name: string }> }, moviesProductionCountries: { __typename?: 'MoviesProductionCountriesConnection', nodes: Array<{ __typename?: 'MoviesProductionCountry', name: string }> }, moviesTrailers: { __typename?: 'MoviesTrailersConnection', totalCount: number }, moviesImages: { __typename?: 'MoviesImagesConnection', nodes: Array<{ __typename?: 'MoviesImage', imageType: MovieImageType, imageId: any }> } } | null, movieGenres?: { __typename?: 'MovieGenresConnection', nodes: Array<{ __typename?: 'MovieGenre', title: string, id: number }> } | null, ageRatings?: { __typename?: 'AgeRatingsConnection', nodes: Array<{ __typename?: 'AgeRating', name: string, id: any }> } | null, contentOwners?: { __typename?: 'ContentOwnersConnection', nodes: Array<{ __typename?: 'ContentOwner', name: string, id: any }> } | null };
 
 export type DeleteMovieMutationVariables = Exact<{
   input: DeleteMovieInput;
@@ -20991,15 +21308,7 @@ export type SearchMovieDirectorQueryVariables = Exact<{
 
 export type SearchMovieDirectorQuery = { __typename?: 'Query', getMoviesDirectorsValues?: { __typename?: 'GetMoviesDirectorsValuesConnection', nodes: Array<string | null> } | null };
 
-export type SearchMovieProductionCountriesQueryVariables = Exact<{
-  searchKey: Scalars['String']['input'];
-  limit: Scalars['Int']['input'];
-}>;
-
-
-export type SearchMovieProductionCountriesQuery = { __typename?: 'Query', getMoviesProductionCountriesValues?: { __typename?: 'GetMoviesProductionCountriesValuesConnection', nodes: Array<string | null> } | null };
-
-export type MovieExplorerPropertiesFragment = { __typename?: 'Movie', id: number, title: string, originalTitle?: string | null, externalId?: string | null, mainVideoId?: any | null, ageRating?: string | null, contentOwner?: string | null, businessType: BusinessType, assetSubtype: AssetSubtype, released?: any | null, studio?: string | null, publishedDate?: any | null, createdDate: any, updatedDate: any, updatedUser: string, publishStatus: PublishStatus, moviesLicenses: { __typename?: 'MoviesLicensesConnection', nodes: Array<{ __typename?: 'MoviesLicense', licenseEnd?: any | null, licenseStart?: any | null, moviesLicensesCountries: { __typename?: 'MoviesLicensesCountriesConnection', nodes: Array<{ __typename?: 'MoviesLicensesCountry', code: IsoAlphaTwoCountryCodes }> } }> }, moviesImages: { __typename?: 'MoviesImagesConnection', nodes: Array<{ __typename?: 'MoviesImage', imageId: any }> }, moviesTags: { __typename?: 'MoviesTagsConnection', nodes: Array<{ __typename?: 'MoviesTag', name: string }> }, moviesMovieGenres: { __typename?: 'MoviesMovieGenresConnection', nodes: Array<{ __typename?: 'MoviesMovieGenre', movieGenres?: { __typename?: 'MovieGenre', title: string } | null }> }, moviesCasts: { __typename?: 'MoviesCastsConnection', nodes: Array<{ __typename?: 'MoviesCast', name: string }> }, moviesProductionCountries: { __typename?: 'MoviesProductionCountriesConnection', nodes: Array<{ __typename?: 'MoviesProductionCountry', name: string }> }, collectionRelations: { __typename?: 'CollectionRelationsConnection', nodes: Array<{ __typename?: 'CollectionRelation', collection?: { __typename?: 'Collection', title: string } | null }> } };
+export type MovieExplorerPropertiesFragment = { __typename?: 'Movie', id: number, title: string, originalTitle?: string | null, externalId?: string | null, mainVideoId?: any | null, ageRating?: string | null, contentOwner?: string | null, businessType: BusinessType, assetSubtype: AssetSubtype, released?: any | null, publishedDate?: any | null, publishingId?: string | null, createdDate: any, updatedDate: any, updatedUser: string, publishStatus: PublishStatus, moviesLicenses: { __typename?: 'MoviesLicensesConnection', nodes: Array<{ __typename?: 'MoviesLicense', licenseEnd?: any | null, licenseStart?: any | null, moviesLicensesCountries: { __typename?: 'MoviesLicensesCountriesConnection', nodes: Array<{ __typename?: 'MoviesLicensesCountry', countryCode?: IsoAlphaTwoCountryCodes | null, countryGroupId?: any | null }> } }> }, moviesImages: { __typename?: 'MoviesImagesConnection', nodes: Array<{ __typename?: 'MoviesImage', imageId: any, imageType: MovieImageType }> }, moviesTags: { __typename?: 'MoviesTagsConnection', nodes: Array<{ __typename?: 'MoviesTag', name: string }> }, moviesMovieGenres: { __typename?: 'MoviesMovieGenresConnection', nodes: Array<{ __typename?: 'MoviesMovieGenre', movieGenres?: { __typename?: 'MovieGenre', title: string } | null }> }, moviesCasts: { __typename?: 'MoviesCastsConnection', nodes: Array<{ __typename?: 'MoviesCast', name: string }> }, moviesProductionCountries: { __typename?: 'MoviesProductionCountriesConnection', nodes: Array<{ __typename?: 'MoviesProductionCountry', name: string }> }, collectionRelations: { __typename?: 'CollectionRelationsConnection', nodes: Array<{ __typename?: 'CollectionRelation', collection?: { __typename?: 'Collection', title: string } | null }> } };
 
 export type MoviesQueryVariables = Exact<{
   filter?: InputMaybe<MovieFilter>;
@@ -21008,12 +21317,12 @@ export type MoviesQueryVariables = Exact<{
 }>;
 
 
-export type MoviesQuery = { __typename?: 'Query', filtered?: { __typename?: 'MoviesConnection', totalCount: number, pageInfo: { __typename?: 'PageInfo', hasNextPage: boolean, endCursor?: any | null }, nodes: Array<{ __typename?: 'Movie', id: number, title: string, originalTitle?: string | null, externalId?: string | null, mainVideoId?: any | null, ageRating?: string | null, contentOwner?: string | null, businessType: BusinessType, assetSubtype: AssetSubtype, released?: any | null, studio?: string | null, publishedDate?: any | null, createdDate: any, updatedDate: any, updatedUser: string, publishStatus: PublishStatus, moviesLicenses: { __typename?: 'MoviesLicensesConnection', nodes: Array<{ __typename?: 'MoviesLicense', licenseEnd?: any | null, licenseStart?: any | null, moviesLicensesCountries: { __typename?: 'MoviesLicensesCountriesConnection', nodes: Array<{ __typename?: 'MoviesLicensesCountry', code: IsoAlphaTwoCountryCodes }> } }> }, moviesImages: { __typename?: 'MoviesImagesConnection', nodes: Array<{ __typename?: 'MoviesImage', imageId: any }> }, moviesTags: { __typename?: 'MoviesTagsConnection', nodes: Array<{ __typename?: 'MoviesTag', name: string }> }, moviesMovieGenres: { __typename?: 'MoviesMovieGenresConnection', nodes: Array<{ __typename?: 'MoviesMovieGenre', movieGenres?: { __typename?: 'MovieGenre', title: string } | null }> }, moviesCasts: { __typename?: 'MoviesCastsConnection', nodes: Array<{ __typename?: 'MoviesCast', name: string }> }, moviesProductionCountries: { __typename?: 'MoviesProductionCountriesConnection', nodes: Array<{ __typename?: 'MoviesProductionCountry', name: string }> }, collectionRelations: { __typename?: 'CollectionRelationsConnection', nodes: Array<{ __typename?: 'CollectionRelation', collection?: { __typename?: 'Collection', title: string } | null }> } }> } | null, nonFiltered?: { __typename?: 'MoviesConnection', totalCount: number } | null };
+export type MoviesQuery = { __typename?: 'Query', filtered?: { __typename?: 'MoviesConnection', totalCount: number, pageInfo: { __typename?: 'PageInfo', hasNextPage: boolean, endCursor?: any | null }, nodes: Array<{ __typename?: 'Movie', id: number, title: string, originalTitle?: string | null, externalId?: string | null, mainVideoId?: any | null, ageRating?: string | null, contentOwner?: string | null, businessType: BusinessType, assetSubtype: AssetSubtype, released?: any | null, publishedDate?: any | null, publishingId?: string | null, createdDate: any, updatedDate: any, updatedUser: string, publishStatus: PublishStatus, moviesLicenses: { __typename?: 'MoviesLicensesConnection', nodes: Array<{ __typename?: 'MoviesLicense', licenseEnd?: any | null, licenseStart?: any | null, moviesLicensesCountries: { __typename?: 'MoviesLicensesCountriesConnection', nodes: Array<{ __typename?: 'MoviesLicensesCountry', countryCode?: IsoAlphaTwoCountryCodes | null, countryGroupId?: any | null }> } }> }, moviesImages: { __typename?: 'MoviesImagesConnection', nodes: Array<{ __typename?: 'MoviesImage', imageId: any, imageType: MovieImageType }> }, moviesTags: { __typename?: 'MoviesTagsConnection', nodes: Array<{ __typename?: 'MoviesTag', name: string }> }, moviesMovieGenres: { __typename?: 'MoviesMovieGenresConnection', nodes: Array<{ __typename?: 'MoviesMovieGenre', movieGenres?: { __typename?: 'MovieGenre', title: string } | null }> }, moviesCasts: { __typename?: 'MoviesCastsConnection', nodes: Array<{ __typename?: 'MoviesCast', name: string }> }, moviesProductionCountries: { __typename?: 'MoviesProductionCountriesConnection', nodes: Array<{ __typename?: 'MoviesProductionCountry', name: string }> }, collectionRelations: { __typename?: 'CollectionRelationsConnection', nodes: Array<{ __typename?: 'CollectionRelation', collection?: { __typename?: 'Collection', title: string } | null }> } }> } | null, nonFiltered?: { __typename?: 'MoviesConnection', totalCount: number } | null };
 
 export type MoviesMutatedSubscriptionVariables = Exact<{ [key: string]: never; }>;
 
 
-export type MoviesMutatedSubscription = { __typename?: 'Subscription', movieMutated?: { __typename?: 'MovieSubscriptionPayload', id: number, eventKey?: MovieSubscriptionEventKey | null, movie?: { __typename?: 'Movie', id: number, title: string, originalTitle?: string | null, externalId?: string | null, mainVideoId?: any | null, ageRating?: string | null, contentOwner?: string | null, businessType: BusinessType, assetSubtype: AssetSubtype, released?: any | null, studio?: string | null, publishedDate?: any | null, createdDate: any, updatedDate: any, updatedUser: string, publishStatus: PublishStatus, moviesLicenses: { __typename?: 'MoviesLicensesConnection', nodes: Array<{ __typename?: 'MoviesLicense', licenseEnd?: any | null, licenseStart?: any | null, moviesLicensesCountries: { __typename?: 'MoviesLicensesCountriesConnection', nodes: Array<{ __typename?: 'MoviesLicensesCountry', code: IsoAlphaTwoCountryCodes }> } }> }, moviesImages: { __typename?: 'MoviesImagesConnection', nodes: Array<{ __typename?: 'MoviesImage', imageId: any }> }, moviesTags: { __typename?: 'MoviesTagsConnection', nodes: Array<{ __typename?: 'MoviesTag', name: string }> }, moviesMovieGenres: { __typename?: 'MoviesMovieGenresConnection', nodes: Array<{ __typename?: 'MoviesMovieGenre', movieGenres?: { __typename?: 'MovieGenre', title: string } | null }> }, moviesCasts: { __typename?: 'MoviesCastsConnection', nodes: Array<{ __typename?: 'MoviesCast', name: string }> }, moviesProductionCountries: { __typename?: 'MoviesProductionCountriesConnection', nodes: Array<{ __typename?: 'MoviesProductionCountry', name: string }> }, collectionRelations: { __typename?: 'CollectionRelationsConnection', nodes: Array<{ __typename?: 'CollectionRelation', collection?: { __typename?: 'Collection', title: string } | null }> } } | null } | null };
+export type MoviesMutatedSubscription = { __typename?: 'Subscription', movieMutated?: { __typename?: 'MovieSubscriptionPayload', id: number, eventKey?: MovieSubscriptionEventKey | null, movie?: { __typename?: 'Movie', id: number, title: string, originalTitle?: string | null, externalId?: string | null, mainVideoId?: any | null, ageRating?: string | null, contentOwner?: string | null, businessType: BusinessType, assetSubtype: AssetSubtype, released?: any | null, publishedDate?: any | null, publishingId?: string | null, createdDate: any, updatedDate: any, updatedUser: string, publishStatus: PublishStatus, moviesLicenses: { __typename?: 'MoviesLicensesConnection', nodes: Array<{ __typename?: 'MoviesLicense', licenseEnd?: any | null, licenseStart?: any | null, moviesLicensesCountries: { __typename?: 'MoviesLicensesCountriesConnection', nodes: Array<{ __typename?: 'MoviesLicensesCountry', countryCode?: IsoAlphaTwoCountryCodes | null, countryGroupId?: any | null }> } }> }, moviesImages: { __typename?: 'MoviesImagesConnection', nodes: Array<{ __typename?: 'MoviesImage', imageId: any, imageType: MovieImageType }> }, moviesTags: { __typename?: 'MoviesTagsConnection', nodes: Array<{ __typename?: 'MoviesTag', name: string }> }, moviesMovieGenres: { __typename?: 'MoviesMovieGenresConnection', nodes: Array<{ __typename?: 'MoviesMovieGenre', movieGenres?: { __typename?: 'MovieGenre', title: string } | null }> }, moviesCasts: { __typename?: 'MoviesCastsConnection', nodes: Array<{ __typename?: 'MoviesCast', name: string }> }, moviesProductionCountries: { __typename?: 'MoviesProductionCountriesConnection', nodes: Array<{ __typename?: 'MoviesProductionCountry', name: string }> }, collectionRelations: { __typename?: 'CollectionRelationsConnection', nodes: Array<{ __typename?: 'CollectionRelation', collection?: { __typename?: 'Collection', title: string } | null }> } } | null } | null };
 
 export type GetMoviesFilterOptionsDataQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -21054,7 +21363,7 @@ export type MoviesLicensesQueryVariables = Exact<{
 }>;
 
 
-export type MoviesLicensesQuery = { __typename?: 'Query', moviesLicenses?: { __typename?: 'MoviesLicensesConnection', totalCount: number, pageInfo: { __typename?: 'PageInfo', hasNextPage: boolean, endCursor?: any | null }, nodes: Array<{ __typename?: 'MoviesLicense', id: number, licenseEnd?: any | null, licenseStart?: any | null, moviesLicensesCountries: { __typename?: 'MoviesLicensesCountriesConnection', nodes: Array<{ __typename?: 'MoviesLicensesCountry', code: IsoAlphaTwoCountryCodes }> } }> } | null };
+export type MoviesLicensesQuery = { __typename?: 'Query', moviesLicenses?: { __typename?: 'MoviesLicensesConnection', totalCount: number, pageInfo: { __typename?: 'PageInfo', hasNextPage: boolean, endCursor?: any | null }, nodes: Array<{ __typename?: 'MoviesLicense', id: number, licenseEnd?: any | null, licenseStart?: any | null, moviesLicensesCountries: { __typename?: 'MoviesLicensesCountriesConnection', nodes: Array<{ __typename?: 'MoviesLicensesCountry', countryCode?: IsoAlphaTwoCountryCodes | null, countryGroupId?: any | null }> } }> } | null };
 
 export type CreateMoviesLicenseMutationVariables = Exact<{
   input: CreateMoviesLicenseInput;
@@ -21068,7 +21377,7 @@ export type MoviesLicenseQueryVariables = Exact<{
 }>;
 
 
-export type MoviesLicenseQuery = { __typename?: 'Query', moviesLicense?: { __typename?: 'MoviesLicense', licenseEnd?: any | null, licenseStart?: any | null, movieId: number, createdDate: any, updatedDate: any, updatedUser: string, createdUser: string, isDownloadable: boolean, downloadedAssetLifespan?: number | null, moviesLicensesCountries: { __typename?: 'MoviesLicensesCountriesConnection', nodes: Array<{ __typename?: 'MoviesLicensesCountry', code: IsoAlphaTwoCountryCodes }> } } | null };
+export type MoviesLicenseQuery = { __typename?: 'Query', moviesLicense?: { __typename?: 'MoviesLicense', licenseEnd?: any | null, licenseStart?: any | null, movieId: number, createdDate: any, updatedDate: any, updatedUser: string, createdUser: string, isDownloadable: boolean, downloadedAssetLifespan?: number | null, moviesLicensesCountries: { __typename?: 'MoviesLicensesCountriesConnection', nodes: Array<{ __typename?: 'MoviesLicensesCountry', countryCode?: IsoAlphaTwoCountryCodes | null, countryGroupId?: any | null, id: any }> } } | null, allCountryTypes?: { __typename?: 'AllCountryTypesConnection', nodes: Array<{ __typename?: 'AllCountryType', name?: string | null, id?: string | null }> } | null };
 
 export type UpdateMoviesLicenseMutationVariables = Exact<{
   input: UpdateMoviesLicenseInput;
@@ -21235,7 +21544,7 @@ export type SeasonQueryVariables = Exact<{
 }>;
 
 
-export type SeasonQuery = { __typename?: 'Query', season?: { __typename?: 'Season', index: number, title: string, synopsis?: string | null, description?: string | null, externalId?: string | null, rating?: any | null, contentOwner?: string | null, extendedField?: string | null, assetSubtype: AssetSubtype, studio?: string | null, released?: any | null, id: number, createdDate: any, createdUser: string, updatedDate: any, updatedUser: string, publishStatus: PublishStatus, publishedDate?: any | null, publishedUser?: string | null, seasonsTags: { __typename?: 'SeasonsTagsConnection', nodes: Array<{ __typename?: 'SeasonsTag', name: string }> }, seasonsDirectors: { __typename?: 'SeasonsDirectorsConnection', nodes: Array<{ __typename?: 'SeasonsDirector', name: string }> }, seasonsTvshowGenres: { __typename?: 'SeasonsTvshowGenresConnection', nodes: Array<{ __typename?: 'SeasonsTvshowGenre', tvshowGenres?: { __typename?: 'TvshowGenre', title: string } | null }> }, seasonsCasts: { __typename?: 'SeasonsCastsConnection', nodes: Array<{ __typename?: 'SeasonsCast', name: string }> }, seasonsProductionCountries: { __typename?: 'SeasonsProductionCountriesConnection', nodes: Array<{ __typename?: 'SeasonsProductionCountry', name: string }> }, episodes: { __typename?: 'EpisodesConnection', totalCount: number }, seasonsTrailers: { __typename?: 'SeasonsTrailersConnection', totalCount: number }, seasonsImages: { __typename?: 'SeasonsImagesConnection', nodes: Array<{ __typename?: 'SeasonsImage', imageType: SeasonImageType, imageId: any }> }, tvshow?: { __typename?: 'Tvshow', id: number, title: string, tvshowsImages: { __typename?: 'TvshowsImagesConnection', nodes: Array<{ __typename?: 'TvshowsImage', imageId: any }> } } | null } | null, tvshowGenres?: { __typename?: 'TvshowGenresConnection', nodes: Array<{ __typename?: 'TvshowGenre', title: string, id: number }> } | null, ageRatings?: { __typename?: 'AgeRatingsConnection', nodes: Array<{ __typename?: 'AgeRating', name: string, id: any }> } | null, contentOwners?: { __typename?: 'ContentOwnersConnection', nodes: Array<{ __typename?: 'ContentOwner', name: string, id: any }> } | null };
+export type SeasonQuery = { __typename?: 'Query', season?: { __typename?: 'Season', index: number, title: string, synopsis?: string | null, description?: string | null, externalId?: string | null, publishingId?: string | null, rating?: any | null, ageRating?: string | null, contentOwner?: string | null, extendedField?: string | null, assetSubtype: AssetSubtype, studio?: string | null, released?: any | null, id: number, createdDate: any, createdUser: string, updatedDate: any, updatedUser: string, publishStatus: PublishStatus, publishedDate?: any | null, publishedUser?: string | null, seasonsTags: { __typename?: 'SeasonsTagsConnection', nodes: Array<{ __typename?: 'SeasonsTag', name: string }> }, seasonsDirectors: { __typename?: 'SeasonsDirectorsConnection', nodes: Array<{ __typename?: 'SeasonsDirector', name: string }> }, seasonsTvshowGenres: { __typename?: 'SeasonsTvshowGenresConnection', nodes: Array<{ __typename?: 'SeasonsTvshowGenre', tvshowGenres?: { __typename?: 'TvshowGenre', title: string } | null }> }, seasonsCasts: { __typename?: 'SeasonsCastsConnection', nodes: Array<{ __typename?: 'SeasonsCast', name: string }> }, seasonsProductionCountries: { __typename?: 'SeasonsProductionCountriesConnection', nodes: Array<{ __typename?: 'SeasonsProductionCountry', name: string }> }, episodes: { __typename?: 'EpisodesConnection', totalCount: number }, seasonsTrailers: { __typename?: 'SeasonsTrailersConnection', totalCount: number }, seasonsImages: { __typename?: 'SeasonsImagesConnection', nodes: Array<{ __typename?: 'SeasonsImage', imageType: SeasonImageType, imageId: any }> }, tvshow?: { __typename?: 'Tvshow', id: number, title: string, tvshowsImages: { __typename?: 'TvshowsImagesConnection', nodes: Array<{ __typename?: 'TvshowsImage', imageId: any }> } } | null } | null, tvshowGenres?: { __typename?: 'TvshowGenresConnection', nodes: Array<{ __typename?: 'TvshowGenre', title: string, id: number }> } | null, ageRatings?: { __typename?: 'AgeRatingsConnection', nodes: Array<{ __typename?: 'AgeRating', name: string, id: any }> } | null, contentOwners?: { __typename?: 'ContentOwnersConnection', nodes: Array<{ __typename?: 'ContentOwner', name: string, id: any }> } | null };
 
 export type DeleteSeasonMutationVariables = Exact<{
   input: DeleteSeasonInput;
@@ -21281,14 +21590,6 @@ export type SearchSeasonCastQueryVariables = Exact<{
 
 export type SearchSeasonCastQuery = { __typename?: 'Query', getSeasonsCastsValues?: { __typename?: 'GetSeasonsCastsValuesConnection', nodes: Array<string | null> } | null };
 
-export type SearchSeasonProductionCountriesQueryVariables = Exact<{
-  searchKey: Scalars['String']['input'];
-  limit: Scalars['Int']['input'];
-}>;
-
-
-export type SearchSeasonProductionCountriesQuery = { __typename?: 'Query', getSeasonsProductionCountriesValues?: { __typename?: 'GetSeasonsProductionCountriesValuesConnection', nodes: Array<string | null> } | null };
-
 export type SearchSeasonDirectorQueryVariables = Exact<{
   searchKey: Scalars['String']['input'];
   limit: Scalars['Int']['input'];
@@ -21304,7 +21605,7 @@ export type SeasonEpisodesQueryVariables = Exact<{
 
 export type SeasonEpisodesQuery = { __typename?: 'Query', season?: { __typename?: 'Season', episodes: { __typename?: 'EpisodesConnection', nodes: Array<{ __typename?: 'Episode', id: number, index: number, externalId?: string | null, title: string }> } } | null };
 
-export type SeasonExplorerPropertiesFragment = { __typename?: 'Season', id: number, publishStatus: PublishStatus, index: number, externalId?: string | null, ageRating?: string | null, contentOwner?: string | null, createdDate: any, updatedDate: any, updatedUser: string, released?: any | null, studio?: string | null, publishedDate?: any | null, tvshow?: { __typename?: 'Tvshow', id: number, title: string } | null, seasonsImages: { __typename?: 'SeasonsImagesConnection', nodes: Array<{ __typename?: 'SeasonsImage', imageId: any }> }, seasonsTvshowGenres: { __typename?: 'SeasonsTvshowGenresConnection', nodes: Array<{ __typename?: 'SeasonsTvshowGenre', tvshowGenres?: { __typename?: 'TvshowGenre', title: string } | null }> }, seasonsTags: { __typename?: 'SeasonsTagsConnection', nodes: Array<{ __typename?: 'SeasonsTag', name: string }> }, seasonsCasts: { __typename?: 'SeasonsCastsConnection', nodes: Array<{ __typename?: 'SeasonsCast', name: string }> }, seasonsProductionCountries: { __typename?: 'SeasonsProductionCountriesConnection', nodes: Array<{ __typename?: 'SeasonsProductionCountry', name: string }> }, seasonsLicenses: { __typename?: 'SeasonsLicensesConnection', nodes: Array<{ __typename?: 'SeasonsLicense', licenseEnd?: any | null, licenseStart?: any | null, seasonsLicensesCountries: { __typename?: 'SeasonsLicensesCountriesConnection', nodes: Array<{ __typename?: 'SeasonsLicensesCountry', code: IsoAlphaTwoCountryCodes }> } }> } };
+export type SeasonExplorerPropertiesFragment = { __typename?: 'Season', id: number, publishStatus: PublishStatus, index: number, externalId?: string | null, ageRating?: string | null, contentOwner?: string | null, title: string, createdDate: any, updatedDate: any, updatedUser: string, released?: any | null, publishedDate?: any | null, publishingId?: string | null, tvshow?: { __typename?: 'Tvshow', id: number, title: string } | null, seasonsImages: { __typename?: 'SeasonsImagesConnection', nodes: Array<{ __typename?: 'SeasonsImage', imageId: any }> }, seasonsTvshowGenres: { __typename?: 'SeasonsTvshowGenresConnection', nodes: Array<{ __typename?: 'SeasonsTvshowGenre', tvshowGenres?: { __typename?: 'TvshowGenre', title: string } | null }> }, seasonsTags: { __typename?: 'SeasonsTagsConnection', nodes: Array<{ __typename?: 'SeasonsTag', name: string }> }, seasonsCasts: { __typename?: 'SeasonsCastsConnection', nodes: Array<{ __typename?: 'SeasonsCast', name: string }> }, seasonsProductionCountries: { __typename?: 'SeasonsProductionCountriesConnection', nodes: Array<{ __typename?: 'SeasonsProductionCountry', name: string }> }, seasonsLicenses: { __typename?: 'SeasonsLicensesConnection', nodes: Array<{ __typename?: 'SeasonsLicense', licenseEnd?: any | null, licenseStart?: any | null, seasonsLicensesCountries: { __typename?: 'SeasonsLicensesCountriesConnection', nodes: Array<{ __typename?: 'SeasonsLicensesCountry', countryCode?: IsoAlphaTwoCountryCodes | null, countryGroupId?: any | null }> } }> } };
 
 export type SeasonsQueryVariables = Exact<{
   filter?: InputMaybe<SeasonFilter>;
@@ -21313,12 +21614,12 @@ export type SeasonsQueryVariables = Exact<{
 }>;
 
 
-export type SeasonsQuery = { __typename?: 'Query', filtered?: { __typename?: 'SeasonsConnection', totalCount: number, pageInfo: { __typename?: 'PageInfo', hasNextPage: boolean, endCursor?: any | null }, nodes: Array<{ __typename?: 'Season', id: number, publishStatus: PublishStatus, index: number, externalId?: string | null, ageRating?: string | null, contentOwner?: string | null, createdDate: any, updatedDate: any, updatedUser: string, released?: any | null, studio?: string | null, publishedDate?: any | null, tvshow?: { __typename?: 'Tvshow', id: number, title: string } | null, seasonsImages: { __typename?: 'SeasonsImagesConnection', nodes: Array<{ __typename?: 'SeasonsImage', imageId: any }> }, seasonsTvshowGenres: { __typename?: 'SeasonsTvshowGenresConnection', nodes: Array<{ __typename?: 'SeasonsTvshowGenre', tvshowGenres?: { __typename?: 'TvshowGenre', title: string } | null }> }, seasonsTags: { __typename?: 'SeasonsTagsConnection', nodes: Array<{ __typename?: 'SeasonsTag', name: string }> }, seasonsCasts: { __typename?: 'SeasonsCastsConnection', nodes: Array<{ __typename?: 'SeasonsCast', name: string }> }, seasonsProductionCountries: { __typename?: 'SeasonsProductionCountriesConnection', nodes: Array<{ __typename?: 'SeasonsProductionCountry', name: string }> }, seasonsLicenses: { __typename?: 'SeasonsLicensesConnection', nodes: Array<{ __typename?: 'SeasonsLicense', licenseEnd?: any | null, licenseStart?: any | null, seasonsLicensesCountries: { __typename?: 'SeasonsLicensesCountriesConnection', nodes: Array<{ __typename?: 'SeasonsLicensesCountry', code: IsoAlphaTwoCountryCodes }> } }> } }> } | null, nonFiltered?: { __typename?: 'SeasonsConnection', totalCount: number } | null };
+export type SeasonsQuery = { __typename?: 'Query', filtered?: { __typename?: 'SeasonsConnection', totalCount: number, pageInfo: { __typename?: 'PageInfo', hasNextPage: boolean, endCursor?: any | null }, nodes: Array<{ __typename?: 'Season', id: number, publishStatus: PublishStatus, index: number, externalId?: string | null, ageRating?: string | null, contentOwner?: string | null, title: string, createdDate: any, updatedDate: any, updatedUser: string, released?: any | null, publishedDate?: any | null, publishingId?: string | null, tvshow?: { __typename?: 'Tvshow', id: number, title: string } | null, seasonsImages: { __typename?: 'SeasonsImagesConnection', nodes: Array<{ __typename?: 'SeasonsImage', imageId: any }> }, seasonsTvshowGenres: { __typename?: 'SeasonsTvshowGenresConnection', nodes: Array<{ __typename?: 'SeasonsTvshowGenre', tvshowGenres?: { __typename?: 'TvshowGenre', title: string } | null }> }, seasonsTags: { __typename?: 'SeasonsTagsConnection', nodes: Array<{ __typename?: 'SeasonsTag', name: string }> }, seasonsCasts: { __typename?: 'SeasonsCastsConnection', nodes: Array<{ __typename?: 'SeasonsCast', name: string }> }, seasonsProductionCountries: { __typename?: 'SeasonsProductionCountriesConnection', nodes: Array<{ __typename?: 'SeasonsProductionCountry', name: string }> }, seasonsLicenses: { __typename?: 'SeasonsLicensesConnection', nodes: Array<{ __typename?: 'SeasonsLicense', licenseEnd?: any | null, licenseStart?: any | null, seasonsLicensesCountries: { __typename?: 'SeasonsLicensesCountriesConnection', nodes: Array<{ __typename?: 'SeasonsLicensesCountry', countryCode?: IsoAlphaTwoCountryCodes | null, countryGroupId?: any | null }> } }> } }> } | null, nonFiltered?: { __typename?: 'SeasonsConnection', totalCount: number } | null };
 
 export type SeasonsMutatedSubscriptionVariables = Exact<{ [key: string]: never; }>;
 
 
-export type SeasonsMutatedSubscription = { __typename?: 'Subscription', seasonMutated?: { __typename?: 'SeasonSubscriptionPayload', id: number, eventKey?: SeasonSubscriptionEventKey | null, season?: { __typename?: 'Season', id: number, publishStatus: PublishStatus, index: number, externalId?: string | null, ageRating?: string | null, contentOwner?: string | null, createdDate: any, updatedDate: any, updatedUser: string, released?: any | null, studio?: string | null, publishedDate?: any | null, tvshow?: { __typename?: 'Tvshow', id: number, title: string } | null, seasonsImages: { __typename?: 'SeasonsImagesConnection', nodes: Array<{ __typename?: 'SeasonsImage', imageId: any }> }, seasonsTvshowGenres: { __typename?: 'SeasonsTvshowGenresConnection', nodes: Array<{ __typename?: 'SeasonsTvshowGenre', tvshowGenres?: { __typename?: 'TvshowGenre', title: string } | null }> }, seasonsTags: { __typename?: 'SeasonsTagsConnection', nodes: Array<{ __typename?: 'SeasonsTag', name: string }> }, seasonsCasts: { __typename?: 'SeasonsCastsConnection', nodes: Array<{ __typename?: 'SeasonsCast', name: string }> }, seasonsProductionCountries: { __typename?: 'SeasonsProductionCountriesConnection', nodes: Array<{ __typename?: 'SeasonsProductionCountry', name: string }> }, seasonsLicenses: { __typename?: 'SeasonsLicensesConnection', nodes: Array<{ __typename?: 'SeasonsLicense', licenseEnd?: any | null, licenseStart?: any | null, seasonsLicensesCountries: { __typename?: 'SeasonsLicensesCountriesConnection', nodes: Array<{ __typename?: 'SeasonsLicensesCountry', code: IsoAlphaTwoCountryCodes }> } }> } } | null } | null };
+export type SeasonsMutatedSubscription = { __typename?: 'Subscription', seasonMutated?: { __typename?: 'SeasonSubscriptionPayload', id: number, eventKey?: SeasonSubscriptionEventKey | null, season?: { __typename?: 'Season', id: number, publishStatus: PublishStatus, index: number, externalId?: string | null, ageRating?: string | null, contentOwner?: string | null, title: string, createdDate: any, updatedDate: any, updatedUser: string, released?: any | null, publishedDate?: any | null, publishingId?: string | null, tvshow?: { __typename?: 'Tvshow', id: number, title: string } | null, seasonsImages: { __typename?: 'SeasonsImagesConnection', nodes: Array<{ __typename?: 'SeasonsImage', imageId: any }> }, seasonsTvshowGenres: { __typename?: 'SeasonsTvshowGenresConnection', nodes: Array<{ __typename?: 'SeasonsTvshowGenre', tvshowGenres?: { __typename?: 'TvshowGenre', title: string } | null }> }, seasonsTags: { __typename?: 'SeasonsTagsConnection', nodes: Array<{ __typename?: 'SeasonsTag', name: string }> }, seasonsCasts: { __typename?: 'SeasonsCastsConnection', nodes: Array<{ __typename?: 'SeasonsCast', name: string }> }, seasonsProductionCountries: { __typename?: 'SeasonsProductionCountriesConnection', nodes: Array<{ __typename?: 'SeasonsProductionCountry', name: string }> }, seasonsLicenses: { __typename?: 'SeasonsLicensesConnection', nodes: Array<{ __typename?: 'SeasonsLicense', licenseEnd?: any | null, licenseStart?: any | null, seasonsLicensesCountries: { __typename?: 'SeasonsLicensesCountriesConnection', nodes: Array<{ __typename?: 'SeasonsLicensesCountry', countryCode?: IsoAlphaTwoCountryCodes | null, countryGroupId?: any | null }> } }> } } | null } | null };
 
 export type GetSeasonsFilterOptionsDataQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -21339,7 +21640,7 @@ export type SeasonsLicensesQueryVariables = Exact<{
 }>;
 
 
-export type SeasonsLicensesQuery = { __typename?: 'Query', seasonsLicenses?: { __typename?: 'SeasonsLicensesConnection', totalCount: number, pageInfo: { __typename?: 'PageInfo', hasNextPage: boolean, endCursor?: any | null }, nodes: Array<{ __typename?: 'SeasonsLicense', id: number, licenseEnd?: any | null, licenseStart?: any | null, seasonsLicensesCountries: { __typename?: 'SeasonsLicensesCountriesConnection', nodes: Array<{ __typename?: 'SeasonsLicensesCountry', code: IsoAlphaTwoCountryCodes }> } }> } | null };
+export type SeasonsLicensesQuery = { __typename?: 'Query', seasonsLicenses?: { __typename?: 'SeasonsLicensesConnection', totalCount: number, pageInfo: { __typename?: 'PageInfo', hasNextPage: boolean, endCursor?: any | null }, nodes: Array<{ __typename?: 'SeasonsLicense', id: number, licenseEnd?: any | null, licenseStart?: any | null, seasonsLicensesCountries: { __typename?: 'SeasonsLicensesCountriesConnection', nodes: Array<{ __typename?: 'SeasonsLicensesCountry', countryCode?: IsoAlphaTwoCountryCodes | null, countryGroupId?: any | null }> } }> } | null };
 
 export type CreateSeasonsLicenseMutationVariables = Exact<{
   input: CreateSeasonsLicenseInput;
@@ -21353,7 +21654,7 @@ export type SeasonsLicenseQueryVariables = Exact<{
 }>;
 
 
-export type SeasonsLicenseQuery = { __typename?: 'Query', seasonsLicense?: { __typename?: 'SeasonsLicense', licenseEnd?: any | null, licenseStart?: any | null, seasonId: number, createdDate: any, updatedDate: any, updatedUser: string, createdUser: string, isDownloadable: boolean, downloadedAssetLifespan?: number | null, seasonsLicensesCountries: { __typename?: 'SeasonsLicensesCountriesConnection', nodes: Array<{ __typename?: 'SeasonsLicensesCountry', code: IsoAlphaTwoCountryCodes }> } } | null };
+export type SeasonsLicenseQuery = { __typename?: 'Query', seasonsLicense?: { __typename?: 'SeasonsLicense', licenseEnd?: any | null, licenseStart?: any | null, seasonId: number, createdDate: any, updatedDate: any, updatedUser: string, createdUser: string, isDownloadable: boolean, downloadedAssetLifespan?: number | null, seasonsLicensesCountries: { __typename?: 'SeasonsLicensesCountriesConnection', nodes: Array<{ __typename?: 'SeasonsLicensesCountry', countryCode?: IsoAlphaTwoCountryCodes | null, countryGroupId?: any | null, id: any }> } } | null, allCountryTypes?: { __typename?: 'AllCountryTypesConnection', nodes: Array<{ __typename?: 'AllCountryType', name?: string | null, id?: string | null }> } | null };
 
 export type UpdateSeasonsLicenseMutationVariables = Exact<{
   input: UpdateSeasonsLicenseInput;
@@ -21430,7 +21731,7 @@ export type TvShowQueryVariables = Exact<{
 }>;
 
 
-export type TvShowQuery = { __typename?: 'Query', tvshow?: { __typename?: 'Tvshow', title: string, originalTitle?: string | null, synopsis?: string | null, description?: string | null, externalId?: string | null, ageRating?: string | null, businessType: BusinessType, contentOwner?: string | null, rating?: any | null, extendedField?: string | null, assetSubtype: AssetSubtype, studio?: string | null, released?: any | null, id: number, createdDate: any, createdUser: string, updatedDate: any, updatedUser: string, publishStatus: PublishStatus, publishedDate?: any | null, publishedUser?: string | null, tvshowsTags: { __typename?: 'TvshowsTagsConnection', nodes: Array<{ __typename?: 'TvshowsTag', name: string }> }, tvshowsTvshowGenres: { __typename?: 'TvshowsTvshowGenresConnection', nodes: Array<{ __typename?: 'TvshowsTvshowGenre', tvshowGenres?: { __typename?: 'TvshowGenre', title: string } | null }> }, tvshowsCasts: { __typename?: 'TvshowsCastsConnection', nodes: Array<{ __typename?: 'TvshowsCast', name: string }> }, tvshowsProductionCountries: { __typename?: 'TvshowsProductionCountriesConnection', nodes: Array<{ __typename?: 'TvshowsProductionCountry', name: string }> }, tvshowsDirectors: { __typename?: 'TvshowsDirectorsConnection', nodes: Array<{ __typename?: 'TvshowsDirector', name: string }> }, seasons: { __typename?: 'SeasonsConnection', totalCount: number }, tvshowsImages: { __typename?: 'TvshowsImagesConnection', nodes: Array<{ __typename?: 'TvshowsImage', imageType: TvshowImageType, imageId: any }> }, tvshowsTrailers: { __typename?: 'TvshowsTrailersConnection', totalCount: number } } | null, tvshowGenres?: { __typename?: 'TvshowGenresConnection', nodes: Array<{ __typename?: 'TvshowGenre', title: string, id: number }> } | null, ageRatings?: { __typename?: 'AgeRatingsConnection', nodes: Array<{ __typename?: 'AgeRating', name: string, id: any }> } | null, contentOwners?: { __typename?: 'ContentOwnersConnection', nodes: Array<{ __typename?: 'ContentOwner', name: string, id: any }> } | null, languages?: { __typename?: 'LanguagesConnection', nodes: Array<{ __typename?: 'Language', code: string, title: string }> } | null };
+export type TvShowQuery = { __typename?: 'Query', tvshow?: { __typename?: 'Tvshow', title: string, originalTitle?: string | null, synopsis?: string | null, description?: string | null, externalId?: string | null, publishingId?: string | null, ageRating?: string | null, businessType: BusinessType, contentOwner?: string | null, rating?: any | null, extendedField?: string | null, assetSubtype: AssetSubtype, studio?: string | null, released?: any | null, id: number, createdDate: any, createdUser: string, updatedDate: any, updatedUser: string, publishStatus: PublishStatus, publishedDate?: any | null, publishedUser?: string | null, tvshowsTags: { __typename?: 'TvshowsTagsConnection', nodes: Array<{ __typename?: 'TvshowsTag', name: string }> }, tvshowsTvshowGenres: { __typename?: 'TvshowsTvshowGenresConnection', nodes: Array<{ __typename?: 'TvshowsTvshowGenre', tvshowGenres?: { __typename?: 'TvshowGenre', title: string } | null }> }, tvshowsCasts: { __typename?: 'TvshowsCastsConnection', nodes: Array<{ __typename?: 'TvshowsCast', name: string }> }, tvshowsProductionCountries: { __typename?: 'TvshowsProductionCountriesConnection', nodes: Array<{ __typename?: 'TvshowsProductionCountry', name: string }> }, tvshowsDirectors: { __typename?: 'TvshowsDirectorsConnection', nodes: Array<{ __typename?: 'TvshowsDirector', name: string }> }, seasons: { __typename?: 'SeasonsConnection', totalCount: number }, tvshowsImages: { __typename?: 'TvshowsImagesConnection', nodes: Array<{ __typename?: 'TvshowsImage', imageType: TvshowImageType, imageId: any }> }, tvshowsTrailers: { __typename?: 'TvshowsTrailersConnection', totalCount: number } } | null, tvshowGenres?: { __typename?: 'TvshowGenresConnection', nodes: Array<{ __typename?: 'TvshowGenre', title: string, id: number }> } | null, ageRatings?: { __typename?: 'AgeRatingsConnection', nodes: Array<{ __typename?: 'AgeRating', name: string, id: any }> } | null, contentOwners?: { __typename?: 'ContentOwnersConnection', nodes: Array<{ __typename?: 'ContentOwner', name: string, id: any }> } | null, languages?: { __typename?: 'LanguagesConnection', nodes: Array<{ __typename?: 'Language', code: string, title: string }> } | null };
 
 export type DeleteTvShowMutationVariables = Exact<{
   input: DeleteTvshowInput;
@@ -21476,14 +21777,6 @@ export type SearchTvShowCastQueryVariables = Exact<{
 
 export type SearchTvShowCastQuery = { __typename?: 'Query', getTvshowsCastsValues?: { __typename?: 'GetTvshowsCastsValuesConnection', nodes: Array<string | null> } | null };
 
-export type SearchTvShowProductionCountriesQueryVariables = Exact<{
-  searchKey: Scalars['String']['input'];
-  limit: Scalars['Int']['input'];
-}>;
-
-
-export type SearchTvShowProductionCountriesQuery = { __typename?: 'Query', getTvshowsProductionCountriesValues?: { __typename?: 'GetTvshowsProductionCountriesValuesConnection', nodes: Array<string | null> } | null };
-
 export type SearchTvShowDirectorQueryVariables = Exact<{
   searchKey: Scalars['String']['input'];
   limit: Scalars['Int']['input'];
@@ -21492,7 +21785,7 @@ export type SearchTvShowDirectorQueryVariables = Exact<{
 
 export type SearchTvShowDirectorQuery = { __typename?: 'Query', getTvshowsDirectorsValues?: { __typename?: 'GetTvshowsDirectorsValuesConnection', nodes: Array<string | null> } | null };
 
-export type TvShowExplorerPropertiesFragment = { __typename?: 'Tvshow', id: number, publishStatus: PublishStatus, title: string, externalId?: string | null, ageRating?: string | null, assetSubtype: AssetSubtype, businessType: BusinessType, contentOwner?: string | null, createdDate: any, updatedDate: any, updatedUser: string, originalTitle?: string | null, released?: any | null, studio?: string | null, publishedDate?: any | null, tvshowsImages: { __typename?: 'TvshowsImagesConnection', nodes: Array<{ __typename?: 'TvshowsImage', imageId: any }> }, tvshowsTvshowGenres: { __typename?: 'TvshowsTvshowGenresConnection', nodes: Array<{ __typename?: 'TvshowsTvshowGenre', tvshowGenres?: { __typename?: 'TvshowGenre', title: string } | null }> }, tvshowsTags: { __typename?: 'TvshowsTagsConnection', nodes: Array<{ __typename?: 'TvshowsTag', name: string }> }, tvshowsCasts: { __typename?: 'TvshowsCastsConnection', nodes: Array<{ __typename?: 'TvshowsCast', name: string }> }, tvshowsProductionCountries: { __typename?: 'TvshowsProductionCountriesConnection', nodes: Array<{ __typename?: 'TvshowsProductionCountry', name: string }> }, tvshowsLicenses: { __typename?: 'TvshowsLicensesConnection', nodes: Array<{ __typename?: 'TvshowsLicense', licenseEnd?: any | null, licenseStart?: any | null, tvshowsLicensesCountries: { __typename?: 'TvshowsLicensesCountriesConnection', nodes: Array<{ __typename?: 'TvshowsLicensesCountry', code: IsoAlphaTwoCountryCodes }> } }> }, seasons: { __typename?: 'SeasonsConnection', nodes: Array<{ __typename?: 'Season', episodes: { __typename?: 'EpisodesConnection', nodes: Array<{ __typename?: 'Episode', episodesLicenses: { __typename?: 'EpisodesLicensesConnection', nodes: Array<{ __typename?: 'EpisodesLicense', licenseStart?: any | null, licenseEnd?: any | null }> } }> } }> } };
+export type TvShowExplorerPropertiesFragment = { __typename?: 'Tvshow', id: number, publishStatus: PublishStatus, title: string, externalId?: string | null, ageRating?: string | null, assetSubtype: AssetSubtype, businessType: BusinessType, contentOwner?: string | null, createdDate: any, updatedDate: any, updatedUser: string, originalTitle?: string | null, released?: any | null, publishedDate?: any | null, publishingId?: string | null, tvshowsImages: { __typename?: 'TvshowsImagesConnection', nodes: Array<{ __typename?: 'TvshowsImage', imageId: any }> }, tvshowsTvshowGenres: { __typename?: 'TvshowsTvshowGenresConnection', nodes: Array<{ __typename?: 'TvshowsTvshowGenre', tvshowGenres?: { __typename?: 'TvshowGenre', title: string } | null }> }, tvshowsTags: { __typename?: 'TvshowsTagsConnection', nodes: Array<{ __typename?: 'TvshowsTag', name: string }> }, tvshowsCasts: { __typename?: 'TvshowsCastsConnection', nodes: Array<{ __typename?: 'TvshowsCast', name: string }> }, tvshowsProductionCountries: { __typename?: 'TvshowsProductionCountriesConnection', nodes: Array<{ __typename?: 'TvshowsProductionCountry', name: string }> }, tvshowsLicenses: { __typename?: 'TvshowsLicensesConnection', nodes: Array<{ __typename?: 'TvshowsLicense', licenseEnd?: any | null, licenseStart?: any | null, tvshowsLicensesCountries: { __typename?: 'TvshowsLicensesCountriesConnection', nodes: Array<{ __typename?: 'TvshowsLicensesCountry', countryCode?: IsoAlphaTwoCountryCodes | null, countryGroupId?: any | null }> } }> }, seasons: { __typename?: 'SeasonsConnection', nodes: Array<{ __typename?: 'Season', episodes: { __typename?: 'EpisodesConnection', nodes: Array<{ __typename?: 'Episode', episodesLicenses: { __typename?: 'EpisodesLicensesConnection', nodes: Array<{ __typename?: 'EpisodesLicense', licenseStart?: any | null, licenseEnd?: any | null }> } }> } }> } };
 
 export type TvShowsQueryVariables = Exact<{
   filter?: InputMaybe<TvshowFilter>;
@@ -21501,12 +21794,12 @@ export type TvShowsQueryVariables = Exact<{
 }>;
 
 
-export type TvShowsQuery = { __typename?: 'Query', filtered?: { __typename?: 'TvshowsConnection', totalCount: number, pageInfo: { __typename?: 'PageInfo', hasNextPage: boolean, endCursor?: any | null }, nodes: Array<{ __typename?: 'Tvshow', id: number, publishStatus: PublishStatus, title: string, externalId?: string | null, ageRating?: string | null, assetSubtype: AssetSubtype, businessType: BusinessType, contentOwner?: string | null, createdDate: any, updatedDate: any, updatedUser: string, originalTitle?: string | null, released?: any | null, studio?: string | null, publishedDate?: any | null, tvshowsImages: { __typename?: 'TvshowsImagesConnection', nodes: Array<{ __typename?: 'TvshowsImage', imageId: any }> }, tvshowsTvshowGenres: { __typename?: 'TvshowsTvshowGenresConnection', nodes: Array<{ __typename?: 'TvshowsTvshowGenre', tvshowGenres?: { __typename?: 'TvshowGenre', title: string } | null }> }, tvshowsTags: { __typename?: 'TvshowsTagsConnection', nodes: Array<{ __typename?: 'TvshowsTag', name: string }> }, tvshowsCasts: { __typename?: 'TvshowsCastsConnection', nodes: Array<{ __typename?: 'TvshowsCast', name: string }> }, tvshowsProductionCountries: { __typename?: 'TvshowsProductionCountriesConnection', nodes: Array<{ __typename?: 'TvshowsProductionCountry', name: string }> }, tvshowsLicenses: { __typename?: 'TvshowsLicensesConnection', nodes: Array<{ __typename?: 'TvshowsLicense', licenseEnd?: any | null, licenseStart?: any | null, tvshowsLicensesCountries: { __typename?: 'TvshowsLicensesCountriesConnection', nodes: Array<{ __typename?: 'TvshowsLicensesCountry', code: IsoAlphaTwoCountryCodes }> } }> }, seasons: { __typename?: 'SeasonsConnection', nodes: Array<{ __typename?: 'Season', episodes: { __typename?: 'EpisodesConnection', nodes: Array<{ __typename?: 'Episode', episodesLicenses: { __typename?: 'EpisodesLicensesConnection', nodes: Array<{ __typename?: 'EpisodesLicense', licenseStart?: any | null, licenseEnd?: any | null }> } }> } }> } }> } | null, nonFiltered?: { __typename?: 'TvshowsConnection', totalCount: number } | null };
+export type TvShowsQuery = { __typename?: 'Query', filtered?: { __typename?: 'TvshowsConnection', totalCount: number, pageInfo: { __typename?: 'PageInfo', hasNextPage: boolean, endCursor?: any | null }, nodes: Array<{ __typename?: 'Tvshow', id: number, publishStatus: PublishStatus, title: string, externalId?: string | null, ageRating?: string | null, assetSubtype: AssetSubtype, businessType: BusinessType, contentOwner?: string | null, createdDate: any, updatedDate: any, updatedUser: string, originalTitle?: string | null, released?: any | null, publishedDate?: any | null, publishingId?: string | null, tvshowsImages: { __typename?: 'TvshowsImagesConnection', nodes: Array<{ __typename?: 'TvshowsImage', imageId: any }> }, tvshowsTvshowGenres: { __typename?: 'TvshowsTvshowGenresConnection', nodes: Array<{ __typename?: 'TvshowsTvshowGenre', tvshowGenres?: { __typename?: 'TvshowGenre', title: string } | null }> }, tvshowsTags: { __typename?: 'TvshowsTagsConnection', nodes: Array<{ __typename?: 'TvshowsTag', name: string }> }, tvshowsCasts: { __typename?: 'TvshowsCastsConnection', nodes: Array<{ __typename?: 'TvshowsCast', name: string }> }, tvshowsProductionCountries: { __typename?: 'TvshowsProductionCountriesConnection', nodes: Array<{ __typename?: 'TvshowsProductionCountry', name: string }> }, tvshowsLicenses: { __typename?: 'TvshowsLicensesConnection', nodes: Array<{ __typename?: 'TvshowsLicense', licenseEnd?: any | null, licenseStart?: any | null, tvshowsLicensesCountries: { __typename?: 'TvshowsLicensesCountriesConnection', nodes: Array<{ __typename?: 'TvshowsLicensesCountry', countryCode?: IsoAlphaTwoCountryCodes | null, countryGroupId?: any | null }> } }> }, seasons: { __typename?: 'SeasonsConnection', nodes: Array<{ __typename?: 'Season', episodes: { __typename?: 'EpisodesConnection', nodes: Array<{ __typename?: 'Episode', episodesLicenses: { __typename?: 'EpisodesLicensesConnection', nodes: Array<{ __typename?: 'EpisodesLicense', licenseStart?: any | null, licenseEnd?: any | null }> } }> } }> } }> } | null, nonFiltered?: { __typename?: 'TvshowsConnection', totalCount: number } | null };
 
 export type TvShowsMutatedSubscriptionVariables = Exact<{ [key: string]: never; }>;
 
 
-export type TvShowsMutatedSubscription = { __typename?: 'Subscription', tvshowMutated?: { __typename?: 'TvshowSubscriptionPayload', id: number, eventKey?: TvshowSubscriptionEventKey | null, tvshow?: { __typename?: 'Tvshow', id: number, publishStatus: PublishStatus, title: string, externalId?: string | null, ageRating?: string | null, assetSubtype: AssetSubtype, businessType: BusinessType, contentOwner?: string | null, createdDate: any, updatedDate: any, updatedUser: string, originalTitle?: string | null, released?: any | null, studio?: string | null, publishedDate?: any | null, tvshowsImages: { __typename?: 'TvshowsImagesConnection', nodes: Array<{ __typename?: 'TvshowsImage', imageId: any }> }, tvshowsTvshowGenres: { __typename?: 'TvshowsTvshowGenresConnection', nodes: Array<{ __typename?: 'TvshowsTvshowGenre', tvshowGenres?: { __typename?: 'TvshowGenre', title: string } | null }> }, tvshowsTags: { __typename?: 'TvshowsTagsConnection', nodes: Array<{ __typename?: 'TvshowsTag', name: string }> }, tvshowsCasts: { __typename?: 'TvshowsCastsConnection', nodes: Array<{ __typename?: 'TvshowsCast', name: string }> }, tvshowsProductionCountries: { __typename?: 'TvshowsProductionCountriesConnection', nodes: Array<{ __typename?: 'TvshowsProductionCountry', name: string }> }, tvshowsLicenses: { __typename?: 'TvshowsLicensesConnection', nodes: Array<{ __typename?: 'TvshowsLicense', licenseEnd?: any | null, licenseStart?: any | null, tvshowsLicensesCountries: { __typename?: 'TvshowsLicensesCountriesConnection', nodes: Array<{ __typename?: 'TvshowsLicensesCountry', code: IsoAlphaTwoCountryCodes }> } }> }, seasons: { __typename?: 'SeasonsConnection', nodes: Array<{ __typename?: 'Season', episodes: { __typename?: 'EpisodesConnection', nodes: Array<{ __typename?: 'Episode', episodesLicenses: { __typename?: 'EpisodesLicensesConnection', nodes: Array<{ __typename?: 'EpisodesLicense', licenseStart?: any | null, licenseEnd?: any | null }> } }> } }> } } | null } | null };
+export type TvShowsMutatedSubscription = { __typename?: 'Subscription', tvshowMutated?: { __typename?: 'TvshowSubscriptionPayload', id: number, eventKey?: TvshowSubscriptionEventKey | null, tvshow?: { __typename?: 'Tvshow', id: number, publishStatus: PublishStatus, title: string, externalId?: string | null, ageRating?: string | null, assetSubtype: AssetSubtype, businessType: BusinessType, contentOwner?: string | null, createdDate: any, updatedDate: any, updatedUser: string, originalTitle?: string | null, released?: any | null, publishedDate?: any | null, publishingId?: string | null, tvshowsImages: { __typename?: 'TvshowsImagesConnection', nodes: Array<{ __typename?: 'TvshowsImage', imageId: any }> }, tvshowsTvshowGenres: { __typename?: 'TvshowsTvshowGenresConnection', nodes: Array<{ __typename?: 'TvshowsTvshowGenre', tvshowGenres?: { __typename?: 'TvshowGenre', title: string } | null }> }, tvshowsTags: { __typename?: 'TvshowsTagsConnection', nodes: Array<{ __typename?: 'TvshowsTag', name: string }> }, tvshowsCasts: { __typename?: 'TvshowsCastsConnection', nodes: Array<{ __typename?: 'TvshowsCast', name: string }> }, tvshowsProductionCountries: { __typename?: 'TvshowsProductionCountriesConnection', nodes: Array<{ __typename?: 'TvshowsProductionCountry', name: string }> }, tvshowsLicenses: { __typename?: 'TvshowsLicensesConnection', nodes: Array<{ __typename?: 'TvshowsLicense', licenseEnd?: any | null, licenseStart?: any | null, tvshowsLicensesCountries: { __typename?: 'TvshowsLicensesCountriesConnection', nodes: Array<{ __typename?: 'TvshowsLicensesCountry', countryCode?: IsoAlphaTwoCountryCodes | null, countryGroupId?: any | null }> } }> }, seasons: { __typename?: 'SeasonsConnection', nodes: Array<{ __typename?: 'Season', episodes: { __typename?: 'EpisodesConnection', nodes: Array<{ __typename?: 'Episode', episodesLicenses: { __typename?: 'EpisodesLicensesConnection', nodes: Array<{ __typename?: 'EpisodesLicense', licenseStart?: any | null, licenseEnd?: any | null }> } }> } }> } } | null } | null };
 
 export type GetTvShowsFilterOptionsDataQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -21547,7 +21840,7 @@ export type TvshowsLicensesQueryVariables = Exact<{
 }>;
 
 
-export type TvshowsLicensesQuery = { __typename?: 'Query', tvshowsLicenses?: { __typename?: 'TvshowsLicensesConnection', totalCount: number, pageInfo: { __typename?: 'PageInfo', hasNextPage: boolean, endCursor?: any | null }, nodes: Array<{ __typename?: 'TvshowsLicense', id: number, licenseEnd?: any | null, licenseStart?: any | null, tvshowsLicensesCountries: { __typename?: 'TvshowsLicensesCountriesConnection', nodes: Array<{ __typename?: 'TvshowsLicensesCountry', code: IsoAlphaTwoCountryCodes }> } }> } | null };
+export type TvshowsLicensesQuery = { __typename?: 'Query', tvshowsLicenses?: { __typename?: 'TvshowsLicensesConnection', totalCount: number, pageInfo: { __typename?: 'PageInfo', hasNextPage: boolean, endCursor?: any | null }, nodes: Array<{ __typename?: 'TvshowsLicense', id: number, licenseEnd?: any | null, licenseStart?: any | null, tvshowsLicensesCountries: { __typename?: 'TvshowsLicensesCountriesConnection', nodes: Array<{ __typename?: 'TvshowsLicensesCountry', countryCode?: IsoAlphaTwoCountryCodes | null, countryGroupId?: any | null }> } }> } | null };
 
 export type CreateTvshowsLicenseMutationVariables = Exact<{
   input: CreateTvshowsLicenseInput;
@@ -21561,7 +21854,7 @@ export type TvshowsLicenseQueryVariables = Exact<{
 }>;
 
 
-export type TvshowsLicenseQuery = { __typename?: 'Query', tvshowsLicense?: { __typename?: 'TvshowsLicense', licenseEnd?: any | null, licenseStart?: any | null, tvshowId: number, createdDate: any, updatedDate: any, updatedUser: string, createdUser: string, isDownloadable: boolean, downloadedAssetLifespan?: number | null, tvshowsLicensesCountries: { __typename?: 'TvshowsLicensesCountriesConnection', nodes: Array<{ __typename?: 'TvshowsLicensesCountry', code: IsoAlphaTwoCountryCodes }> } } | null };
+export type TvshowsLicenseQuery = { __typename?: 'Query', tvshowsLicense?: { __typename?: 'TvshowsLicense', licenseEnd?: any | null, licenseStart?: any | null, tvshowId: number, createdDate: any, updatedDate: any, updatedUser: string, createdUser: string, isDownloadable: boolean, downloadedAssetLifespan?: number | null, tvshowsLicensesCountries: { __typename?: 'TvshowsLicensesCountriesConnection', nodes: Array<{ __typename?: 'TvshowsLicensesCountry', countryCode?: IsoAlphaTwoCountryCodes | null, countryGroupId?: any | null, id: any }> } } | null, allCountryTypes?: { __typename?: 'AllCountryTypesConnection', nodes: Array<{ __typename?: 'AllCountryType', name?: string | null, id?: string | null }> } | null };
 
 export type UpdateTvshowsLicenseMutationVariables = Exact<{
   input: UpdateTvshowsLicenseInput;
@@ -21631,19 +21924,18 @@ export const CollectionExplorerPropertiesFragmentDoc = gql`
   id
   title
   description
-  __typename
   externalId
   collectionsTags {
     nodes {
       name
     }
   }
+  publishingId
   publishedDate
   createdDate
   updatedDate
   updatedUser
   publishStatus
-  languages
   assetSubtype
   collectionCountries {
     nodes {
@@ -21652,9 +21944,13 @@ export const CollectionExplorerPropertiesFragmentDoc = gql`
       countryId
     }
   }
-  collectionsImages {
+  collectionsImages(
+    filter: {imageType: {in: [COLLECTION_COVER_1X1, COLLECTION_COVER_4X1, COLLECTION_COVER]}}
+    orderBy: IMAGE_TYPE_DESC
+  ) {
     nodes {
       imageId
+      imageType
     }
   }
   collectionRelations(orderBy: SORT_ORDER_DESC) {
@@ -21694,7 +21990,10 @@ export const EpisodeExplorerPropertiesFragmentDoc = gql`
       title
     }
   }
-  episodesImages(condition: {imageType: COVER_1X1}) {
+  episodesImages(
+    filter: {imageType: {in: [EPISODE_COVER_1X1, EPISODE_COVER_16X9, EPISODE_COVER]}}
+    orderBy: IMAGE_TYPE_DESC
+  ) {
     nodes {
       imageId
     }
@@ -21732,14 +22031,15 @@ export const EpisodeExplorerPropertiesFragmentDoc = gql`
       licenseStart
       episodesLicensesCountries {
         nodes {
-          code
+          countryCode
+          countryGroupId
         }
       }
     }
   }
-  studio
   publishedDate
   id
+  publishingId
   ageRating
   contentOwner
 }
@@ -21774,14 +22074,19 @@ export const MovieExplorerPropertiesFragmentDoc = gql`
       licenseStart
       moviesLicensesCountries {
         nodes {
-          code
+          countryCode
+          countryGroupId
         }
       }
     }
   }
-  moviesImages(condition: {imageType: COVER_1X1}) {
+  moviesImages(
+    filter: {imageType: {in: [MOVIE_COVER_1X1, MOVIE_COVER_16X9, MOVIE_COVER]}}
+    orderBy: IMAGE_TYPE_DESC
+  ) {
     nodes {
       imageId
+      imageType
     }
   }
   moviesTags {
@@ -21814,8 +22119,8 @@ export const MovieExplorerPropertiesFragmentDoc = gql`
       }
     }
   }
-  studio
   publishedDate
+  publishingId
   createdDate
   updatedDate
   updatedUser
@@ -21872,11 +22177,15 @@ export const SeasonExplorerPropertiesFragmentDoc = gql`
   externalId
   ageRating
   contentOwner
+  title
   tvshow {
     id
     title
   }
-  seasonsImages(condition: {imageType: COVER_1X1}) {
+  seasonsImages(
+    filter: {imageType: {in: [SEASON_COVER_1X1, SEASON_COVER_16X9, SEASON_COVER]}}
+    orderBy: IMAGE_TYPE_DESC
+  ) {
     nodes {
       imageId
     }
@@ -21913,13 +22222,14 @@ export const SeasonExplorerPropertiesFragmentDoc = gql`
       licenseStart
       seasonsLicensesCountries {
         nodes {
-          code
+          countryCode
+          countryGroupId
         }
       }
     }
   }
-  studio
   publishedDate
+  publishingId
 }
     `;
 export const TvShowExplorerPropertiesFragmentDoc = gql`
@@ -21932,7 +22242,10 @@ export const TvShowExplorerPropertiesFragmentDoc = gql`
   assetSubtype
   businessType
   contentOwner
-  tvshowsImages(condition: {imageType: COVER_1X1}) {
+  tvshowsImages(
+    filter: {imageType: {in: [TVSHOW_COVER_1X1, TVSHOW_COVER_16X9, TVSHOW_COVER]}}
+    orderBy: IMAGE_TYPE_DESC
+  ) {
     nodes {
       imageId
     }
@@ -21970,13 +22283,14 @@ export const TvShowExplorerPropertiesFragmentDoc = gql`
       licenseStart
       tvshowsLicensesCountries {
         nodes {
-          code
+          countryCode
+          countryGroupId
         }
       }
     }
   }
-  studio
   publishedDate
+  publishingId
   seasons {
     nodes {
       episodes {
@@ -22036,6 +22350,7 @@ export const CollectionDocument = gql`
     synopsis
     description
     externalId
+    publishingId
     languages
     extendedField
     assetSubtype
@@ -22072,7 +22387,7 @@ export const CollectionDocument = gql`
     tvshows: collectionRelations(filter: {tvshowExists: true}) {
       totalCount
     }
-    seasons: collectionRelations(filter: {seasonExists: true}) {
+    childCollections: collectionRelations(filter: {childCollectionExists: true}) {
       totalCount
     }
     episodes: collectionRelations(filter: {episodeExists: true}) {
@@ -22315,16 +22630,6 @@ export const CollectionRelatedEntitiesDocument = gql`
           title
           publishStatus
           entityImages: tvshowsImages {
-            nodes {
-              imageId
-            }
-          }
-        }
-        season {
-          entityId: id
-          index
-          publishStatus
-          entityImages: seasonsImages {
             nodes {
               imageId
             }
@@ -22675,6 +22980,43 @@ export function useBulkCreateCollectionSnapshotsMutation(baseOptions?: Apollo.Mu
 export type BulkCreateCollectionSnapshotsMutationHookResult = ReturnType<typeof useBulkCreateCollectionSnapshotsMutation>;
 export type BulkCreateCollectionSnapshotsMutationResult = Apollo.MutationResult<BulkCreateCollectionSnapshotsMutation>;
 export type BulkCreateCollectionSnapshotsMutationOptions = Apollo.BaseMutationOptions<BulkCreateCollectionSnapshotsMutation, BulkCreateCollectionSnapshotsMutationVariables>;
+export const GetAllCountryDataDocument = gql`
+    query GetAllCountryData {
+  allCountryTypes(orderBy: NAME_ASC) {
+    nodes {
+      name
+      id
+    }
+  }
+}
+    `;
+
+/**
+ * __useGetAllCountryDataQuery__
+ *
+ * To run a query within a React component, call `useGetAllCountryDataQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetAllCountryDataQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetAllCountryDataQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useGetAllCountryDataQuery(baseOptions?: Apollo.QueryHookOptions<GetAllCountryDataQuery, GetAllCountryDataQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetAllCountryDataQuery, GetAllCountryDataQueryVariables>(GetAllCountryDataDocument, options);
+      }
+export function useGetAllCountryDataLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetAllCountryDataQuery, GetAllCountryDataQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetAllCountryDataQuery, GetAllCountryDataQueryVariables>(GetAllCountryDataDocument, options);
+        }
+export type GetAllCountryDataQueryHookResult = ReturnType<typeof useGetAllCountryDataQuery>;
+export type GetAllCountryDataLazyQueryHookResult = ReturnType<typeof useGetAllCountryDataLazyQuery>;
+export type GetAllCountryDataQueryResult = Apollo.QueryResult<GetAllCountryDataQuery, GetAllCountryDataQueryVariables>;
 export const CreateCountryGroupDocument = gql`
     mutation CreateCountryGroup($input: CreateCountryGroupInput!) {
   createCountryGroup(input: $input) {
@@ -22957,6 +23299,7 @@ export const EpisodeDocument = gql`
     synopsis
     description
     externalId
+    publishingId
     ageRating
     contentOwner
     rating
@@ -23012,7 +23355,7 @@ export const EpisodeDocument = gql`
     season {
       id
       index
-      seasonsImages(condition: {imageType: COVER_1X1}, first: 1) {
+      seasonsImages(condition: {imageType: SEASON_COVER_1X1}, first: 1) {
         nodes {
           imageId
         }
@@ -23320,45 +23663,6 @@ export function useSearchEpisodeCastLazyQuery(baseOptions?: Apollo.LazyQueryHook
 export type SearchEpisodeCastQueryHookResult = ReturnType<typeof useSearchEpisodeCastQuery>;
 export type SearchEpisodeCastLazyQueryHookResult = ReturnType<typeof useSearchEpisodeCastLazyQuery>;
 export type SearchEpisodeCastQueryResult = Apollo.QueryResult<SearchEpisodeCastQuery, SearchEpisodeCastQueryVariables>;
-export const SearchEpisodeProductionCountriesDocument = gql`
-    query SearchEpisodeProductionCountries($searchKey: String!, $limit: Int!) {
-  getEpisodesProductionCountriesValues(
-    filter: {startsWithInsensitive: $searchKey}
-    first: $limit
-  ) {
-    nodes
-  }
-}
-    `;
-
-/**
- * __useSearchEpisodeProductionCountriesQuery__
- *
- * To run a query within a React component, call `useSearchEpisodeProductionCountriesQuery` and pass it any options that fit your needs.
- * When your component renders, `useSearchEpisodeProductionCountriesQuery` returns an object from Apollo Client that contains loading, error, and data properties
- * you can use to render your UI.
- *
- * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
- *
- * @example
- * const { data, loading, error } = useSearchEpisodeProductionCountriesQuery({
- *   variables: {
- *      searchKey: // value for 'searchKey'
- *      limit: // value for 'limit'
- *   },
- * });
- */
-export function useSearchEpisodeProductionCountriesQuery(baseOptions: Apollo.QueryHookOptions<SearchEpisodeProductionCountriesQuery, SearchEpisodeProductionCountriesQueryVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<SearchEpisodeProductionCountriesQuery, SearchEpisodeProductionCountriesQueryVariables>(SearchEpisodeProductionCountriesDocument, options);
-      }
-export function useSearchEpisodeProductionCountriesLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<SearchEpisodeProductionCountriesQuery, SearchEpisodeProductionCountriesQueryVariables>) {
-          const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<SearchEpisodeProductionCountriesQuery, SearchEpisodeProductionCountriesQueryVariables>(SearchEpisodeProductionCountriesDocument, options);
-        }
-export type SearchEpisodeProductionCountriesQueryHookResult = ReturnType<typeof useSearchEpisodeProductionCountriesQuery>;
-export type SearchEpisodeProductionCountriesLazyQueryHookResult = ReturnType<typeof useSearchEpisodeProductionCountriesLazyQuery>;
-export type SearchEpisodeProductionCountriesQueryResult = Apollo.QueryResult<SearchEpisodeProductionCountriesQuery, SearchEpisodeProductionCountriesQueryVariables>;
 export const SearchEpisodeDirectorDocument = gql`
     query SearchEpisodeDirector($searchKey: String!, $limit: Int!) {
   getEpisodesDirectorsValues(
@@ -23585,7 +23889,8 @@ export const EpisodesLicensesDocument = gql`
       id
       episodesLicensesCountries {
         nodes {
-          code
+          countryCode
+          countryGroupId
         }
       }
       licenseEnd
@@ -23659,13 +23964,52 @@ export function useCreateEpisodesLicenseMutation(baseOptions?: Apollo.MutationHo
 export type CreateEpisodesLicenseMutationHookResult = ReturnType<typeof useCreateEpisodesLicenseMutation>;
 export type CreateEpisodesLicenseMutationResult = Apollo.MutationResult<CreateEpisodesLicenseMutation>;
 export type CreateEpisodesLicenseMutationOptions = Apollo.BaseMutationOptions<CreateEpisodesLicenseMutation, CreateEpisodesLicenseMutationVariables>;
+export const GetAllCountryTypesDataDocument = gql`
+    query GetAllCountryTypesData {
+  allCountryTypes(orderBy: NAME_ASC) {
+    nodes {
+      name
+      id
+    }
+  }
+}
+    `;
+
+/**
+ * __useGetAllCountryTypesDataQuery__
+ *
+ * To run a query within a React component, call `useGetAllCountryTypesDataQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetAllCountryTypesDataQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetAllCountryTypesDataQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useGetAllCountryTypesDataQuery(baseOptions?: Apollo.QueryHookOptions<GetAllCountryTypesDataQuery, GetAllCountryTypesDataQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetAllCountryTypesDataQuery, GetAllCountryTypesDataQueryVariables>(GetAllCountryTypesDataDocument, options);
+      }
+export function useGetAllCountryTypesDataLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetAllCountryTypesDataQuery, GetAllCountryTypesDataQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetAllCountryTypesDataQuery, GetAllCountryTypesDataQueryVariables>(GetAllCountryTypesDataDocument, options);
+        }
+export type GetAllCountryTypesDataQueryHookResult = ReturnType<typeof useGetAllCountryTypesDataQuery>;
+export type GetAllCountryTypesDataLazyQueryHookResult = ReturnType<typeof useGetAllCountryTypesDataLazyQuery>;
+export type GetAllCountryTypesDataQueryResult = Apollo.QueryResult<GetAllCountryTypesDataQuery, GetAllCountryTypesDataQueryVariables>;
 export const EpisodesLicenseDocument = gql`
     query EpisodesLicense($id: Int!) {
   episodesLicense(id: $id) {
     episodeId
     episodesLicensesCountries {
       nodes {
-        code
+        countryCode
+        countryGroupId
+        id
       }
     }
     licenseEnd
@@ -23676,6 +24020,12 @@ export const EpisodesLicenseDocument = gql`
     updatedUser
     isDownloadable
     downloadedAssetLifespan
+  }
+  allCountryTypes(orderBy: NAME_ASC) {
+    nodes {
+      name
+      id
+    }
   }
 }
     `;
@@ -24619,6 +24969,7 @@ export const MovieDocument = gql`
     synopsis
     description
     externalId
+    publishingId
     ageRating
     businessType
     contentOwner
@@ -24967,45 +25318,6 @@ export function useSearchMovieDirectorLazyQuery(baseOptions?: Apollo.LazyQueryHo
 export type SearchMovieDirectorQueryHookResult = ReturnType<typeof useSearchMovieDirectorQuery>;
 export type SearchMovieDirectorLazyQueryHookResult = ReturnType<typeof useSearchMovieDirectorLazyQuery>;
 export type SearchMovieDirectorQueryResult = Apollo.QueryResult<SearchMovieDirectorQuery, SearchMovieDirectorQueryVariables>;
-export const SearchMovieProductionCountriesDocument = gql`
-    query SearchMovieProductionCountries($searchKey: String!, $limit: Int!) {
-  getMoviesProductionCountriesValues(
-    filter: {startsWithInsensitive: $searchKey}
-    first: $limit
-  ) {
-    nodes
-  }
-}
-    `;
-
-/**
- * __useSearchMovieProductionCountriesQuery__
- *
- * To run a query within a React component, call `useSearchMovieProductionCountriesQuery` and pass it any options that fit your needs.
- * When your component renders, `useSearchMovieProductionCountriesQuery` returns an object from Apollo Client that contains loading, error, and data properties
- * you can use to render your UI.
- *
- * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
- *
- * @example
- * const { data, loading, error } = useSearchMovieProductionCountriesQuery({
- *   variables: {
- *      searchKey: // value for 'searchKey'
- *      limit: // value for 'limit'
- *   },
- * });
- */
-export function useSearchMovieProductionCountriesQuery(baseOptions: Apollo.QueryHookOptions<SearchMovieProductionCountriesQuery, SearchMovieProductionCountriesQueryVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<SearchMovieProductionCountriesQuery, SearchMovieProductionCountriesQueryVariables>(SearchMovieProductionCountriesDocument, options);
-      }
-export function useSearchMovieProductionCountriesLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<SearchMovieProductionCountriesQuery, SearchMovieProductionCountriesQueryVariables>) {
-          const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<SearchMovieProductionCountriesQuery, SearchMovieProductionCountriesQueryVariables>(SearchMovieProductionCountriesDocument, options);
-        }
-export type SearchMovieProductionCountriesQueryHookResult = ReturnType<typeof useSearchMovieProductionCountriesQuery>;
-export type SearchMovieProductionCountriesLazyQueryHookResult = ReturnType<typeof useSearchMovieProductionCountriesLazyQuery>;
-export type SearchMovieProductionCountriesQueryResult = Apollo.QueryResult<SearchMovieProductionCountriesQuery, SearchMovieProductionCountriesQueryVariables>;
 export const MoviesDocument = gql`
     query Movies($filter: MovieFilter, $orderBy: [MoviesOrderBy!], $after: Cursor) {
   filtered: movies(filter: $filter, orderBy: $orderBy, first: 30, after: $after) {
@@ -25345,7 +25657,8 @@ export const MoviesLicensesDocument = gql`
       id
       moviesLicensesCountries {
         nodes {
-          code
+          countryCode
+          countryGroupId
         }
       }
       licenseEnd
@@ -25424,7 +25737,9 @@ export const MoviesLicenseDocument = gql`
   moviesLicense(id: $id) {
     moviesLicensesCountries {
       nodes {
-        code
+        countryCode
+        countryGroupId
+        id
       }
     }
     licenseEnd
@@ -25436,6 +25751,12 @@ export const MoviesLicenseDocument = gql`
     createdUser
     isDownloadable
     downloadedAssetLifespan
+  }
+  allCountryTypes(orderBy: NAME_ASC) {
+    nodes {
+      name
+      id
+    }
   }
 }
     `;
@@ -26276,7 +26597,9 @@ export const SeasonDocument = gql`
     synopsis
     description
     externalId
+    publishingId
     rating
+    ageRating
     contentOwner
     extendedField
     assetSubtype
@@ -26332,7 +26655,7 @@ export const SeasonDocument = gql`
     tvshow {
       id
       title
-      tvshowsImages(condition: {imageType: COVER_1X1}, first: 1) {
+      tvshowsImages(condition: {imageType: TVSHOW_COVER_1X1}, first: 1) {
         nodes {
           imageId
         }
@@ -26597,45 +26920,6 @@ export function useSearchSeasonCastLazyQuery(baseOptions?: Apollo.LazyQueryHookO
 export type SearchSeasonCastQueryHookResult = ReturnType<typeof useSearchSeasonCastQuery>;
 export type SearchSeasonCastLazyQueryHookResult = ReturnType<typeof useSearchSeasonCastLazyQuery>;
 export type SearchSeasonCastQueryResult = Apollo.QueryResult<SearchSeasonCastQuery, SearchSeasonCastQueryVariables>;
-export const SearchSeasonProductionCountriesDocument = gql`
-    query SearchSeasonProductionCountries($searchKey: String!, $limit: Int!) {
-  getSeasonsProductionCountriesValues(
-    filter: {startsWithInsensitive: $searchKey}
-    first: $limit
-  ) {
-    nodes
-  }
-}
-    `;
-
-/**
- * __useSearchSeasonProductionCountriesQuery__
- *
- * To run a query within a React component, call `useSearchSeasonProductionCountriesQuery` and pass it any options that fit your needs.
- * When your component renders, `useSearchSeasonProductionCountriesQuery` returns an object from Apollo Client that contains loading, error, and data properties
- * you can use to render your UI.
- *
- * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
- *
- * @example
- * const { data, loading, error } = useSearchSeasonProductionCountriesQuery({
- *   variables: {
- *      searchKey: // value for 'searchKey'
- *      limit: // value for 'limit'
- *   },
- * });
- */
-export function useSearchSeasonProductionCountriesQuery(baseOptions: Apollo.QueryHookOptions<SearchSeasonProductionCountriesQuery, SearchSeasonProductionCountriesQueryVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<SearchSeasonProductionCountriesQuery, SearchSeasonProductionCountriesQueryVariables>(SearchSeasonProductionCountriesDocument, options);
-      }
-export function useSearchSeasonProductionCountriesLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<SearchSeasonProductionCountriesQuery, SearchSeasonProductionCountriesQueryVariables>) {
-          const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<SearchSeasonProductionCountriesQuery, SearchSeasonProductionCountriesQueryVariables>(SearchSeasonProductionCountriesDocument, options);
-        }
-export type SearchSeasonProductionCountriesQueryHookResult = ReturnType<typeof useSearchSeasonProductionCountriesQuery>;
-export type SearchSeasonProductionCountriesLazyQueryHookResult = ReturnType<typeof useSearchSeasonProductionCountriesLazyQuery>;
-export type SearchSeasonProductionCountriesQueryResult = Apollo.QueryResult<SearchSeasonProductionCountriesQuery, SearchSeasonProductionCountriesQueryVariables>;
 export const SearchSeasonDirectorDocument = gql`
     query SearchSeasonDirector($searchKey: String!, $limit: Int!) {
   getSeasonsDirectorsValues(
@@ -26904,7 +27188,8 @@ export const SeasonsLicensesDocument = gql`
       id
       seasonsLicensesCountries {
         nodes {
-          code
+          countryCode
+          countryGroupId
         }
       }
       licenseEnd
@@ -26983,7 +27268,9 @@ export const SeasonsLicenseDocument = gql`
   seasonsLicense(id: $id) {
     seasonsLicensesCountries {
       nodes {
-        code
+        countryCode
+        countryGroupId
+        id
       }
     }
     licenseEnd
@@ -26995,6 +27282,12 @@ export const SeasonsLicenseDocument = gql`
     createdUser
     isDownloadable
     downloadedAssetLifespan
+  }
+  allCountryTypes(orderBy: NAME_ASC) {
+    nodes {
+      name
+      id
+    }
   }
 }
     `;
@@ -27390,6 +27683,7 @@ export const TvShowDocument = gql`
     synopsis
     description
     externalId
+    publishingId
     ageRating
     businessType
     contentOwner
@@ -27710,45 +28004,6 @@ export function useSearchTvShowCastLazyQuery(baseOptions?: Apollo.LazyQueryHookO
 export type SearchTvShowCastQueryHookResult = ReturnType<typeof useSearchTvShowCastQuery>;
 export type SearchTvShowCastLazyQueryHookResult = ReturnType<typeof useSearchTvShowCastLazyQuery>;
 export type SearchTvShowCastQueryResult = Apollo.QueryResult<SearchTvShowCastQuery, SearchTvShowCastQueryVariables>;
-export const SearchTvShowProductionCountriesDocument = gql`
-    query SearchTvShowProductionCountries($searchKey: String!, $limit: Int!) {
-  getTvshowsProductionCountriesValues(
-    filter: {startsWithInsensitive: $searchKey}
-    first: $limit
-  ) {
-    nodes
-  }
-}
-    `;
-
-/**
- * __useSearchTvShowProductionCountriesQuery__
- *
- * To run a query within a React component, call `useSearchTvShowProductionCountriesQuery` and pass it any options that fit your needs.
- * When your component renders, `useSearchTvShowProductionCountriesQuery` returns an object from Apollo Client that contains loading, error, and data properties
- * you can use to render your UI.
- *
- * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
- *
- * @example
- * const { data, loading, error } = useSearchTvShowProductionCountriesQuery({
- *   variables: {
- *      searchKey: // value for 'searchKey'
- *      limit: // value for 'limit'
- *   },
- * });
- */
-export function useSearchTvShowProductionCountriesQuery(baseOptions: Apollo.QueryHookOptions<SearchTvShowProductionCountriesQuery, SearchTvShowProductionCountriesQueryVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<SearchTvShowProductionCountriesQuery, SearchTvShowProductionCountriesQueryVariables>(SearchTvShowProductionCountriesDocument, options);
-      }
-export function useSearchTvShowProductionCountriesLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<SearchTvShowProductionCountriesQuery, SearchTvShowProductionCountriesQueryVariables>) {
-          const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<SearchTvShowProductionCountriesQuery, SearchTvShowProductionCountriesQueryVariables>(SearchTvShowProductionCountriesDocument, options);
-        }
-export type SearchTvShowProductionCountriesQueryHookResult = ReturnType<typeof useSearchTvShowProductionCountriesQuery>;
-export type SearchTvShowProductionCountriesLazyQueryHookResult = ReturnType<typeof useSearchTvShowProductionCountriesLazyQuery>;
-export type SearchTvShowProductionCountriesQueryResult = Apollo.QueryResult<SearchTvShowProductionCountriesQuery, SearchTvShowProductionCountriesQueryVariables>;
 export const SearchTvShowDirectorDocument = gql`
     query SearchTvShowDirector($searchKey: String!, $limit: Int!) {
   getTvshowsDirectorsValues(
@@ -28121,7 +28376,8 @@ export const TvshowsLicensesDocument = gql`
       id
       tvshowsLicensesCountries {
         nodes {
-          code
+          countryCode
+          countryGroupId
         }
       }
       licenseEnd
@@ -28200,7 +28456,9 @@ export const TvshowsLicenseDocument = gql`
   tvshowsLicense(id: $id) {
     tvshowsLicensesCountries {
       nodes {
-        code
+        countryCode
+        countryGroupId
+        id
       }
     }
     licenseEnd
@@ -28212,6 +28470,12 @@ export const TvshowsLicenseDocument = gql`
     createdUser
     isDownloadable
     downloadedAssetLifespan
+  }
+  allCountryTypes(orderBy: NAME_ASC) {
+    nodes {
+      name
+      id
+    }
   }
 }
     `;

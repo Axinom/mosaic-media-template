@@ -1,0 +1,209 @@
+trigger: none
+pr: none
+
+pool:
+  vmImage: 'ubuntu-latest'
+
+variables:
+  tag: '$(Build.BuildNumber)'
+  serviceId: dc-user-service
+  tenantId: '19727078-1284-4708-bda6-8792c2011752'
+  ID_SERVICE_AUTH_BASE_URL: https://id.service.eu.axinom.net
+
+parameters:
+  - name: int
+    displayName: Release to INT
+    type: boolean
+    default: true
+  - name: nfn_acceptance
+    displayName: Release to NFN acceptance
+    type: boolean
+    default: false
+  - name: nfn_production
+    displayName: Release to NFN production
+    type: boolean
+    default: false
+  - name: lov_acceptance
+    displayName: Release to LOV acceptance
+    type: boolean
+    default: false
+  - name: lov_production
+    displayName: Release to LOV production
+    type: boolean
+    default: false
+
+stages:
+  - stage: Build
+    displayName: Build and push stage
+    jobs:
+      - job: Build
+        displayName: Build
+        pool:
+          vmImage: 'ubuntu-latest'
+        steps:
+          - task: NodeTool@0
+            inputs:
+              versionSpec: '22.x'
+            displayName: 'Install Node.js'
+
+          - script: |
+              ORIGINAL_PKG_VER=`npx -q json -f "$(packageRoot)/package.json" version`
+              NEW_PKG_VER="${ORIGINAL_PKG_VER}-$(tag)"
+              echo "##vso[task.setvariable variable=pkgVer;isOutput=true]${NEW_PKG_VER}"
+
+              echo "Current package.json version is: [${ORIGINAL_PKG_VER}]"
+              echo "Updating package.json version to: [${NEW_PKG_VER}]"
+              
+              npx -q json -I -f "$(packageRoot)/package.json" -e "this.version = '${NEW_PKG_VER}'"
+              
+              echo "Updated package.json version is: [`npx -q json -f \"$(packageRoot)/package.json\" version`]"
+            displayName:
+              'Updating package.json version to reflect the build number'
+            name: setPackageVersion
+
+          - script: |
+              npm run $(packageBuildCommand)
+            displayName: 'Build pilet'
+
+          - task: CopyFiles@2
+            inputs:
+              Contents: '*.tgz'
+              TargetFolder: '$(Build.ArtifactStagingDirectory)'
+            displayName: Copy pilet package artifact to staging directory
+
+          - task: PublishBuildArtifacts@1
+            inputs:
+              PathtoPublish: '$(Build.ArtifactStagingDirectory)'
+              ArtifactName: 'drop'
+              publishLocation: 'Container'
+            displayName: Publishing build artifact
+
+      - job: Release_int
+        dependsOn: Build
+        displayName: 'Release - INT'
+        condition: ${{ eq(parameters.int, true) }}
+        variables:
+          PKG_VER: $[ dependencies.Build.outputs['setPackageVersion.pkgVer'] ]
+        steps:
+          - script: |
+              npm run $(packageBuildCommand)
+            displayName: 'Build pilet'
+
+          - download: current
+            artifact: drop
+            displayName: 'Download build artifact'
+
+          - task: Bash@3
+            displayName:
+              'Upload pilet to INT environment'
+            inputs:
+              targetType: 'inline'
+              script: |
+                yarn run pilet publish --no-fresh --url "https://frontends.service.eu.axinom.net/v1/pilets/c9165f62-bbb5-4fd4-8669-6e56c2b536d4/c43bfd95-d8c8-4937-991f-4566e84d6967" --api-key "$(serviceAccountCredentialsInt)" --fields.MANAGEMENT_HOST "dc-ms-user-int.axtest.net" --fields.MANAGEMENT_HTTP_PROTOCOL "https" $(Pipeline.Workspace)/drop/user-workflows-$(PKG_VER).tgz
+            env:
+              MOSAIC_HOSTING_CLIENT_ID: $(mosaicHostingClientIdInt)
+              MOSAIC_HOSTING_CLIENT_SECRET: $(mosaicHostingClientSecretInt)
+
+      - job: Release_nfn_acc
+        dependsOn: Build
+        displayName: 'Release - NFN acceptance'
+        condition: ${{ eq(parameters.nfn_acceptance, true) }}
+        variables:
+          PKG_VER: $[ dependencies.Build.outputs['setPackageVersion.pkgVer'] ]
+        steps:
+          - script: |
+              npm run $(packageBuildCommand)
+            displayName: 'Build pilet'
+
+          - download: current
+            artifact: drop
+            displayName: 'Download build artifact'
+
+          - task: Bash@3
+            displayName:
+              'Upload pilet to NFN acceptance environment'
+            inputs:
+              targetType: 'inline'
+              script: |
+                yarn run pilet publish --no-fresh --url "https://frontends.service.eu.axinom.net/v1/pilets/$(tenantId)/3b57b976-446a-4ae6-9ead-e4feec58ba7e" --api-key "$(serviceAccountCredentialsNfnAcc)" --fields.MANAGEMENT_HOST "dc-nfn-ms-user-acceptance.axprod.net" --fields.MANAGEMENT_HTTP_PROTOCOL "https" $(Pipeline.Workspace)/drop/user-workflows-$(PKG_VER).tgz
+            env:
+              MOSAIC_HOSTING_CLIENT_ID: $(mosaicHostingClientIdNfnAcc)
+              MOSAIC_HOSTING_CLIENT_SECRET: $(mosaicHostingClientSecretNfnAcc)
+
+      - job: Release_nfn_prod
+        dependsOn: Build
+        displayName: 'Release - NFN production'
+        condition: ${{ eq(parameters.nfn_production, true) }}
+        variables:
+          PKG_VER: $[ dependencies.Build.outputs['setPackageVersion.pkgVer'] ]
+        steps:
+          - script: |
+              npm run $(packageBuildCommand)
+            displayName: 'Build pilet'
+
+          - download: current
+            artifact: drop
+            displayName: 'Download build artifact'
+
+          - task: Bash@3
+            displayName:
+              'Upload pilet to NFN production environment'
+            inputs:
+              targetType: 'inline'
+              script: |
+                yarn run pilet publish --no-fresh --url "https://frontends.service.eu.axinom.net/v1/pilets/$(tenantId)/6cec639e-2158-4dad-af4f-0a1ad957681e" --api-key "$(serviceAccountCredentialsNfnProd)" --fields.MANAGEMENT_HOST "dc-nfn-ms-user.axprod.net" --fields.MANAGEMENT_HTTP_PROTOCOL "https" $(Pipeline.Workspace)/drop/user-workflows-$(PKG_VER).tgz
+            env:
+              MOSAIC_HOSTING_CLIENT_ID: $(mosaicHostingClientIdNfnProd)
+              MOSAIC_HOSTING_CLIENT_SECRET: $(mosaicHostingClientSecretNfnProd)
+
+      - job: Release_lov_acc
+        dependsOn: Build
+        displayName: 'Release - LOV acceptance'
+        condition: ${{ eq(parameters.lov_acceptance, true) }}
+        variables:
+          PKG_VER: $[ dependencies.Build.outputs['setPackageVersion.pkgVer'] ]
+        steps:
+          - script: |
+              npm run $(packageBuildCommand)
+            displayName: 'Build pilet'
+
+          - download: current
+            artifact: drop
+            displayName: 'Download build artifact'
+
+          - task: Bash@3
+            displayName:
+              'Upload pilet to LOV acceptance environment'
+            inputs:
+              targetType: 'inline'
+              script: |
+                yarn run pilet publish --no-fresh --url "https://frontends.service.eu.axinom.net/v1/pilets/$(tenantId)/0deb7f36-b4db-4b59-8b04-c855dcc3a5d2" --api-key "$(serviceAccountCredentialsLovAcc)" --fields.MANAGEMENT_HOST "dc-lov-ms-user-acceptance.axprod.net" --fields.MANAGEMENT_HTTP_PROTOCOL "https" $(Pipeline.Workspace)/drop/user-workflows-$(PKG_VER).tgz
+            env:
+              MOSAIC_HOSTING_CLIENT_ID: $(mosaicHostingClientIdLovAcc)
+              MOSAIC_HOSTING_CLIENT_SECRET: $(mosaicHostingClientSecretLovAcc)
+
+      - job: Release_lov_prod
+        dependsOn: Build
+        displayName: 'Release - LOV production'
+        condition: ${{ eq(parameters.lov_production, true) }}
+        variables:
+          PKG_VER: $[ dependencies.Build.outputs['setPackageVersion.pkgVer'] ]
+        steps:
+          - script: |
+              npm run $(packageBuildCommand)
+            displayName: 'Build pilet'
+
+          - download: current
+            artifact: drop
+            displayName: 'Download build artifact'
+
+          - task: Bash@3
+            displayName:
+              'Upload pilet to LOV production environment'
+            inputs:
+              targetType: 'inline'
+              script: |
+                yarn run pilet publish --no-fresh --url "https://frontends.service.eu.axinom.net/v1/pilets/$(tenantId)/d12ecb04-ab19-4a7f-8f32-bc519546891b" --api-key "$(serviceAccountCredentialsLovProd)" --fields.MANAGEMENT_HOST "dc-lov-ms-user.axprod.net" --fields.MANAGEMENT_HTTP_PROTOCOL "https" $(Pipeline.Workspace)/drop/user-workflows-$(PKG_VER).tgz
+            env:
+              MOSAIC_HOSTING_CLIENT_ID: $(mosaicHostingClientIdLovProd)
+              MOSAIC_HOSTING_CLIENT_SECRET: $(mosaicHostingClientSecretLovProd)

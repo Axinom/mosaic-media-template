@@ -34,12 +34,15 @@ const Form: React.FC<{ imageSelectField: unknown }> = ({
   const customSortedSeasonImageTypes = Object.values(SeasonImageType).sort(
     (a, b) => {
       const order = [
-        'COVER_1X1',
-        'COVER_16X9',
-        'CLEAN_COVER_1X1',
-        'CLEAN_COVER_16X9',
-        'LIST_1X1',
-        'LIST_9X13',
+        'SEASON_COVER',
+        'SEASON_COVER_1X1',
+        'SEASON_COVER_16X9',
+        'SEASON_CLEAN_COVER',
+        'SEASON_CLEAN_COVER_1X1',
+        'SEASON_CLEAN_COVER_16X9',
+        'SEASON_LIST',
+        'SEASON_LIST_1X1',
+        'SEASON_LIST_9X13',
       ];
       return order.indexOf(a) - order.indexOf(b);
     },
@@ -66,7 +69,7 @@ const Form: React.FC<{ imageSelectField: unknown }> = ({
             as={imageSelectField}
             maxItems={1}
             title="Select Image"
-            imageScope="season"
+            imageType={field.toLocaleLowerCase()}
           />
         );
       })}

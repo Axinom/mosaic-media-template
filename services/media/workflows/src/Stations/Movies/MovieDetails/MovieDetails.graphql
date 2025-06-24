@@ -5,6 +5,7 @@ query Movie($id: Int!) {
     synopsis
     description
     externalId
+    publishingId
     ageRating
     businessType
     contentOwner
@@ -127,15 +128,6 @@ query SearchMovieCast($searchKey: String!, $limit: Int!) {
 
 query SearchMovieDirector($searchKey: String!, $limit: Int!) {
   getMoviesDirectorsValues(
-    filter: { startsWithInsensitive: $searchKey }
-    first: $limit
-  ) {
-    nodes
-  }
-}
-
-query SearchMovieProductionCountries($searchKey: String!, $limit: Int!) {
-  getMoviesProductionCountriesValues(
     filter: { startsWithInsensitive: $searchKey }
     first: $limit
   ) {

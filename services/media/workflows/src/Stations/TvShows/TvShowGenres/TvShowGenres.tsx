@@ -9,12 +9,14 @@ import {
   formatDateTime,
   generateArrayMutationsWithUpdates,
   InfoPanel,
+  ObjectSchemaDefinition,
   Paragraph,
   Section,
 } from '@axinom/mosaic-ui';
 import { useFormikContext } from 'formik';
 import gql from 'graphql-tag';
 import React, { useCallback, useMemo } from 'react';
+import * as Yup from 'yup';
 import { client } from '../../../apolloClient';
 import { Constants } from '../../../constants';
 import {
@@ -30,6 +32,10 @@ import {
 import { useTvShowGenresActions } from './TvShowGenres.actions';
 import classes from './TvShowGenres.module.scss';
 import { FormDataGenre, TvShowGenresFormData } from './TvShowGenres.types';
+
+const validationSchema = Yup.object<ObjectSchemaDefinition>({
+  title: Yup.string().trim().required('Title is required.'),
+});
 
 export const TvShowGenres: React.FC = () => {
   const { loading, data, error } = useTvShowGenresQuery({
@@ -154,6 +160,7 @@ const Form: React.FC = () => {
       }}
       stickyHeader={false}
       inlineMenuActions={generateInlineMenuActions}
+      rowValidationSchema={validationSchema}
     />
   );
 };
@@ -203,9 +210,5 @@ const Panel: React.FC<{ data?: TvShowGenresQuery }> = ({ data }) => {
         </Section>
       </InfoPanel>
     );
-  }, [
-    data?.snapshots?.nodes,
-    data?.tvshowGenres?.nodes,
-    data?.tvshowGenres?.totalCount,
-  ]);
+  }, [data?.snapshots?.nodes, data?.tvshowGenres?.totalCount, sortedGenres]);
 };

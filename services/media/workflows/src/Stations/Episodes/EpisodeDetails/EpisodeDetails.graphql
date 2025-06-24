@@ -6,6 +6,7 @@ query Episode($id: Int!) {
     synopsis
     description
     externalId
+    publishingId
     ageRating
     contentOwner
     rating
@@ -61,7 +62,7 @@ query Episode($id: Int!) {
     season {
       id
       index
-      seasonsImages(condition: { imageType: COVER_1X1 }, first: 1) {
+      seasonsImages(condition: { imageType: SEASON_COVER_1X1 }, first: 1) {
         nodes {
           imageId
         }
@@ -140,15 +141,6 @@ query SearchEpisodeTags($searchKey: String!, $limit: Int!) {
 
 query SearchEpisodeCast($searchKey: String!, $limit: Int!) {
   getEpisodesCastsValues(
-    filter: { startsWithInsensitive: $searchKey }
-    first: $limit
-  ) {
-    nodes
-  }
-}
-
-query SearchEpisodeProductionCountries($searchKey: String!, $limit: Int!) {
-  getEpisodesProductionCountriesValues(
     filter: { startsWithInsensitive: $searchKey }
     first: $limit
   ) {

@@ -6,7 +6,6 @@ import {
 export type CollectionRelatedEntity = (
   | CollectionRelatedMovie
   | CollectionRelatedTvShow
-  | CollectionRelatedSeason
   | CollectionRelatedEpisode
   | CollectionRelatedCollection
 ) & { sortOrder: number; id?: number };
@@ -19,10 +18,6 @@ export type CollectionRelatedTvShow = CollectionRelation['tvshow'] & {
   entityType: EntityType.Tvshow;
 };
 
-export type CollectionRelatedSeason = CollectionRelation['season'] & {
-  entityType: EntityType.Season;
-  title: string;
-};
 export type CollectionRelatedEpisode = NonNullable<
   CollectionRelation['episode']
 > & {

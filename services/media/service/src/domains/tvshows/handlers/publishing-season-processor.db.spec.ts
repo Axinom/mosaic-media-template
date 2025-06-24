@@ -1,9 +1,10 @@
 import 'jest-extended';
 import { SeasonLocalization } from 'media-messages';
 import { insert, update } from 'zapatos/db';
-import { seasons } from 'zapatos/schema';
+import { seasons, tvshows } from 'zapatos/schema';
 import { DEFAULT_LOCALE_TAG } from '../../../common';
 import {
+  buildBDPublishingId,
   commonPublishValidator,
   SnapshotValidationResult,
 } from '../../../publishing';
@@ -17,6 +18,7 @@ import { publishingSeasonProcessor } from './publishing-season-processor';
 describe('publishingSeasonProcessor', () => {
   let ctx: ITestContext;
   let season1: seasons.JSONSelectable;
+  let tvshow: tvshows.JSONSelectable;
   const authToken = 'does-not-matter-as-request-is-mocked';
 
   beforeAll(async () => {
@@ -24,9 +26,17 @@ describe('publishingSeasonProcessor', () => {
   });
 
   beforeEach(async () => {
+    tvshow = await insert('tvshows', {
+      title: 'Parent TV Show',
+      external_id: 'existing1',
+      publishing_id: buildBDPublishingId('TVSHOW', 'Entity1', 'existing1'),
+    }).run(ctx.ownerPool);
     season1 = await insert('seasons', {
+      title: 'Entity1',
       index: 1,
       external_id: 'existing1',
+      publishing_id: buildBDPublishingId('SEASON', 'Entity1', 'existing1'),
+      tvshow_id: tvshow.id,
     }).run(ctx.ownerPool);
   });
 
@@ -74,10 +84,15 @@ describe('publishingSeasonProcessor', () => {
       // Assert
       expect(result).toEqual({
         result: {
+          age_rating: undefined,
+          asset_subtype: 'Season',
+          asset_type: 2,
+          directors: [],
+          extended_field: undefined,
           cast: [],
           tags: [],
-          content_id: `season-${season1.id}`,
-          tvshow_id: undefined,
+          content_id: `1-2-${season1.external_id}`,
+          tvshow_id: `1-6-${tvshow.external_id}`,
           genre_ids: [],
           images: [],
           licenses: [],
@@ -92,8 +107,11 @@ describe('publishingSeasonProcessor', () => {
               language_tag: DEFAULT_LOCALE_TAG,
               description: undefined,
               synopsis: undefined,
+              title: season1.title,
             },
           ],
+          original_title: season1.title,
+          rating: undefined,
         },
         validation: [],
       });
@@ -101,10 +119,6 @@ describe('publishingSeasonProcessor', () => {
 
     it('full metadata season -> valid result with mocked warnings and errors', async () => {
       // Arrange
-      const tvshow = await insert('tvshows', {
-        title: 'Parent TV Show',
-        external_id: 'existing1',
-      }).run(ctx.ownerPool);
       const updateValues = {
         description: 'desc',
         released: '2021-05-26',
@@ -169,17 +183,17 @@ describe('publishingSeasonProcessor', () => {
 
       await insert('seasons_licenses_countries', {
         seasons_license_id: license1.id,
-        code: 'KW',
+        country_code: 'KW',
       }).run(ctx.ownerPool);
 
       await insert('seasons_licenses_countries', {
         seasons_license_id: license2.id,
-        code: 'BY',
+        country_code: 'BY',
       }).run(ctx.ownerPool);
 
       await insert('seasons_licenses_countries', {
         seasons_license_id: license2.id,
-        code: 'DE',
+        country_code: 'DE',
       }).run(ctx.ownerPool);
 
       await insert('seasons_production_countries', {
@@ -218,7 +232,7 @@ describe('publishingSeasonProcessor', () => {
       const image: PublishImage = {
         width: 111,
         height: 222,
-        type: 'COVER',
+        type: 'SEASON_COVER_1x1',
         path: 'test/path.png',
       };
       const imageWarning: SnapshotValidationResult = {
@@ -270,6 +284,20 @@ describe('publishingSeasonProcessor', () => {
         }));
 
       // Act
+      const expectedImages = [
+        image,
+        ...localizations
+          .filter((l) => !l.is_default_locale)
+          .map((l) => {
+            var locImage = Object.assign({}, image);
+            locImage.language_tag = l.language_tag;
+            return locImage;
+          }),
+      ];
+      const expectedImageValidations = Array(expectedImages.length)
+        .fill([imageError, imageWarning])
+        .flat();
+
       const result = await publishingSeasonProcessor.aggregator(
         season1.id,
         authToken,
@@ -280,34 +308,46 @@ describe('publishingSeasonProcessor', () => {
       // Assert
       expect(result).toEqual({
         result: {
+          age_rating: undefined,
+          asset_subtype: 'Season',
+          asset_type: 2,
           index: 1,
-          tvshow_id: `tvshow-${tvshow.id}`,
+          tvshow_id: `1-6-${tvshow.external_id}`,
           cast: ['Actress 1', 'Actor 2'],
           tags: ['Tag 1', 'Tag 3'],
-          content_id: `season-${season1.id}`,
+          content_id: `1-2-${season1.external_id}`,
+          directors: [],
+          extended_field: undefined,
           genre_ids: [`tvshow_genre-${genre1.id}`, `tvshow_genre-${genre2.id}`],
-          images: [image],
+          images: expectedImages,
           licenses: [
             {
+              content_owner: undefined,
               countries: ['KW'],
               end_time: '2021-09-01T15:05:25+00:00',
               start_time: '2021-02-01T15:05:25+00:00',
+              downloaded_asset_lifespan: 0,
+              is_downloadable: false,
             },
             {
+              content_owner: undefined,
               countries: ['BY', 'DE'],
               end_time: undefined,
               start_time: undefined,
+              downloaded_asset_lifespan: 0,
+              is_downloadable: false,
             },
           ],
+          original_title: season1.title,
           production_countries: ['Imaginary Country A', 'Imaginary Country B'],
+          rating: undefined,
           released: updateValues.released,
           studio: updateValues.studio,
           videos: [video],
           localizations,
         },
         validation: [
-          imageError,
-          imageWarning,
+          ...expectedImageValidations,
           videoError,
           videoWarning,
           localizationWarning,
@@ -384,7 +424,7 @@ describe('publishingSeasonProcessor', () => {
             index: 0,
             licenses: [],
             genre_ids: [],
-            images: [{ type: 'COVER' }],
+            images: [{ type: 'SEASON_COVER_1x1' }],
             videos: [{ type: 'TRAILER' }],
             localizations: [{}],
           },
@@ -396,11 +436,6 @@ describe('publishingSeasonProcessor', () => {
 
       // Assert
       expect(result).toEqual([
-        {
-          context: 'METADATA',
-          message: `At least one genre must be assigned.`,
-          severity: 'ERROR',
-        },
         {
           context: 'METADATA',
           message: `Property 'width' of the first image is required.`,
@@ -434,21 +469,6 @@ describe('publishingSeasonProcessor', () => {
         {
           context: 'METADATA',
           message: `The first video must have either DASH Manifest or HLS Manifest defined. Most probably assigned video is still processing.`,
-          severity: 'ERROR',
-        },
-        {
-          context: 'METADATA',
-          message: `No licenses are assigned.`,
-          severity: 'WARNING',
-        },
-        {
-          context: 'METADATA',
-          message: `Property 'content_id' should match the pattern "^(season)-([a-zA-Z0-9_-]+)$".`,
-          severity: 'ERROR',
-        },
-        {
-          context: 'METADATA',
-          message: `Property 'tvshow_id' should match the pattern "^(tvshow)-([a-zA-Z0-9_-]+)$".`,
           severity: 'ERROR',
         },
         {
@@ -496,12 +516,14 @@ describe('publishingSeasonProcessor', () => {
       const result = await commonPublishValidator(
         {
           result: {
-            content_id: 'season-1',
-            tvshow_id: 'tvshow-1',
+            content_id: '1-2-season-1',
+            tvshow_id: '1-6-tvshow-1',
             index: 1,
             licenses: [{}],
             genre_ids: ['test'],
-            images: [{ type: 'COVER', width: 0, height: 0, path: '' }],
+            images: [
+              { type: 'SEASON_COVER_1x1', width: 0, height: 0, path: '' },
+            ],
             videos: [
               {
                 type: 'TRAILER',
@@ -513,6 +535,7 @@ describe('publishingSeasonProcessor', () => {
                 subtitle_languages: [],
                 caption_languages: [],
                 dash_manifest: 'a',
+                hls_manifest: 'b',
               },
             ],
             localizations: [{ is_default_locale: 'no', language_tag: null }],
@@ -554,7 +577,7 @@ describe('publishingSeasonProcessor', () => {
         },
         {
           context: 'METADATA',
-          message: `The first license must have either start_time, end_time, or at least one country defined.`,
+          message: `Property 'hls_manifest' of the first video must be a valid URL.`,
           severity: 'ERROR',
         },
         {
@@ -597,7 +620,8 @@ describe('publishingSeasonProcessor', () => {
       const result = await commonPublishValidator(
         {
           result: {
-            content_id: 'season-1',
+            content_id: '1-2-season-1',
+            tvshow_id: '1-6-tvshow1',
             index: 1,
             production_countries: [],
             genre_ids: [],
@@ -623,18 +647,18 @@ describe('publishingSeasonProcessor', () => {
       expect(result).toEqual([
         {
           context: 'METADATA',
-          message: 'At least one genre must be assigned.',
-          severity: 'ERROR',
-        },
-        {
-          context: 'METADATA',
           message: 'Cover image is not assigned.',
           severity: 'ERROR',
         },
         {
-          context: 'METADATA',
-          message: 'No licenses are assigned.',
-          severity: 'WARNING',
+          context: 'LOCALIZATION',
+          message: 'Title is required.',
+          severity: 'ERROR',
+        },
+        {
+          context: 'LOCALIZATION',
+          message: 'Description is required.',
+          severity: 'ERROR',
         },
       ]);
     });
@@ -644,14 +668,14 @@ describe('publishingSeasonProcessor', () => {
       const result = await commonPublishValidator(
         {
           result: {
-            content_id: 'season-1',
-            tvshow_id: 'tvshow-1',
+            content_id: '1-2-season-1',
+            tvshow_id: '1-6-tvshow-1',
             index: 1,
             licenses: [{ countries: ['ZW'] }],
             genre_ids: ['tvshow_genre-1'],
             images: [
               {
-                type: 'COVER',
+                type: 'SEASON_COVER_1x1',
                 width: 100,
                 height: 100,
                 path: '/transform/0000000000000000-0000000000000000/9FqubDgdtLaSjXmnBc9UNf.jpg',
@@ -673,6 +697,8 @@ describe('publishingSeasonProcessor', () => {
             ],
             localizations: [
               {
+                title: 'localized title',
+                description: 'localized description',
                 is_default_locale: true,
                 language_tag: DEFAULT_LOCALE_TAG,
               },
@@ -715,8 +741,8 @@ describe('publishingSeasonProcessor', () => {
       const result = await commonPublishValidator(
         {
           result: {
-            content_id: 'season-6',
-            tvshow_id: 'tvshow-1',
+            content_id: '1-2-season-6',
+            tvshow_id: '1-6-tvshow-1',
             index: 1,
             released: '2009-12-10',
             studio: '20th Century Fox',
@@ -743,20 +769,20 @@ describe('publishingSeasonProcessor', () => {
                 start_time: '2020-08-01T00:00:00+00:00',
               },
               {
-                end_time: '2020-08-30T23:59:59.999+00:00',
+                end_time: '2040-08-30T23:59:59.999+00:00',
               },
             ],
             images: [
               {
                 width: 1800,
                 height: 1012,
-                type: 'COVER',
+                type: 'SEASON_COVER_1x1',
                 path: '/transform/0000000000000000-0000000000000000/9FqubDgdtLaSjXmnBc9UNf.jpg',
               },
               {
                 width: 1800,
                 height: 1012,
-                type: 'TEASER',
+                type: 'SEASON_LIST_1x1',
                 path: '/transform/0000000000000000-0000000000000000/43BncavVQvDmjxiwQtt3kd.jpg',
               },
             ],
@@ -791,6 +817,7 @@ describe('publishingSeasonProcessor', () => {
             ],
             localizations: [
               {
+                title: 'localized title',
                 synopsis:
                   "In 2154, humans have depleted Earth's natural resources...",
                 description:

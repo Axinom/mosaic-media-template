@@ -17,21 +17,25 @@ import {
 import { Field, useFormikContext } from 'formik';
 import gql from 'graphql-tag';
 import { ObjectSchemaDefinition } from 'ObjectSchemaDefinition';
-import React, { useCallback, useMemo } from 'react';
+import React, { useCallback, useEffect, useMemo } from 'react';
 import { useHistory, useParams } from 'react-router-dom';
+import { validate as isUuid } from 'uuid';
 import * as Yup from 'yup';
 import { client } from '../../../apolloClient';
 import {
+  AllCountryType,
+  DeleteTvshowsLicensesCountryInput,
   IsoAlphaTwoCountryCodes,
   Mutation,
   MutationCreateTvshowsLicensesCountryArgs,
   MutationDeleteTvshowsLicensesCountryArgs,
   MutationUpdateTvshowsLicenseArgs,
   TvshowsLicense,
+  TvshowsLicensesCountry,
+  TvshowsLicensesCountryInput,
   useDeleteTvshowsLicenseMutation,
   useTvshowsLicenseQuery,
 } from '../../../generated/graphql';
-import { CountryNames } from '../../../Util/CountryNames/CountryNames';
 import {
   getLicenseEndSchema,
   getLicenseStartSchema,
@@ -65,11 +69,17 @@ export const TvShowLicensingDetails: React.FC = () => {
     fetchPolicy: 'no-cache',
   });
 
-  const { countries } = useMemo(
+  const { countries, allCountries } = useMemo(
     () => ({
-      countries: data?.tvshowsLicense?.tvshowsLicensesCountries.nodes.map(
-        (country) => country.code,
+      countries: data?.tvshowsLicense?.tvshowsLicensesCountries.nodes.flatMap(
+        (country) =>
+          [country.countryCode, country.countryGroupId].filter(Boolean),
       ),
+      allCountries:
+        data?.allCountryTypes?.nodes.map(({ name, id }) => ({
+          display: name ?? '',
+          value: id,
+        })) ?? [],
     }),
     [data],
   );
@@ -92,10 +102,10 @@ export const TvShowLicensingDetails: React.FC = () => {
             'createTvshowsLicensesCountry',
             {
               input: {
-                tvshowsLicensesCountry: {
-                  code: { type: 'enum', value: code },
+                tvshowsLicensesCountry: generateCountryAssignmentPatch(
+                  code,
                   tvshowsLicenseId,
-                },
+                ),
               },
             },
           ),
@@ -103,7 +113,11 @@ export const TvShowLicensingDetails: React.FC = () => {
           generateUpdateGQLFragment<MutationDeleteTvshowsLicensesCountryArgs>(
             'deleteTvshowsLicensesCountry',
             {
-              input: { code: { type: 'enum', value: code }, tvshowsLicenseId },
+              input: generateDeleteCountryAssignmentPatch(
+                code,
+                data?.tvshowsLicense?.tvshowsLicensesCountries.nodes,
+                data?.allCountryTypes?.nodes,
+              ),
             },
           ),
       });
@@ -127,7 +141,7 @@ export const TvShowLicensingDetails: React.FC = () => {
 
       await client.mutate({ mutation: GqlMutationDocument });
     },
-    [tvshowsLicenseId],
+    [tvshowsLicenseId, data],
   );
 
   return (
@@ -149,7 +163,7 @@ export const TvShowLicensingDetails: React.FC = () => {
       saveData={onSubmit}
       infoPanel={<Panel />}
     >
-      <Form />
+      <Form countryOptions={allCountries} />
     </Details>
   );
 };
@@ -178,7 +192,20 @@ const Panel: React.FC = () => {
   ]);
 };
 
-const Form: React.FC = () => {
+interface Option {
+  display: string;
+  value: any;
+}
+
+const Form: React.FC<{
+  countryOptions?: Option[];
+}> = ({ countryOptions }) => {
+  const { values, setFieldValue } = useFormikContext<FormData>();
+  useEffect(() => {
+    if (!values.isDownloadable) {
+      setFieldValue('downloadedAssetLifespan', 0);
+    }
+  }, [values.isDownloadable, setFieldValue]);
   return (
     <>
       <Field name="licenseStart" label="From" as={DateTimeTextField} />
@@ -186,7 +213,7 @@ const Form: React.FC = () => {
       <Field
         name="countries"
         label="Licensing Countries"
-        tagsOptions={CountryNames}
+        tagsOptions={countryOptions}
         as={TagsField}
         displayKey="display"
         valueKey="value"
@@ -196,6 +223,7 @@ const Form: React.FC = () => {
         name="downloadedAssetLifespan"
         label="Downloaded asset lifespan (days)"
         type="number"
+        disabled={!values.isDownloadable}
         as={SingleLineTextField}
       />
     </>
@@ -236,6 +264,61 @@ function createUpdateDto(
   initialValues?: FormData | null,
 ): Partial<FormData> {
   const { countries, ...rest } = getFormDiff(currentValues, initialValues);
-
-  return rest;
+  if (
+    rest.downloadedAssetLifespan !== undefined ||
+    rest.isDownloadable !== undefined
+  ) {
+    return {
+      ...rest,
+      downloadedAssetLifespan:
+        typeof rest.downloadedAssetLifespan === 'string' ||
+        rest.isDownloadable === false
+          ? 0
+          : rest.downloadedAssetLifespan,
+    };
+  } else {
+    return rest;
+  }
 }
+
+const generateDeleteCountryAssignmentPatch = (
+  countryId: string,
+  licensesCountries: TvshowsLicensesCountry['id'],
+  allCountries: AllCountryType[] | undefined,
+): DeleteTvshowsLicensesCountryInput => {
+  if (!isUuid(countryId)) {
+    const country = licensesCountries.find(
+      (con: TvshowsLicensesCountry['id']) => con.countryCode === countryId,
+    );
+    if (country) {
+      return { id: country.id };
+    }
+  } else {
+    if (allCountries) {
+      const licensesCountry = licensesCountries.find(
+        (con: TvshowsLicensesCountry['id']) => con.countryGroupId === countryId,
+      );
+      if (licensesCountry) {
+        return { id: licensesCountry.id };
+      }
+    }
+  }
+  return { id: 0 };
+};
+
+const generateCountryAssignmentPatch = (
+  countryId: IsoAlphaTwoCountryCodes,
+  tvshowsLicenseId: number,
+): TvshowsLicensesCountryInput['id'] => {
+  if (!isUuid(countryId)) {
+    return {
+      tvshowsLicenseId,
+      countryCode: { type: 'enum', value: countryId },
+    };
+  } else {
+    return {
+      tvshowsLicenseId,
+      countryGroupId: countryId,
+    };
+  }
+};

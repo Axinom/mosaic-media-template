@@ -4,6 +4,7 @@ import { insert, update } from 'zapatos/db';
 import { tvshows } from 'zapatos/schema';
 import { DEFAULT_LOCALE_TAG } from '../../../common';
 import {
+  buildBDPublishingId,
   commonPublishValidator,
   SnapshotValidationResult,
 } from '../../../publishing';
@@ -27,6 +28,7 @@ describe('publishingTvshowProcessor', () => {
     tvshow1 = await insert('tvshows', {
       title: 'Entity1',
       external_id: 'existing1',
+      publishing_id: buildBDPublishingId('TVSHOW', 'Entity1' , 'existing1'),
     }).run(ctx.ownerPool);
   });
 
@@ -73,9 +75,15 @@ describe('publishingTvshowProcessor', () => {
       // Assert
       expect(result).toEqual({
         result: {
+          age_rating: undefined,
+          asset_subtype: "TVShow",
+          asset_type: 6,
+          business_type: "premium",
           cast: [],
           tags: [],
-          content_id: `tvshow-${tvshow1.id}`,
+          content_id: `0-6-${tvshow1.external_id}`,
+          directors: [],
+          extended_field: undefined,
           genre_ids: [],
           images: [],
           licenses: [],
@@ -164,17 +172,17 @@ describe('publishingTvshowProcessor', () => {
 
       await insert('tvshows_licenses_countries', {
         tvshows_license_id: license1.id,
-        code: 'KW',
+        country_code: 'KW',
       }).run(ctx.ownerPool);
 
       await insert('tvshows_licenses_countries', {
         tvshows_license_id: license2.id,
-        code: 'BY',
+        country_code: 'BY',
       }).run(ctx.ownerPool);
 
       await insert('tvshows_licenses_countries', {
         tvshows_license_id: license2.id,
-        code: 'DE',
+        country_code: 'DE',
       }).run(ctx.ownerPool);
 
       await insert('tvshows_production_countries', {
@@ -213,7 +221,7 @@ describe('publishingTvshowProcessor', () => {
       const image: PublishImage = {
         width: 111,
         height: 222,
-        type: 'COVER',
+        type: 'TVSHOW_COVER_1x1',
         path: 'test/path.png',
       };
       const imageWarning: SnapshotValidationResult = {
@@ -268,6 +276,14 @@ describe('publishingTvshowProcessor', () => {
         }));
 
       // Act
+      const expectedImages = [image, ...localizations.filter(l=> !l.is_default_locale).map(l =>
+        {
+         var locImage = Object.assign({}, image);
+         locImage.language_tag = l.language_tag;
+         return locImage;
+       })];
+      const expectedImageValidations = Array(expectedImages.length).fill([imageError, imageWarning]).flat() 
+
       const result = await publishingTvshowProcessor.aggregator(
         tvshow1.id,
         authToken,
@@ -278,33 +294,47 @@ describe('publishingTvshowProcessor', () => {
       // Assert
       expect(result).toEqual({
         result: {
+          age_rating: undefined,
+          asset_subtype: "TVShow",
+          asset_type: 6,
+          business_type: "premium",
           cast: ['Actress 1', 'Actor 2'],
           tags: ['Tag 1', 'Tag 3'],
-          content_id: `tvshow-${tvshow1.id}`,
+          content_id: `0-6-${tvshow1.external_id}`,
+          directors: [],
+          extended_field: undefined,
           genre_ids: [`tvshow_genre-${genre1.id}`, `tvshow_genre-${genre2.id}`],
-          images: [image],
+          images: expectedImages,
           licenses: [
             {
+              business_type: "premium",
+              content_owner: undefined,
               countries: ['KW'],
               end_time: '2021-09-01T15:05:25+00:00',
               start_time: '2021-02-01T15:05:25+00:00',
+              downloaded_asset_lifespan : 0,
+              is_downloadable : false,
             },
             {
+              business_type: "premium",
+              content_owner: undefined,
               countries: ['BY', 'DE'],
               end_time: undefined,
               start_time: undefined,
+              downloaded_asset_lifespan : 0,
+              is_downloadable : false,
             },
           ],
           original_title: updateValues.original_title,
           production_countries: ['Imaginary Country A', 'Imaginary Country B'],
+          rating: undefined,
           released: updateValues.released,
           studio: updateValues.studio,
           videos: [video],
           localizations,
         },
         validation: [
-          imageError,
-          imageWarning,
+          ...expectedImageValidations,
           videoError,
           videoWarning,
           localizationWarning,
@@ -374,7 +404,7 @@ describe('publishingTvshowProcessor', () => {
             content_id: '',
             licenses: [],
             genre_ids: [],
-            images: [{ type: 'COVER' }],
+            images: [{ type: 'TVSHOW_COVER_1x1' }],
             videos: [{ type: 'TRAILER' }],
             localizations: [{ title: '' }],
           },
@@ -433,11 +463,6 @@ describe('publishingTvshowProcessor', () => {
         },
         {
           context: 'METADATA',
-          message: `Property 'content_id' should match the pattern "^(tvshow)-([a-zA-Z0-9_-]+)$".`,
-          severity: 'ERROR',
-        },
-        {
-          context: 'METADATA',
           message: `Property 'path' of the first image is required.`,
           severity: 'ERROR',
         },
@@ -476,10 +501,10 @@ describe('publishingTvshowProcessor', () => {
       const result = await commonPublishValidator(
         {
           result: {
-            content_id: 'tvshow-1',
+            content_id: '0-6-tvshow-1',
             licenses: [{}],
             genre_ids: ['test'],
-            images: [{ type: 'COVER', width: 0, height: 0, path: '' }],
+            images: [{ type: 'TVSHOW_COVER_1x1', width: 0, height: 0, path: '' }],
             videos: [
               {
                 type: 'TRAILER',
@@ -491,6 +516,7 @@ describe('publishingTvshowProcessor', () => {
                 subtitle_languages: [],
                 caption_languages: [],
                 dash_manifest: 'a',
+                hls_manifest: 'b'
               },
             ],
             localizations: [
@@ -534,6 +560,11 @@ describe('publishingTvshowProcessor', () => {
         },
         {
           context: 'METADATA',
+          message: `Property 'hls_manifest' of the first video must be a valid URL.`,
+          severity: 'ERROR',
+        },
+        {
+          context: 'METADATA',
           message: `The first license must have either start_time, end_time, or at least one country defined.`,
           severity: 'ERROR',
         },
@@ -572,7 +603,7 @@ describe('publishingTvshowProcessor', () => {
         {
           context: 'METADATA',
           message:
-            "Property 'title' of the first localization should be of type 'string'.",
+            "Property 'title' of the first localization should be of type 'string,null'.",
           severity: 'ERROR',
         },
       ]);
@@ -583,7 +614,7 @@ describe('publishingTvshowProcessor', () => {
       const result = await commonPublishValidator(
         {
           result: {
-            content_id: 'tvshow-1',
+            content_id: '0-6-tvshow-1',
             production_countries: [],
             genre_ids: [],
             cast: [],
@@ -593,11 +624,10 @@ describe('publishingTvshowProcessor', () => {
             videos: [],
             localizations: [
               {
-                title: 'empty',
                 is_default_locale: true,
-                language_tag: DEFAULT_LOCALE_TAG,
+                language_tag: DEFAULT_LOCALE_TAG
               },
-            ],
+            ]
           },
           validation: [],
         } as any,
@@ -622,6 +652,16 @@ describe('publishingTvshowProcessor', () => {
           message: 'No licenses are assigned.',
           severity: 'WARNING',
         },
+        {
+          context: "LOCALIZATION",
+          message: "Title is required.",
+          severity: "ERROR",
+        },
+        {
+          context: "LOCALIZATION",
+          message: "Description is required.",
+          severity: "ERROR",
+        }
       ]);
     });
 
@@ -630,12 +670,12 @@ describe('publishingTvshowProcessor', () => {
       const result = await commonPublishValidator(
         {
           result: {
-            content_id: 'tvshow-1',
+            content_id: '0-6-tvshow-1',
             licenses: [{ countries: ['ZW'] }],
             genre_ids: ['tvshow_genre-1'],
             images: [
               {
-                type: 'COVER',
+                type: 'TVSHOW_COVER_1x1',
                 width: 100,
                 height: 100,
                 path: '/transform/0000000000000000-0000000000000000/9FqubDgdtLaSjXmnBc9UNf.jpg',
@@ -660,6 +700,7 @@ describe('publishingTvshowProcessor', () => {
                 title: 'test',
                 is_default_locale: true,
                 language_tag: DEFAULT_LOCALE_TAG,
+                description: 'some description'
               },
             ],
           },
@@ -700,7 +741,7 @@ describe('publishingTvshowProcessor', () => {
       const result = await commonPublishValidator(
         {
           result: {
-            content_id: 'tvshow-6',
+            content_id: '0-6-tvshow-6',
             original_title: "James Cameron's Avatar",
             released: '2009-12-10',
             studio: '20th Century Fox',
@@ -727,20 +768,20 @@ describe('publishingTvshowProcessor', () => {
                 start_time: '2020-08-01T00:00:00+00:00',
               },
               {
-                end_time: '2020-08-30T23:59:59.999+00:00',
+                end_time: '2040-08-30T23:59:59.999+00:00',
               },
             ],
             images: [
               {
                 width: 1800,
                 height: 1012,
-                type: 'COVER',
+                type: 'TVSHOW_COVER_1x1',
                 path: '/transform/0000000000000000-0000000000000000/9FqubDgdtLaSjXmnBc9UNf.jpg',
               },
               {
                 width: 1800,
                 height: 1012,
-                type: 'TEASER',
+                type: 'TVSHOW_LIST_1x1',
                 path: '/transform/0000000000000000-0000000000000000/43BncavVQvDmjxiwQtt3kd.jpg',
               },
             ],

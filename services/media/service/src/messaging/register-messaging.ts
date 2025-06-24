@@ -99,8 +99,11 @@ import {
   ImageCreatedHandler,
   ImageFailedHandler,
   ingestMessageRetryStrategy,
+  LocalizableImageIngestFinishedHandler,
   LocalizeEntityFailedHandler,
   LocalizeEntityFinishedHandler,
+  RegisterCuePointsFailedHandler,
+  RegisterCuePointsFinishedHandler,
   StartIngestHandler,
   StartIngestItemHandler,
   UpdateMetadataHandler,
@@ -323,8 +326,16 @@ const registerTransactionalInboxHandlers = (
     ),
     new UpdateMetadataHandler(ingestProcessors, config),
     new CheckFinishIngestDocumentHandler(storeInboxMessage, config),
-    new VideoAlreadyExistedHandler(ingestProcessors, config),
-    new VideoCreationStartedHandler(ingestProcessors, config),
+    new VideoAlreadyExistedHandler(
+      storeOutboxMessage,
+      ingestProcessors,
+      config,
+    ),
+    new VideoCreationStartedHandler(
+      storeOutboxMessage,
+      ingestProcessors,
+      config,
+    ),
     new VideoFailedHandler(config),
     new ImageAlreadyExistedHandler(ingestProcessors, config),
     new ImageCreatedHandler(ingestProcessors, config),
@@ -336,6 +347,9 @@ const registerTransactionalInboxHandlers = (
     new UpsertLocalizationSourceEntityFailedHandler(config),
     new LocalizeEntityFinishedHandler(config),
     new LocalizeEntityFailedHandler(config),
+    new LocalizableImageIngestFinishedHandler(storeOutboxMessage, config),
+    new RegisterCuePointsFinishedHandler(config),
+    new RegisterCuePointsFailedHandler(config),
   ];
   const commonMessageHandlers: TransactionalMessageHandler[] = [
     new DeleteEntityHandler(storeOutboxMessage, config),
@@ -366,6 +380,8 @@ const registerTransactionalInboxHandlers = (
         switch (message.messageType) {
           case MediaServiceMessagingSettings.StartIngest.messageType:
             return 600_000;
+          case MediaServiceMessagingSettings.PublishEntity.messageType:
+            return 60_000;
           default:
             return 15_000;
         }
@@ -405,6 +421,8 @@ const registerRabbitMqMessaging = async (
         VideoServiceMultiTenantMessagingSettings.EnsureVideoExistsAlreadyExisted,
         VideoServiceMultiTenantMessagingSettings.EnsureVideoExistsCreationStarted,
         VideoServiceMultiTenantMessagingSettings.EnsureVideoExistsFailed,
+        VideoServiceMultiTenantMessagingSettings.RegisterCuePointsFinished,
+        VideoServiceMultiTenantMessagingSettings.RegisterCuePointsFailed,
         ImageServiceMultiTenantMessagingSettings.EnsureImageExistsAlreadyExisted,
         ImageServiceMultiTenantMessagingSettings.EnsureImageExistsImageCreated,
         ImageServiceMultiTenantMessagingSettings.EnsureImageExistsFailed,
@@ -424,11 +442,17 @@ const registerRabbitMqMessaging = async (
           case MediaServiceMessagingSettings.UpdateMetadata.messageType:
           case MediaServiceMessagingSettings.CheckFinishIngestDocument
             .messageType:
+          case MediaServiceMessagingSettings.LocalizableImageIngestFinished
+            .messageType:
           case VideoServiceMultiTenantMessagingSettings
             .EnsureVideoExistsAlreadyExisted.messageType:
           case VideoServiceMultiTenantMessagingSettings
             .EnsureVideoExistsCreationStarted.messageType:
           case VideoServiceMultiTenantMessagingSettings.EnsureVideoExistsFailed
+            .messageType:
+          case VideoServiceMultiTenantMessagingSettings
+            .RegisterCuePointsFinished.messageType:
+          case VideoServiceMultiTenantMessagingSettings.RegisterCuePointsFailed
             .messageType:
           case ImageServiceMultiTenantMessagingSettings
             .EnsureImageExistsAlreadyExisted.messageType:
@@ -523,6 +547,22 @@ const registerRabbitMqMessaging = async (
     ).subscribeForEvent(() => inboxWriter),
     new RascalTransactionalConfigBuilder(
       LocalizationServiceMultiTenantMessagingSettings.LocalizeEntityFailed,
+      config,
+    ).subscribeForEvent(() => inboxWriter),
+    new RascalTransactionalConfigBuilder(
+      MediaServiceMessagingSettings.LocalizableImageIngestFinished,
+      config,
+    ).subscribeForEvent(() => inboxWriter),
+    new RascalTransactionalConfigBuilder(
+      VideoServiceMultiTenantMessagingSettings.RegisterCuePoints,
+      config,
+    ).sendCommand(),
+    new RascalTransactionalConfigBuilder(
+      VideoServiceMultiTenantMessagingSettings.RegisterCuePointsFinished,
+      config,
+    ).subscribeForEvent(() => inboxWriter),
+    new RascalTransactionalConfigBuilder(
+      VideoServiceMultiTenantMessagingSettings.RegisterCuePointsFailed,
       config,
     ).subscribeForEvent(() => inboxWriter),
   ];

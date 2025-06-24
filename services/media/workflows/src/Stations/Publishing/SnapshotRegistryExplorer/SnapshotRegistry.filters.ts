@@ -4,7 +4,6 @@ import {
   FilterType,
   FilterTypes,
   FilterValues,
-  transformRange,
 } from '@axinom/mosaic-ui';
 import {
   EntityType,
@@ -12,6 +11,7 @@ import {
   SnapshotState,
   SnapshotValidationStatus,
 } from '../../../generated/graphql';
+import { transformRange } from '../../../Util/DateRangeTransformer/DateRangeTransformer';
 import { getEnumLabel } from '../../../Util/StringEnumMapper/StringEnumMapper';
 import { SnapshotData } from './SnapshotRegistry.types';
 
@@ -21,10 +21,8 @@ export function useSnapshotRegistryFilters(): {
     filters: FilterValues<SnapshotData>,
   ) => SnapshotFilter | undefined;
 } {
-  const [
-    createFromDateFilterValidator,
-    createToDateFilterValidator,
-  ] = createDateRangeFilterValidators<SnapshotData>();
+  const [createFromDateFilterValidator, createToDateFilterValidator] =
+    createDateRangeFilterValidators<SnapshotData>();
 
   const filterOptions: FilterType<SnapshotData>[] = [
     {

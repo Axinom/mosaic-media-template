@@ -2,19 +2,18 @@ fragment CollectionExplorerProperties on Collection {
   id
   title
   description
-  __typename
   externalId
   collectionsTags {
     nodes {
       name
     }
   }
+  publishingId
   publishedDate
   createdDate
   updatedDate
   updatedUser
   publishStatus
-  languages
   assetSubtype
   collectionCountries {
     nodes {
@@ -23,9 +22,17 @@ fragment CollectionExplorerProperties on Collection {
       countryId
     }
   }
-  collectionsImages {
+  collectionsImages(
+    filter: {
+      imageType: {
+        in: [COLLECTION_COVER_1X1, COLLECTION_COVER_4X1, COLLECTION_COVER]
+      }
+    }
+    orderBy: IMAGE_TYPE_DESC
+  ) {
     nodes {
       imageId
+      imageType
     }
   }
   collectionRelations(orderBy: SORT_ORDER_DESC) {
@@ -91,5 +98,14 @@ mutation BulkUnpublishCollections($filter: CollectionFilter) {
 mutation BulkCreateCollectionSnapshots($filter: CollectionFilter) {
   createCollectionSnapshots(filter: $filter) {
     affectedIds
+  }
+}
+
+query GetAllCountryData {
+  allCountryTypes(orderBy: NAME_ASC) {
+    nodes {
+      name
+      id
+    }
   }
 }

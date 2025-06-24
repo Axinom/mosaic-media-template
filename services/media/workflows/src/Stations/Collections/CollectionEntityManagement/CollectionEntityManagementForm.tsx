@@ -59,8 +59,6 @@ export const CollectionEntityManagementForm: React.FC<
                   return 'movieId';
                 case EntityType.Tvshow:
                   return 'tvshowId';
-                case EntityType.Season:
-                  return 'seasonId';
                 case EntityType.Episode:
                   return 'episodeId';
                 case EntityType.Collection:

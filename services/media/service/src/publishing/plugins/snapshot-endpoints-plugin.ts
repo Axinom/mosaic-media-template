@@ -7,7 +7,7 @@ import {
 import { gql as gqlExtended, makeExtendSchemaPlugin } from 'postgraphile';
 import { CommonErrors, getLongLivedToken } from '../../common';
 import { getValidatedExtendedContext } from '../../graphql';
-import { getSnapshotPgField } from '../utils';
+import { getRepublishableSnapshotPgField, getSnapshotPgField } from '../utils';
 
 /**
  * Plugin that adds `publishSnapshot` and `unpublishSnapshot` endpoints.
@@ -27,7 +27,7 @@ export const SnapshotEndpointsPlugin = makeExtendSchemaPlugin((build) => {
           const { storeInboxMessage, jwtToken, config, pgClient } =
             getValidatedExtendedContext(context);
 
-          const snapshot = await getSnapshotPgField(
+          const snapshot = await getRepublishableSnapshotPgField(
             snapshotId,
             build,
             graphile,

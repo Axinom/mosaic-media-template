@@ -37,8 +37,7 @@ export const TvShowCreate: React.FC = () => {
           variables: {
             input: {
               tvshow: {
-                title: formData.title,
-                externalId: `${ContentProviderKey}-${AssetType}-tvshow-${new Date().getTime()}`,
+                title: formData.title
               },
             },
           },

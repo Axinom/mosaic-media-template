@@ -101,7 +101,7 @@
         "type": "object",
         "additionalProperties": false,
         "title": "collection_localization",
-        "required": ["is_default_locale", "language_tag", "title"],
+        "required": ["is_default_locale", "language_tag"],
         "properties": {
           "is_default_locale": {
             "type": "boolean",
@@ -112,7 +112,7 @@
             "description": "The locale for which the values are localized."
           },
           "title": {
-            "type": "string",
+            "type": ["string", "null"],
             "description": "The localized title of this collection."
           },
           "description": {
@@ -122,6 +122,54 @@
           "synopsis": {
             "type": ["string", "null"],
             "description": "The localized synopsis of this collection."
+          },
+          "collection_cover": {
+            "type": ["string", "null"],
+            "description": "Localized cover image ID."
+          },
+          "collection_cover_1x1": {
+            "type": ["string", "null"],
+            "description": "Localized 1x1 cover image ID."
+          },
+          "collection_cover_4x1": {
+            "type": ["string", "null"],
+            "description": "Localized 4x1 cover image ID."
+          },
+          "collection_clean_cover": {
+            "type": ["string", "null"],
+            "description": "Localized clean cover image ID."
+          },
+          "collection_clean_cover_1x1": {
+            "type": ["string", "null"],
+            "description": "Localized 1x1 clean cover image ID."
+          },
+          "collection_clean_cover_4x1": {
+            "type": ["string", "null"],
+            "description": "Localized 4x1 clean cover image ID."
+          },
+          "collection_list": {
+            "type": ["string", "null"],
+            "description": "Localized list image ID."
+          },
+          "collection_list_1x1": {
+            "type": ["string", "null"],
+            "description": "Localized 1x1 list image ID."
+          },
+          "collection_list_15x16": {
+            "type": ["string", "null"],
+            "description": "Localized 15x16 list image ID."
+          },
+          "cover": {
+            "type": ["string", "null"],
+            "description": "The localized cover image of this movie."
+          },
+          "clean_cover": {
+            "type": ["string", "null"],
+            "description": "The localized clean_cover image cover of this movie."
+          },
+          "list": {
+            "type": ["string", "null"],
+            "description": "The localized list image of this movie."
           }
         }
       }

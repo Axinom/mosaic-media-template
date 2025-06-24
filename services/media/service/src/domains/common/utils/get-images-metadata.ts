@@ -9,9 +9,15 @@ import { getSdk } from '../../../generated/graphql/image';
 import { SnapshotValidationResult } from '../../../publishing';
 import { ImageJSONSelectable, PublishImage } from '../models';
 
-interface ImageApiResults {
+export interface ImageApiResults {
   validation: SnapshotValidationResult[];
   result: PublishImage[];
+}
+
+export interface LocalizedImageApiResults {
+  validation: SnapshotValidationResult[];
+  result: PublishImage[];
+  language_tag: string;
 }
 
 const getMappedError = mosaicErrorMappingFactory(

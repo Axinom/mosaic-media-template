@@ -10,7 +10,7 @@ export interface MovieLocalization {
   /**
    * The localized title of this movie.
    */
-  title: string;
+  title?: string | null;
   /**
    * The localized description of this movie.
    */
@@ -19,4 +19,52 @@ export interface MovieLocalization {
    * The localized synopsis of this movie.
    */
   synopsis?: string | null;
+  /**
+   * Localized cover image ID.
+   */
+  movie_cover?: string | null;
+  /**
+   * Localized 1x1 cover image ID.
+   */
+  movie_cover_1x1?: string | null;
+  /**
+   * Localized 16x9 cover image ID.
+   */
+  movie_cover_16x9?: string | null;
+  /**
+   * Localized clean cover image ID.
+   */
+  movie_clean_cover?: string | null;
+  /**
+   * Localized 1x1 clean cover image ID.
+   */
+  movie_clean_cover_1x1?: string | null;
+  /**
+   * Localized 16x9 clean cover image ID.
+   */
+  movie_clean_cover_16x9?: string | null;
+  /**
+   * Localized list image ID.
+   */
+  movie_list?: string | null;
+  /**
+   * Localized 1x1 list image ID.
+   */
+  movie_list_1x1?: string | null;
+  /**
+   * Localized 9x13 list image ID.
+   */
+  movie_list_9x13?: string | null;
+  /**
+   * The localized cover image of this movie.
+   */
+  cover?: string | null;
+  /**
+   * The localized clean_cover image cover of this movie.
+   */
+  clean_cover?: string | null;
+  /**
+   * The localized list image of this movie.
+   */
+  list?: string | null;
 }

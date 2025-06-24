@@ -4,6 +4,7 @@ import { insert, update } from 'zapatos/db';
 import { movies } from 'zapatos/schema';
 import { DEFAULT_LOCALE_TAG } from '../../../common';
 import {
+  buildBDPublishingId,
   commonPublishValidator,
   SnapshotValidationResult,
 } from '../../../publishing';
@@ -27,6 +28,7 @@ describe('publishingMovieProcessor', () => {
     movie1 = await insert('movies', {
       title: 'Entity1',
       external_id: 'existing1',
+      publishing_id: buildBDPublishingId('MOVIE', 'Entity1', 'existing1'),
     }).run(ctx.ownerPool);
   });
 
@@ -73,9 +75,18 @@ describe('publishingMovieProcessor', () => {
       // Assert
       expect(result).toEqual({
         result: {
+          age_rating: undefined,
+          asset_subtype: 'Movie',
+          asset_type: 0,
+          audio_languages: undefined,
+          business_type: 'premium',
+          caption_languages: undefined,
           cast: [],
           tags: [],
-          content_id: `movie-${movie1.id}`,
+          content_id: `1-0-${movie1.external_id}`,
+          credits_start_time: undefined,
+          directors: [],
+          extended_field: undefined,
           genre_ids: [],
           images: [],
           licenses: [],
@@ -164,17 +175,17 @@ describe('publishingMovieProcessor', () => {
 
       await insert('movies_licenses_countries', {
         movies_license_id: license1.id,
-        code: 'KW',
+        country_code: 'KW',
       }).run(ctx.ownerPool);
 
       await insert('movies_licenses_countries', {
         movies_license_id: license2.id,
-        code: 'BY',
+        country_code: 'BY',
       }).run(ctx.ownerPool);
 
       await insert('movies_licenses_countries', {
         movies_license_id: license2.id,
-        code: 'DE',
+        country_code: 'DE',
       }).run(ctx.ownerPool);
 
       await insert('movies_production_countries', {
@@ -213,7 +224,7 @@ describe('publishingMovieProcessor', () => {
       const image: PublishImage = {
         width: 111,
         height: 222,
-        type: 'COVER',
+        type: 'MOVIE_COVER_1x1',
         path: 'test/path.png',
       };
       const imageWarning: SnapshotValidationResult = {
@@ -276,23 +287,55 @@ describe('publishingMovieProcessor', () => {
       );
 
       // Assert
+      const expectedImages = [
+        image,
+        ...localizations
+          .filter((l) => !l.is_default_locale)
+          .map((l) => {
+            var locImage = Object.assign({}, image);
+            locImage.language_tag = l.language_tag;
+            return locImage;
+          }),
+      ];
+      const expectedImageValidations = Array(expectedImages.length)
+        .fill([imageError, imageWarning])
+        .flat();
+
       expect(result).toEqual({
         result: {
+          age_rating: undefined,
+          asset_subtype: 'Movie',
+          asset_type: 0,
+          audio_languages: undefined,
+          business_type: 'premium',
+          caption_languages: undefined,
           cast: ['Actress 1', 'Actor 2'],
           tags: ['Tag 1', 'Tag 3'],
-          content_id: `movie-${movie1.id}`,
+          content_id: `1-0-${movie1.external_id}`,
+          credits_start_time: undefined,
+          directors: [],
+          extended_field: undefined,
           genre_ids: [`movie_genre-${genre1.id}`, `movie_genre-${genre2.id}`],
-          images: [image],
+          images: expectedImages,
+          length_in_seconds: undefined,
           licenses: [
             {
+              business_type: 'premium',
+              content_owner: undefined,
               countries: ['KW'],
               end_time: '2021-09-01T15:05:25+00:00',
               start_time: '2021-02-01T15:05:25+00:00',
+              downloaded_asset_lifespan: 0,
+              is_downloadable: false,
             },
             {
+              business_type: 'premium',
+              content_owner: undefined,
               countries: ['BY', 'DE'],
               end_time: undefined,
               start_time: undefined,
+              downloaded_asset_lifespan: 0,
+              is_downloadable: false,
             },
           ],
           original_title: updateValues.original_title,
@@ -301,10 +344,11 @@ describe('publishingMovieProcessor', () => {
           studio: updateValues.studio,
           videos: [video],
           localizations,
+          rating: undefined,
+          subtitle_languages: undefined,
         },
         validation: [
-          imageError,
-          imageWarning,
+          ...expectedImageValidations,
           videoError,
           videoWarning,
           localizationWarning,
@@ -335,7 +379,7 @@ describe('publishingMovieProcessor', () => {
         },
         {
           context: 'METADATA',
-          message: 'Main video is not assigned.',
+          message: 'At least one video must be assigned.',
           severity: 'ERROR',
         },
         {
@@ -379,7 +423,7 @@ describe('publishingMovieProcessor', () => {
             content_id: '',
             licenses: [],
             genre_ids: [],
-            images: [{ type: 'COVER' }],
+            images: [{ type: 'MOVIE_COVER_1x1' }],
             videos: [{ type: 'MAIN' }],
             localizations: [{ title: '' }],
           },
@@ -433,12 +477,12 @@ describe('publishingMovieProcessor', () => {
         },
         {
           context: 'METADATA',
-          message: `At least one license must be assigned.`,
+          message: 'At least one video must be assigned.',
           severity: 'ERROR',
         },
         {
           context: 'METADATA',
-          message: `Property 'content_id' should match the pattern "^(movie)-([a-zA-Z0-9_-]+)$".`,
+          message: `At least one license must be assigned.`,
           severity: 'ERROR',
         },
         {
@@ -487,10 +531,13 @@ describe('publishingMovieProcessor', () => {
               {
                 end_time: '2020-08-01T00:00:00+00:00',
                 start_time: '2020-08-30T23:59:59.999+00:00',
+                countries: ['US'],
               },
             ],
             genre_ids: ['test'],
-            images: [{ type: 'COVER', width: 0, height: 0, path: '' }],
+            images: [
+              { type: 'MOVIE_COVER_1x1', width: 0, height: 0, path: '' },
+            ],
             videos: [
               {
                 type: 'MAIN',
@@ -502,6 +549,7 @@ describe('publishingMovieProcessor', () => {
                 subtitle_languages: [],
                 caption_languages: [],
                 dash_manifest: 'a',
+                hls_manifest: 'b',
               },
               {
                 type: 'INVALID',
@@ -557,13 +605,22 @@ describe('publishingMovieProcessor', () => {
         },
         {
           context: 'METADATA',
-          message: `The first license must have either start_time, end_time, or at least one country defined.`,
+          message: `Property 'hls_manifest' of the first video must be a valid URL.`,
           severity: 'ERROR',
         },
-
         {
           context: 'METADATA',
-          message: `Property 'end_time' of the second license must be greater than start_time.`,
+          message: 'At least one video must be assigned.',
+          severity: 'ERROR',
+        },
+        {
+          context: 'METADATA',
+          message: `The first license must have Until time and at least one Country defined.`,
+          severity: 'ERROR',
+        },
+        {
+          context: 'METADATA',
+          message: `Property 'end_time' of the second license must be greater than From time.`,
           severity: 'ERROR',
         },
         {
@@ -606,7 +663,7 @@ describe('publishingMovieProcessor', () => {
         {
           context: 'METADATA',
           message:
-            "Property 'title' of the first localization should be of type 'string'.",
+            "Property 'title' of the first localization should be of type 'string,null'.",
           severity: 'ERROR',
         },
       ]);
@@ -617,7 +674,7 @@ describe('publishingMovieProcessor', () => {
       const result = await commonPublishValidator(
         {
           result: {
-            content_id: 'movie-1',
+            content_id: '1-0-movie-1',
             production_countries: [],
             genre_ids: [],
             cast: [],
@@ -627,11 +684,12 @@ describe('publishingMovieProcessor', () => {
             videos: [],
             localizations: [
               {
-                title: 'empty',
                 is_default_locale: true,
                 language_tag: DEFAULT_LOCALE_TAG,
               },
             ],
+            credits_start_time: '12.5',
+            length_in_seconds: 12.0,
           },
           validation: [],
         } as any,
@@ -653,12 +711,28 @@ describe('publishingMovieProcessor', () => {
         },
         {
           context: 'METADATA',
-          message: 'Main video is not assigned.',
+          message: 'At least one video must be assigned.',
           severity: 'ERROR',
         },
         {
           context: 'METADATA',
           message: 'At least one license must be assigned.',
+          severity: 'ERROR',
+        },
+        {
+          context: 'VIDEO',
+          message:
+            'Credits start time cue point must be less than the video length.',
+          severity: 'ERROR',
+        },
+        {
+          context: 'LOCALIZATION',
+          message: 'Title is required.',
+          severity: 'ERROR',
+        },
+        {
+          context: 'LOCALIZATION',
+          message: 'Description is required.',
           severity: 'ERROR',
         },
       ]);
@@ -669,12 +743,14 @@ describe('publishingMovieProcessor', () => {
       const result = await commonPublishValidator(
         {
           result: {
-            content_id: 'movie-1',
-            licenses: [{ countries: ['ZW'] }],
+            content_id: '1-0-movie-1',
+            licenses: [
+              { end_time: '2030-08-01T00:00:00+00:00', countries: ['ZW'] },
+            ],
             genre_ids: ['movie_genre-1'],
             images: [
               {
-                type: 'COVER',
+                type: 'MOVIE_COVER_1x1',
                 width: 100,
                 height: 100,
                 path: '/transform/0000000000000000-0000000000000000/9FqubDgdtLaSjXmnBc9UNf.jpg',
@@ -699,6 +775,7 @@ describe('publishingMovieProcessor', () => {
                 title: 'test',
                 is_default_locale: true,
                 language_tag: DEFAULT_LOCALE_TAG,
+                description: 'some description',
               },
             ],
           },
@@ -739,7 +816,7 @@ describe('publishingMovieProcessor', () => {
       const result = await commonPublishValidator(
         {
           result: {
-            content_id: 'movie-6',
+            content_id: '1-0-movie-6',
             original_title: "James Cameron's Avatar",
             released: '2009-12-10',
             studio: '20th Century Fox',
@@ -756,30 +833,31 @@ describe('publishingMovieProcessor', () => {
             licenses: [
               {
                 start_time: '2020-08-01T00:00:00+00:00',
-                end_time: '2020-08-30T23:59:59.999+00:00',
+                end_time: '2040-08-30T23:59:59.999+00:00',
                 countries: ['AW', 'AT', 'FI'],
               },
               {
+                end_time: '2040-08-30T23:59:59.999+00:00',
                 countries: ['AW', 'AT', 'FI'],
               },
               {
-                start_time: '2020-08-01T00:00:00+00:00',
-              },
-              {
-                end_time: '2020-08-30T23:59:59.999+00:00',
+                end_time: '2040-08-30T23:59:59.999+00:00',
+                countries: ['AW', 'AT', 'FI'],
+                is_downloadable: true,
+                downloaded_asset_lifespan: 30,
               },
             ],
             images: [
               {
                 width: 1800,
                 height: 1012,
-                type: 'COVER',
+                type: 'MOVIE_COVER_1x1',
                 path: '/transform/0000000000000000-0000000000000000/9FqubDgdtLaSjXmnBc9UNf.jpg',
               },
               {
                 width: 1800,
                 height: 1012,
-                type: 'TEASER',
+                type: 'MOVIE_LIST',
                 path: '/transform/0000000000000000-0000000000000000/43BncavVQvDmjxiwQtt3kd.jpg',
               },
             ],

@@ -5,6 +5,7 @@ query TvShow($id: Int!) {
     synopsis
     description
     externalId
+    publishingId
     ageRating
     businessType
     contentOwner
@@ -127,15 +128,6 @@ query SearchTvShowTags($searchKey: String!, $limit: Int!) {
 
 query SearchTvShowCast($searchKey: String!, $limit: Int!) {
   getTvshowsCastsValues(
-    filter: { startsWithInsensitive: $searchKey }
-    first: $limit
-  ) {
-    nodes
-  }
-}
-
-query SearchTvShowProductionCountries($searchKey: String!, $limit: Int!) {
-  getTvshowsProductionCountriesValues(
     filter: { startsWithInsensitive: $searchKey }
     first: $limit
   ) {

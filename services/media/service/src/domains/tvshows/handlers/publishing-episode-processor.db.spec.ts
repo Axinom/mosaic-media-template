@@ -1,9 +1,10 @@
 import 'jest-extended';
 import { EpisodeLocalization } from 'media-messages';
 import { insert, update } from 'zapatos/db';
-import { episodes } from 'zapatos/schema';
+import { episodes, seasons } from 'zapatos/schema';
 import { DEFAULT_LOCALE_TAG } from '../../../common';
 import {
+  buildBDPublishingId,
   commonPublishValidator,
   SnapshotValidationResult,
 } from '../../../publishing';
@@ -17,6 +18,7 @@ import { publishingEpisodeProcessor } from './publishing-episode-processor';
 describe('publishingEpisodeProcessor', () => {
   let ctx: ITestContext;
   let episode1: episodes.JSONSelectable;
+  let season: seasons.JSONSelectable;
   const authToken = 'does-not-matter-as-request-is-mocked';
 
   beforeAll(async () => {
@@ -24,10 +26,17 @@ describe('publishingEpisodeProcessor', () => {
   });
 
   beforeEach(async () => {
+    season = await insert('seasons', {
+      title: 'Parent TV Show',
+      external_id: 'existing1',
+      index: 1,
+      publishing_id: buildBDPublishingId('SEASON', 'Entity1', 'existing1'),
+    }).run(ctx.ownerPool);
     episode1 = await insert('episodes', {
       title: 'Entity1',
       index: 1,
       external_id: 'existing1',
+      publishing_id: buildBDPublishingId('EPISODE', 'Entity1', 'existing1'),
     }).run(ctx.ownerPool);
   });
 
@@ -75,16 +84,26 @@ describe('publishingEpisodeProcessor', () => {
       // Assert
       expect(result).toEqual({
         result: {
+          age_rating: undefined,
+          asset_subtype: 'Episode',
+          asset_type: 1,
           index: 1,
+          intro_end_time: undefined,
+          intro_start_time: undefined,
+          length_in_seconds: undefined,
           season_id: undefined,
           cast: [],
           tags: [],
-          content_id: `episode-${episode1.id}`,
+          content_id: `0-1-${episode1.external_id}`,
+          credits_start_time: undefined,
+          directors: [],
+          extended_field: undefined,
           genre_ids: [],
           images: [],
           licenses: [],
           original_title: undefined,
           production_countries: [],
+          rating: undefined,
           released: undefined,
           studio: undefined,
           videos: [],
@@ -103,10 +122,6 @@ describe('publishingEpisodeProcessor', () => {
     });
 
     it('full metadata episode -> valid result with mocked warnings and errors', async () => {
-      const season = await insert('seasons', {
-        index: 1,
-        external_id: 'existing1',
-      }).run(ctx.ownerPool);
       // Arrange
       const updateValues = {
         description: 'desc',
@@ -173,17 +188,17 @@ describe('publishingEpisodeProcessor', () => {
 
       await insert('episodes_licenses_countries', {
         episodes_license_id: license1.id,
-        code: 'KW',
+        country_code: 'KW',
       }).run(ctx.ownerPool);
 
       await insert('episodes_licenses_countries', {
         episodes_license_id: license2.id,
-        code: 'BY',
+        country_code: 'BY',
       }).run(ctx.ownerPool);
 
       await insert('episodes_licenses_countries', {
         episodes_license_id: license2.id,
-        code: 'DE',
+        country_code: 'DE',
       }).run(ctx.ownerPool);
 
       await insert('episodes_production_countries', {
@@ -222,7 +237,7 @@ describe('publishingEpisodeProcessor', () => {
       const image: PublishImage = {
         width: 111,
         height: 222,
-        type: 'COVER',
+        type: 'EPISODE_COVER_1x1',
         path: 'test/path.png',
       };
       const imageWarning: SnapshotValidationResult = {
@@ -277,6 +292,20 @@ describe('publishingEpisodeProcessor', () => {
         }));
 
       // Act
+      const expectedImages = [
+        image,
+        ...localizations
+          .filter((l) => !l.is_default_locale)
+          .map((l) => {
+            var locImage = Object.assign({}, image);
+            locImage.language_tag = l.language_tag;
+            return locImage;
+          }),
+      ];
+      const expectedImageValidations = Array(expectedImages.length)
+        .fill([imageError, imageWarning])
+        .flat();
+
       const result = await publishingEpisodeProcessor.aggregator(
         episode1.id,
         authToken,
@@ -287,35 +316,50 @@ describe('publishingEpisodeProcessor', () => {
       // Assert
       expect(result).toEqual({
         result: {
+          age_rating: undefined,
+          asset_subtype: 'Episode',
+          asset_type: 1,
           index: 1,
-          season_id: `season-${season.id}`,
+          season_id: `0-2-${season.external_id}`,
           cast: ['Actress 1', 'Actor 2'],
+          credits_start_time: undefined,
+          directors: [],
+          extended_field: undefined,
           tags: ['Tag 1', 'Tag 3'],
-          content_id: `episode-${episode1.id}`,
+          content_id: `0-1-${episode1.external_id}`,
           genre_ids: [`tvshow_genre-${genre1.id}`, `tvshow_genre-${genre2.id}`],
-          images: [image],
+          images: expectedImages,
+          intro_end_time: undefined,
+          intro_start_time: undefined,
+          length_in_seconds: undefined,
           licenses: [
             {
+              content_owner: undefined,
               countries: ['KW'],
               end_time: '2021-09-01T15:05:25+00:00',
               start_time: '2021-02-01T15:05:25+00:00',
+              downloaded_asset_lifespan: 0,
+              is_downloadable: false,
             },
             {
+              content_owner: undefined,
               countries: ['BY', 'DE'],
               end_time: undefined,
               start_time: undefined,
+              downloaded_asset_lifespan: 0,
+              is_downloadable: false,
             },
           ],
           original_title: updateValues.original_title,
           production_countries: ['Imaginary Country A', 'Imaginary Country B'],
+          rating: undefined,
           released: updateValues.released,
           studio: updateValues.studio,
           videos: [video],
           localizations,
         },
         validation: [
-          imageError,
-          imageWarning,
+          ...expectedImageValidations,
           videoError,
           videoWarning,
           localizationWarning,
@@ -346,7 +390,7 @@ describe('publishingEpisodeProcessor', () => {
         },
         {
           context: 'METADATA',
-          message: `Main video is not assigned.`,
+          message: `At least one video must be assigned.`,
           severity: 'ERROR',
         },
         {
@@ -397,7 +441,7 @@ describe('publishingEpisodeProcessor', () => {
             season_id: '',
             licenses: [],
             genre_ids: [],
-            images: [{ type: 'COVER' }],
+            images: [{ type: 'EPISODE_COVER_1x1' }],
             videos: [{ type: 'MAIN' }],
             localizations: [{ title: '' }],
           },
@@ -451,17 +495,12 @@ describe('publishingEpisodeProcessor', () => {
         },
         {
           context: 'METADATA',
-          message: `No licenses are assigned.`,
-          severity: 'WARNING',
-        },
-        {
-          context: 'METADATA',
-          message: `Property 'content_id' should match the pattern "^(episode)-([a-zA-Z0-9_-]+)$".`,
+          message: 'At least one video must be assigned.',
           severity: 'ERROR',
         },
         {
           context: 'METADATA',
-          message: `Property 'season_id' should match the pattern "^(season)-([a-zA-Z0-9_-]+)$".`,
+          message: `At least one license must be assigned.`,
           severity: 'ERROR',
         },
         {
@@ -509,12 +548,14 @@ describe('publishingEpisodeProcessor', () => {
       const result = await commonPublishValidator(
         {
           result: {
-            content_id: 'episode-1',
+            content_id: '0-1-episode-1',
             index: 1,
-            season_id: `season-1`,
+            season_id: `0-2-season-1`,
             licenses: [{}],
             genre_ids: ['test'],
-            images: [{ type: 'COVER', width: 0, height: 0, path: '' }],
+            images: [
+              { type: 'EPISODE_COVER_1x1', width: 0, height: 0, path: '' },
+            ],
             videos: [
               {
                 type: 'MAIN',
@@ -526,6 +567,7 @@ describe('publishingEpisodeProcessor', () => {
                 subtitle_languages: [],
                 caption_languages: [],
                 dash_manifest: 'a',
+                hls_manifest: 'b',
               },
             ],
             localizations: [
@@ -569,7 +611,17 @@ describe('publishingEpisodeProcessor', () => {
         },
         {
           context: 'METADATA',
-          message: `The first license must have either start_time, end_time, or at least one country defined.`,
+          message: `Property 'hls_manifest' of the first video must be a valid URL.`,
+          severity: 'ERROR',
+        },
+        {
+          context: 'METADATA',
+          message: 'At least one video must be assigned.',
+          severity: 'ERROR',
+        },
+        {
+          context: 'METADATA',
+          message: `The first license must have Until time and at least one Country defined.`,
           severity: 'ERROR',
         },
         {
@@ -607,7 +659,7 @@ describe('publishingEpisodeProcessor', () => {
         {
           context: 'METADATA',
           message:
-            "Property 'title' of the first localization should be of type 'string'.",
+            "Property 'title' of the first localization should be of type 'string,null'.",
           severity: 'ERROR',
         },
       ]);
@@ -618,7 +670,8 @@ describe('publishingEpisodeProcessor', () => {
       const result = await commonPublishValidator(
         {
           result: {
-            content_id: 'episode-1',
+            content_id: '0-1-episode-1',
+            season_id: '0-2-season-6',
             index: 1,
             production_countries: [],
             genre_ids: [],
@@ -629,11 +682,14 @@ describe('publishingEpisodeProcessor', () => {
             videos: [],
             localizations: [
               {
-                title: 'empty',
                 is_default_locale: true,
                 language_tag: DEFAULT_LOCALE_TAG,
               },
             ],
+            credits_start_time: '12.5',
+            intro_start_time: '12.5',
+            intro_end_time: '12.5',
+            length_in_seconds: 12.0,
           },
           validation: [],
         } as any,
@@ -655,13 +711,41 @@ describe('publishingEpisodeProcessor', () => {
         },
         {
           context: 'METADATA',
-          message: 'Main video is not assigned.',
+          message: 'At least one video must be assigned.',
           severity: 'ERROR',
         },
         {
           context: 'METADATA',
-          message: 'No licenses are assigned.',
-          severity: 'WARNING',
+          message: 'At least one license must be assigned.',
+          severity: 'ERROR',
+        },
+        {
+          context: 'VIDEO',
+          message:
+            'Credits start time cue point must be less than the video length.',
+          severity: 'ERROR',
+        },
+        {
+          context: 'VIDEO',
+          message:
+            'Intro start time cue point must be less than the video length.',
+          severity: 'ERROR',
+        },
+        {
+          context: 'VIDEO',
+          message:
+            'Intro end time cue point must be less than the video length.',
+          severity: 'ERROR',
+        },
+        {
+          context: 'LOCALIZATION',
+          message: 'Title is required.',
+          severity: 'ERROR',
+        },
+        {
+          context: 'LOCALIZATION',
+          message: 'Description is required.',
+          severity: 'ERROR',
         },
       ]);
     });
@@ -671,14 +755,14 @@ describe('publishingEpisodeProcessor', () => {
       const result = await commonPublishValidator(
         {
           result: {
-            content_id: 'episode-1',
+            content_id: '0-1-episode-1',
             index: 1,
-            season_id: `season-1`,
+            season_id: `0-2-season-1`,
             licenses: [{ countries: ['ZW'] }],
             genre_ids: ['tvshow_genre-1'],
             images: [
               {
-                type: 'COVER',
+                type: 'EPISODE_COVER_1x1',
                 width: 100,
                 height: 100,
                 path: '/transform/0000000000000000-0000000000000000/9FqubDgdtLaSjXmnBc9UNf.jpg',
@@ -703,6 +787,7 @@ describe('publishingEpisodeProcessor', () => {
                 title: 'test',
                 is_default_locale: true,
                 language_tag: DEFAULT_LOCALE_TAG,
+                description: 'some description',
               },
             ],
           },
@@ -735,6 +820,12 @@ describe('publishingEpisodeProcessor', () => {
           message: 'additional warning',
           severity: 'WARNING',
         },
+        {
+          context: 'METADATA',
+          message:
+            'The first license must have Until time and at least one Country defined.',
+          severity: 'ERROR',
+        },
       ]);
     });
 
@@ -743,9 +834,9 @@ describe('publishingEpisodeProcessor', () => {
       const result = await commonPublishValidator(
         {
           result: {
-            content_id: 'episode-6',
+            content_id: '0-1-episode-6',
             index: 1,
-            season_id: `season-1`,
+            season_id: `0-2-season-1`,
             original_title: "James Cameron's Avatar",
             released: '2009-12-10',
             studio: '20th Century Fox',
@@ -762,30 +853,31 @@ describe('publishingEpisodeProcessor', () => {
             licenses: [
               {
                 start_time: '2020-08-01T00:00:00+00:00',
-                end_time: '2020-08-30T23:59:59.999+00:00',
+                end_time: '2030-08-30T23:59:59.999+00:00',
                 countries: ['AW', 'AT', 'FI'],
               },
               {
                 countries: ['AW', 'AT', 'FI'],
+                end_time: '2030-08-30T23:59:59.999+00:00',
               },
               {
-                start_time: '2020-08-01T00:00:00+00:00',
-              },
-              {
-                end_time: '2020-08-30T23:59:59.999+00:00',
+                countries: ['AW', 'AT', 'FI'],
+                end_time: '2030-08-30T23:59:59.999+00:00',
+                is_downloadable: true,
+                downloaded_asset_lifespan: 30,
               },
             ],
             images: [
               {
                 width: 1800,
                 height: 1012,
-                type: 'COVER',
+                type: 'EPISODE_COVER_1x1',
                 path: '/transform/0000000000000000-0000000000000000/9FqubDgdtLaSjXmnBc9UNf.jpg',
               },
               {
                 width: 1800,
                 height: 1012,
-                type: 'TEASER',
+                type: 'EPISODE_LIST_1x1',
                 path: '/transform/0000000000000000-0000000000000000/43BncavVQvDmjxiwQtt3kd.jpg',
               },
             ],

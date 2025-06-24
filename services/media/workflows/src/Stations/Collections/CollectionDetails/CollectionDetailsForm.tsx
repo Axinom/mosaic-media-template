@@ -35,6 +35,7 @@ import {
   MutationCreateCollectionsTagArgs,
   MutationDeleteCollectionCountryArgs,
   MutationDeleteCollectionsTagArgs,
+  PublishStatus,
   SearchCollectionTagsDocument,
   SearchCollectionTagsQuery,
   SearchCollectionTagsQueryVariables,
@@ -72,11 +73,9 @@ export const CollectionDetailsForm: React.FC<CollectionDetailsFormProps> = ({
     fetchPolicy: 'network-only',
   });
 
-  const { tags, allLanguages, languages, allCountries, countries } = useMemo(
+  const { tags, allCountries, countries } = useMemo(
     () => ({
       tags: data?.collection?.collectionsTags.nodes.map((node) => node.name),
-      allLanguages: data?.languages?.nodes.map((node) => node.title) ?? [],
-      languages: data?.collection?.languages?.map((lang) => lang ?? ''),
       allCountries:
         data?.allCountryTypes?.nodes.map((node: AllCountryType) =>
           isUuid(node.id ?? '') ? node.name : getCountryName(node.id ?? ''),
@@ -180,7 +179,6 @@ export const CollectionDetailsForm: React.FC<CollectionDetailsFormProps> = ({
         data: {
           ...data?.collection,
           tags,
-          languages,
           countries,
         },
         loading,
@@ -190,7 +188,7 @@ export const CollectionDetailsForm: React.FC<CollectionDetailsFormProps> = ({
       saveData={onSubmit}
       infoPanel={<Panel />}
     >
-      <Form languageOptions={allLanguages} countryOptions={allCountries} />
+      <Form countryOptions={allCountries} />
     </Details>
   );
 };
@@ -202,13 +200,49 @@ const Panel: React.FC = () => {
 
   return useMemo(() => {
     let coverImageId: ID;
+    let cover1x1ImageId: ID;
+    let cover4x1ImageId: ID;
     let coverImageCount = 0;
+    let cover1x1ImageCount = 0;
+    let cover4x1ImageCount = 0;
+    let cleanCoverImageCount = 0;
+    let cleanCover1x1ImageCount = 0;
+    let cleanCover4x1ImageCount = 0;
+    let listImageCount = 0;
+    let list1x1ImageCount = 0;
+    let list15x16ImageCount = 0;
 
     values.collectionsImages?.nodes.forEach(({ imageId, imageType }) => {
       switch (imageType) {
-        case CollectionImageType.Cover_1X1:
+        case CollectionImageType.CollectionCover:
           coverImageCount++;
           coverImageId = imageId;
+          break;
+        case CollectionImageType.CollectionCover_1X1:
+          cover1x1ImageCount++;
+          cover1x1ImageId = imageId;
+          break;
+        case CollectionImageType.CollectionCover_4X1:
+          cover4x1ImageCount++;
+          cover4x1ImageId = imageId;
+          break;
+        case CollectionImageType.CollectionCleanCover:
+          cleanCoverImageCount++;
+          break;
+        case CollectionImageType.CollectionCleanCover_1X1:
+          cleanCover1x1ImageCount++;
+          break;
+        case CollectionImageType.CollectionCleanCover_4X1:
+          cleanCover4x1ImageCount++;
+          break;
+        case CollectionImageType.CollectionList:
+          listImageCount++;
+          break;
+        case CollectionImageType.CollectionList_1X1:
+          list1x1ImageCount++;
+          break;
+        case CollectionImageType.CollectionList_15X16:
+          list15x16ImageCount++;
           break;
         default:
           break;
@@ -218,11 +252,10 @@ const Panel: React.FC = () => {
     return (
       <InfoPanel>
         <Section>
-          <ImageCover id={coverImageId} />
+          <ImageCover id={cover1x1ImageId ?? cover4x1ImageId ?? coverImageId} />
         </Section>
         <Section title="Additional Information">
           <Paragraph title="ID">{values.id}</Paragraph>
-          <Paragraph title="External ID">{values.externalId}</Paragraph>
           <Paragraph title="Subtype">
             {getEnumLabel(values.assetSubtype)}
           </Paragraph>
@@ -235,11 +268,12 @@ const Panel: React.FC = () => {
           <Paragraph title="Publishing Status">
             {getEnumLabel(values.publishStatus)}
           </Paragraph>
+          {values.publishStatus !== PublishStatus.NotPublished ? (<Paragraph title="Publishing ID">{values.publishingId}</Paragraph>) : null}
           {values.publishedDate ? (
             <Paragraph title="Published">
               {formatDateTime(values.publishedDate)} by {values.publishedUser}
             </Paragraph>
-          ) : null}
+          ) : null}         
         </Section>
         <Section title="Assigned Items">
           <Paragraph title="Entities">
@@ -252,17 +286,13 @@ const Panel: React.FC = () => {
               <div className={classes.rightAlignment}>
                 {values.tvshows?.totalCount} / many
               </div>
-              <div>Seasons</div>
-              <div className={classes.rightAlignment}>
-                {values.seasons?.totalCount} / many
-              </div>
               <div>Episodes</div>
               <div className={classes.rightAlignment}>
                 {values.episodes?.totalCount} / many
               </div>
               <div>Collections</div>
               <div className={classes.rightAlignment}>
-                {values.episodes?.totalCount} / many
+                {values.childCollections?.totalCount} / many
               </div>
             </div>
           </Paragraph>
@@ -273,6 +303,54 @@ const Panel: React.FC = () => {
                 {coverImageCount} / 1
               </div>
             </div>
+            <div className={classes.datalist}>
+              <div>Cover 1x1</div>
+              <div className={classes.rightAlignment}>
+                {cover1x1ImageCount} / 1
+              </div>
+            </div>
+            <div className={classes.datalist}>
+              <div>Cover 4x1</div>
+              <div className={classes.rightAlignment}>
+                {cover4x1ImageCount} / 1
+              </div>
+            </div>
+            <div className={classes.datalist}>
+              <div>Clean Cover</div>
+              <div className={classes.rightAlignment}>
+                {cleanCoverImageCount} / 1
+              </div>
+            </div>
+            <div className={classes.datalist}>
+              <div>Clean Cover 1x1</div>
+              <div className={classes.rightAlignment}>
+                {cleanCover1x1ImageCount} / 1
+              </div>
+            </div>
+            <div className={classes.datalist}>
+              <div>Clean Cover 4x1</div>
+              <div className={classes.rightAlignment}>
+                {cleanCover4x1ImageCount} / 1
+              </div>
+            </div>
+            <div className={classes.datalist}>
+              <div>List</div>
+              <div className={classes.rightAlignment}>
+                {listImageCount} / 1
+              </div>
+            </div>
+            <div className={classes.datalist}>
+              <div>List 1x1</div>
+              <div className={classes.rightAlignment}>
+                {list1x1ImageCount} / 1
+              </div>
+            </div>
+            <div className={classes.datalist}>
+              <div>List 15x16</div>
+              <div className={classes.rightAlignment}>
+                {list15x16ImageCount} / 1
+              </div>
+            </div>
           </Paragraph>
         </Section>
       </InfoPanel>
@@ -280,7 +358,6 @@ const Panel: React.FC = () => {
   }, [
     values.collectionsImages?.nodes,
     values.id,
-    values.externalId,
     values.assetSubtype,
     values.createdDate,
     values.createdUser,
@@ -291,16 +368,17 @@ const Panel: React.FC = () => {
     values.publishedUser,
     values.movies?.totalCount,
     values.tvshows?.totalCount,
-    values.seasons?.totalCount,
     values.episodes?.totalCount,
+    values.childCollections?.totalCount,
     ImageCover,
   ]);
 };
 
 const Form: React.FC<{
-  languageOptions?: string[];
   countryOptions?: (Maybe<string> | undefined)[];
-}> = ({ languageOptions, countryOptions }) => {
+}> = ({ countryOptions }) => {
+  const { initialValues } = useFormikContext<CollectionDetailsFormData>();
+
   const tagsResolver = async (value: string): Promise<(string | null)[]> => {
     const { data } = await client.query<
       SearchCollectionTagsQuery,
@@ -317,6 +395,12 @@ const Form: React.FC<{
       <Field name="title" label="Title" as={SingleLineTextField} />
       <Field name="synopsis" label="Short Description" as={TextAreaField} />
       <Field name="description" label="Description" as={TextAreaField} />
+      <Field
+        name="externalId"
+        label="External ID"
+        as={SingleLineTextField}
+        disabled={!!initialValues.externalId}
+      />
       <Field
         name="tags"
         label="Tags"

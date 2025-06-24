@@ -1,0 +1,15 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "type": "object",
+  "title": "localizable_image_ingest_finished_event",
+  "description": "Ingest of localizable images has finished.",
+  "additionalProperties": false,
+  "required": ["ingest_item_id"],
+  "properties": {
+    "ingest_item_id": {
+      "type": "number",
+      "title": "ingest_item_id",
+      "description": "ID of the ingest item."
+    }
+  }
+}

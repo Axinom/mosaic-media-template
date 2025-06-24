@@ -5,15 +5,16 @@ import {
   FilterTypes,
   FilterValues,
   Option,
-  transformRange,
 } from '@axinom/mosaic-ui';
 import { useEffect, useState } from 'react';
+import { validate as isUuid } from 'uuid';
 import { client } from '../../../apolloClient';
 import {
   PublishStatus,
   SeasonFilter,
   useGetSeasonsFilterOptionsDataQuery,
 } from '../../../generated/graphql';
+import { transformRange } from '../../../Util/DateRangeTransformer/DateRangeTransformer';
 import { getEnumLabel } from '../../../Util/StringEnumMapper/StringEnumMapper';
 import { SeasonData } from './SeasonExplorer.types';
 
@@ -41,7 +42,10 @@ export function useSeasonsFilters(): {
     allCountries: [],
   });
 
-  const { data, error } = useGetSeasonsFilterOptionsDataQuery({ client });
+  const { data, error } = useGetSeasonsFilterOptionsDataQuery({
+    client,
+    fetchPolicy: 'network-only',
+  });
 
   useEffect(() => {
     if (error) {
@@ -114,6 +118,11 @@ export function useSeasonsFilters(): {
       tvshowExists?: boolean;
     }
   >[] = [
+    {
+      label: 'Title',
+      property: 'title',
+      type: FilterTypes.FreeText,
+    },
     {
       label: 'Season Index',
       property: 'index',
@@ -193,12 +202,12 @@ export function useSeasonsFilters(): {
     {
       label: 'Production Country',
       property: 'seasonsProductionCountries',
-      type: FilterTypes.FreeText,
-    },
-    {
-      label: 'Studio',
-      property: 'studio',
-      type: FilterTypes.FreeText,
+      searchInputPlaceholder: 'Search',
+      type: FilterTypes.SearcheableOptions,
+      optionsProvider: (searchText) =>
+        AllFilterOptions.allCountries.filter((option) =>
+          option.label.toLowerCase().includes(searchText.toLowerCase()),
+        ),
     },
     {
       label: 'Content Owners',
@@ -254,6 +263,11 @@ export function useSeasonsFilters(): {
       onValidate: createToDateFilterValidator('createdDate'),
     },
     {
+      label: 'Publishing ID',
+      property: 'publishingId',
+      type: FilterTypes.FreeText,
+    },
+    {
       label: 'ID',
       property: 'id',
       type: FilterTypes.Numeric,
@@ -265,8 +279,10 @@ export function useSeasonsFilters(): {
     excludeItems?: number[],
   ): SeasonFilter | undefined => {
     return filterToPostGraphileFilter<SeasonFilter>(filters, {
+      title: 'includesInsensitive',
       index: 'equalTo',
       externalId: 'includesInsensitive',
+      publishingId: 'includesInsensitive',
       seasonsTags: ['some', 'name', 'includesInsensitive'],
       seasonsTvshowGenres: [
         'some',
@@ -276,7 +292,6 @@ export function useSeasonsFilters(): {
       ],
       seasonsCasts: ['some', 'name', 'includesInsensitive'],
       seasonsProductionCountries: ['some', 'name', 'includesInsensitive'],
-      studio: 'includesInsensitive',
       ageRating: 'includesInsensitive',
       contentOwner: 'includesInsensitive',
       publishStatus: 'in',
@@ -298,12 +313,24 @@ export function useSeasonsFilters(): {
               },
             },
           };
+        } else if (!isUuid(countryCode)) {
+          return {
+            some: {
+              seasonsLicensesCountries: {
+                some: {
+                  countryCode: {
+                    equalTo: countryCode,
+                  },
+                },
+              },
+            },
+          };
         } else {
           return {
             some: {
               seasonsLicensesCountries: {
                 some: {
-                  code: {
+                  countryGroupId: {
                     equalTo: countryCode,
                   },
                 },
@@ -312,6 +339,10 @@ export function useSeasonsFilters(): {
           };
         }
       },
+      released: transformRange,
+      createdDate: transformRange,
+      publishedDate: transformRange,
+      tvshowExists: (value) => value as boolean,
       id: (value) => {
         if (typeof value === 'number') {
           // User filter
@@ -326,10 +357,6 @@ export function useSeasonsFilters(): {
           };
         }
       },
-      released: transformRange,
-      createdDate: transformRange,
-      publishedDate: transformRange,
-      tvshowExists: (value) => value as boolean,
     });
   };
 

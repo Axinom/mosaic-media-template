@@ -1,6 +1,6 @@
 import { nullable, optional } from '@axinom/mosaic-db-common';
+import { isNullOrWhitespace, MosaicError } from '@axinom/mosaic-service-common';
 import {
-  ImageMessageContext,
   IngestItem,
   MovieIngestData,
   StartIngestItemCommand,
@@ -9,6 +9,7 @@ import {
 } from 'media-messages';
 import { IngestItemTypeEnum } from 'zapatos/custom';
 import { Queryable, update, upsert } from 'zapatos/db';
+import { CommonErrors } from '../../../common';
 import { MediaInitializeResult, OrchestrationData } from '../../../ingest';
 import { buildDisplayTitle, DefaultIngestEntityProcessor } from '../../common';
 
@@ -52,6 +53,8 @@ export class IngestMovieProcessor extends DefaultIngestEntityProcessor {
       ...this.orchestrateTrailers(movie, content.ingest_item_id),
       ...this.orchestrateImages(movie, content),
       ...this.orchestrateLocalizations(movie, content),
+      ...this.orchestrateImageLocalizations(movie, content),
+      ...this.orchestrateCuePoints(movie, content),
     ];
 
     return orchestrationData;
@@ -77,6 +80,11 @@ export class IngestMovieProcessor extends DefaultIngestEntityProcessor {
         ...nullable(movie.description, (val) => ({ description: val?.trim() })),
         ...nullable(movie.studio, (val) => ({ studio: val?.trim() })),
         ...nullable(movie.released, (val) => ({ released: val })),
+        ...nullable(movie.business_type, (val) => ({ business_type: val })),
+        ...nullable(movie.age_rating, (val) => ({ age_rating: val })),
+        ...nullable(movie.rating, (val) => ({ rating: val })),
+        ...nullable(movie.content_owner, (val) => ({ content_owner: val })),
+        ...nullable(movie.custom, (val) => ({ extended_field: val })),
       },
       { id: content.entity_id },
     ).run(ctx);
@@ -109,17 +117,37 @@ export class IngestMovieProcessor extends DefaultIngestEntityProcessor {
       ctx,
     );
 
+    await this.updateRelations(
+      'movies_directors',
+      movie.directors,
+      { movie_id: content.entity_id },
+      ctx,
+    );
+
     await this.dropAddLicenseRelations(
       'movies_licenses',
       'movies_licenses_countries',
-      movie.licenses?.map((r) => ({
-        insertable: {
-          movie_id: content.entity_id,
-          license_start: r.start,
-          license_end: r.end,
-        },
-        countries: r.countries,
-      })),
+      movie.licenses?.map((r) => {
+        if (
+          !isNullOrWhitespace(r.start) &&
+          !isNullOrWhitespace(r.end) &&
+          r.start > r.end
+        ) {
+          throw new MosaicError(
+            CommonErrors.LicenseStartDateCannotBeAfterEndDate,
+          );
+        }
+        return {
+          insertable: {
+            movie_id: content.entity_id,
+            license_start: r.start,
+            license_end: r.end,
+            is_downloadable: r.is_downloadable,
+            downloaded_asset_lifespan: r.downloaded_asset_lifespan,
+          },
+          countries: r.countries,
+        };
+      }),
       { movie_id: content.entity_id },
       (licenseId) => ({
         movies_license_id: licenseId,
@@ -158,7 +186,16 @@ export class IngestMovieProcessor extends DefaultIngestEntityProcessor {
   public async processImage(
     entityId: number,
     imageId: string,
-    imageType: ImageMessageContext['imageType'],
+    imageType:
+      | 'MOVIE_COVER'
+      | 'MOVIE_COVER_1x1'
+      | 'MOVIE_COVER_16x9'
+      | 'MOVIE_CLEAN_COVER'
+      | 'MOVIE_CLEAN_COVER_1x1'
+      | 'MOVIE_CLEAN_COVER_16x9'
+      | 'MOVIE_LIST'
+      | 'MOVIE_LIST_1x1'
+      | 'MOVIE_LIST_9x13',
     dbContext: Queryable,
   ): Promise<void> {
     await upsert(

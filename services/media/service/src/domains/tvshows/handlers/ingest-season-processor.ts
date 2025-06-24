@@ -1,6 +1,6 @@
 import { nullable, optional } from '@axinom/mosaic-db-common';
+import { isNullOrWhitespace, MosaicError } from '@axinom/mosaic-service-common';
 import {
-  ImageMessageContext,
   IngestItem,
   SeasonIngestData,
   StartIngestItemCommand,
@@ -8,7 +8,15 @@ import {
   VideoMessageContext,
 } from 'media-messages';
 import { IngestItemTypeEnum } from 'zapatos/custom';
-import { conditions as c, Queryable, select, update, upsert } from 'zapatos/db';
+import {
+  conditions as c,
+  Queryable,
+  select,
+  selectOne,
+  update,
+  upsert,
+} from 'zapatos/db';
+import { CommonErrors } from '../../../common';
 import { MediaInitializeResult, OrchestrationData } from '../../../ingest';
 import { buildDisplayTitle, DefaultIngestEntityProcessor } from '../../common';
 
@@ -70,6 +78,7 @@ export class IngestSeasonProcessor extends DefaultIngestEntityProcessor {
       ...this.orchestrateTrailers(season, content.ingest_item_id),
       ...this.orchestrateImages(season, content),
       ...this.orchestrateLocalizations(season, content),
+      ...this.orchestrateImageLocalizations(season, content),
     ];
 
     return orchestrationData;
@@ -81,18 +90,29 @@ export class IngestSeasonProcessor extends DefaultIngestEntityProcessor {
     ingestItemId?: number,
   ): Promise<void> {
     const season = content.item.data as SeasonIngestData;
+
+    const parentTvShow = await selectOne('tvshows', {
+      external_id: season.parent_external_id,
+    }).run(ctx);
+
     await update(
       'seasons',
       {
         ...optional(ingestItemId, (val) => ({ ingest_correlation_id: val })),
         external_id: content.item.external_id,
         index: season.index,
+        tvshow_id: parentTvShow?.id,
         ...nullable(season.synopsis, (val) => ({ synopsis: val?.trim() })),
         ...nullable(season.description, (val) => ({
           description: val?.trim(),
         })),
         ...nullable(season.studio, (val) => ({ studio: val?.trim() })),
         ...nullable(season.released, (val) => ({ released: val })),
+        ...nullable(season.business_type, (val) => ({ business_type: val })),
+        ...nullable(season.age_rating, (val) => ({ age_rating: val })),
+        ...nullable(season.rating, (val) => ({ rating: val })),
+        ...nullable(season.content_owner, (val) => ({ content_owner: val })),
+        ...nullable(season.custom, (val) => ({ extended_field: val })),
       },
       { id: content.entity_id },
     ).run(ctx);
@@ -125,17 +145,37 @@ export class IngestSeasonProcessor extends DefaultIngestEntityProcessor {
       ctx,
     );
 
+    await this.updateRelations(
+      'seasons_directors',
+      season.directors,
+      { season_id: content.entity_id },
+      ctx,
+    );
+
     await this.dropAddLicenseRelations(
       'seasons_licenses',
       'seasons_licenses_countries',
-      season.licenses?.map((r) => ({
-        insertable: {
-          season_id: content.entity_id,
-          license_start: r.start,
-          license_end: r.end,
-        },
-        countries: r.countries,
-      })),
+      season.licenses?.map((r) => {
+        if (
+          !isNullOrWhitespace(r.start) &&
+          !isNullOrWhitespace(r.end) &&
+          r.start > r.end
+        ) {
+          throw new MosaicError(
+            CommonErrors.LicenseStartDateCannotBeAfterEndDate,
+          );
+        }
+        return {
+          insertable: {
+            season_id: content.entity_id,
+            license_start: r.start,
+            license_end: r.end,
+            is_downloadable: r.is_downloadable,
+            downloaded_asset_lifespan: r.downloaded_asset_lifespan,
+          },
+          countries: r.countries,
+        };
+      }),
       { season_id: content.entity_id },
       (licenseId) => ({
         seasons_license_id: licenseId,
@@ -175,7 +215,16 @@ export class IngestSeasonProcessor extends DefaultIngestEntityProcessor {
   public async processImage(
     entityId: number,
     imageId: string,
-    imageType: ImageMessageContext['imageType'],
+    imageType:
+      | 'SEASON_COVER'
+      | 'SEASON_COVER_1x1'
+      | 'SEASON_COVER_16x9'
+      | 'SEASON_CLEAN_COVER'
+      | 'SEASON_CLEAN_COVER_1x1'
+      | 'SEASON_CLEAN_COVER_16x9'
+      | 'SEASON_LIST'
+      | 'SEASON_LIST_1x1'
+      | 'SEASON_LIST_9x13',
     dbContext: Queryable,
   ): Promise<void> {
     await upsert(

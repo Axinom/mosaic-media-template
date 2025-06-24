@@ -5,17 +5,17 @@ import {
   FilterTypes,
   FilterValues,
   Option,
-  transformRange,
 } from '@axinom/mosaic-ui';
 import { useEffect, useState } from 'react';
+import { validate as isUuid } from 'uuid';
 import { client } from '../../../apolloClient';
 import {
-  AssetSubtype,
   BusinessType,
   PublishStatus,
   TvshowFilter,
   useGetTvShowsFilterOptionsDataQuery,
 } from '../../../generated/graphql';
+import { transformRange } from '../../../Util/DateRangeTransformer/DateRangeTransformer';
 import { getEnumLabel } from '../../../Util/StringEnumMapper/StringEnumMapper';
 import { TvShowData } from './TvShowExplorer.types';
 
@@ -40,7 +40,10 @@ export function useTvShowsFilters(): {
     allCountries: [],
   });
 
-  const { data, error } = useGetTvShowsFilterOptionsDataQuery({ client });
+  const { data, error } = useGetTvShowsFilterOptionsDataQuery({
+    client,
+    fetchPolicy: 'network-only',
+  });
 
   useEffect(() => {
     if (error) {
@@ -200,17 +203,6 @@ export function useTvShowsFilters(): {
       })),
     },
     {
-      label: 'TV Show Subtype',
-      property: 'assetSubtype',
-      type: FilterTypes.Options,
-      options: Object.keys(AssetSubtype)
-        .filter((type) => type === 'TvShow')
-        .map((key) => ({
-          value: AssetSubtype[key],
-          label: getEnumLabel(AssetSubtype[key]),
-        })),
-    },
-    {
       label: 'Release Period (From)',
       property: 'released',
       type: FilterTypes.Date,
@@ -225,14 +217,13 @@ export function useTvShowsFilters(): {
     {
       label: 'Production Country',
       property: 'tvshowsProductionCountries',
-      type: FilterTypes.FreeText,
+      searchInputPlaceholder: 'Search',
+      type: FilterTypes.SearcheableOptions,
+      optionsProvider: (searchText) =>
+        AllFilterOptions.allCountries.filter((option) =>
+          option.label.toLowerCase().includes(searchText.toLowerCase()),
+        ),
     },
-    {
-      label: 'Studio',
-      property: 'studio',
-      type: FilterTypes.FreeText,
-    },
-
     {
       label: 'Publication Period (From)',
       property: 'publishedDate',
@@ -258,9 +249,9 @@ export function useTvShowsFilters(): {
       onValidate: createToDateFilterValidator('createdDate'),
     },
     {
-      label: 'ID',
-      property: 'id',
-      type: FilterTypes.Numeric,
+      label: 'Publishing ID',
+      property: 'publishingId',
+      type: FilterTypes.FreeText,
     },
   ];
 
@@ -271,6 +262,7 @@ export function useTvShowsFilters(): {
     return filterToPostGraphileFilter<TvshowFilter>(filters, {
       title: 'includesInsensitive',
       externalId: 'includesInsensitive',
+      publishingId: 'includesInsensitive',
       tvshowsTags: ['some', 'name', 'includesInsensitive'],
       tvshowsTvshowGenres: [
         'some',
@@ -280,7 +272,6 @@ export function useTvShowsFilters(): {
       ],
       tvshowsCasts: ['some', 'name', 'includesInsensitive'],
       tvshowsProductionCountries: ['some', 'name', 'includesInsensitive'],
-      studio: 'includesInsensitive',
       publishStatus: 'in',
       ageRating: 'includesInsensitive',
       contentOwner: 'includesInsensitive',
@@ -302,12 +293,24 @@ export function useTvShowsFilters(): {
               },
             },
           };
+        } else if (!isUuid(countryCode)) {
+          return {
+            some: {
+              tvshowsLicensesCountries: {
+                some: {
+                  countryCode: {
+                    equalTo: countryCode,
+                  },
+                },
+              },
+            },
+          };
         } else {
           return {
             some: {
               tvshowsLicensesCountries: {
                 some: {
-                  code: {
+                  countryGroupId: {
                     equalTo: countryCode,
                   },
                 },
@@ -316,22 +319,7 @@ export function useTvShowsFilters(): {
           };
         }
       },
-      assetSubtype: 'equalTo',
       businessType: 'in',
-      id: (value) => {
-        if (typeof value === 'number') {
-          // User filter
-          return {
-            equalTo: value,
-            notIn: excludeItems,
-          };
-        } else {
-          // Exclude items
-          return {
-            notIn: excludeItems,
-          };
-        }
-      },
       released: transformRange,
       createdDate: transformRange,
       publishedDate: transformRange,

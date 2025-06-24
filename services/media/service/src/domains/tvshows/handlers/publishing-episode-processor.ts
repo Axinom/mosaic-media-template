@@ -1,24 +1,110 @@
+import { isNullOrWhitespace, MosaicError } from '@axinom/mosaic-service-common';
 import {
   EpisodePublishedEvent,
   EpisodePublishedEventSchema,
+  License,
   PublishServiceMessagingSettings,
 } from 'media-messages';
 import * as Yup from 'yup';
-import { parent, Queryable, select, selectExactlyOne } from 'zapatos/db';
-import { Config, DEFAULT_LOCALE_TAG } from '../../../common';
 import {
-  atLeastOneString,
+  parent,
+  Queryable,
+  select,
+  selectExactlyOne,
+  selectOne,
+} from 'zapatos/db';
+import { CommonErrors, Config, DEFAULT_LOCALE_TAG } from '../../../common';
+import {
+  buildBDPublishingId,
   buildPublishingId,
   EntityPublishingProcessor,
-  licensesValidation,
-  requiredCover,
+  licenseValidationSchema,
   SnapshotDataAggregator,
   SnapshotValidationResult,
   validateYupPublishSchema,
   videosValidation,
 } from '../../../publishing';
 import { getImagesMetadata, getVideosMetadata } from '../../common';
-import { getEpisodeLocalizationsMetadata } from '../localization';
+import {
+  getEpisodeLocalizationsMetadata,
+  getEpisodeLocalizedImagesMetadata,
+} from '../localization';
+
+const applyImageFallbacks = (images: any[]) => {
+  const primaryToSecondaryMap = {
+    EPISODE_COVER: ['EPISODE_COVER_1x1', 'EPISODE_COVER_16x9'],
+    EPISODE_CLEAN_COVER: [
+      'EPISODE_CLEAN_COVER_1x1',
+      'EPISODE_CLEAN_COVER_16x9',
+    ],
+    EPISODE_LIST: ['EPISODE_LIST_1x1', 'EPISODE_LIST_9x13'],
+  };
+
+  const result = [...images];
+
+  Object.entries(primaryToSecondaryMap).forEach(([primary, secondaries]) => {
+    const primaryImage = images.find((img) => img.type === primary);
+    if (primaryImage) {
+      secondaries.forEach((secondary) => {
+        const hasSecondary = images.some((img) => img.type === secondary);
+        if (!hasSecondary) {
+          result.push({
+            ...primaryImage,
+            type: secondary,
+          });
+        }
+      });
+    }
+  });
+
+  // Filter out primary image types
+  return result.filter(
+    (img) =>
+      !['EPISODE_COVER', 'EPISODE_CLEAN_COVER', 'EPISODE_LIST'].includes(
+        img.type,
+      ),
+  );
+};
+
+/**
+ * Builds episode license objects from license data
+ */
+const buildEpisodeLicenses = async (
+  licenses: any[],
+  contentOwner: string | null,
+  queryable: Queryable,
+): Promise<License[]> => {
+  const episodeLicenses: License[] = [];
+  for (const license of licenses) {
+    const episodeLicense: License = {
+      start_time: license.license_start ?? undefined,
+      end_time: license.license_end ?? undefined,
+      is_downloadable: license.is_downloadable,
+      downloaded_asset_lifespan: license.downloaded_asset_lifespan ?? undefined,
+      content_owner: contentOwner ?? undefined,
+      countries: [],
+    };
+    for (const country of license.countries) {
+      if (!isNullOrWhitespace(country.country_group_id)) {
+        const countryGroupCountries = await select('country_groups_countries', {
+          group_id: country.country_group_id,
+        }).run(queryable);
+        episodeLicense.countries?.push(
+          ...countryGroupCountries
+            .filter((c) => !episodeLicense.countries?.includes(c.country_id))
+            .map((c) => c.country_id),
+        );
+      } else if (
+        !isNullOrWhitespace(country.country_code) &&
+        !episodeLicense.countries?.includes(country.country_code)
+      ) {
+        episodeLicense.countries?.push(country.country_code);
+      }
+    }
+    episodeLicenses.push(episodeLicense);
+  }
+  return episodeLicenses;
+};
 
 const episodeDataAggregator: SnapshotDataAggregator = async (
   entityId: number,
@@ -47,6 +133,7 @@ const episodeDataAggregator: SnapshotDataAggregator = async (
             },
           },
         ),
+        directors: select('episodes_directors', { episode_id: parent('id') }),
         trailers: select('episodes_trailers', {
           episode_id: parent('id'),
         }),
@@ -55,6 +142,9 @@ const episodeDataAggregator: SnapshotDataAggregator = async (
         }),
         productionCountries: select('episodes_production_countries', {
           episode_id: parent('id'),
+        }),
+        season: selectOne('seasons', {
+          id: parent('season_id'),
         }),
       },
     },
@@ -75,10 +165,91 @@ const episodeDataAggregator: SnapshotDataAggregator = async (
     getEpisodeLocalizationsMetadata(config, authToken, episode.id.toString()),
   ]);
 
+  const imageLocalizations = await getEpisodeLocalizedImagesMetadata(
+    episode.id,
+    localizations,
+    config.imageServiceBaseUrl,
+    authToken,
+  );
+
+  const episodeImages = applyImageFallbacks(images);
+
+  const episodeImageValidations = imagesValidation;
+  imageLocalizations.forEach((localization) => {
+    const localizedImages = applyImageFallbacks(localization.result);
+    episodeImages.push(
+      ...localizedImages.map((image) => {
+        return {
+          ...image,
+          language_tag: localization.language_tag,
+        };
+      }),
+    );
+    episodeImageValidations.push(
+      ...localization.validation.map((validation) => {
+        return {
+          ...validation,
+        };
+      }),
+    );
+  });
+
+  const mainVideo = videos.filter((video) => video.type === 'MAIN')?.[0];
+  if (episode.publishing_id === undefined || episode.publishing_id === null) {
+    throw new MosaicError({
+      ...CommonErrors.EntityPublishingIdNotFound,
+      messageParams: ['Episode', entityId],
+    });
+  }
+
+  const episodeLicenses = await buildEpisodeLicenses(
+    episode.licenses,
+    episode.content_owner,
+    queryable,
+  );
+
+  let extendedField = null;
+  const metadataValidation: SnapshotValidationResult[] = [];
+  if (!isNullOrWhitespace(episode.extended_field)) {
+    try {
+      extendedField = {
+        custom: JSON.parse(episode.extended_field),
+      };
+    } catch (error) {
+      metadataValidation.push({
+        context: 'METADATA',
+        severity: 'ERROR',
+        message: 'Invalid JSON format in extended_field.',
+      });
+    }
+  }
+
+  if (mainVideo?.cue_points && mainVideo.cue_points.length > 0) {
+    const cuePointTypeKeys = new Set<string>();
+    for (const cuePoint of mainVideo.cue_points) {
+      if (cuePoint.cue_point_type_key) {
+        if (cuePointTypeKeys.has(cuePoint.cue_point_type_key)) {
+          videosValidation.push({
+            context: 'VIDEO',
+            severity: 'ERROR',
+            message: `Duplicate cue point type key found: ${cuePoint.cue_point_type_key}.`,
+          });
+        } else {
+          cuePointTypeKeys.add(cuePoint.cue_point_type_key);
+        }
+      }
+    }
+  }
+
   const snapshotJson: EpisodePublishedEvent = {
-    content_id: buildPublishingId('episodes', episode.id),
+    content_id: episode.publishing_id,
     season_id: episode.season_id
-      ? buildPublishingId('seasons', episode.season_id)
+      ? episode.season?.publishing_id ||
+        buildBDPublishingId(
+          'EPISODE',
+          episode.season!.title,
+          episode.season!.external_id!, // TODO: Can we improve this logic?
+        )
       : undefined,
     index: episode.index,
     original_title: episode.original_title ?? undefined,
@@ -90,13 +261,46 @@ const episodeDataAggregator: SnapshotDataAggregator = async (
     ),
     cast: episode.cast.map((c) => c.name),
     tags: episode.tags.map((c) => c.name),
-    licenses: episode.licenses.map((license) => ({
-      start_time: license.license_start ?? undefined,
-      end_time: license.license_end ?? undefined,
-      countries: license.countries.map((country) => country.code),
-    })),
-    images,
+    licenses: episodeLicenses,
+    images: episodeImages,
     videos,
+    directors: episode.directors.map((d) => d.name),
+    credits_start_time:
+      mainVideo?.cue_points?.filter(
+        (cue_point) => cue_point.cue_point_type_key === 'CREDIT_START',
+      )[0]?.time_in_seconds !== undefined
+        ? String(
+            mainVideo?.cue_points?.filter(
+              (cue_point) => cue_point.cue_point_type_key === 'CREDIT_START',
+            )[0]?.time_in_seconds,
+          )
+        : undefined,
+    intro_start_time:
+      mainVideo?.cue_points?.filter(
+        (cue_point) => cue_point.cue_point_type_key === 'INTRO_START',
+      )[0]?.time_in_seconds !== undefined
+        ? String(
+            mainVideo?.cue_points?.filter(
+              (cue_point) => cue_point.cue_point_type_key === 'INTRO_START',
+            )[0]?.time_in_seconds,
+          )
+        : undefined,
+    intro_end_time:
+      mainVideo?.cue_points?.filter(
+        (cue_point) => cue_point.cue_point_type_key === 'INTRO_FINISH',
+      )[0]?.time_in_seconds !== undefined
+        ? String(
+            mainVideo?.cue_points?.filter(
+              (cue_point) => cue_point.cue_point_type_key === 'INTRO_FINISH',
+            )[0]?.time_in_seconds,
+          )
+        : undefined,
+    length_in_seconds: mainVideo?.length_in_seconds,
+    extended_field: extendedField ? JSON.stringify(extendedField) : undefined,
+    rating: episode.rating ?? undefined,
+    age_rating: episode.age_rating ?? undefined,
+    asset_type: 1,
+    asset_subtype: 'Episode',
     localizations: localizations ?? [
       {
         is_default_locale: true,
@@ -111,7 +315,8 @@ const episodeDataAggregator: SnapshotDataAggregator = async (
   return {
     result: snapshotJson,
     validation: [
-      ...imagesValidation,
+      ...metadataValidation,
+      ...episodeImageValidations,
       ...videosValidation,
       ...localizationsValidation,
     ],
@@ -121,13 +326,135 @@ const episodeDataAggregator: SnapshotDataAggregator = async (
 const customEpisodeValidation = async (
   json: unknown,
 ): Promise<SnapshotValidationResult[]> => {
+  const episodeJson = json as EpisodePublishedEvent;
+
   const yupSchema = Yup.object({
-    genre_ids: atLeastOneString,
-    images: requiredCover,
-    videos: videosValidation('MAIN', 'TRAILER'),
-    licenses: licensesValidation(false),
+    //genre_ids: atLeastOneString, // generes are not required for episodes
+    //images: requiredEpisodeCover, // cover images are not required for episodes
+    videos: videosValidation(),
   });
-  return validateYupPublishSchema(json, yupSchema);
+
+  const yupValidationResults = await validateYupPublishSchema(json, yupSchema);
+  const licenseValidationResults: SnapshotValidationResult[] = [];
+  let hasValidLicense = false;
+
+  if (episodeJson.licenses.length > 0) {
+    episodeJson.licenses.forEach((license, index) => {
+      try {
+        licenseValidationSchema.validateSync(license, { abortEarly: false });
+        hasValidLicense = true;
+      } catch (err) {
+        if (err instanceof Yup.ValidationError) {
+          const errors = err.inner
+            ? err.inner.map((e) => e.message)
+            : [err.message];
+          licenseValidationResults.push({
+            context: 'LICENSING',
+            severity: 'ERROR',
+            message: `License ${index + 1}: ${errors.toString()}`,
+          });
+        } else {
+          licenseValidationResults.push({
+            context: 'LICENSING',
+            severity: 'ERROR',
+            message: `Unknown validation error for License ${index + 1}: ${
+              (err as Error).message
+            }`,
+          });
+        }
+      }
+    });
+
+    // If there is at least one valid license, we make the other errors WARNINGS and let the publishing process continue
+    if (hasValidLicense && licenseValidationResults.length > 0) {
+      licenseValidationResults.forEach((result) => {
+        result.severity = 'WARNING';
+      });
+    }
+  } else {
+    licenseValidationResults.push({
+      context: 'LICENSING',
+      severity: 'ERROR',
+      message: 'At least one license is required.',
+    });
+  }
+
+  const customValidationResults: SnapshotValidationResult[] = [];
+
+  if (!episodeJson.videos || episodeJson.videos.length === 0) {
+    customValidationResults.push({
+      context: 'VIDEO',
+      severity: 'ERROR',
+      message: 'At least one video is required.',
+    });
+  }
+  // Check credit_start_time vs length_in_seconds
+  if (episodeJson.credits_start_time && episodeJson.length_in_seconds) {
+    const creditsStartTime = parseFloat(episodeJson.credits_start_time);
+    if (creditsStartTime >= episodeJson.length_in_seconds) {
+      customValidationResults.push({
+        context: 'VIDEO',
+        severity: 'ERROR',
+        message:
+          'Credits start time cue point must be less than the video length.',
+      });
+    }
+  }
+  if (episodeJson.intro_start_time && episodeJson.length_in_seconds) {
+    const introStartTime = parseFloat(episodeJson.intro_start_time);
+    if (introStartTime >= episodeJson.length_in_seconds) {
+      customValidationResults.push({
+        context: 'VIDEO',
+        severity: 'ERROR',
+        message:
+          'Intro start time cue point must be less than the video length.',
+      });
+    }
+  }
+  if (episodeJson.intro_end_time && episodeJson.length_in_seconds) {
+    const introEndTime = parseFloat(episodeJson.intro_end_time);
+    if (introEndTime >= episodeJson.length_in_seconds) {
+      customValidationResults.push({
+        context: 'VIDEO',
+        severity: 'ERROR',
+        message: 'Intro end time cue point must be less than the video length.',
+      });
+    }
+  }
+
+  // Check if title and description are present for default locale
+  if (episodeJson.localizations) {
+    const defaultLocale = episodeJson.localizations.find(
+      (locale) => locale.is_default_locale === true,
+    );
+
+    if (defaultLocale) {
+      if (!defaultLocale.title || defaultLocale.title.trim() === '') {
+        customValidationResults.push({
+          context: 'LOCALIZATION',
+          severity: 'ERROR',
+          message: 'Title is required.',
+        });
+      }
+
+      if (
+        !defaultLocale.description ||
+        defaultLocale.description.trim() === ''
+      ) {
+        customValidationResults.push({
+          context: 'LOCALIZATION',
+          severity: 'ERROR',
+          message: 'Description is required.',
+        });
+      }
+    }
+  }
+
+  return [
+    ...yupValidationResults,
+    ...licenseValidationResults,
+    ...customValidationResults,
+  ];
 };
 
 export const publishingEpisodeProcessor: EntityPublishingProcessor = {

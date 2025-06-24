@@ -7,7 +7,12 @@ fragment TVShowExplorerProperties on Tvshow {
   assetSubtype
   businessType
   contentOwner
-  tvshowsImages(condition: { imageType: COVER_1X1 }) {
+  tvshowsImages(
+    filter: {
+      imageType: { in: [TVSHOW_COVER_1X1, TVSHOW_COVER_16X9, TVSHOW_COVER] }
+    }
+    orderBy: IMAGE_TYPE_DESC
+  ) {
     nodes {
       imageId
     }
@@ -45,13 +50,14 @@ fragment TVShowExplorerProperties on Tvshow {
       licenseStart
       tvshowsLicensesCountries {
         nodes {
-          code
+          countryCode
+          countryGroupId
         }
       }
     }
   }
-  studio
   publishedDate
+  publishingId
   seasons {
     nodes {
       episodes {

@@ -4,9 +4,12 @@ import {
 } from '@axinom/mosaic-messages';
 import { Logger } from '@axinom/mosaic-service-common';
 import { TypedTransactionalMessage } from '@axinom/mosaic-transactional-inbox-outbox';
-import { IngestMessageContext } from 'media-messages';
+import {
+  ImageLocalizationMessageContext,
+  IngestMessageContext,
+} from 'media-messages';
 import { ClientBase } from 'pg';
-import { update } from 'zapatos/db';
+import { conditions as c, update } from 'zapatos/db';
 import { Config } from '../../common';
 import { MediaTransactionalInboxMessageHandler } from '../../messaging';
 import { checkIsIngestEvent } from '../utils/check-is-ingest-event';
@@ -38,14 +41,50 @@ export class LocalizeEntityFailedHandler extends MediaTransactionalInboxMessageH
       // skipping events for entity types from different services and non-ingest events
       return;
     }
-    const messageContext = metadata.messageContext as IngestMessageContext;
-    await update(
-      'ingest_item_steps',
-      {
-        status: 'ERROR',
-        response_message: payload.message,
-      },
-      { id: messageContext.ingestItemStepId },
-    ).run(ownerClient);
+
+    if (
+      metadata.messageContext === undefined ||
+      !(metadata.messageContext as ImageLocalizationMessageContext)
+        .isImageLocalization
+    ) {
+      const messageContext = metadata.messageContext as IngestMessageContext;
+
+      const updatedIngestItemStep = await update(
+        'ingest_item_steps',
+        {
+          status: 'ERROR',
+          response_message: payload.message,
+        },
+        { id: messageContext.ingestItemStepId },
+      ).run(ownerClient);
+
+      // If the localization for entity fails, we fail image localizations as well, since the EntityLocalize command for images are only fired after the entity localization is successful.
+      await update(
+        'ingest_item_steps',
+        {
+          status: 'ERROR',
+          response_message:
+            'Localization of the entity failed. Cannot proceed with Image Localization.',
+        },
+        {
+          ingest_item_id: updatedIngestItemStep[0].ingest_item_id,
+          type: 'IMAGE_LOCALIZATIONS',
+        },
+      ).run(ownerClient);
+    } else {
+      // When we localize images, we have multiple ingest item steps for each image type.
+      // We need to mark all of them as error.
+      const messageContext =
+        metadata.messageContext as ImageLocalizationMessageContext;
+
+      await update(
+        'ingest_item_steps',
+        {
+          status: 'ERROR',
+          response_message: payload.message,
+        },
+        { id: c.isIn(messageContext.ingestItemStepIds) },
+      ).run(ownerClient);
+    }
   }
 }

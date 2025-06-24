@@ -83,6 +83,10 @@ export const EpisodeExplorer: React.FC<EpisodeExplorerProps> = (props) => {
         },
       ),
     },
+    { label: 'Published',
+      propertyName: 'publishedDate',
+      render: DateRenderer 
+    },
     { label: 'Created At', propertyName: 'createdDate', render: DateRenderer },
     {
       label: 'Last Modified At',

@@ -16,7 +16,6 @@ import {
   TagsField,
   TextAreaField,
 } from '@axinom/mosaic-ui';
-import clsx from 'clsx';
 import { Field, useFormikContext } from 'formik';
 import gql from 'graphql-tag';
 import { ObjectSchemaDefinition } from 'ObjectSchemaDefinition';
@@ -40,15 +39,13 @@ import {
   MutationDeleteEpisodesProductionCountryArgs,
   MutationDeleteEpisodesTagArgs,
   MutationDeleteEpisodesTvshowGenreArgs,
+  PublishStatus,
   SearchEpisodeCastDocument,
   SearchEpisodeCastQuery,
   SearchEpisodeCastQueryVariables,
   SearchEpisodeDirectorDocument,
   SearchEpisodeDirectorQuery,
   SearchEpisodeDirectorQueryVariables,
-  SearchEpisodeProductionCountriesDocument,
-  SearchEpisodeProductionCountriesQuery,
-  SearchEpisodeProductionCountriesQueryVariables,
   SearchEpisodeTagsDocument,
   SearchEpisodeTagsQuery,
   SearchEpisodeTagsQueryVariables,
@@ -57,6 +54,7 @@ import {
   UpdateEpisodeMutationVariables,
   useEpisodeQuery,
 } from '../../../generated/graphql';
+import { CountryNames } from '../../../Util/CountryNames/CountryNames';
 import { getEnumLabel } from '../../../Util/StringEnumMapper/StringEnumMapper';
 import { useEpisodeDetailsActions } from './EpisodeDetails.actions';
 import classes from './EpisodeDetails.module.scss';
@@ -324,13 +322,49 @@ const Panel: React.FC = () => {
 
   return useMemo(() => {
     let coverImageId: ID;
+    let cover1x1ImageId: ID;
+    let cover16x9ImageId: ID;
     let coverImageCount = 0;
+    let cover1x1ImageCount = 0;
+    let cover16x9ImageCount = 0;
+    let cleanCoverImageCount = 0;
+    let cleanCover1x1ImageCount = 0;
+    let cleanCover16x9ImageCount = 0;
+    let listImageCount = 0;
+    let list1x1ImageCount = 0;
+    let list16x9ImageCount = 0;
 
     values.episodesImages?.nodes.forEach(({ imageId, imageType }) => {
       switch (imageType) {
-        case EpisodeImageType.Cover_1X1:
+        case EpisodeImageType.EpisodeCover:
           coverImageCount++;
           coverImageId = imageId;
+          break;
+        case EpisodeImageType.EpisodeCover_1X1:
+          cover1x1ImageCount++;
+          cover1x1ImageId = imageId;
+          break;
+        case EpisodeImageType.EpisodeCover_16X9:
+          cover16x9ImageCount++;
+          cover16x9ImageId = imageId;
+          break;
+        case EpisodeImageType.EpisodeCleanCover:
+          cleanCoverImageCount++;
+          break;
+        case EpisodeImageType.EpisodeCleanCover_1X1:
+          cleanCover1x1ImageCount++;
+          break;
+        case EpisodeImageType.EpisodeCleanCover_16X9:
+          cleanCover16x9ImageCount++;
+          break;
+        case EpisodeImageType.EpisodeList:
+          listImageCount++;
+          break;
+        case EpisodeImageType.EpisodeList_1X1:
+          list1x1ImageCount++;
+          break;
+        case EpisodeImageType.EpisodeList_9X13:
+          list16x9ImageCount++;
           break;
         default:
           break;
@@ -340,11 +374,10 @@ const Panel: React.FC = () => {
     return (
       <InfoPanel>
         <Section>
-          <ImageCover id={coverImageId} />
+          <ImageCover id={cover1x1ImageId ??  cover16x9ImageId ?? coverImageId} />
         </Section>
         <Section title="Additional Information">
           <Paragraph title="ID">{values.id}</Paragraph>
-          <Paragraph title="External ID">{values.externalId}</Paragraph>
           <Paragraph title="Subtype">
             {getEnumLabel(values.assetSubtype)}
           </Paragraph>
@@ -357,6 +390,7 @@ const Panel: React.FC = () => {
           <Paragraph title="Publishing Status">
             {getEnumLabel(values.publishStatus)}
           </Paragraph>
+          {values.publishStatus !== PublishStatus.NotPublished ? (<Paragraph title="Publishing ID">{values.publishingId}</Paragraph>) : null}
           {values.publishedDate ? (
             <Paragraph title="Last Published">
               {formatDateTime(values.publishedDate)} by {values.publishedUser}
@@ -385,25 +419,74 @@ const Panel: React.FC = () => {
             )}
           </Paragraph>
           <Paragraph title="Assigned items">
-            <div className={classes.datalist}>
-              <div>Main Video</div>
-              <div className={classes.rightAlignment}>
-                {values.mainVideoId ? 1 : 0}/1
+            <Paragraph title="Videos">
+              <div className={classes.datalist}>
+                <div>Main Video</div>
+                <div className={classes.rightAlignment}>
+                  {values.mainVideoId ? 1 : 0}/1
+                </div>
+                <div>Trailers</div>
+                <div className={classes.rightAlignment}>
+                  {values.episodesTrailers?.totalCount}/many
+                </div>
               </div>
-              <div>Trailers</div>
-              <div className={classes.rightAlignment}>
-                {values.episodesTrailers?.totalCount}/many
+            </Paragraph>
+            <Paragraph title="Images">
+              <div className={classes.datalist}>
+                <div>Cover</div>
+                <div className={classes.rightAlignment}>
+                  {coverImageCount} / 1
+                </div>
               </div>
-              <div className={classes.assignedItemsSpacing}>Cover</div>
-              <div
-                className={clsx(
-                  classes.rightAlignment,
-                  classes.assignedItemsSpacing,
-                )}
-              >
-                {coverImageCount} / 1
+              <div className={classes.datalist}>
+                <div>Cover 1x1</div>
+                <div className={classes.rightAlignment}>
+                  {cover1x1ImageCount} / 1
+                </div>
               </div>
-            </div>
+              <div className={classes.datalist}>
+                <div>Cover 16x9</div>
+                <div className={classes.rightAlignment}>
+                  {cover16x9ImageCount} / 1
+                </div>
+              </div>
+              <div className={classes.datalist}>
+                <div>Clean Cover</div>
+                <div className={classes.rightAlignment}>
+                  {cleanCoverImageCount} / 1
+                </div>
+              </div>
+              <div className={classes.datalist}>
+                <div>Clean Cover 1x1</div>
+                <div className={classes.rightAlignment}>
+                  {cleanCover1x1ImageCount} / 1
+                </div>
+              </div>
+              <div className={classes.datalist}>
+                <div>Clean Cover 16x9</div>
+                <div className={classes.rightAlignment}>
+                  {cleanCover16x9ImageCount} / 1
+                </div>
+              </div>
+              <div className={classes.datalist}>
+                <div>List</div>
+                <div className={classes.rightAlignment}>
+                  {listImageCount} / 1
+                </div>
+              </div>
+              <div className={classes.datalist}>
+                <div>List 1x1</div>
+                <div className={classes.rightAlignment}>
+                  {list1x1ImageCount} / 1
+                </div>
+              </div>
+              <div className={classes.datalist}>
+                <div>List 16x9</div>
+                <div className={classes.rightAlignment}>
+                  {list16x9ImageCount} / 1
+                </div>
+              </div>
+            </Paragraph>
           </Paragraph>
         </Section>
       </InfoPanel>
@@ -416,7 +499,6 @@ const Panel: React.FC = () => {
     values.createdUser,
     values.episodesImages?.nodes,
     values.episodesTrailers?.totalCount,
-    values.externalId,
     values.id,
     values.mainVideoId,
     values.publishStatus,
@@ -433,6 +515,8 @@ const Form: React.FC<{
   ageRatingOptions?: selectOption[];
   contentOwnerOptions?: selectOption[];
 }> = ({ genreOptions, ageRatingOptions, contentOwnerOptions }) => {
+  const { initialValues } = useFormikContext<EpisodeDetailsFormData>();
+  
   const tagsResolver = async (value: string): Promise<(string | null)[]> => {
     const { data } = await client.query<
       SearchEpisodeTagsQuery,
@@ -457,19 +541,6 @@ const Form: React.FC<{
     return data.getEpisodesCastsValues?.nodes ?? [];
   };
 
-  const productionCountriesResolver = async (
-    value: string,
-  ): Promise<(string | null)[]> => {
-    const { data } = await client.query<
-      SearchEpisodeProductionCountriesQuery,
-      SearchEpisodeProductionCountriesQueryVariables
-    >({
-      query: SearchEpisodeProductionCountriesDocument,
-      variables: { searchKey: value, limit: 10 },
-    });
-    return data.getEpisodesProductionCountriesValues?.nodes ?? [];
-  };
-
   const directorSuggestionResolver = async (
     value: string,
   ): Promise<(string | null)[]> => {
@@ -486,12 +557,19 @@ const Form: React.FC<{
   return (
     <>
       <Field name="title" label="Title" as={SingleLineTextField} />
+      <Field name="originalTitle" label="Original Title" as={SingleLineTextField} />
       <Field
-        name="originalTitle"
-        label="Short Description"
+        name="synopsis"
+        label="Synopsis"
         as={SingleLineTextField}
       />
       <Field name="description" label="Description" as={TextAreaField} />
+      <Field
+        name="externalId"
+        label="External ID"
+        as={SingleLineTextField}
+        disabled={!!initialValues.externalId}
+      />
       <Field
         type="number"
         name="index"
@@ -532,8 +610,10 @@ const Form: React.FC<{
       <Field
         name="productionCountries"
         label="Country"
-        liveSuggestionsResolver={productionCountriesResolver}
-        as={CustomTagsField}
+        tagsOptions={CountryNames}
+        as={TagsField}
+        displayKey="display"
+        valueKey="value"
       />
       <Field
         name="ageRating"

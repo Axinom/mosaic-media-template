@@ -3,8 +3,12 @@ import {
   makePluginByCombiningPlugins,
   makeWrapResolversPlugin,
 } from 'graphile-utils';
-import { parent, select, selectOne } from 'zapatos/db';
-import { CommonErrors, isLicenseValid } from '../../../common';
+import { param, parent, select, selectOne, sql } from 'zapatos/db';
+import {
+  CommonErrors,
+  isLicenseValid,
+  MOSAIC_COUNTRY_CODE_PG_KEY,
+} from '../../../common';
 import { CountryCodeQueryArgPluginFactory } from '../../../graphql/plugins';
 
 const CheckOptionalCountryCodePlugin = makeWrapResolversPlugin({
@@ -14,6 +18,15 @@ const CheckOptionalCountryCodePlugin = makeWrapResolversPlugin({
         childColumns: [{ column: 'season_id', alias: '$seasonId' }],
       },
       async resolve(resolver, source, args, context, resolveInfo) {
+        // We set the country code for the current request as a PG Setting for the current transaction
+        // It is used to determine the license validity in the `episode_videos_view`.
+        // This is only used if we need to override default behaviour of extracting the country code through the ip.
+        if (!isNullOrWhitespace(args.countryCode)) {
+          await sql`SELECT set_config(${param(
+            MOSAIC_COUNTRY_CODE_PG_KEY,
+          )},  ${param(args.countryCode)}, true)`.run(context.pgClient);
+        }
+
         const result = await resolver(source, args, context, resolveInfo);
         if (!result) {
           return result;
@@ -79,7 +92,10 @@ const CheckOptionalCountryCodePlugin = makeWrapResolversPlugin({
             );
 
             // No licenses is also fine, all levels (episode, season, TV) are not protected by licensing
-            if (tvshowValidity === true || tvshowValidity.code === CommonErrors.LicenseNotFound.code) {
+            if (
+              tvshowValidity === true ||
+              tvshowValidity.code === CommonErrors.LicenseNotFound.code
+            ) {
               return result;
             }
           }

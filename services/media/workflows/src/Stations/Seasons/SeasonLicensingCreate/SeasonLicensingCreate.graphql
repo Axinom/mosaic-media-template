@@ -5,3 +5,12 @@ mutation CreateSeasonsLicense($input: CreateSeasonsLicenseInput!) {
     }
   }
 }
+
+query GetAllCountryTypesData {
+  allCountryTypes(orderBy: NAME_ASC) {
+    nodes {
+      name
+      id
+    }
+  }
+}

@@ -5,7 +5,9 @@ query Season($id: Int!) {
     synopsis
     description
     externalId
+    publishingId
     rating
+    ageRating
     contentOwner
     extendedField
     assetSubtype
@@ -61,7 +63,7 @@ query Season($id: Int!) {
     tvshow {
       id
       title
-      tvshowsImages(condition: { imageType: COVER_1X1 }, first: 1) {
+      tvshowsImages(condition: { imageType: TVSHOW_COVER_1X1 }, first: 1) {
         nodes {
           imageId
         }
@@ -127,15 +129,6 @@ query SearchSeasonTags($searchKey: String!, $limit: Int!) {
 
 query SearchSeasonCast($searchKey: String!, $limit: Int!) {
   getSeasonsCastsValues(
-    filter: { startsWithInsensitive: $searchKey }
-    first: $limit
-  ) {
-    nodes
-  }
-}
-
-query SearchSeasonProductionCountries($searchKey: String!, $limit: Int!) {
-  getSeasonsProductionCountriesValues(
     filter: { startsWithInsensitive: $searchKey }
     first: $limit
   ) {

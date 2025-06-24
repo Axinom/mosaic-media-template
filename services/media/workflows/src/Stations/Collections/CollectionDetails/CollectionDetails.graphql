@@ -4,6 +4,7 @@ query Collection($id: Int!) {
     synopsis
     description
     externalId
+    publishingId
     languages
     extendedField
     assetSubtype
@@ -40,7 +41,9 @@ query Collection($id: Int!) {
     tvshows: collectionRelations(filter: { tvshowExists: true }) {
       totalCount
     }
-    seasons: collectionRelations(filter: { seasonExists: true }) {
+    childCollections: collectionRelations(
+      filter: { childCollectionExists: true }
+    ) {
       totalCount
     }
     episodes: collectionRelations(filter: { episodeExists: true }) {

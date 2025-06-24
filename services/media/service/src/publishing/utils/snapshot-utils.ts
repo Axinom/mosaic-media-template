@@ -13,12 +13,13 @@ import {
   selectOne,
   SQL,
   sql,
+  update,
   vals,
 } from 'zapatos/db';
 import { snapshots, Table } from 'zapatos/schema';
 import { CommonErrors } from '../../common';
 import { EntityListInfo } from '../models';
-import { buildPublishingId } from './publishing-common';
+import { buildBDPublishingId, buildPublishingId } from './publishing-common';
 
 export function buildEntityTableName(entityType: EntityTypeEnum): Table {
   return pluralize(entityType.toLowerCase()) as Table;
@@ -87,6 +88,29 @@ export async function createSnapshotWithRelation(
       messageParams: [entityType, entityId],
     });
   }
+  const entityResult = entity as { title: string; external_id: string };
+  let publishingId;
+  if (
+    entityType === 'MOVIE' ||
+    entityType === 'TVSHOW' ||
+    entityType === 'SEASON' ||
+    entityType === 'EPISODE' ||
+    entityType === 'COLLECTION'
+  ) {
+    publishingId = buildBDPublishingId(
+      entityType,
+      entityResult.title,
+      entityResult.external_id ?? '',
+    );
+
+    await update(
+      entityTable,
+      { publishing_id: publishingId },
+      { id: entityId },
+    ).run(queryable);
+  } else {
+    publishingId = buildPublishingId(entityTable, entityId);
+  }
 
   // TODO: Consider moving the snapshot_no field to the xref table.
   const existingSnapshots = await select(
@@ -104,10 +128,9 @@ export async function createSnapshotWithRelation(
     Math.max(...existingSnapshots.map((x) => x.snapshot_no).concat(0)) + 1;
 
   // 1. Create a new snapshot row.
-  const titleResult = entity as { title: string };
   const entityTitle =
-    'title' in titleResult
-      ? titleResult.title
+    'title' in entityResult
+      ? entityResult.title
       : `${entityType} snapshot ${entityId}`;
 
   const snapshot = await insert('snapshots', {
@@ -116,7 +139,7 @@ export async function createSnapshotWithRelation(
     entity_type: entityType,
     snapshot_no: snapshotNo,
     job_id: jobId,
-    publish_id: buildPublishingId(entityTable, entityId),
+    publish_id: publishingId,
   }).run(queryable);
 
   // 2. Create a cross reference entry.

@@ -52,7 +52,7 @@
     "@axinom/mosaic-id-link-be": "0.27.0",
     "@axinom/mosaic-message-bus": "0.33.0",
     "@axinom/mosaic-message-bus-abstractions": "0.20.0",
-    "@axinom/mosaic-messages": "0.49.0",
+    "@axinom/mosaic-messages": "0.56.0",
     "@axinom/mosaic-service-common": "0.55.0",
     "@axinom/mosaic-transactional-inbox-outbox": "0.15.0",
     "@faker-js/faker": "^7.6.0",

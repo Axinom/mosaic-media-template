@@ -24,17 +24,6 @@ query CollectionRelatedEntities($id: Int!) {
           }
         }
 
-        season {
-          entityId: id
-          index
-          publishStatus
-          entityImages: seasonsImages {
-            nodes {
-              imageId
-            }
-          }
-        }
-
         episode {
           entityId: id
           title

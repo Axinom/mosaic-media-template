@@ -18,6 +18,7 @@ import {
   EpisodesLicensesQuery,
   EpisodesLicensesQueryVariables,
   useDeleteEpisodesLicenseMutation,
+  useGetAllCountryDataQuery,
 } from '../../../generated/graphql';
 import { getCountryName } from '../../../Util/CountryNames/CountryNames';
 
@@ -33,6 +34,10 @@ export const EpisodeLicensing: React.FC = () => {
   );
 
   const history = useHistory();
+  const { data } = useGetAllCountryDataQuery({
+    client,
+    fetchPolicy: 'no-cache',
+  });
 
   const [deleteEpisodesLicenseMutation] = useDeleteEpisodesLicenseMutation({
     client,
@@ -56,7 +61,13 @@ export const EpisodeLicensing: React.FC = () => {
       propertyName: 'episodesLicensesCountries',
       size: '4fr',
       render: createConnectionRenderer<EpisodesLicensesCountriesConnection>(
-        (node) => getCountryName(node.code),
+        (node) =>
+          [
+            getCountryName(node.countryCode ?? ''),
+            data?.allCountryTypes?.nodes.find(
+              (country) => country.id === node.countryGroupId,
+            )?.name,
+          ].filter(Boolean),
       ),
     },
   ];

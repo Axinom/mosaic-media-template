@@ -5,16 +5,16 @@ import {
   FilterTypes,
   FilterValues,
   Option,
-  transformRange,
 } from '@axinom/mosaic-ui';
 import { useEffect, useState } from 'react';
+import { validate as isUuid } from 'uuid';
 import { client } from '../../../apolloClient';
 import {
-  AssetSubtype,
   EpisodeFilter,
   PublishStatus,
   useGetEpisodesFilterOptionsDataQuery,
 } from '../../../generated/graphql';
+import { transformRange } from '../../../Util/DateRangeTransformer/DateRangeTransformer';
 import { getEnumLabel } from '../../../Util/StringEnumMapper/StringEnumMapper';
 import { EpisodeData } from './EpisodeExplorer.types';
 
@@ -42,7 +42,10 @@ export function useEpisodesFilters(): {
     allCountries: [],
   });
 
-  const { data, error } = useGetEpisodesFilterOptionsDataQuery({ client });
+  const { data, error } = useGetEpisodesFilterOptionsDataQuery({
+    client,
+    fetchPolicy: 'network-only',
+  });
 
   useEffect(() => {
     if (error) {
@@ -190,17 +193,6 @@ export function useEpisodesFilters(): {
       type: FilterTypes.Options,
     },
     {
-      label: 'Episode Subtype',
-      property: 'assetSubtype',
-      type: FilterTypes.Options,
-      options: Object.keys(AssetSubtype)
-        .filter((type) => type === 'Episode')
-        .map((key) => ({
-          value: AssetSubtype[key],
-          label: getEnumLabel(AssetSubtype[key]),
-        })),
-    },
-    {
       label: 'Release Period (From)',
       property: 'released',
       type: FilterTypes.Date,
@@ -215,12 +207,12 @@ export function useEpisodesFilters(): {
     {
       label: 'Production Country',
       property: 'episodesProductionCountries',
-      type: FilterTypes.FreeText,
-    },
-    {
-      label: 'Studio',
-      property: 'studio',
-      type: FilterTypes.FreeText,
+      searchInputPlaceholder: 'Search',
+      type: FilterTypes.SearcheableOptions,
+      optionsProvider: (searchText) =>
+        AllFilterOptions.allCountries.filter((option) =>
+          option.label.toLowerCase().includes(searchText.toLowerCase()),
+        ),
     },
     {
       label: 'Content Owners',
@@ -276,9 +268,9 @@ export function useEpisodesFilters(): {
       onValidate: createToDateFilterValidator('createdDate'),
     },
     {
-      label: 'ID',
-      property: 'id',
-      type: FilterTypes.Numeric,
+      label: 'Publishing ID',
+      property: 'publishingId',
+      type: FilterTypes.FreeText,
     },
     {
       label: 'Main Video',
@@ -295,6 +287,11 @@ export function useEpisodesFilters(): {
         },
       ],
     },
+    {
+      label: 'ID',
+      property: 'id',
+      type: FilterTypes.Numeric,
+    },
   ];
 
   const transformFilters = (
@@ -306,6 +303,7 @@ export function useEpisodesFilters(): {
       index: 'equalTo',
       originalTitle: 'includesInsensitive',
       externalId: 'includesInsensitive',
+      publishingId: 'includesInsensitive',
       episodesTags: ['some', 'name', 'includesInsensitive'],
       episodesTvshowGenres: [
         'some',
@@ -315,7 +313,6 @@ export function useEpisodesFilters(): {
       ],
       episodesCasts: ['some', 'name', 'includesInsensitive'],
       episodesProductionCountries: ['some', 'name', 'includesInsensitive'],
-      studio: 'includesInsensitive',
       ageRating: 'includesInsensitive',
       contentOwner: 'includesInsensitive',
       publishStatus: 'in',
@@ -337,12 +334,24 @@ export function useEpisodesFilters(): {
               },
             },
           };
+        } else if (!isUuid(countryCode)) {
+          return {
+            some: {
+              episodesLicensesCountries: {
+                some: {
+                  countryCode: {
+                    equalTo: countryCode,
+                  },
+                },
+              },
+            },
+          };
         } else {
           return {
             some: {
               episodesLicensesCountries: {
                 some: {
-                  code: {
+                  countryGroupId: {
                     equalTo: countryCode,
                   },
                 },
@@ -351,6 +360,13 @@ export function useEpisodesFilters(): {
           };
         }
       },
+      released: transformRange,
+      createdDate: transformRange,
+      publishedDate: transformRange,
+      mainVideoId: (value) => ({
+        isNull: !value,
+      }),
+      seasonExists: (value) => value as boolean,
       id: (value) => {
         if (typeof value === 'number') {
           // User filter
@@ -365,14 +381,6 @@ export function useEpisodesFilters(): {
           };
         }
       },
-      released: transformRange,
-      createdDate: transformRange,
-      publishedDate: transformRange,
-      assetSubtype: 'equalTo',
-      mainVideoId: (value) => ({
-        isNull: !value,
-      }),
-      seasonExists: (value) => value as boolean,
     });
   };
 

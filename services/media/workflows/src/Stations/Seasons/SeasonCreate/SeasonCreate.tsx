@@ -43,7 +43,6 @@ export const SeasonCreate: React.FC = () => {
               season: {
                 title: formData.title,
                 index: Number(formData.index),
-                externalId: `${ContentProviderKey}-${AssetType}-season-${new Date().getTime()}`,
               },
             },
           },

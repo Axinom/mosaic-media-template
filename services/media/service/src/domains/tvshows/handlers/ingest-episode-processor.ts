@@ -1,7 +1,7 @@
 import { nullable, optional } from '@axinom/mosaic-db-common';
+import { isNullOrWhitespace, MosaicError } from '@axinom/mosaic-service-common';
 import {
   EpisodeIngestData,
-  ImageMessageContext,
   IngestItem,
   StartIngestItemCommand,
   UpdateMetadataCommand,
@@ -17,6 +17,7 @@ import {
   update,
   upsert,
 } from 'zapatos/db';
+import { CommonErrors } from '../../../common';
 import { MediaInitializeResult, OrchestrationData } from '../../../ingest';
 import { buildDisplayTitle, DefaultIngestEntityProcessor } from '../../common';
 
@@ -89,6 +90,8 @@ export class IngestEpisodeProcessor extends DefaultIngestEntityProcessor {
       ...this.orchestrateTrailers(episode, content.ingest_item_id),
       ...this.orchestrateImages(episode, content),
       ...this.orchestrateLocalizations(episode, content),
+      ...this.orchestrateImageLocalizations(episode, content),
+      ...this.orchestrateCuePoints(episode, content),
     ];
 
     return orchestrationData;
@@ -101,6 +104,10 @@ export class IngestEpisodeProcessor extends DefaultIngestEntityProcessor {
   ): Promise<void> {
     const episode = content.item.data as EpisodeIngestData;
 
+    const parentSeason = await selectOne('seasons', {
+      external_id: episode.parent_external_id,
+    }).run(ctx);
+
     await update(
       'episodes',
       {
@@ -108,6 +115,7 @@ export class IngestEpisodeProcessor extends DefaultIngestEntityProcessor {
         external_id: content.item.external_id,
         title: episode.title?.trim(),
         index: episode.index,
+        season_id: parentSeason?.id,
         ...nullable(episode.original_title, (val) => ({
           original_title: val?.trim(),
         })),
@@ -117,6 +125,10 @@ export class IngestEpisodeProcessor extends DefaultIngestEntityProcessor {
         })),
         ...nullable(episode.studio, (val) => ({ studio: val?.trim() })),
         ...nullable(episode.released, (val) => ({ released: val })),
+        ...nullable(episode.age_rating, (val) => ({ age_rating: val })),
+        ...nullable(episode.rating, (val) => ({ rating: val })),
+        ...nullable(episode.content_owner, (val) => ({ content_owner: val })),
+        ...nullable(episode.custom, (val) => ({ extended_field: val })),
       },
       { id: content.entity_id },
     ).run(ctx);
@@ -143,6 +155,13 @@ export class IngestEpisodeProcessor extends DefaultIngestEntityProcessor {
     );
 
     await this.updateRelations(
+      'episodes_directors',
+      episode.directors,
+      { episode_id: content.entity_id },
+      ctx,
+    );
+
+    await this.updateRelations(
       'episodes_production_countries',
       episode.production_countries,
       { episode_id: content.entity_id },
@@ -152,14 +171,27 @@ export class IngestEpisodeProcessor extends DefaultIngestEntityProcessor {
     await this.dropAddLicenseRelations(
       'episodes_licenses',
       'episodes_licenses_countries',
-      episode.licenses?.map((r) => ({
-        insertable: {
-          episode_id: content.entity_id,
-          license_start: r.start,
-          license_end: r.end,
-        },
-        countries: r.countries,
-      })),
+      episode.licenses?.map((r) => {
+        if (
+          !isNullOrWhitespace(r.start) &&
+          !isNullOrWhitespace(r.end) &&
+          r.start > r.end
+        ) {
+          throw new MosaicError(
+            CommonErrors.LicenseStartDateCannotBeAfterEndDate,
+          );
+        }
+        return {
+          insertable: {
+            episode_id: content.entity_id,
+            license_start: r.start,
+            license_end: r.end,
+            is_downloadable: r.is_downloadable,
+            downloaded_asset_lifespan: r.downloaded_asset_lifespan,
+          },
+          countries: r.countries,
+        };
+      }),
       { episode_id: content.entity_id },
       (licenseId) => ({
         episodes_license_id: licenseId,
@@ -201,7 +233,16 @@ export class IngestEpisodeProcessor extends DefaultIngestEntityProcessor {
   public async processImage(
     entityId: number,
     imageId: string,
-    imageType: ImageMessageContext['imageType'],
+    imageType:
+      | 'EPISODE_COVER'
+      | 'EPISODE_COVER_1x1'
+      | 'EPISODE_COVER_16x9'
+      | 'EPISODE_CLEAN_COVER'
+      | 'EPISODE_CLEAN_COVER_1x1'
+      | 'EPISODE_CLEAN_COVER_16x9'
+      | 'EPISODE_LIST'
+      | 'EPISODE_LIST_1x1'
+      | 'EPISODE_LIST_9x13',
     dbContext: Queryable,
   ): Promise<void> {
     await upsert(

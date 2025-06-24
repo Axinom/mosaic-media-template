@@ -96,6 +96,7 @@ serviceAccounts:
       - serviceId: 'ax-video-service'
         permissions:
           - 'CUE_POINT_TYPES_DECLARE'
+          - 'VIDEOS_EDIT'
 
       - serviceId: 'ax-localization-service'
         permissions:
@@ -103,6 +104,10 @@ serviceAccounts:
           - 'ENTITY_DEFINITIONS_EDIT'
           - 'LOCALIZED_ENTITIES_EDIT'
           - 'LOCALIZED_ENTITIES_REVIEW'
+
+      - serviceId: 'media-service'
+        permissions:
+          - 'INGESTS_EDIT'
 
 pilets:
   # Defines the pilets (i.e. micro-frontends) associated with the service, and the required key-value pairs to run the pilet.

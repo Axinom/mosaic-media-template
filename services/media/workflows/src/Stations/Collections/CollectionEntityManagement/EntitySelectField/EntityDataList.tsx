@@ -108,8 +108,6 @@ const createEntityUrl = ({
       return `/movies/${entityId}`;
     case EntityType.Tvshow:
       return `/tvshows/${entityId}`;
-    case EntityType.Season:
-      return `/seasons/${entityId}`;
     case EntityType.Episode:
       return `/episodes/${entityId}`;
     case EntityType.Collection:

@@ -1,6 +1,6 @@
 import { nullable, optional } from '@axinom/mosaic-db-common';
+import { isNullOrWhitespace, MosaicError } from '@axinom/mosaic-service-common';
 import {
-  ImageMessageContext,
   IngestItem,
   StartIngestItemCommand,
   TvShowIngestData,
@@ -9,6 +9,7 @@ import {
 } from 'media-messages';
 import { IngestItemTypeEnum } from 'zapatos/custom';
 import { Queryable, update, upsert } from 'zapatos/db';
+import { CommonErrors } from '../../../common';
 import { MediaInitializeResult, OrchestrationData } from '../../../ingest';
 import { buildDisplayTitle, DefaultIngestEntityProcessor } from '../../common';
 
@@ -53,6 +54,7 @@ export class IngestTvshowProcessor extends DefaultIngestEntityProcessor {
       ...this.orchestrateTrailers(tvshow, content.ingest_item_id),
       ...this.orchestrateImages(tvshow, content),
       ...this.orchestrateLocalizations(tvshow, content),
+      ...this.orchestrateImageLocalizations(tvshow, content),
     ];
 
     return orchestrationData;
@@ -80,6 +82,11 @@ export class IngestTvshowProcessor extends DefaultIngestEntityProcessor {
         })),
         ...nullable(tvshow.studio, (val) => ({ studio: val?.trim() })),
         ...nullable(tvshow.released, (val) => ({ released: val })),
+        ...nullable(tvshow.business_type, (val) => ({ business_type: val })),
+        ...nullable(tvshow.age_rating, (val) => ({ age_rating: val })),
+        ...nullable(tvshow.rating, (val) => ({ rating: val })),
+        ...nullable(tvshow.content_owner, (val) => ({ content_owner: val })),
+        ...nullable(tvshow.custom, (val) => ({ extended_field: val })),
       },
       { id: content.entity_id },
     ).run(ctx);
@@ -112,17 +119,37 @@ export class IngestTvshowProcessor extends DefaultIngestEntityProcessor {
       ctx,
     );
 
+    await this.updateRelations(
+      'tvshows_directors',
+      tvshow.directors,
+      { tvshow_id: content.entity_id },
+      ctx,
+    );
+
     await this.dropAddLicenseRelations(
       'tvshows_licenses',
       'tvshows_licenses_countries',
-      tvshow.licenses?.map((r) => ({
-        insertable: {
-          tvshow_id: content.entity_id,
-          license_start: r.start,
-          license_end: r.end,
-        },
-        countries: r.countries,
-      })),
+      tvshow.licenses?.map((r) => {
+        if (
+          !isNullOrWhitespace(r.start) &&
+          !isNullOrWhitespace(r.end) &&
+          r.start > r.end
+        ) {
+          throw new MosaicError(
+            CommonErrors.LicenseStartDateCannotBeAfterEndDate,
+          );
+        }
+        return {
+          insertable: {
+            tvshow_id: content.entity_id,
+            license_start: r.start,
+            license_end: r.end,
+            is_downloadable: r.is_downloadable,
+            downloaded_asset_lifespan: r.downloaded_asset_lifespan,
+          },
+          countries: r.countries,
+        };
+      }),
       { tvshow_id: content.entity_id },
       (licenseId) => ({
         tvshows_license_id: licenseId,
@@ -162,7 +189,16 @@ export class IngestTvshowProcessor extends DefaultIngestEntityProcessor {
   public async processImage(
     entityId: number,
     imageId: string,
-    imageType: ImageMessageContext['imageType'],
+    imageType:
+      | 'TVSHOW_COVER'
+      | 'TVSHOW_COVER_1x1'
+      | 'TVSHOW_COVER_16x9'
+      | 'TVSHOW_CLEAN_COVER'
+      | 'TVSHOW_CLEAN_COVER_1x1'
+      | 'TVSHOW_CLEAN_COVER_16x9'
+      | 'TVSHOW_LIST'
+      | 'TVSHOW_LIST_1x1'
+      | 'TVSHOW_LIST_9x13',
     dbContext: Queryable,
   ): Promise<void> {
     await upsert(

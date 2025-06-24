@@ -40,21 +40,20 @@ import {
   MutationDeleteMoviesMovieGenreArgs,
   MutationDeleteMoviesProductionCountryArgs,
   MutationDeleteMoviesTagArgs,
+  PublishStatus,
   SearchMovieCastDocument,
   SearchMovieCastQuery,
   SearchMovieCastQueryVariables,
   SearchMovieDirectorDocument,
   SearchMovieDirectorQuery,
   SearchMovieDirectorQueryVariables,
-  SearchMovieProductionCountriesDocument,
-  SearchMovieProductionCountriesQuery,
-  SearchMovieProductionCountriesQueryVariables,
   SearchMovieTagsDocument,
   SearchMovieTagsQuery,
   SearchMovieTagsQueryVariables,
   UpdateMovieInput,
   useMovieQuery,
 } from '../../../generated/graphql';
+import { CountryNames } from '../../../Util/CountryNames/CountryNames';
 import { getEnumLabel } from '../../../Util/StringEnumMapper/StringEnumMapper';
 import { useMovieDetailsActions } from './MovieDetails.actions';
 import classes from './MovieDetails.module.scss';
@@ -316,13 +315,50 @@ const Panel: React.FC = () => {
 
   return useMemo(() => {
     let coverImageId: ID;
+    let cover1x1ImageId: ID;
+    let cover16x9ImageId: ID;
     let coverImageCount = 0;
+    let cover1x1ImageCount = 0;
+    let cover16x9ImageCount = 0;
+    let cleanCoverImageCount = 0;
+    let cleanCover1x1ImageCount = 0;
+    let cleanCover16x9ImageCount = 0;
+    let listImageCount = 0;
+    let list1x1ImageCount = 0;
+    let list16x9ImageCount = 0;
+    
 
     values.moviesImages?.nodes.forEach(({ imageId, imageType }) => {
       switch (imageType) {
-        case MovieImageType.Cover_1X1:
+        case MovieImageType.MovieCover_1X1:
+          cover1x1ImageCount++;
+          cover1x1ImageId = imageId;
+          break;
+        case MovieImageType.MovieCover_16X9:
+          cover16x9ImageCount++;
+          cover16x9ImageId = imageId;
+          break;
+        case MovieImageType.MovieCover:
           coverImageCount++;
           coverImageId = imageId;
+          break;                
+        case MovieImageType.MovieCleanCover:
+          cleanCoverImageCount++;
+          break;
+        case MovieImageType.MovieCleanCover_1X1:
+          cleanCover1x1ImageCount++;
+          break;
+        case MovieImageType.MovieCleanCover_16X9:
+          cleanCover16x9ImageCount++;
+          break;
+        case MovieImageType.MovieList:
+          cleanCoverImageCount++;
+          break;
+        case MovieImageType.MovieList_1X1:
+          listImageCount++;
+          break;
+        case MovieImageType.MovieList_9X13:
+          list16x9ImageCount++;
           break;
         default:
           break;
@@ -332,10 +368,9 @@ const Panel: React.FC = () => {
     return (
       <InfoPanel>
         <Section>
-          <ImageCover id={coverImageId} />
+          <ImageCover id={cover1x1ImageId ?? cover16x9ImageId ?? coverImageId} />
         </Section>
         <Section title="Additional Information">
-          <Paragraph title="External ID">{values.externalId}</Paragraph>
           <Paragraph title="Subtype">
             {getEnumLabel(values.assetSubtype)}
           </Paragraph>
@@ -348,6 +383,7 @@ const Panel: React.FC = () => {
           <Paragraph title="Publishing Status">
             {getEnumLabel(values.publishStatus)}
           </Paragraph>
+          {values.publishStatus !== PublishStatus.NotPublished ? (<Paragraph title="Publishing ID">{values.publishingId}</Paragraph>) : null}          
           {values.publishedDate ? (
             <Paragraph title="Published">
               {formatDateTime(values.publishedDate)} by {values.publishedUser}
@@ -374,6 +410,54 @@ const Panel: React.FC = () => {
                 {coverImageCount} / 1
               </div>
             </div>
+            <div className={classes.datalist}>
+              <div>Cover 1x1</div>
+              <div className={classes.rightAlignment}>
+                {cover1x1ImageCount} / 1
+              </div>
+            </div>
+            <div className={classes.datalist}>
+              <div>Cover 16x9</div>
+              <div className={classes.rightAlignment}>
+                {cover16x9ImageCount} / 1
+              </div>
+            </div>
+            <div className={classes.datalist}>
+              <div>Clean Cover</div>
+              <div className={classes.rightAlignment}>
+                {cleanCoverImageCount} / 1
+              </div>
+            </div>
+            <div className={classes.datalist}>
+              <div>Clean Cover 1x1</div>
+              <div className={classes.rightAlignment}>
+                {cleanCover1x1ImageCount} / 1
+              </div>
+            </div>
+            <div className={classes.datalist}>
+              <div>Clean Cover 16x9</div>
+              <div className={classes.rightAlignment}>
+                {cleanCover16x9ImageCount} / 1
+              </div>
+            </div>
+            <div className={classes.datalist}>
+              <div>List</div>
+              <div className={classes.rightAlignment}>
+                {listImageCount} / 1
+              </div>
+            </div>
+            <div className={classes.datalist}>
+              <div>List 1x1</div>
+              <div className={classes.rightAlignment}>
+                {list1x1ImageCount} / 1
+              </div>
+            </div>
+            <div className={classes.datalist}>
+              <div>List 16x9</div>
+              <div className={classes.rightAlignment}>
+                {list16x9ImageCount} / 1
+              </div>
+            </div>
           </Paragraph>
         </Section>
       </InfoPanel>
@@ -383,7 +467,6 @@ const Panel: React.FC = () => {
     values.assetSubtype,
     values.createdDate,
     values.createdUser,
-    values.externalId,
     values.mainVideoId,
     values.moviesImages?.nodes,
     values.moviesTrailers?.totalCount,
@@ -392,6 +475,7 @@ const Panel: React.FC = () => {
     values.publishedUser,
     values.updatedDate,
     values.updatedUser,
+    values.publishingId,
   ]);
 };
 
@@ -401,6 +485,8 @@ const Form: React.FC<{
   contentOwnerOptions?: selectOption[];
   languageOptions?: string[];
 }> = ({ genreOptions, ageRatingOptions, contentOwnerOptions }) => {
+  const { initialValues } = useFormikContext<MovieDetailsFormData>();
+
   const tagsResolver = async (value: string): Promise<(string | null)[]> => {
     const { data } = await client.query<
       SearchMovieTagsQuery,
@@ -438,24 +524,17 @@ const Form: React.FC<{
     return data.getMoviesDirectorsValues?.nodes ?? [];
   };
 
-  const productionCountriesResolver = async (
-    value: string,
-  ): Promise<(string | null)[]> => {
-    const { data } = await client.query<
-      SearchMovieProductionCountriesQuery,
-      SearchMovieProductionCountriesQueryVariables
-    >({
-      query: SearchMovieProductionCountriesDocument,
-      variables: { searchKey: value, limit: 10 },
-    });
-    return data.getMoviesProductionCountriesValues?.nodes ?? [];
-  };
-
   return (
     <>
       <Field name="title" label="Title" as={SingleLineTextField} />
       <Field name="synopsis" label="Short Description" as={TextAreaField} />
       <Field name="description" label="Description" as={TextAreaField} />
+      <Field
+        name="externalId"
+        label="External ID"
+        as={SingleLineTextField}
+        disabled={!!initialValues.externalId}
+      />
       <Field
         name="businessType"
         label="Business Type"
@@ -498,8 +577,10 @@ const Form: React.FC<{
       <Field
         name="productionCountries"
         label="Country"
-        liveSuggestionsResolver={productionCountriesResolver}
-        as={CustomTagsField}
+        tagsOptions={CountryNames}
+        as={TagsField}
+        displayKey="display"
+        valueKey="value"
       />
       <Field
         name="ageRating"
@@ -521,7 +602,6 @@ const Form: React.FC<{
         options={contentOwnerOptions}
         as={SelectField}
       />
-
       <Field name="extendedField" label="Custom" as={TextAreaField} />
     </>
   );

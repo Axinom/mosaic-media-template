@@ -35,23 +35,32 @@ export class LocalizableCollectionImageCreatedDbMessageHandler extends Localizab
   > {
     let fields = {};
     switch (image_type) {
-      case 'COVER_1x1':
-        fields = { image_id_cover_1x1: image_id };
+      case 'COLLECTION_COVER':
+        fields = { collection_cover: image_id };
         break;
-      case 'COVER_4x1':
-        fields = { image_id_cover_4x1: image_id };
+      case 'COLLECTION_COVER_1x1':
+        fields = { collection_cover_1x1: image_id };
         break;
-      case 'CLEAN_COVER_1x1':
-        fields = { image_id_clean_cover_1x1: image_id };
+      case 'COLLECTION_COVER_4x1':
+        fields = { collection_cover_4x1: image_id };
         break;
-      case 'CLEAN_COVER_4x1':
-        fields = { image_id_clean_cover_4x1: image_id };
+      case 'COLLECTION_CLEAN_COVER':
+        fields = { collection_clean_cover: image_id };
         break;
-      case 'LIST_1x1':
-        fields = { image_id_list_1x1: image_id };
+      case 'COLLECTION_CLEAN_COVER_1x1':
+        fields = { collection_clean_cover_1x1: image_id };
         break;
-      case 'LIST_15x16':
-        fields = { image_id_list_15x16: image_id };
+      case 'COLLECTION_CLEAN_COVER_4x1':
+        fields = { collection_clean_cover_4x1: image_id };
+        break;
+      case 'COLLECTION_LIST':
+        fields = { collection_list: image_id };
+        break;
+      case 'COLLECTION_LIST_1x1':
+        fields = { collection_list_1x1: image_id };
+        break;
+      case 'COLLECTION_LIST_15x16':
+        fields = { collection_list_15x16: image_id };
         break;
       default:
         return undefined;
@@ -85,23 +94,32 @@ export class LocalizableCollectionImageUpdatedDbMessageHandler extends Localizab
   > {
     let fields = {};
     switch (image_type) {
-      case 'COVER_1x1':
-        fields = { image_id_cover_1x1: image_id };
+      case 'COLLECTION_COVER':
+        fields = { collection_cover: image_id };
         break;
-      case 'COVER_4x1':
-        fields = { image_id_cover_4x1: image_id };
+      case 'COLLECTION_COVER_1x1':
+        fields = { collection_cover_1x1: image_id };
         break;
-      case 'CLEAN_COVER_1x1':
-        fields = { image_id_clean_cover_1x1: image_id };
+      case 'COLLECTION_COVER_4x1':
+        fields = { collection_cover_4x1: image_id };
         break;
-      case 'CLEAN_COVER_4x1':
-        fields = { image_id_clean_cover_4x1: image_id };
+      case 'COLLECTION_CLEAN_COVER':
+        fields = { collection_clean_cover: image_id };
         break;
-      case 'LIST_1x1':
-        fields = { image_id_list_1x1: image_id };
+      case 'COLLECTION_CLEAN_COVER_1x1':
+        fields = { collection_clean_cover_1x1: image_id };
         break;
-      case 'LIST_15x16':
-        fields = { image_id_list_15x16: image_id };
+      case 'COLLECTION_CLEAN_COVER_4x1':
+        fields = { collection_clean_cover_4x1: image_id };
+        break;
+      case 'COLLECTION_LIST':
+        fields = { collection_list: image_id };
+        break;
+      case 'COLLECTION_LIST_1x1':
+        fields = { collection_list_1x1: image_id };
+        break;
+      case 'COLLECTION_LIST_15x16':
+        fields = { collection_list_15x16: image_id };
         break;
       default:
         return undefined;
@@ -140,23 +158,32 @@ export class LocalizableCollectionImageDeletedDbMessageHandler extends Localizab
     } else {
       let fields = {};
       switch (image_type) {
-        case 'COVER_1x1':
-          fields = { image_id_cover_1x1: '' };
+        case 'COLLECTION_COVER':
+          fields = { collection_cover: '' };
           break;
-        case 'COVER_4x1':
-          fields = { image_id_cover_4x1: '' };
+        case 'COLLECTION_COVER_1x1':
+          fields = { collection_cover_1x1: '' };
           break;
-        case 'CLEAN_COVER_1x1':
-          fields = { image_id_clean_cover_1x1: '' };
+        case 'COLLECTION_COVER_4x1':
+          fields = { collection_cover_4x1: '' };
           break;
-        case 'CLEAN_COVER_4x1':
-          fields = { image_id_clean_cover_4x1: '' };
+        case 'COLLECTION_CLEAN_COVER':
+          fields = { collection_clean_cover: '' };
           break;
-        case 'LIST_1x1':
-          fields = { image_id_list_1x1: '' };
+        case 'COLLECTION_CLEAN_COVER_1x1':
+          fields = { collection_clean_cover_1x1: '' };
           break;
-        case 'LIST_15x16':
-          fields = { image_id_list_15x16: '' };
+        case 'COLLECTION_CLEAN_COVER_4x1':
+          fields = { collection_clean_cover_4x1: '' };
+          break;
+        case 'COLLECTION_LIST':
+          fields = { collection_list: '' };
+          break;
+        case 'COLLECTION_LIST_1x1':
+          fields = { collection_list_1x1: '' };
+          break;
+        case 'COLLECTION_LIST_15x16':
+          fields = { collection_list_15x16: '' };
           break;
         default:
           return undefined;

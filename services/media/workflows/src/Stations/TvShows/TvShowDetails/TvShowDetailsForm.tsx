@@ -16,7 +16,6 @@ import {
   TagsField,
   TextAreaField,
 } from '@axinom/mosaic-ui';
-import clsx from 'clsx';
 import { Field, useFormikContext } from 'formik';
 import gql from 'graphql-tag';
 import { ObjectSchemaDefinition } from 'ObjectSchemaDefinition';
@@ -37,15 +36,13 @@ import {
   MutationDeleteTvshowsProductionCountryArgs,
   MutationDeleteTvshowsTagArgs,
   MutationDeleteTvshowsTvshowGenreArgs,
+  PublishStatus,
   SearchTvShowCastDocument,
   SearchTvShowCastQuery,
   SearchTvShowCastQueryVariables,
   SearchTvShowDirectorDocument,
   SearchTvShowDirectorQuery,
   SearchTvShowDirectorQueryVariables,
-  SearchTvShowProductionCountriesDocument,
-  SearchTvShowProductionCountriesQuery,
-  SearchTvShowProductionCountriesQueryVariables,
   SearchTvShowTagsDocument,
   SearchTvShowTagsQuery,
   SearchTvShowTagsQueryVariables,
@@ -56,6 +53,7 @@ import {
   UpdateTvshowInput,
   useTvShowQuery,
 } from '../../../generated/graphql';
+import { CountryNames } from '../../../Util/CountryNames/CountryNames';
 import { getEnumLabel } from '../../../Util/StringEnumMapper/StringEnumMapper';
 import { useTvShowDetailsActions } from './TvShowDetails.actions';
 import classes from './TvShowDetails.module.scss';
@@ -317,13 +315,49 @@ const Panel: React.FC = () => {
 
   return useMemo(() => {
     let coverImageId: ID;
+    let cover1x1ImageId: ID;    
+    let cover16x9ImageId: ID;
     let coverImageCount = 0;
+    let cover1x1ImageCount = 0;
+    let cover16x9ImageCount = 0;
+    let cleanCoverImageCount = 0;
+    let cleanCover1x1ImageCount = 0;
+    let cleanCover16x9ImageCount = 0;
+    let listImageCount = 0;
+    let list1x1ImageCount = 0;
+    let list16x9ImageCount = 0;
 
     values.tvshowsImages?.nodes.forEach(({ imageId, imageType }) => {
       switch (imageType) {
-        case TvshowImageType.Cover_1X1:
+        case TvshowImageType.TvshowCover:
           coverImageCount++;
           coverImageId = imageId;
+          break;
+        case TvshowImageType.TvshowCover_1X1:
+          cover1x1ImageCount++;
+          cover1x1ImageId = imageId;
+          break;
+        case TvshowImageType.TvshowCover_16X9:
+          cover16x9ImageCount++;
+          cover16x9ImageId = imageId;
+          break;
+          case TvshowImageType.TvshowCleanCover:
+            cleanCoverImageCount++;
+            break;
+        case TvshowImageType.TvshowCleanCover_1X1:
+          cleanCover1x1ImageCount++;
+          break;
+        case TvshowImageType.TvshowCleanCover_16X9:
+          cleanCover16x9ImageCount++;
+          break;
+          case TvshowImageType.TvshowList:
+            listImageCount++;
+            break;
+        case TvshowImageType.TvshowList_1X1:
+          list1x1ImageCount++;
+          break;
+        case TvshowImageType.TvshowList_9X13:
+          list16x9ImageCount++;
           break;
         default:
           break;
@@ -333,11 +367,10 @@ const Panel: React.FC = () => {
     return (
       <InfoPanel>
         <Section>
-          <ImageCover id={coverImageId} />
+          <ImageCover id={cover1x1ImageId ?? cover16x9ImageId ?? coverImageId} />
         </Section>
         <Section title="Additional Information">
           <Paragraph title="ID">{values.id}</Paragraph>
-          <Paragraph title="External ID">{values.externalId}</Paragraph>
           <Paragraph title="Subtype">
             {getEnumLabel(values.assetSubtype)}
           </Paragraph>
@@ -350,33 +383,83 @@ const Panel: React.FC = () => {
           <Paragraph title="Publishing Status">
             {getEnumLabel(values.publishStatus)}
           </Paragraph>
+          {values.publishStatus !== PublishStatus.NotPublished ? (<Paragraph title="Publishing ID">{values.publishingId}</Paragraph>) : null}
           {values.publishedDate ? (
             <Paragraph title="Last Published">
               {formatDateTime(values.publishedDate)} by {values.publishedUser}
             </Paragraph>
-          ) : null}
+          ) : null}          
         </Section>
         <Section title="Assignments">
           <Paragraph title="Assigned items">
-            <div className={classes.datalist}>
-              <div>Seasons</div>
-              <div className={classes.rightAlignment}>
-                {values.seasons?.totalCount}/many
+            <Paragraph>
+              <div className={classes.datalist}>
+                <div>Seasons</div>
+                <div className={classes.rightAlignment}>
+                  {values.seasons?.totalCount}/many
+                </div>
+                <div>Trailers</div>{' '}
+                <div className={classes.rightAlignment}>
+                  {values.tvshowsTrailers?.totalCount}/many
+                </div>
               </div>
-              <div>Trailers</div>{' '}
-              <div className={classes.rightAlignment}>
-                {values.tvshowsTrailers?.totalCount}/many
+            </Paragraph>
+            <Paragraph title="Images">
+              <div className={classes.datalist}>
+                <div>Cover</div>
+                <div className={classes.rightAlignment}>
+                  {coverImageCount} / 1
+                </div>
               </div>
-              <div className={classes.assignedItemsSpacing}>Cover</div>
-              <div
-                className={clsx(
-                  classes.rightAlignment,
-                  classes.assignedItemsSpacing,
-                )}
-              >
-                {coverImageCount} / 1
+              <div className={classes.datalist}>
+                <div>Cover 1x1</div>
+                <div className={classes.rightAlignment}>
+                  {cover1x1ImageCount} / 1
+                </div>
               </div>
-            </div>
+              <div className={classes.datalist}>
+                <div>Cover 16x9</div>
+                <div className={classes.rightAlignment}>
+                  {cover16x9ImageCount} / 1
+                </div>
+              </div>
+              <div className={classes.datalist}>
+                <div>Clean Cover</div>
+                <div className={classes.rightAlignment}>
+                  {cleanCoverImageCount} / 1
+                </div>
+              </div>
+              <div className={classes.datalist}>
+                <div>Clean Cover 1x1</div>
+                <div className={classes.rightAlignment}>
+                  {cleanCover1x1ImageCount} / 1
+                </div>
+              </div>
+              <div className={classes.datalist}>
+                <div>Clean Cover 16x9</div>
+                <div className={classes.rightAlignment}>
+                  {cleanCover16x9ImageCount} / 1
+                </div>
+              </div>
+              <div className={classes.datalist}>
+                <div>List</div>
+                <div className={classes.rightAlignment}>
+                  {listImageCount} / 1
+                </div>
+              </div>
+              <div className={classes.datalist}>
+                <div>List 1x1</div>
+                <div className={classes.rightAlignment}>
+                  {list1x1ImageCount} / 1
+                </div>
+              </div>
+              <div className={classes.datalist}>
+                <div>List 16x9</div>
+                <div className={classes.rightAlignment}>
+                  {list16x9ImageCount} / 1
+                </div>
+              </div>
+            </Paragraph>
           </Paragraph>
         </Section>
       </InfoPanel>
@@ -386,7 +469,6 @@ const Panel: React.FC = () => {
     values.assetSubtype,
     values.createdDate,
     values.createdUser,
-    values.externalId,
     values.id,
     values.publishStatus,
     values.publishedDate,
@@ -404,6 +486,8 @@ const Form: React.FC<{
   ageRatingOptions?: selectOption[];
   contentOwnerOptions?: selectOption[];
 }> = ({ genreOptions, ageRatingOptions, contentOwnerOptions }) => {
+  const { initialValues } = useFormikContext<TvShowDetailsFormData>();
+
   const tagsResolver = async (value: string): Promise<(string | null)[]> => {
     const { data } = await client.query<
       SearchTvShowTagsQuery,
@@ -428,19 +512,6 @@ const Form: React.FC<{
     return data.getTvshowsCastsValues?.nodes ?? [];
   };
 
-  const productionCountriesResolver = async (
-    value: string,
-  ): Promise<(string | null)[]> => {
-    const { data } = await client.query<
-      SearchTvShowProductionCountriesQuery,
-      SearchTvShowProductionCountriesQueryVariables
-    >({
-      query: SearchTvShowProductionCountriesDocument,
-      variables: { searchKey: value, limit: 10 },
-    });
-    return data.getTvshowsProductionCountriesValues?.nodes ?? [];
-  };
-
   const directorSuggestionResolver = async (
     value: string,
   ): Promise<(string | null)[]> => {
@@ -459,6 +530,12 @@ const Form: React.FC<{
       <Field name="title" label="Title" as={SingleLineTextField} />
       <Field name="synopsis" label="Short Description" as={TextAreaField} />
       <Field name="description" label="Description" as={TextAreaField} />
+      <Field
+        name="externalId"
+        label="External ID"
+        as={SingleLineTextField}
+        disabled={!!initialValues.externalId}
+      />
       <Field
         name="businessType"
         label="Business Type"
@@ -501,8 +578,10 @@ const Form: React.FC<{
       <Field
         name="productionCountries"
         label="Country"
-        liveSuggestionsResolver={productionCountriesResolver}
-        as={CustomTagsField}
+        tagsOptions={CountryNames}
+        as={TagsField}
+        displayKey="display"
+        valueKey="value"
       />
       <Field
         name="ageRating"

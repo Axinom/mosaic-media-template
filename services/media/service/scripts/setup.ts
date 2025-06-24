@@ -63,7 +63,7 @@ async function main(): Promise<void> {
       },
       {
         serviceId: 'ax-video-service',
-        permissions: ['CUE_POINT_TYPES_DECLARE'],
+        permissions: ['CUE_POINT_TYPES_DECLARE', 'VIDEOS_EDIT'],
       },
       {
         serviceId: 'ax-localization-service',

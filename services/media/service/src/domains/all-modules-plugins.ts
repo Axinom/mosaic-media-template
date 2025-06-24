@@ -1,6 +1,7 @@
 import { SubscriptionsPluginFactory } from '@axinom/mosaic-graphql-common';
 import { makePluginByCombiningPlugins } from 'graphile-utils';
 import { AllCollectionDevPlugins, AllCollectionPlugins } from './collections';
+import { ValidateExternalIdUpdatePlugin } from './common/plugins';
 import { AllCountryPlugins } from './countries';
 import { AllMovieDevPlugins, AllMoviePlugins } from './movies';
 import { AllTvshowDevPlugins, AllTvshowPlugins } from './tvshows';
@@ -10,6 +11,7 @@ export const AllModulesPlugins = makePluginByCombiningPlugins(
   AllMoviePlugins,
   AllTvshowPlugins,
   AllCountryPlugins,
+  ValidateExternalIdUpdatePlugin,
 );
 
 export const AllModulesDevPlugins = makePluginByCombiningPlugins(

@@ -2,13 +2,18 @@ import { MessagingSettings } from '@axinom/mosaic-message-bus-abstractions';
 import {
   EnsureVideoExistsAlreadyExistedEvent,
   EnsureVideoExistsCreationStartedEvent,
+  RegisterCuePointsCommand,
+  VideoServiceMultiTenantMessagingSettings,
 } from '@axinom/mosaic-messages';
 import { Logger, MosaicError } from '@axinom/mosaic-service-common';
-import { TypedTransactionalMessage } from '@axinom/mosaic-transactional-inbox-outbox';
-import { VideoMessageContext } from 'media-messages';
+import {
+  StoreOutboxMessage,
+  TypedTransactionalMessage,
+} from '@axinom/mosaic-transactional-inbox-outbox';
+import { CuePointsIngestElement, VideoMessageContext } from 'media-messages';
 import { ClientBase } from 'pg';
-import { selectExactlyOne, update } from 'zapatos/db';
-import { CommonErrors, Config } from '../../common';
+import { selectExactlyOne, selectOne, update } from 'zapatos/db';
+import { CommonErrors, Config, requestServiceAccountToken } from '../../common';
 import { MediaGuardedTransactionalInboxMessageHandler } from '../../messaging';
 import { IngestEntityProcessor } from '../models';
 import { checkIsIngestEvent } from '../utils/check-is-ingest-event';
@@ -20,6 +25,7 @@ export abstract class VideoSucceededHandler<
     | EnsureVideoExistsCreationStartedEvent,
 > extends MediaGuardedTransactionalInboxMessageHandler<TContent> {
   constructor(
+    private readonly storeOutboxMessage: StoreOutboxMessage,
     private entityProcessors: IngestEntityProcessor[],
     messagingSettings: MessagingSettings,
     config: Config,
@@ -70,6 +76,64 @@ export abstract class VideoSucceededHandler<
       { status: 'SUCCESS', entity_id: payload.video_id },
       { id: messageContext.ingestItemStepId },
     ).run(ownerClient);
+
+    // We only process cue points for the main video.
+    if (messageContext.videoType == 'MAIN') {
+      const cuePointsIngestStep = await selectOne('ingest_item_steps', {
+        ingest_item_id: messageContext.ingestItemId,
+        type: 'CUE_POINTS',
+      }).run(ownerClient);
+
+      const cuePoints = ingestItem.item.data as CuePointsIngestElement;
+
+      if (
+        cuePointsIngestStep !== undefined &&
+        cuePoints.cue_points !== undefined &&
+        cuePoints.cue_points.length > 0
+      ) {
+        const cuePointsPayload: RegisterCuePointsCommand = {
+          video_id: payload.video_id,
+          skip_validation: true,
+          cue_points: [],
+          remove_missing: true,
+        };
+
+        for (const cuePoint of cuePoints.cue_points) {
+          cuePointsPayload.cue_points.push({
+            cue_point_type: cuePoint.cue_point_type,
+            time_in_seconds: cuePoint.time_in_seconds,
+            value: cuePoint.value,
+          });
+        }
+
+        const registerCuePointsMessageSettings =
+          VideoServiceMultiTenantMessagingSettings.RegisterCuePoints;
+        const accessToken = await requestServiceAccountToken(this.config);
+
+        await this.storeOutboxMessage<RegisterCuePointsCommand>(
+          payload.video_id,
+          registerCuePointsMessageSettings,
+          cuePointsPayload,
+          ownerClient,
+          {
+            envelopeOverrides: {
+              auth_token: accessToken,
+              message_context: {
+                ingestItemId: messageContext.ingestItemId,
+                ingestItemStepId: cuePointsIngestStep.id,
+              },
+            },
+            options: {
+              routingKey:
+                registerCuePointsMessageSettings.getEnvironmentRoutingKey({
+                  tenantId: this.config.tenantId,
+                  environmentId: this.config.environmentId,
+                }),
+            },
+          },
+        );
+      }
+    }
   }
 
   override async handleErrorMessage(

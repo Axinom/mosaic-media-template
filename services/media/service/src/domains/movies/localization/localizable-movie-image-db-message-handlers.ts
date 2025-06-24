@@ -35,23 +35,32 @@ export class LocalizableMovieImageCreatedDbMessageHandler extends LocalizableMed
   > {
     let fields = {};
     switch (image_type) {
-      case 'COVER_1x1':
-        fields = { image_id_cover_1x1: image_id };
+      case 'MOVIE_COVER':
+        fields = { movie_cover: image_id };
         break;
-      case 'COVER_16x9':
-        fields = { image_id_cover_16x9: image_id };
+      case 'MOVIE_COVER_1x1':
+        fields = { movie_cover_1x1: image_id };
         break;
-      case 'CLEAN_COVER_1x1':
-        fields = { image_id_clean_cover_1x1: image_id };
+      case 'MOVIE_COVER_16x9':
+        fields = { movie_cover_16x9: image_id };
         break;
-      case 'CLEAN_COVER_16x9':
-        fields = { image_id_clean_cover_16x9: image_id };
+      case 'MOVIE_CLEAN_COVER':
+        fields = { movie_clean_cover: image_id };
         break;
-      case 'LIST_1x1':
-        fields = { image_id_list_1x1: image_id };
+      case 'MOVIE_CLEAN_COVER_1x1':
+        fields = { movie_clean_cover_1x1: image_id };
         break;
-      case 'LIST_9x13':
-        fields = { image_id_list_9x13: image_id };
+      case 'MOVIE_CLEAN_COVER_16x9':
+        fields = { movie_clean_cover_16x9: image_id };
+        break;
+      case 'MOVIE_LIST':
+        fields = { movie_list: image_id };
+        break;
+      case 'MOVIE_LIST_1x1':
+        fields = { movie_list_1x1: image_id };
+        break;
+      case 'MOVIE_LIST_9x13':
+        fields = { movie_list_9x13: image_id };
         break;
       default:
         return undefined;
@@ -85,23 +94,32 @@ export class LocalizableMovieImageUpdatedDbMessageHandler extends LocalizableMed
   > {
     let fields = {};
     switch (image_type) {
-      case 'COVER_1x1':
-        fields = { image_id_cover_1x1: image_id };
+      case 'MOVIE_COVER':
+        fields = { movie_cover: image_id };
         break;
-      case 'COVER_16x9':
-        fields = { image_id_cover_16x9: image_id };
+      case 'MOVIE_COVER_1x1':
+        fields = { movie_cover_1x1: image_id };
         break;
-      case 'CLEAN_COVER_1x1':
-        fields = { image_id_clean_cover_1x1: image_id };
+      case 'MOVIE_COVER_16x9':
+        fields = { movie_cover_16x9: image_id };
         break;
-      case 'CLEAN_COVER_16x9':
-        fields = { image_id_clean_cover_16x9: image_id };
+      case 'MOVIE_CLEAN_COVER':
+        fields = { movie_clean_cover: image_id };
         break;
-      case 'LIST_1x1':
-        fields = { image_id_list_1x1: image_id };
+      case 'MOVIE_CLEAN_COVER_1x1':
+        fields = { movie_clean_cover_1x1: image_id };
         break;
-      case 'LIST_9x13':
-        fields = { image_id_list_9x13: image_id };
+      case 'MOVIE_CLEAN_COVER_16x9':
+        fields = { movie_clean_cover_16x9: image_id };
+        break;
+      case 'MOVIE_LIST':
+        fields = { movie_list: image_id };
+        break;
+      case 'MOVIE_LIST_1x1':
+        fields = { movie_list_1x1: image_id };
+        break;
+      case 'MOVIE_LIST_9x13':
+        fields = { movie_list_9x13: image_id };
         break;
       default:
         return undefined;
@@ -140,23 +158,32 @@ export class LocalizableMovieImageDeletedDbMessageHandler extends LocalizableMed
     } else {
       let fields = {};
       switch (image_type) {
-        case 'COVER_1x1':
-          fields = { image_id_cover_1x1: '' };
+        case 'MOVIE_COVER':
+          fields = { movie_cover: '' };
           break;
-        case 'COVER_16x9':
-          fields = { image_id_cover_16x9: '' };
+        case 'MOVIE_COVER_1x1':
+          fields = { movie_cover_1x1: '' };
           break;
-        case 'CLEAN_COVER_1x1':
-          fields = { image_id_clean_cover_1x1: '' };
+        case 'MOVIE_COVER_16x9':
+          fields = { movie_cover_16x9: '' };
           break;
-        case 'CLEAN_COVER_16x9':
-          fields = { image_id_clean_cover_16x9: '' };
+        case 'MOVIE_CLEAN_COVER':
+          fields = { movie_clean_cover: '' };
           break;
-        case 'LIST_1x1':
-          fields = { image_id_list_1x1: '' };
+        case 'MOVIE_CLEAN_COVER_1x1':
+          fields = { movie_clean_cover_1x1: '' };
           break;
-        case 'LIST_9x13':
-          fields = { image_id_list_9x13: '' };
+        case 'MOVIE_CLEAN_COVER_16x9':
+          fields = { movie_clean_cover_16x9: '' };
+          break;
+        case 'MOVIE_LIST':
+          fields = { movie_list: '' };
+          break;
+        case 'MOVIE_LIST_1x1':
+          fields = { movie_list_1x1: '' };
+          break;
+        case 'MOVIE_LIST_9x13':
+          fields = { movie_list_9x13: '' };
           break;
         default:
           return undefined;

@@ -2,34 +2,45 @@ import {
   ActionHandler,
   Create,
   CreateProps,
+  createUpdateGQLFragmentGenerator,
   DateTimeTextField,
+  generateArrayMutations,
   getFormDiff,
+  StationMessage,
+  TagsField,
 } from '@axinom/mosaic-ui';
 import { Field } from 'formik';
+import gql from 'graphql-tag';
 import { ObjectSchemaDefinition } from 'ObjectSchemaDefinition';
-import React, { useCallback } from 'react';
+import React, { useCallback, useMemo, useState } from 'react';
 import { useHistory, useParams } from 'react-router-dom';
+import { validate as isUuid } from 'uuid';
 import * as Yup from 'yup';
 import { client } from '../../../apolloClient';
 import {
   CreateSeasonsLicenseMutation,
+  IsoAlphaTwoCountryCodes,
+  Mutation,
   MutationCreateSeasonsLicenseArgs,
+  MutationCreateSeasonsLicensesCountryArgs,
+  SeasonsLicensesCountryInput,
   useCreateSeasonsLicenseMutation,
+  useGetAllCountryDataQuery,
 } from '../../../generated/graphql';
 import {
   getLicenseEndSchema,
   getLicenseStartSchema,
 } from '../../../Util/LicenseDateSchema/LicenseDateSchema';
 
-type FormData = MutationCreateSeasonsLicenseArgs['input']['seasonsLicense'];
+type FormData = MutationCreateSeasonsLicenseArgs['input']['seasonsLicense'] & {
+  countries?: string[];
+};
+interface Option {
+  display: string;
+  value: any;
+}
 
 type SubmitResponse = CreateSeasonsLicenseMutation['createSeasonsLicense'];
-
-const licenseSchema = Yup.object().shape<ObjectSchemaDefinition<FormData>>({
-  seasonId: Yup.number().required(),
-  licenseStart: getLicenseStartSchema().label('From'),
-  licenseEnd: getLicenseEndSchema().label('To'),
-});
 
 export const SeasonLicensingCreate: React.FC = () => {
   const seasonId = Number(
@@ -37,30 +48,107 @@ export const SeasonLicensingCreate: React.FC = () => {
       seasonId: string;
     }>().seasonId,
   );
-
+  const [stationMessage, setStationMessage] = useState<StationMessage>();
+  const licenseSchema = Yup.object()
+    .shape<ObjectSchemaDefinition<FormData>>({
+      seasonId: Yup.number().required(),
+      licenseStart: getLicenseStartSchema().label('From'),
+      licenseEnd: getLicenseEndSchema().label('To'),
+      countries: Yup.array(),
+    })
+    .test(
+      'at-least-one-required',
+      'At least one of the fields is required',
+      (values) => {
+        if (
+          values.licenseStart ||
+          values.licenseEnd ||
+          (values.countries && values.countries.length > 0)
+        ) {
+          setStationMessage(undefined);
+        } else {
+          setStationMessage({
+            type: 'error',
+            title: `At least one field is required to create a new license.`,
+          });
+        }
+        return (
+          values.licenseStart ||
+          values.licenseEnd ||
+          (values.countries && values.countries.length > 0)
+        );
+      },
+    );
   const [createSeasonsLicenseMutation] = useCreateSeasonsLicenseMutation({
     client,
     fetchPolicy: 'no-cache',
   });
+
+  const { data } = useGetAllCountryDataQuery({ client });
+
+  const { allCountries } = useMemo(
+    () => ({
+      allCountries:
+        data?.allCountryTypes?.nodes.map(({ name, id }) => ({
+          display: name ?? '',
+          value: id,
+        })) ?? [],
+    }),
+    [data],
+  );
 
   const onSubmit = useCallback(
     async (
       formData: FormData,
       initialData: CreateProps<FormData>['initialData'],
     ): Promise<SubmitResponse> => {
-      const formDiff = getFormDiff(formData, initialData.data);
-      return (
-        await createSeasonsLicenseMutation({
-          variables: {
-            input: {
-              seasonsLicense: {
-                seasonId: seasonId,
-                ...formDiff,
-              },
+      const { countries, ...rest } = getFormDiff(formData, initialData.data);
+      const result = await createSeasonsLicenseMutation({
+        variables: {
+          input: {
+            seasonsLicense: {
+              seasonId: seasonId,
+              ...rest,
             },
           },
-        })
-      ).data?.createSeasonsLicense;
+        },
+      });
+      if (
+        result?.data?.createSeasonsLicense?.seasonsLicense?.id &&
+        countries &&
+        countries.length > 0
+      ) {
+        const generateUpdateGQLFragment =
+          createUpdateGQLFragmentGenerator<Mutation>();
+        const licenseId = Number(
+          result?.data?.createSeasonsLicense?.seasonsLicense?.id,
+        );
+        const countryAssignmentMutations = generateArrayMutations({
+          current: formData.countries,
+          original: initialData.data?.countries,
+          generateCreateMutation: (code) =>
+            generateUpdateGQLFragment<MutationCreateSeasonsLicensesCountryArgs>(
+              'createSeasonsLicensesCountry',
+              {
+                input: {
+                  seasonsLicensesCountry: generateCountryAssignmentPatch(
+                    code,
+                    licenseId,
+                  ),
+                },
+              },
+            ),
+          generateDeleteMutation: function (): string {
+            throw new Error('Function not implemented.');
+          },
+        });
+        const GqlMutationDocument = gql`mutation UpdateSeasonsLicense {
+          ${countryAssignmentMutations}
+        }`;
+
+        await client.mutate({ mutation: GqlMutationDocument });
+      }
+      return result?.data?.createSeasonsLicense;
     },
     [createSeasonsLicenseMutation, seasonId],
   );
@@ -89,22 +177,50 @@ export const SeasonLicensingCreate: React.FC = () => {
       onProceed={onProceed}
       initialData={{
         loading: false,
-        data: { seasonId },
+        data: { seasonId, countries: [] },
       }}
       validationSchema={licenseSchema}
       saveData={onSubmit}
       cancelNavigationUrl={`/seasons/${seasonId}/licenses`}
+      stationMessage={stationMessage}
     >
-      <Form />
+      <Form countryOptions={allCountries} />
     </Create>
   );
 };
 
-const Form: React.FC = () => {
+const Form: React.FC<{
+  countryOptions?: Option[];
+}> = ({ countryOptions }) => {
   return (
     <>
       <Field name="licenseStart" label="From" as={DateTimeTextField} />
       <Field name="licenseEnd" label="To" as={DateTimeTextField} />
+      <Field
+        name="countries"
+        label="Licensing Countries"
+        tagsOptions={countryOptions}
+        as={TagsField}
+        displayKey="display"
+        valueKey="value"
+      />
     </>
   );
+};
+
+const generateCountryAssignmentPatch = (
+  countryId: IsoAlphaTwoCountryCodes | string,
+  seasonsLicenseId: number,
+): SeasonsLicensesCountryInput['id'] => {
+  if (!isUuid(countryId)) {
+    return {
+      seasonsLicenseId,
+      countryCode: { type: 'enum', value: countryId },
+    };
+  } else {
+    return {
+      seasonsLicenseId,
+      countryGroupId: countryId,
+    };
+  }
 };
