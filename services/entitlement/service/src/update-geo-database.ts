@@ -6,8 +6,18 @@ import {
   MosaicErrors,
   removeAnsiColorEscapeCodes,
 } from '@axinom/mosaic-service-common';
-import { updateDatabase } from 'geoip-country';
-import { Config, GEOLITE2_DOWNLOAD_URL, GEOLITE2_LICENSE_KEY } from './common';
+import fs from 'fs';
+import cron from 'node-cron';
+import fetch from 'node-fetch';
+import path from 'path';
+import { pipeline } from 'stream';
+import { promisify } from 'util';
+import {
+  Config,
+  GEOLITE2_DOWNLOAD_URL,
+  GEOLITE2_LICENSE_KEY,
+  MAXMIND_ACCOUNT_ID,
+} from './common';
 
 /**
  * Returns an error to be thrown in case initial (startup) geo database update attempt fails.
@@ -51,25 +61,56 @@ const handleScheduledUpdateError = (
 
 const successMessage = 'Geo databases successfully updated!';
 
+const streamPipeline = promisify(pipeline);
+
+const buildGeoLite2DownloadUrl = (
+  accountId: string,
+  licenseKey: string,
+  downloadUrl: string,
+): string =>
+  `${downloadUrl}edition_id=GeoLite2-Country&suffix=tar.gz&account_id=${accountId}&license_key=${licenseKey}`;
+
+const downloadGeoDb = async (
+  accountId: string,
+  licenseKey: string,
+  downloadUrl: string,
+  dataFilePath: string,
+): Promise<void> => {
+  const DB_DEST = path.join(__dirname, dataFilePath);
+
+  const url = buildGeoLite2DownloadUrl(accountId, licenseKey, downloadUrl);
+  const res = await fetch(url);
+
+  if (!res.ok) {
+    throw new Error(
+      `Failed to download Geo DB: ${res.status} ${res.statusText}`,
+    );
+  }
+  await streamPipeline(res.body, fs.createWriteStream(DB_DEST));
+  if (!fs.existsSync(DB_DEST)) {
+    throw new Error('Downloaded Geo DB file not found at expected path.');
+  }
+};
+
 /**
  * Schedules an update of geo database to happen every day after service startup.
  * In case of update failure - error is logged and should be explicitly monitored, but the service will continue using old version of geo database.
  */
 const scheduleUpdate = (config: Config, logger: Logger): void => {
-  setInterval(async () => {
+  cron.schedule('0 0 * * *', async () => {
     try {
-      updateDatabase(config.geolite2LicenseKey, (error, stdout, stderr) => {
-        if (error) {
-          handleScheduledUpdateError(error, stdout, stderr, logger);
-        } else {
-          logger.log(successMessage);
-        }
-      });
-    } catch (err) {
-      const error = err as Error & { stdout: string; stderr: string };
-      handleScheduledUpdateError(error, error.stdout, error.stderr, logger);
+      await downloadGeoDb(
+        config.maxmindAccountId,
+        config.geolite2LicenseKey,
+        config.geolite2DownloadUrl,
+        config.geolite2DataFilePath,
+      );
+      logger.log(successMessage);
+    } catch (error) {
+      const err = error as Error & { stdout: string; stderr: string };
+      handleScheduledUpdateError(err, err.stdout, err.stderr, logger);
     }
-  }, 86400000); // 1 day interval
+  });
 };
 
 /**
@@ -82,26 +123,23 @@ export const updateGeoDatabase = async (config: Config): Promise<void> => {
     if (
       config.isDev &&
       isNullOrWhitespace(config.geolite2LicenseKey) &&
-      isNullOrWhitespace(config.geolite2DownloadUrl)
+      isNullOrWhitespace(config.geolite2DownloadUrl) &&
+      isNullOrWhitespace(config.maxmindAccountId)
     ) {
       logger.warn(
-        `The '${GEOLITE2_LICENSE_KEY}' or '${GEOLITE2_DOWNLOAD_URL}' env variables are not set. The GEO location databases might be outdated! Please make sure to update the 'geoip-country' npm package at least once every 30 days or enable automatic database updates by setting an env variable for the license key.`,
+        `The '${GEOLITE2_LICENSE_KEY}' or '${GEOLITE2_DOWNLOAD_URL}' or '${MAXMIND_ACCOUNT_ID}' env variables are not set. The GEO location databases might be outdated!`,
       );
       return;
     }
 
-    updateDatabase(config.geolite2LicenseKey, (error, stdout, stderr) => {
-      if (error) {
-        throw handleStartupUpdateError(error, {
-          stdout,
-          stderr,
-          reason: 'Database update call returned a callback error.',
-        });
-      } else {
-        logger.log(successMessage);
-        scheduleUpdate(config, logger);
-      }
-    });
+    await downloadGeoDb(
+      config.maxmindAccountId,
+      config.geolite2LicenseKey,
+      config.geolite2DownloadUrl,
+      config.geolite2DataFilePath,
+    );
+    logger.log(successMessage);
+    scheduleUpdate(config, logger);
   } catch (err) {
     throw handleStartupUpdateError(err, {
       reason: 'An unhandled error was thrown.',

@@ -3,8 +3,8 @@ import {
   isNullOrWhitespace,
   MosaicError,
 } from '@axinom/mosaic-service-common';
-import { lookup } from 'geoip-country';
 import { gql, makeExtendSchemaPlugin } from 'graphile-utils';
+import maxmind, { CountryResponse, Reader } from 'maxmind';
 import { CommonErrors } from '../../common';
 import { ENABLE_VIDEOS_DOWNLOAD, validClaims } from '../../domains';
 import {
@@ -45,7 +45,9 @@ export const EntitlementEndpointPlugin = makeExtendSchemaPlugin(() => {
             const { config, clientIpAddress, ownerPool, jwtToken } =
               getValidatedExtendedContext(context);
 
-            const countryCode = lookup(clientIpAddress)?.country;
+            const geoLookup = await getGeoLookup(config.geolite2DataFilePath);
+            const countryCode =
+              geoLookup?.get(clientIpAddress)?.country?.iso_code;
 
             if (isNullOrWhitespace(countryCode)) {
               throw new MosaicError({
@@ -97,3 +99,16 @@ export const EntitlementEndpointPlugin = makeExtendSchemaPlugin(() => {
     },
   };
 });
+
+let geoLookupPromise: Promise<Reader<CountryResponse>> | null = null;
+
+const getGeoLookup = async (
+  dataFilePath: string,
+): Promise<Reader<CountryResponse>> => {
+  const dbPath = `../../${dataFilePath},`;
+
+  if (!geoLookupPromise) {
+    geoLookupPromise = maxmind.open<CountryResponse>(dbPath);
+  }
+  return geoLookupPromise;
+};
