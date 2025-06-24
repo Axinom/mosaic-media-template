@@ -32,7 +32,11 @@ export const catalogQueries = {
       asset: episode(id: $id) {
         id
         assetType
-        businessType
+        season {
+          tvshow {
+            businessType
+          }
+        }
         licenses {
           nodes {
             isDownloadable
