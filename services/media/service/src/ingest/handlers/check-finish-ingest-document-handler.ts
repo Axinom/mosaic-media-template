@@ -21,7 +21,7 @@ export class CheckFinishIngestDocumentHandler extends MediaGuardedTransactionalI
   ) {
     super(
       MediaServiceMessagingSettings.CheckFinishIngestDocument,
-      ['INGESTS_EDIT', 'ADMIN'],
+      ['INGEST_EDITOR', 'ADMIN'],
       new Logger({
         config,
         context: CheckFinishIngestDocumentHandler.name,

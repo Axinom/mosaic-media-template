@@ -15,7 +15,7 @@ export class RegisterCuePointsFailedHandler extends MediaGuardedTransactionalInb
   constructor(config: Config) {
     super(
       VideoServiceMultiTenantMessagingSettings.RegisterCuePointsFailed,
-      ['INGESTS_EDIT', 'ADMIN'],
+      ['INGEST_EDITOR', 'ADMIN'],
       new Logger({
         config,
         context: RegisterCuePointsFailedHandler.name,
