@@ -23,10 +23,10 @@ export class DeleteEntityHandler extends MediaGuardedTransactionalInboxMessageHa
       MediaServiceMessagingSettings.DeleteEntity,
       [
         'ADMIN',
-        'COLLECTIONS_EDIT',
-        'MOVIES_EDIT',
-        'SETTINGS_EDIT',
-        'TVSHOWS_EDIT',
+        'COLLECTION_EDITOR',
+        'MOVIE_EDITOR',
+        'SETTINGS_EDITOR',
+        'TVSHOW_EDITOR',
       ],
       new Logger({
         config,

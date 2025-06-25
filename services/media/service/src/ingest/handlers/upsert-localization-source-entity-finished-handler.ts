@@ -32,7 +32,7 @@ export class UpsertLocalizationSourceEntityFinishedHandler extends MediaGuardedT
   ) {
     super(
       LocalizationServiceMultiTenantMessagingSettings.UpsertLocalizationSourceEntityFinished,
-      ['INGESTS_EDIT', 'ADMIN'],
+      ['INGEST_EDITOR', 'ADMIN'],
       new Logger({
         config,
         context: UpsertLocalizationSourceEntityFinishedHandler.name,
