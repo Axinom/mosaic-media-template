@@ -45,7 +45,7 @@ export const EntitlementEndpointPlugin = makeExtendSchemaPlugin(() => {
             const { config, clientIpAddress, ownerPool, jwtToken } =
               getValidatedExtendedContext(context);
 
-            const geoLookup = await getGeoLookup(config.geolite2DataFilePath);
+            const geoLookup = await getGeoLookup();
             const countryCode =
               geoLookup?.get(clientIpAddress)?.country?.iso_code;
 
@@ -102,13 +102,11 @@ export const EntitlementEndpointPlugin = makeExtendSchemaPlugin(() => {
 
 let geoLookupPromise: Promise<Reader<CountryResponse>> | null = null;
 
-const getGeoLookup = async (
-  dataFilePath: string,
-): Promise<Reader<CountryResponse>> => {
-  const dbPath = `../../${dataFilePath},`;
+const getGeoLookup = async (): Promise<Reader<CountryResponse>> => {
+  const geoDbPath = `data/GeoLite2-Country.mmdb,`;
 
   if (!geoLookupPromise) {
-    geoLookupPromise = maxmind.open<CountryResponse>(dbPath);
+    geoLookupPromise = maxmind.open<CountryResponse>(geoDbPath);
   }
   return geoLookupPromise;
 };

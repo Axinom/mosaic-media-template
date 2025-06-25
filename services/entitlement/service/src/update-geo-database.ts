@@ -63,31 +63,27 @@ const successMessage = 'Geo databases successfully updated!';
 
 const streamPipeline = promisify(pipeline);
 
-const buildGeoLite2DownloadUrl = (
-  accountId: string,
-  licenseKey: string,
-  downloadUrl: string,
-): string =>
-  `${downloadUrl}edition_id=GeoLite2-Country&suffix=tar.gz&account_id=${accountId}&license_key=${licenseKey}`;
-
 const downloadGeoDb = async (
   accountId: string,
   licenseKey: string,
   downloadUrl: string,
-  dataFilePath: string,
 ): Promise<void> => {
-  const DB_DEST = path.join(__dirname, dataFilePath);
+  const GEO_DB_DEST = path.join(__dirname, 'data/GeoLite2-Country.mmdb');
 
-  const url = buildGeoLite2DownloadUrl(accountId, licenseKey, downloadUrl);
-  const res = await fetch(url);
+  const url = new URL(downloadUrl);
+  url.searchParams.set('edition_id', 'GeoLite2-Country');
+  url.searchParams.set('suffix', 'tar.gz');
+  url.searchParams.set('account_id', accountId);
+  url.searchParams.set('license_key', licenseKey);
+  const res = await fetch(url.href);
 
   if (!res.ok) {
     throw new Error(
       `Failed to download Geo DB: ${res.status} ${res.statusText}`,
     );
   }
-  await streamPipeline(res.body, fs.createWriteStream(DB_DEST));
-  if (!fs.existsSync(DB_DEST)) {
+  await streamPipeline(res.body, fs.createWriteStream(GEO_DB_DEST));
+  if (!fs.existsSync(GEO_DB_DEST)) {
     throw new Error('Downloaded Geo DB file not found at expected path.');
   }
 };
@@ -103,7 +99,6 @@ const scheduleUpdate = (config: Config, logger: Logger): void => {
         config.maxmindAccountId,
         config.geolite2LicenseKey,
         config.geolite2DownloadUrl,
-        config.geolite2DataFilePath,
       );
       logger.log(successMessage);
     } catch (error) {
@@ -136,7 +131,6 @@ export const updateGeoDatabase = async (config: Config): Promise<void> => {
       config.maxmindAccountId,
       config.geolite2LicenseKey,
       config.geolite2DownloadUrl,
-      config.geolite2DataFilePath,
     );
     logger.log(successMessage);
     scheduleUpdate(config, logger);
