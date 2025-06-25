@@ -1,4 +1,8 @@
-import { isNullOrWhitespace, MosaicError } from '@axinom/mosaic-service-common';
+import {
+  isNullOrWhitespace,
+  Logger,
+  MosaicError,
+} from '@axinom/mosaic-service-common';
 import {
   makePluginByCombiningPlugins,
   makeWrapResolversPlugin,
@@ -34,6 +38,16 @@ const CheckOptionalCountryCodePlugin = makeWrapResolversPlugin({
         { movie_id: args.id },
         { columns: ['countries', 'start_time', 'end_time'] },
       ).run(context.pgClient);
+      const logger = new Logger({
+        context: 'extend-movie-query-with-country-code-plugin',
+      });
+      logger.debug({
+        message: 'Checking license validity',
+        details: {
+          countryCode: args.countryCode,
+          movieId: args.id,
+        },
+      });
       const validity = isLicenseValid(args.countryCode, 'movie', licenses);
 
       // No licenses is also fine
