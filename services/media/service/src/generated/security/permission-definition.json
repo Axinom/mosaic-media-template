@@ -383,7 +383,7 @@
       ]
     },
     {
-      "key": "SETTINGS_READER",
+      "key": "SETTINGS_VIEW",
       "title": "Settings: View",
       "gqlOperations": [
         "movieGenre",
@@ -401,7 +401,7 @@
       ]
     },
     {
-      "key": "SETTINGS_EDITOR",
+      "key": "SETTINGS_EDIT",
       "title": "Settings: Edit",
       "gqlOperations": [
         "movieGenre",
@@ -434,7 +434,7 @@
       ]
     },
     {
-      "key": "MOVIE_READER",
+      "key": "MOVIES_VIEW",
       "title": "Movies: View",
       "gqlOperations": [
         "getMoviesCastsValues",
@@ -472,7 +472,7 @@
       ]
     },
     {
-      "key": "MOVIE_EDITOR",
+      "key": "MOVIES_EDIT",
       "title": "Movies: Edit",
       "gqlOperations": [
         "getMoviesCastsValues",
@@ -555,7 +555,7 @@
       ]
     },
     {
-      "key": "TVSHOW_READER",
+      "key": "TVSHOWS_VIEW",
       "title": "TV Shows: View",
       "gqlOperations": [
         "getTvshowsCastsValues",
@@ -643,7 +643,7 @@
       ]
     },
     {
-      "key": "TVSHOW_EDITOR",
+      "key": "TVSHOWS_EDIT",
       "title": "TV Shows: Edit",
       "gqlOperations": [
         "getTvshowsCastsValues",
@@ -848,7 +848,7 @@
       ]
     },
     {
-      "key": "COLLECTION_READER",
+      "key": "COLLECTIONS_VIEW",
       "title": "Collections: View",
       "gqlOperations": [
         "collection",
@@ -870,7 +870,7 @@
       ]
     },
     {
-      "key": "COLLECTION_EDITOR",
+      "key": "COLLECTIONS_EDIT",
       "title": "Collections: Edit",
       "gqlOperations": [
         "collection",
@@ -923,7 +923,7 @@
       ]
     },
     {
-      "key": "INGEST_READER",
+      "key": "INGESTS_VIEW",
       "title": "Ingests: View",
       "gqlOperations": [
         "ingestDocument",
@@ -936,7 +936,7 @@
       ]
     },
     {
-      "key": "INGEST_EDITOR",
+      "key": "INGESTS_EDIT",
       "title": "Ingests: Edit",
       "gqlOperations": [
         "ingestDocument",

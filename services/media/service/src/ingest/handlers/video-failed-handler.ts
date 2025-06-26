@@ -15,7 +15,7 @@ export class VideoFailedHandler extends MediaGuardedTransactionalInboxMessageHan
   constructor(config: Config) {
     super(
       VideoServiceMultiTenantMessagingSettings.EnsureVideoExistsFailed,
-      ['INGEST_EDITOR', 'ADMIN'],
+      ['INGESTS_EDIT', 'ADMIN'],
       new Logger({
         config,
         context: VideoFailedHandler.name,

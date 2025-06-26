@@ -94,7 +94,7 @@ const permissions = [
     ],
   },
   {
-    key: 'SETTINGS_READER',
+    key: 'SETTINGS_VIEW',
     title: 'Settings: View',
     gqlOperations: [
       ...MovieGenresReadOperations,
@@ -103,7 +103,7 @@ const permissions = [
     ],
   },
   {
-    key: 'SETTINGS_EDITOR',
+    key: 'SETTINGS_EDIT',
     title: 'Settings: Edit',
     gqlOperations: [
       ...MovieGenresReadOperations,
@@ -114,12 +114,12 @@ const permissions = [
     ],
   },
   {
-    key: 'MOVIE_READER',
+    key: 'MOVIES_VIEW',
     title: 'Movies: View',
     gqlOperations: [...MoviesReadOperations, ...SnapshotsReadOperations],
   },
   {
-    key: 'MOVIE_EDITOR',
+    key: 'MOVIES_EDIT',
     title: 'Movies: Edit',
     gqlOperations: [
       ...MoviesReadOperations,
@@ -129,7 +129,7 @@ const permissions = [
     ],
   },
   {
-    key: 'TVSHOW_READER',
+    key: 'TVSHOWS_VIEW',
     title: 'TV Shows: View',
     gqlOperations: [
       ...TvShowsReadOperations,
@@ -138,7 +138,7 @@ const permissions = [
     ],
   },
   {
-    key: 'TVSHOW_EDITOR',
+    key: 'TVSHOWS_EDIT',
     title: 'TV Shows: Edit',
     gqlOperations: [
       ...TvShowsReadOperations,
@@ -150,12 +150,12 @@ const permissions = [
     ],
   },
   {
-    key: 'COLLECTION_READER',
+    key: 'COLLECTIONS_VIEW',
     title: 'Collections: View',
     gqlOperations: [...CollectionsReadOperations],
   },
   {
-    key: 'COLLECTION_EDITOR',
+    key: 'COLLECTIONS_EDIT',
     title: 'Collections: Edit',
     gqlOperations: [
       ...CollectionsReadOperations,
@@ -164,12 +164,12 @@ const permissions = [
     ],
   },
   {
-    key: 'INGEST_READER',
+    key: 'INGESTS_VIEW',
     title: 'Ingests: View',
     gqlOperations: [...IngestReadOperations],
   },
   {
-    key: 'INGEST_EDITOR',
+    key: 'INGESTS_EDIT',
     title: 'Ingests: Edit',
     gqlOperations: [...IngestReadOperations, ...IngestMutateOperations],
   },
@@ -223,10 +223,10 @@ export const ingestPermissionMappings: {
   type: IngestItemTypeEnum;
   permissions: PermissionKey[];
 }[] = [
-  { type: 'MOVIE', permissions: ['MOVIE_EDITOR', 'ADMIN'] },
-  { type: 'TVSHOW', permissions: ['TVSHOW_EDITOR', 'ADMIN'] },
-  { type: 'SEASON', permissions: ['TVSHOW_EDITOR', 'ADMIN'] },
-  { type: 'EPISODE', permissions: ['TVSHOW_EDITOR', 'ADMIN'] },
+  { type: 'MOVIE', permissions: ['MOVIES_EDIT', 'ADMIN'] },
+  { type: 'TVSHOW', permissions: ['TVSHOWS_EDIT', 'ADMIN'] },
+  { type: 'SEASON', permissions: ['TVSHOWS_EDIT', 'ADMIN'] },
+  { type: 'EPISODE', permissions: ['TVSHOWS_EDIT', 'ADMIN'] },
 ];
 
 /**

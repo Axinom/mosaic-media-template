@@ -15,7 +15,7 @@ export class ImageFailedHandler extends MediaGuardedTransactionalInboxMessageHan
   constructor(config: Config) {
     super(
       ImageServiceMultiTenantMessagingSettings.EnsureImageExistsFailed,
-      ['INGEST_EDITOR', 'ADMIN'],
+      ['INGESTS_EDIT', 'ADMIN'],
       new Logger({
         config,
         context: ImageFailedHandler.name,
