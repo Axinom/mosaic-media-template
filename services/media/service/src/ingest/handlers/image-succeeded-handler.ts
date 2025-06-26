@@ -26,7 +26,7 @@ export abstract class ImageSucceededHandler<
   ) {
     super(
       messagingSettings,
-      ['INGEST_EDITOR', 'ADMIN'],
+      ['INGESTS_EDIT', 'ADMIN'],
       new Logger({
         config,
         context: ImageSucceededHandler.name,

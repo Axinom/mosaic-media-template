@@ -59,7 +59,7 @@ export class StartIngestHandler extends MediaGuardedTransactionalInboxMessageHan
   ) {
     super(
       MediaServiceMessagingSettings.StartIngest,
-      ['INGEST_EDITOR', 'ADMIN'],
+      ['INGESTS_EDIT', 'ADMIN'],
       new Logger({
         config,
         context: StartIngestHandler.name,

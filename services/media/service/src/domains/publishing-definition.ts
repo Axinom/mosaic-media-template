@@ -41,8 +41,8 @@ export const publishingProcessors = [
 
 export const publishHandlerPermissions: PermissionKey[] = [
   'ADMIN',
-  'COLLECTION_EDITOR',
-  'MOVIE_EDITOR',
-  'SETTINGS_EDITOR',
-  'TVSHOW_EDITOR',
+  'COLLECTIONS_EDIT',
+  'MOVIES_EDIT',
+  'SETTINGS_EDIT',
+  'TVSHOWS_EDIT',
 ];

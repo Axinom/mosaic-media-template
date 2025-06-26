@@ -21,7 +21,7 @@ export class UpdateMetadataHandler extends MediaGuardedTransactionalInboxMessage
   ) {
     super(
       MediaServiceMessagingSettings.UpdateMetadata,
-      ['INGEST_EDITOR', 'ADMIN'],
+      ['INGESTS_EDIT', 'ADMIN'],
       new Logger({
         config,
         context: UpdateMetadataHandler.name,

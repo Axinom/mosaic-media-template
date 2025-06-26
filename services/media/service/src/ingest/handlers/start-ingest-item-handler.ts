@@ -41,7 +41,7 @@ export class StartIngestItemHandler extends MediaGuardedTransactionalInboxMessag
   ) {
     super(
       MediaServiceMessagingSettings.StartIngestItem,
-      ['INGEST_EDITOR', 'ADMIN'],
+      ['INGESTS_EDIT', 'ADMIN'],
       new Logger({
         config,
         context: StartIngestItemHandler.name,

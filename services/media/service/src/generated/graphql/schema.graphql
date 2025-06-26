@@ -3886,7 +3886,7 @@ enum AssetSubtype {
 
 """
 A connection to a list of `CollectionRelation` values.
-@permissions: COLLECTION_READER,COLLECTION_EDITOR,ADMIN
+@permissions: COLLECTIONS_VIEW,COLLECTIONS_EDIT,ADMIN
 """
 type CollectionRelationsConnection {
   """A list of `CollectionRelation` objects."""
@@ -3906,7 +3906,7 @@ type CollectionRelationsConnection {
   totalCount: Int!
 }
 
-"""@permissions: COLLECTION_READER,COLLECTION_EDITOR,ADMIN"""
+"""@permissions: COLLECTIONS_VIEW,COLLECTIONS_EDIT,ADMIN"""
 type CollectionRelation {
   id: Int!
   collectionId: Int!
@@ -9260,7 +9260,7 @@ type MoviesLicense {
 
 """
 A connection to a list of `MoviesLicensesCountry` values.
-@permissions: MOVIE_READER,MOVIE_EDITOR,ADMIN
+@permissions: MOVIES_VIEW,MOVIES_EDIT,ADMIN
 """
 type MoviesLicensesCountriesConnection {
   """A list of `MoviesLicensesCountry` objects."""
@@ -9280,7 +9280,7 @@ type MoviesLicensesCountriesConnection {
   totalCount: Int!
 }
 
-"""@permissions: MOVIE_READER,MOVIE_EDITOR,ADMIN"""
+"""@permissions: MOVIES_VIEW,MOVIES_EDIT,ADMIN"""
 type MoviesLicensesCountry {
   id: UUID!
   moviesLicenseId: Int!
@@ -9672,7 +9672,7 @@ input MoviesLicensesCountryCondition {
 
 """
 A connection to a list of `TvshowsLicensesCountry` values.
-@permissions: TVSHOW_READER,TVSHOW_EDITOR,ADMIN
+@permissions: TVSHOWS_VIEW,TVSHOWS_EDIT,ADMIN
 """
 type TvshowsLicensesCountriesConnection {
   """A list of `TvshowsLicensesCountry` objects."""
@@ -9692,7 +9692,7 @@ type TvshowsLicensesCountriesConnection {
   totalCount: Int!
 }
 
-"""@permissions: TVSHOW_READER,TVSHOW_EDITOR,ADMIN"""
+"""@permissions: TVSHOWS_VIEW,TVSHOWS_EDIT,ADMIN"""
 type TvshowsLicensesCountry {
   id: UUID!
   tvshowsLicenseId: Int!
@@ -11269,7 +11269,7 @@ type SeasonsLicense {
 
 """
 A connection to a list of `SeasonsLicensesCountry` values.
-@permissions: TVSHOW_READER,TVSHOW_EDITOR,ADMIN
+@permissions: TVSHOWS_VIEW,TVSHOWS_EDIT,ADMIN
 """
 type SeasonsLicensesCountriesConnection {
   """A list of `SeasonsLicensesCountry` objects."""
@@ -11289,7 +11289,7 @@ type SeasonsLicensesCountriesConnection {
   totalCount: Int!
 }
 
-"""@permissions: TVSHOW_READER,TVSHOW_EDITOR,ADMIN"""
+"""@permissions: TVSHOWS_VIEW,TVSHOWS_EDIT,ADMIN"""
 type SeasonsLicensesCountry {
   id: UUID!
   seasonsLicenseId: Int!
@@ -12238,7 +12238,7 @@ type EpisodesLicense {
 
 """
 A connection to a list of `EpisodesLicensesCountry` values.
-@permissions: TVSHOW_READER,TVSHOW_EDITOR,ADMIN
+@permissions: TVSHOWS_VIEW,TVSHOWS_EDIT,ADMIN
 """
 type EpisodesLicensesCountriesConnection {
   """A list of `EpisodesLicensesCountry` objects."""
@@ -12258,7 +12258,7 @@ type EpisodesLicensesCountriesConnection {
   totalCount: Int!
 }
 
-"""@permissions: TVSHOW_READER,TVSHOW_EDITOR,ADMIN"""
+"""@permissions: TVSHOWS_VIEW,TVSHOWS_EDIT,ADMIN"""
 type EpisodesLicensesCountry {
   id: UUID!
   episodesLicenseId: Int!
@@ -13584,7 +13584,7 @@ input EpisodeCondition {
 
 """
 A connection to a list of `SeasonsDirector` values.
-@permissions: TVSHOW_READER,TVSHOW_EDITOR,ADMIN
+@permissions: TVSHOWS_VIEW,TVSHOWS_EDIT,ADMIN
 """
 type SeasonsDirectorsConnection {
   """A list of `SeasonsDirector` objects."""
@@ -13604,7 +13604,7 @@ type SeasonsDirectorsConnection {
   totalCount: Int!
 }
 
-"""@permissions: TVSHOW_READER,TVSHOW_EDITOR,ADMIN"""
+"""@permissions: TVSHOWS_VIEW,TVSHOWS_EDIT,ADMIN"""
 type SeasonsDirector {
   seasonId: Int!
   name: String!
@@ -13947,7 +13947,7 @@ input SeasonCondition {
 
 """
 A connection to a list of `TvshowsDirector` values.
-@permissions: TVSHOW_READER,TVSHOW_EDITOR,ADMIN
+@permissions: TVSHOWS_VIEW,TVSHOWS_EDIT,ADMIN
 """
 type TvshowsDirectorsConnection {
   """A list of `TvshowsDirector` objects."""
@@ -13967,7 +13967,7 @@ type TvshowsDirectorsConnection {
   totalCount: Int!
 }
 
-"""@permissions: TVSHOW_READER,TVSHOW_EDITOR,ADMIN"""
+"""@permissions: TVSHOWS_VIEW,TVSHOWS_EDIT,ADMIN"""
 type TvshowsDirector {
   tvshowId: Int!
   name: String!
@@ -14445,7 +14445,7 @@ input MoviesTrailerCondition {
 
 """
 A connection to a list of `MoviesDirector` values.
-@permissions: MOVIE_READER,MOVIE_EDITOR,ADMIN
+@permissions: MOVIES_VIEW,MOVIES_EDIT,ADMIN
 """
 type MoviesDirectorsConnection {
   """A list of `MoviesDirector` objects."""
@@ -14463,7 +14463,7 @@ type MoviesDirectorsConnection {
   totalCount: Int!
 }
 
-"""@permissions: MOVIE_READER,MOVIE_EDITOR,ADMIN"""
+"""@permissions: MOVIES_VIEW,MOVIES_EDIT,ADMIN"""
 type MoviesDirector {
   movieId: Int!
   name: String!
@@ -19299,7 +19299,7 @@ type CreateCollectionRelationPayload {
 
 """
 All input for the create `CollectionRelation` mutation.
-@permissions: COLLECTION_EDITOR,ADMIN
+@permissions: COLLECTIONS_EDIT,ADMIN
 """
 input CreateCollectionRelationInput {
   """
@@ -19863,7 +19863,7 @@ type CreateEpisodesLicensesCountryPayload {
 
 """
 All input for the create `EpisodesLicensesCountry` mutation.
-@permissions: TVSHOW_EDITOR,ADMIN
+@permissions: TVSHOWS_EDIT,ADMIN
 """
 input CreateEpisodesLicensesCountryInput {
   """
@@ -20324,7 +20324,7 @@ type CreateMoviesDirectorPayload {
 
 """
 All input for the create `MoviesDirector` mutation.
-@permissions: MOVIE_EDITOR,ADMIN
+@permissions: MOVIES_EDIT,ADMIN
 """
 input CreateMoviesDirectorInput {
   """
@@ -20478,7 +20478,7 @@ type CreateMoviesLicensesCountryPayload {
 
 """
 All input for the create `MoviesLicensesCountry` mutation.
-@permissions: MOVIE_EDITOR,ADMIN
+@permissions: MOVIES_EDIT,ADMIN
 """
 input CreateMoviesLicensesCountryInput {
   """
@@ -20834,7 +20834,7 @@ type CreateSeasonsDirectorPayload {
 
 """
 All input for the create `SeasonsDirector` mutation.
-@permissions: TVSHOW_EDITOR,ADMIN
+@permissions: TVSHOWS_EDIT,ADMIN
 """
 input CreateSeasonsDirectorInput {
   """
@@ -20988,7 +20988,7 @@ type CreateSeasonsLicensesCountryPayload {
 
 """
 All input for the create `SeasonsLicensesCountry` mutation.
-@permissions: TVSHOW_EDITOR,ADMIN
+@permissions: TVSHOWS_EDIT,ADMIN
 """
 input CreateSeasonsLicensesCountryInput {
   """
@@ -21394,7 +21394,7 @@ type CreateTvshowsDirectorPayload {
 
 """
 All input for the create `TvshowsDirector` mutation.
-@permissions: TVSHOW_EDITOR,ADMIN
+@permissions: TVSHOWS_EDIT,ADMIN
 """
 input CreateTvshowsDirectorInput {
   """
@@ -21548,7 +21548,7 @@ type CreateTvshowsLicensesCountryPayload {
 
 """
 All input for the create `TvshowsLicensesCountry` mutation.
-@permissions: TVSHOW_EDITOR,ADMIN
+@permissions: TVSHOWS_EDIT,ADMIN
 """
 input CreateTvshowsLicensesCountryInput {
   """
@@ -21865,7 +21865,7 @@ type UpdateCollectionRelationPayload {
 
 """
 All input for the `updateCollectionRelation` mutation.
-@permissions: COLLECTION_EDITOR,ADMIN
+@permissions: COLLECTIONS_EDIT,ADMIN
 """
 input UpdateCollectionRelationInput {
   """
@@ -22582,7 +22582,7 @@ type UpdateEpisodesLicensesCountryPayload {
 
 """
 All input for the `updateEpisodesLicensesCountry` mutation.
-@permissions: TVSHOW_EDITOR,ADMIN
+@permissions: TVSHOWS_EDIT,ADMIN
 """
 input UpdateEpisodesLicensesCountryInput {
   """
@@ -23050,7 +23050,7 @@ type UpdateMoviesDirectorPayload {
 
 """
 All input for the `updateMoviesDirector` mutation.
-@permissions: MOVIE_EDITOR,ADMIN
+@permissions: MOVIES_EDIT,ADMIN
 """
 input UpdateMoviesDirectorInput {
   """
@@ -23223,7 +23223,7 @@ type UpdateMoviesLicensesCountryPayload {
 
 """
 All input for the `updateMoviesLicensesCountry` mutation.
-@permissions: MOVIE_EDITOR,ADMIN
+@permissions: MOVIES_EDIT,ADMIN
 """
 input UpdateMoviesLicensesCountryInput {
   """
@@ -23526,7 +23526,7 @@ type UpdateSeasonsDirectorPayload {
 
 """
 All input for the `updateSeasonsDirector` mutation.
-@permissions: TVSHOW_EDITOR,ADMIN
+@permissions: TVSHOWS_EDIT,ADMIN
 """
 input UpdateSeasonsDirectorInput {
   """
@@ -23699,7 +23699,7 @@ type UpdateSeasonsLicensesCountryPayload {
 
 """
 All input for the `updateSeasonsLicensesCountry` mutation.
-@permissions: TVSHOW_EDITOR,ADMIN
+@permissions: TVSHOWS_EDIT,ADMIN
 """
 input UpdateSeasonsLicensesCountryInput {
   """
@@ -24057,7 +24057,7 @@ type UpdateTvshowsDirectorPayload {
 
 """
 All input for the `updateTvshowsDirector` mutation.
-@permissions: TVSHOW_EDITOR,ADMIN
+@permissions: TVSHOWS_EDIT,ADMIN
 """
 input UpdateTvshowsDirectorInput {
   """
@@ -24230,7 +24230,7 @@ type UpdateTvshowsLicensesCountryPayload {
 
 """
 All input for the `updateTvshowsLicensesCountry` mutation.
-@permissions: TVSHOW_EDITOR,ADMIN
+@permissions: TVSHOWS_EDIT,ADMIN
 """
 input UpdateTvshowsLicensesCountryInput {
   """
@@ -24494,7 +24494,7 @@ type DeleteCollectionRelationPayload {
 
 """
 All input for the `deleteCollectionRelation` mutation.
-@permissions: COLLECTION_EDITOR,ADMIN
+@permissions: COLLECTIONS_EDIT,ADMIN
 """
 input DeleteCollectionRelationInput {
   """
@@ -25005,7 +25005,7 @@ type DeleteEpisodesLicensesCountryPayload {
 
 """
 All input for the `deleteEpisodesLicensesCountry` mutation.
-@permissions: TVSHOW_EDITOR,ADMIN
+@permissions: TVSHOWS_EDIT,ADMIN
 """
 input DeleteEpisodesLicensesCountryInput {
   """
@@ -25389,7 +25389,7 @@ type DeleteMoviesDirectorPayload {
 
 """
 All input for the `deleteMoviesDirector` mutation.
-@permissions: MOVIE_EDITOR,ADMIN
+@permissions: MOVIES_EDIT,ADMIN
 """
 input DeleteMoviesDirectorInput {
   """
@@ -25520,7 +25520,7 @@ type DeleteMoviesLicensesCountryPayload {
 
 """
 All input for the `deleteMoviesLicensesCountry` mutation.
-@permissions: MOVIE_EDITOR,ADMIN
+@permissions: MOVIES_EDIT,ADMIN
 """
 input DeleteMoviesLicensesCountryInput {
   """
@@ -25831,7 +25831,7 @@ type DeleteSeasonsDirectorPayload {
 
 """
 All input for the `deleteSeasonsDirector` mutation.
-@permissions: TVSHOW_EDITOR,ADMIN
+@permissions: TVSHOWS_EDIT,ADMIN
 """
 input DeleteSeasonsDirectorInput {
   """
@@ -25962,7 +25962,7 @@ type DeleteSeasonsLicensesCountryPayload {
 
 """
 All input for the `deleteSeasonsLicensesCountry` mutation.
-@permissions: TVSHOW_EDITOR,ADMIN
+@permissions: TVSHOWS_EDIT,ADMIN
 """
 input DeleteSeasonsLicensesCountryInput {
   """
@@ -26347,7 +26347,7 @@ type DeleteTvshowsDirectorPayload {
 
 """
 All input for the `deleteTvshowsDirector` mutation.
-@permissions: TVSHOW_EDITOR,ADMIN
+@permissions: TVSHOWS_EDIT,ADMIN
 """
 input DeleteTvshowsDirectorInput {
   """
@@ -26478,7 +26478,7 @@ type DeleteTvshowsLicensesCountryPayload {
 
 """
 All input for the `deleteTvshowsLicensesCountry` mutation.
-@permissions: TVSHOW_EDITOR,ADMIN
+@permissions: TVSHOWS_EDIT,ADMIN
 """
 input DeleteTvshowsLicensesCountryInput {
   """

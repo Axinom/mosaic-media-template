@@ -15,7 +15,7 @@ export class RegisterCuePointsFinishedHandler extends MediaGuardedTransactionalI
   constructor(config: Config) {
     super(
       VideoServiceMultiTenantMessagingSettings.RegisterCuePointsFinished,
-      ['INGEST_EDITOR', 'ADMIN'],
+      ['INGESTS_EDIT', 'ADMIN'],
       new Logger({
         config,
         context: RegisterCuePointsFinishedHandler.name,

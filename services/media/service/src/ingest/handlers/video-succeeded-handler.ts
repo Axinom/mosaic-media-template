@@ -32,7 +32,7 @@ export abstract class VideoSucceededHandler<
   ) {
     super(
       messagingSettings,
-      ['INGEST_EDITOR', 'ADMIN'],
+      ['INGESTS_EDIT', 'ADMIN'],
       new Logger({
         config,
         context: VideoSucceededHandler.name,
