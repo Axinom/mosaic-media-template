@@ -77,7 +77,6 @@ regularVariables:
 
   # Managed Service URLs
   ID_SERVICE_AUTH_BASE_URL: '${__ax_hosted__.svc.ax-id-service.auth_base_url}'
-  BILLING_SERVICE_BASE_URL: '${__ax_hosted__.svc.ax-billing-service.end_user_base_url}'
   USER_SERVICE_AUTH_BASE_URL: '${__ax_hosted__.svc.ax-user-service.auth_base_url}'
 
   # Custom Service URLs

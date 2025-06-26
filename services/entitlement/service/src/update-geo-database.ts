@@ -12,12 +12,7 @@ import fetch from 'node-fetch';
 import path from 'path';
 import { pipeline } from 'stream';
 import { promisify } from 'util';
-import {
-  Config,
-  GEOLITE2_DOWNLOAD_URL,
-  GEOLITE2_LICENSE_KEY,
-  MAXMIND_ACCOUNT_ID,
-} from './common';
+import { Config, GEOLITE2_LICENSE_KEY, MAXMIND_ACCOUNT_ID } from './common';
 
 /**
  * Returns an error to be thrown in case initial (startup) geo database update attempt fails.
@@ -69,6 +64,12 @@ const downloadGeoDb = async (
   downloadUrl: string,
 ): Promise<void> => {
   const GEO_DB_DEST = path.join(__dirname, 'data/GeoLite2-Country.mmdb');
+  const GEO_DB_DIR = path.dirname(GEO_DB_DEST);
+
+  // Ensure the data directory exists
+  if (!fs.existsSync(GEO_DB_DIR)) {
+    fs.mkdirSync(GEO_DB_DIR, { recursive: true });
+  }
 
   const url = new URL(downloadUrl);
   url.searchParams.set('edition_id', 'GeoLite2-Country');
@@ -83,6 +84,7 @@ const downloadGeoDb = async (
     );
   }
   await streamPipeline(res.body, fs.createWriteStream(GEO_DB_DEST));
+
   if (!fs.existsSync(GEO_DB_DEST)) {
     throw new Error('Downloaded Geo DB file not found at expected path.');
   }
@@ -118,11 +120,10 @@ export const updateGeoDatabase = async (config: Config): Promise<void> => {
     if (
       config.isDev &&
       isNullOrWhitespace(config.geolite2LicenseKey) &&
-      isNullOrWhitespace(config.geolite2DownloadUrl) &&
       isNullOrWhitespace(config.maxmindAccountId)
     ) {
       logger.warn(
-        `The '${GEOLITE2_LICENSE_KEY}' or '${GEOLITE2_DOWNLOAD_URL}' or '${MAXMIND_ACCOUNT_ID}' env variables are not set. The GEO location databases might be outdated!`,
+        `The '${GEOLITE2_LICENSE_KEY}' or '${MAXMIND_ACCOUNT_ID}' env variables are not set. The GEO location databases might be outdated!`,
       );
       return;
     }
