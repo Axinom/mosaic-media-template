@@ -3,7 +3,7 @@ import {
   TypedTransactionalMessage,
 } from '@axinom/mosaic-transactional-inbox-outbox';
 import { ClientBase } from 'pg';
-import { selectOne } from 'zapatos/db';
+import { conditions as c, select, selectOne } from 'zapatos/db';
 import { Config } from '../../../common';
 import {
   getUpsertMessageData,
@@ -28,11 +28,12 @@ export class LocalizableEpisodeImageCreatedDbMessageHandler extends LocalizableM
     );
   }
 
-  override async getLocalizationCommandData({
-    payload: { image_type, episode_id, image_id },
-  }: TypedTransactionalMessage<LocalizableEpisodeImageDbEvent>): Promise<
-    LocalizationMessageData | undefined
-  > {
+  override async getLocalizationCommandData(
+    {
+      payload: { image_type, episode_id, image_id },
+    }: TypedTransactionalMessage<LocalizableEpisodeImageDbEvent>,
+    ownerClient: ClientBase,
+  ): Promise<LocalizationMessageData | undefined> {
     let fields = {};
     switch (image_type) {
       case 'EPISODE_COVER':
@@ -65,14 +66,14 @@ export class LocalizableEpisodeImageCreatedDbMessageHandler extends LocalizableM
       default:
         return undefined;
     }
-
+    const coverImageId = await applyCoverImageFallback(episode_id, ownerClient);
     return getUpsertMessageData(
       this.config.serviceId,
       LOCALIZATION_EPISODE_TYPE,
       episode_id,
       fields, // Localizable fields are never updated on image assignment
       undefined, // Title is never updated on image assignment
-      undefined,
+      coverImageId,
       `${episode_id}-${image_type}`,
     );
   }
@@ -87,11 +88,12 @@ export class LocalizableEpisodeImageUpdatedDbMessageHandler extends LocalizableM
     );
   }
 
-  override async getLocalizationCommandData({
-    payload: { image_type, episode_id, image_id },
-  }: TypedTransactionalMessage<LocalizableEpisodeImageDbEvent>): Promise<
-    LocalizationMessageData | undefined
-  > {
+  override async getLocalizationCommandData(
+    {
+      payload: { image_type, episode_id, image_id },
+    }: TypedTransactionalMessage<LocalizableEpisodeImageDbEvent>,
+    ownerClient: ClientBase,
+  ): Promise<LocalizationMessageData | undefined> {
     let fields = {};
     switch (image_type) {
       case 'EPISODE_COVER':
@@ -124,14 +126,14 @@ export class LocalizableEpisodeImageUpdatedDbMessageHandler extends LocalizableM
       default:
         return undefined;
     }
-
+    const coverImageId = await applyCoverImageFallback(episode_id, ownerClient);
     return getUpsertMessageData(
       this.config.serviceId,
       LOCALIZATION_EPISODE_TYPE,
       episode_id,
       fields, // Localizable fields are never updated on image assignment
       undefined, // Title is never updated on image assignment
-      undefined,
+      coverImageId,
       `${episode_id}-${image_type}`,
     );
   }
@@ -189,14 +191,17 @@ export class LocalizableEpisodeImageDeletedDbMessageHandler extends LocalizableM
         default:
           return undefined;
       }
-
+      const coverImageId = await applyCoverImageFallback(
+        episode_id,
+        ownerClient,
+      );
       return getUpsertMessageData(
         this.config.serviceId,
         LOCALIZATION_EPISODE_TYPE,
         episode_id,
         fields, // Localizable fields are never updated on image unassign
         undefined, // Title is never updated on image unassign
-        undefined, // Explicit unassign of an image
+        coverImageId,
         `${episode_id}-${image_type}`,
       );
     }
@@ -213,4 +218,31 @@ export class LocalizableEpisodeImageDeletedDbMessageHandler extends LocalizableM
     ).run(ownerClient);
     return !data;
   }
+}
+
+async function applyCoverImageFallback(
+  episodeId: number,
+  ownerClient: ClientBase,
+): Promise<string | undefined> {
+  const episodeImages = await select('episodes_images', {
+    episode_id: episodeId,
+    image_type: c.isIn([
+      'EPISODE_COVER',
+      'EPISODE_COVER_1x1',
+      'EPISODE_COVER_16x9',
+    ]),
+  }).run(ownerClient);
+
+  const priorityOrder = [
+    'EPISODE_COVER',
+    'EPISODE_COVER_1x1',
+    'EPISODE_COVER_16x9',
+  ] as const;
+
+  const episodeCoverImageId = priorityOrder
+    .map((imageType) =>
+      episodeImages.find((img) => img.image_type === imageType),
+    )
+    .find((image) => image !== undefined)?.image_id;
+  return episodeCoverImageId;
 }

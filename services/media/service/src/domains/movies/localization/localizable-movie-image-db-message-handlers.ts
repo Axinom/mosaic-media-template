@@ -3,7 +3,7 @@ import {
   TypedTransactionalMessage,
 } from '@axinom/mosaic-transactional-inbox-outbox';
 import { ClientBase } from 'pg';
-import { selectOne } from 'zapatos/db';
+import { conditions as c, select, selectOne } from 'zapatos/db';
 import { Config } from '../../../common';
 import {
   getUpsertMessageData,
@@ -28,12 +28,14 @@ export class LocalizableMovieImageCreatedDbMessageHandler extends LocalizableMed
     );
   }
 
-  override async getLocalizationCommandData({
-    payload: { image_type, movie_id, image_id },
-  }: TypedTransactionalMessage<LocalizableMovieImageDbEvent>): Promise<
-    LocalizationMessageData | undefined
-  > {
+  override async getLocalizationCommandData(
+    {
+      payload: { image_type, movie_id, image_id },
+    }: TypedTransactionalMessage<LocalizableMovieImageDbEvent>,
+    ownerClient: ClientBase,
+  ): Promise<LocalizationMessageData | undefined> {
     let fields = {};
+
     switch (image_type) {
       case 'MOVIE_COVER':
         fields = { movie_cover: image_id };
@@ -66,13 +68,15 @@ export class LocalizableMovieImageCreatedDbMessageHandler extends LocalizableMed
         return undefined;
     }
 
+    const coverImageId = await applyCoverImageFallback(movie_id, ownerClient);
+
     return getUpsertMessageData(
       this.config.serviceId,
       LOCALIZATION_MOVIE_TYPE,
       movie_id,
       fields, // localizable image id fields
       undefined, // Title is never updated on image assignment
-      undefined, // Image ID assignment is handled through fields
+      coverImageId,
       `${movie_id}-${image_type}`, // Use a combination of movie_id and image_type as the aggregate_id to avoid concurrency issues.
     );
   }
@@ -87,11 +91,12 @@ export class LocalizableMovieImageUpdatedDbMessageHandler extends LocalizableMed
     );
   }
 
-  override async getLocalizationCommandData({
-    payload: { image_type, movie_id, image_id },
-  }: TypedTransactionalMessage<LocalizableMovieImageDbEvent>): Promise<
-    LocalizationMessageData | undefined
-  > {
+  override async getLocalizationCommandData(
+    {
+      payload: { image_type, movie_id, image_id },
+    }: TypedTransactionalMessage<LocalizableMovieImageDbEvent>,
+    ownerClient: ClientBase,
+  ): Promise<LocalizationMessageData | undefined> {
     let fields = {};
     switch (image_type) {
       case 'MOVIE_COVER':
@@ -124,14 +129,14 @@ export class LocalizableMovieImageUpdatedDbMessageHandler extends LocalizableMed
       default:
         return undefined;
     }
-
+    const coverImageId = await applyCoverImageFallback(movie_id, ownerClient);
     return getUpsertMessageData(
       this.config.serviceId,
       LOCALIZATION_MOVIE_TYPE,
       movie_id,
       fields, // localizable image id fields
       undefined, // Title is never updated on image assignment
-      undefined, // Image ID assignment is handled through fields
+      coverImageId,
       `${movie_id}-${image_type}`, // Use a combination of movie_id and image_type as the aggregate_id to avoid concurrency issues.
     );
   }
@@ -188,13 +193,14 @@ export class LocalizableMovieImageDeletedDbMessageHandler extends LocalizableMed
         default:
           return undefined;
       }
+      const coverImageId = await applyCoverImageFallback(movie_id, ownerClient);
       return getUpsertMessageData(
         this.config.serviceId,
         LOCALIZATION_MOVIE_TYPE,
         movie_id,
         fields, // Localizable fields are never updated on image unassign
         undefined, // Title is never updated on image unassign
-        undefined, // Image ID unassignment is handled through fields
+        coverImageId,
         `${movie_id}-${image_type}`, // Use a combination of movie_id and image_type as the aggregate_id to avoid concurrency issues.
       );
     }
@@ -211,4 +217,25 @@ export class LocalizableMovieImageDeletedDbMessageHandler extends LocalizableMed
     ).run(ownerClient);
     return !data;
   }
+}
+
+async function applyCoverImageFallback(
+  movieId: number,
+  ownerClient: ClientBase,
+): Promise<string | undefined> {
+  const movieImages = await select('movies_images', {
+    movie_id: movieId,
+    image_type: c.isIn(['MOVIE_COVER', 'MOVIE_COVER_1x1', 'MOVIE_COVER_16x9']),
+  }).run(ownerClient);
+
+  const priorityOrder = [
+    'MOVIE_COVER',
+    'MOVIE_COVER_1x1',
+    'MOVIE_COVER_16x9',
+  ] as const;
+
+  const movieCoverImageId = priorityOrder
+    .map((imageType) => movieImages.find((img) => img.image_type === imageType))
+    .find((image) => image !== undefined)?.image_id;
+  return movieCoverImageId;
 }
