@@ -3,7 +3,7 @@ import {
   TypedTransactionalMessage,
 } from '@axinom/mosaic-transactional-inbox-outbox';
 import { ClientBase } from 'pg';
-import { selectOne } from 'zapatos/db';
+import { conditions as c, select, selectOne } from 'zapatos/db';
 import { Config } from '../../../common';
 import {
   getUpsertMessageData,
@@ -28,11 +28,12 @@ export class LocalizableTvshowImageCreatedDbMessageHandler extends LocalizableMe
     );
   }
 
-  override async getLocalizationCommandData({
-    payload: { image_type, tvshow_id, image_id },
-  }: TypedTransactionalMessage<LocalizableTvshowImageDbEvent>): Promise<
-    LocalizationMessageData | undefined
-  > {
+  override async getLocalizationCommandData(
+    {
+      payload: { image_type, tvshow_id, image_id },
+    }: TypedTransactionalMessage<LocalizableTvshowImageDbEvent>,
+    ownerClient: ClientBase,
+  ): Promise<LocalizationMessageData | undefined> {
     let fields = {};
     switch (image_type) {
       case 'TVSHOW_COVER':
@@ -65,14 +66,14 @@ export class LocalizableTvshowImageCreatedDbMessageHandler extends LocalizableMe
       default:
         return undefined;
     }
-
+    const coverImageId = await applyCoverImageFallback(tvshow_id, ownerClient);
     return getUpsertMessageData(
       this.config.serviceId,
       LOCALIZATION_TVSHOW_TYPE,
       tvshow_id,
       fields, // localizable image id fields
       undefined, // Title is never updated on image assignment
-      undefined,
+      coverImageId,
       `${tvshow_id}-${image_type}`,
     );
   }
@@ -87,11 +88,12 @@ export class LocalizableTvshowImageUpdatedDbMessageHandler extends LocalizableMe
     );
   }
 
-  override async getLocalizationCommandData({
-    payload: { image_type, tvshow_id, image_id },
-  }: TypedTransactionalMessage<LocalizableTvshowImageDbEvent>): Promise<
-    LocalizationMessageData | undefined
-  > {
+  override async getLocalizationCommandData(
+    {
+      payload: { image_type, tvshow_id, image_id },
+    }: TypedTransactionalMessage<LocalizableTvshowImageDbEvent>,
+    ownerClient: ClientBase,
+  ): Promise<LocalizationMessageData | undefined> {
     let fields = {};
     switch (image_type) {
       case 'TVSHOW_COVER':
@@ -124,14 +126,14 @@ export class LocalizableTvshowImageUpdatedDbMessageHandler extends LocalizableMe
       default:
         return undefined;
     }
-
+    const coverImageId = await applyCoverImageFallback(tvshow_id, ownerClient);
     return getUpsertMessageData(
       this.config.serviceId,
       LOCALIZATION_TVSHOW_TYPE,
       tvshow_id,
       fields, // localizable image id fields
       undefined, // Title is never updated on image assignment
-      undefined,
+      coverImageId,
       `${tvshow_id}-${image_type}`,
     );
   }
@@ -188,13 +190,17 @@ export class LocalizableTvshowImageDeletedDbMessageHandler extends LocalizableMe
         default:
           return undefined;
       }
+      const coverImageId = await applyCoverImageFallback(
+        tvshow_id,
+        ownerClient,
+      );
       return getUpsertMessageData(
         this.config.serviceId,
         LOCALIZATION_TVSHOW_TYPE,
         tvshow_id,
         fields, // localizable image id fields
         undefined, // Title is never updated on image unassign
-        undefined,
+        coverImageId,
         `${tvshow_id}-${image_type}`,
       );
     }
@@ -211,4 +217,31 @@ export class LocalizableTvshowImageDeletedDbMessageHandler extends LocalizableMe
     ).run(ownerClient);
     return !data;
   }
+}
+
+async function applyCoverImageFallback(
+  tvshowId: number,
+  ownerClient: ClientBase,
+): Promise<string | undefined> {
+  const tvshowImages = await select('tvshows_images', {
+    tvshow_id: tvshowId,
+    image_type: c.isIn([
+      'TVSHOW_COVER',
+      'TVSHOW_COVER_1x1',
+      'TVSHOW_COVER_16x9',
+    ]),
+  }).run(ownerClient);
+
+  const priorityOrder = [
+    'TVSHOW_COVER',
+    'TVSHOW_COVER_1x1',
+    'TVSHOW_COVER_16x9',
+  ] as const;
+
+  const tvshowCoverImageId = priorityOrder
+    .map((imageType) =>
+      tvshowImages.find((img) => img.image_type === imageType),
+    )
+    .find((image) => image !== undefined)?.image_id;
+  return tvshowCoverImageId;
 }

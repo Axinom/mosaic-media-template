@@ -3,7 +3,7 @@ import {
   TypedTransactionalMessage,
 } from '@axinom/mosaic-transactional-inbox-outbox';
 import { ClientBase } from 'pg';
-import { selectOne } from 'zapatos/db';
+import { conditions as c, select, selectOne } from 'zapatos/db';
 import { Config } from '../../../common';
 import {
   getUpsertMessageData,
@@ -28,11 +28,12 @@ export class LocalizableSeasonImageCreatedDbMessageHandler extends LocalizableMe
     );
   }
 
-  override async getLocalizationCommandData({
-    payload: { image_type, season_id, image_id },
-  }: TypedTransactionalMessage<LocalizableSeasonImageDbEvent>): Promise<
-    LocalizationMessageData | undefined
-  > {
+  override async getLocalizationCommandData(
+    {
+      payload: { image_type, season_id, image_id },
+    }: TypedTransactionalMessage<LocalizableSeasonImageDbEvent>,
+    ownerClient: ClientBase,
+  ): Promise<LocalizationMessageData | undefined> {
     let fields = {};
     switch (image_type) {
       case 'SEASON_COVER':
@@ -65,13 +66,14 @@ export class LocalizableSeasonImageCreatedDbMessageHandler extends LocalizableMe
       default:
         return undefined;
     }
+    const coverImageId = await applyCoverImageFallback(season_id, ownerClient);
     return getUpsertMessageData(
       this.config.serviceId,
       LOCALIZATION_SEASON_TYPE,
       season_id,
       fields, // Localizable fields are never updated on image assignment
       undefined, // Title is never updated on image assignment
-      undefined,
+      coverImageId,
       `${season_id}-${image_type}`,
     );
   }
@@ -86,11 +88,12 @@ export class LocalizableSeasonImageUpdatedDbMessageHandler extends LocalizableMe
     );
   }
 
-  override async getLocalizationCommandData({
-    payload: { image_type, season_id, image_id },
-  }: TypedTransactionalMessage<LocalizableSeasonImageDbEvent>): Promise<
-    LocalizationMessageData | undefined
-  > {
+  override async getLocalizationCommandData(
+    {
+      payload: { image_type, season_id, image_id },
+    }: TypedTransactionalMessage<LocalizableSeasonImageDbEvent>,
+    ownerClient: ClientBase,
+  ): Promise<LocalizationMessageData | undefined> {
     let fields = {};
     switch (image_type) {
       case 'SEASON_COVER':
@@ -123,13 +126,14 @@ export class LocalizableSeasonImageUpdatedDbMessageHandler extends LocalizableMe
       default:
         return undefined;
     }
+    const coverImageId = await applyCoverImageFallback(season_id, ownerClient);
     return getUpsertMessageData(
       this.config.serviceId,
       LOCALIZATION_SEASON_TYPE,
       season_id,
       fields, // Localizable fields are never updated on image assignment
       undefined, // Title is never updated on image assignment
-      undefined,
+      coverImageId,
       `${season_id}-${image_type}`,
     );
   }
@@ -187,13 +191,17 @@ export class LocalizableSeasonImageDeletedDbMessageHandler extends LocalizableMe
         default:
           return undefined;
       }
+      const coverImageId = await applyCoverImageFallback(
+        season_id,
+        ownerClient,
+      );
       return getUpsertMessageData(
         this.config.serviceId,
         LOCALIZATION_SEASON_TYPE,
         season_id,
         fields, // Localizable fields are never updated on image unassign
         undefined, // Title is never updated on image unassign
-        undefined,
+        coverImageId,
         `${season_id}-${image_type}`,
       );
     }
@@ -210,4 +218,31 @@ export class LocalizableSeasonImageDeletedDbMessageHandler extends LocalizableMe
     ).run(ownerClient);
     return !data;
   }
+}
+
+async function applyCoverImageFallback(
+  seasonId: number,
+  ownerClient: ClientBase,
+): Promise<string | undefined> {
+  const seasonImages = await select('seasons_images', {
+    season_id: seasonId,
+    image_type: c.isIn([
+      'SEASON_COVER',
+      'SEASON_COVER_1x1',
+      'SEASON_COVER_16x9',
+    ]),
+  }).run(ownerClient);
+
+  const priorityOrder = [
+    'SEASON_COVER',
+    'SEASON_COVER_1x1',
+    'SEASON_COVER_16x9',
+  ] as const;
+
+  const seasonCoverImageId = priorityOrder
+    .map((imageType) =>
+      seasonImages.find((img) => img.image_type === imageType),
+    )
+    .find((image) => image !== undefined)?.image_id;
+  return seasonCoverImageId;
 }

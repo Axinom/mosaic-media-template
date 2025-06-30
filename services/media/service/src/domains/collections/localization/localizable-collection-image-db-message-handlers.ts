@@ -3,7 +3,7 @@ import {
   TypedTransactionalMessage,
 } from '@axinom/mosaic-transactional-inbox-outbox';
 import { ClientBase } from 'pg';
-import { selectOne } from 'zapatos/db';
+import { conditions as c, select, selectOne } from 'zapatos/db';
 import { Config } from '../../../common';
 import {
   getUpsertMessageData,
@@ -28,11 +28,12 @@ export class LocalizableCollectionImageCreatedDbMessageHandler extends Localizab
     );
   }
 
-  override async getLocalizationCommandData({
-    payload: { image_type, collection_id, image_id },
-  }: TypedTransactionalMessage<LocalizableCollectionImageDbEvent>): Promise<
-    LocalizationMessageData | undefined
-  > {
+  override async getLocalizationCommandData(
+    {
+      payload: { image_type, collection_id, image_id },
+    }: TypedTransactionalMessage<LocalizableCollectionImageDbEvent>,
+    ownerClient: ClientBase,
+  ): Promise<LocalizationMessageData | undefined> {
     let fields = {};
     switch (image_type) {
       case 'COLLECTION_COVER':
@@ -65,14 +66,17 @@ export class LocalizableCollectionImageCreatedDbMessageHandler extends Localizab
       default:
         return undefined;
     }
-
+    const coverImageId = await applyCoverImageFallback(
+      collection_id,
+      ownerClient,
+    );
     return getUpsertMessageData(
       this.config.serviceId,
       LOCALIZATION_COLLECTION_TYPE,
       collection_id,
       fields, // localizable image id fields
       undefined, // Title is never updated on image assignment
-      undefined,
+      coverImageId,
       `${collection_id}-${image_type}`,
     );
   }
@@ -87,11 +91,12 @@ export class LocalizableCollectionImageUpdatedDbMessageHandler extends Localizab
     );
   }
 
-  override async getLocalizationCommandData({
-    payload: { image_type, collection_id, image_id },
-  }: TypedTransactionalMessage<LocalizableCollectionImageDbEvent>): Promise<
-    LocalizationMessageData | undefined
-  > {
+  override async getLocalizationCommandData(
+    {
+      payload: { image_type, collection_id, image_id },
+    }: TypedTransactionalMessage<LocalizableCollectionImageDbEvent>,
+    ownerClient: ClientBase,
+  ): Promise<LocalizationMessageData | undefined> {
     let fields = {};
     switch (image_type) {
       case 'COLLECTION_COVER':
@@ -124,14 +129,17 @@ export class LocalizableCollectionImageUpdatedDbMessageHandler extends Localizab
       default:
         return undefined;
     }
-
+    const coverImageId = await applyCoverImageFallback(
+      collection_id,
+      ownerClient,
+    );
     return getUpsertMessageData(
       this.config.serviceId,
       LOCALIZATION_COLLECTION_TYPE,
       collection_id,
       fields, // localizable image id fields
       undefined, // Title is never updated on image assignment
-      undefined,
+      coverImageId,
       `${collection_id}-${image_type}`,
     );
   }
@@ -188,13 +196,17 @@ export class LocalizableCollectionImageDeletedDbMessageHandler extends Localizab
         default:
           return undefined;
       }
+      const coverImageId = await applyCoverImageFallback(
+        collection_id,
+        ownerClient,
+      );
       return getUpsertMessageData(
         this.config.serviceId,
         LOCALIZATION_COLLECTION_TYPE,
         collection_id,
         fields, // localizable image id fields
         undefined, // Title is never updated on image unassign
-        null, // Explicit unassign of an image
+        coverImageId,
         `${collection_id}-${image_type}`,
       );
     }
@@ -211,4 +223,31 @@ export class LocalizableCollectionImageDeletedDbMessageHandler extends Localizab
     ).run(ownerClient);
     return !data;
   }
+}
+
+async function applyCoverImageFallback(
+  collectionId: number,
+  ownerClient: ClientBase,
+): Promise<string | undefined> {
+  const collectionImages = await select('collections_images', {
+    collection_id: collectionId,
+    image_type: c.isIn([
+      'COLLECTION_COVER',
+      'COLLECTION_COVER_1x1',
+      'COLLECTION_COVER_4x1',
+    ]),
+  }).run(ownerClient);
+
+  const priorityOrder = [
+    'COLLECTION_COVER',
+    'COLLECTION_COVER_1x1',
+    'COLLECTION_COVER_4x1',
+  ] as const;
+
+  const collectionCoverImageId = priorityOrder
+    .map((imageType) =>
+      collectionImages.find((img) => img.image_type === imageType),
+    )
+    .find((image) => image !== undefined)?.image_id;
+  return collectionCoverImageId;
 }
