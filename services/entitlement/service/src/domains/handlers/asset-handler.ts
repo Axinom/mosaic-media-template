@@ -5,6 +5,7 @@ import {
   AssetHandlerInput,
   AssetHandlerResponse,
   AssetModel,
+  AssetTypeEnum,
   AssetTypeProvider,
   getApolloClient,
   getFullConfig,
@@ -56,7 +57,20 @@ const getAssetFromCatalogService = async (
     variables: { id: assetRequest.asset_id },
   });
 
-  return plainToClass(AssetModel, results.data.asset);
+  const assetData = results.data.asset;
+  if (!assetData) {
+    return plainToClass(AssetModel, null);
+  }
+
+  const transformed = {
+    ...assetData,
+    businessType:
+      assetType === AssetTypeEnum.Episode
+        ? assetData.season?.tvshow?.businessType
+        : assetData.businessType,
+  };
+
+  return plainToClass(AssetModel, transformed);
 };
 
 export const AssetHandler = async (
