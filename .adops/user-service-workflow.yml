@@ -31,6 +31,14 @@ parameters:
     displayName: Release to LOV production
     type: boolean
     default: false
+  - name: flx_acceptance
+    displayName: Release to FLX acceptance
+    type: boolean
+    default: false
+  - name: flx_production
+    displayName: Release to FLX production
+    type: boolean
+    default: false
 
 stages:
   - stage: Build
@@ -207,3 +215,55 @@ stages:
             env:
               MOSAIC_HOSTING_CLIENT_ID: $(mosaicHostingClientIdLovProd)
               MOSAIC_HOSTING_CLIENT_SECRET: $(mosaicHostingClientSecretLovProd)
+
+      - job: Release_flx_acc
+        dependsOn: Build
+        displayName: 'Release - FLX acceptance'
+        condition: ${{ eq(parameters.flx_acceptance, true) }}
+        variables:
+          PKG_VER: $[ dependencies.Build.outputs['setPackageVersion.pkgVer'] ]
+        steps:
+          - script: |
+              npm run $(packageBuildCommand)
+            displayName: 'Build pilet'
+
+          - download: current
+            artifact: drop
+            displayName: 'Download build artifact'
+
+          - task: Bash@3
+            displayName:
+              'Upload pilet to FLX acceptance environment'
+            inputs:
+              targetType: 'inline'
+              script: |
+                yarn run pilet publish --no-fresh --url "https://frontends.service.eu.axinom.net/v1/pilets/$(tenantId)/e178a630-77b1-48d4-8946-d3df5465880e" --api-key "$(serviceAccountCredentialsFlxAcc)" --fields.MANAGEMENT_HOST "dc-flx-ms-user-acceptance.axprod.net" --fields.MANAGEMENT_HTTP_PROTOCOL "https" $(Pipeline.Workspace)/drop/user-workflows-$(PKG_VER).tgz
+            env:
+              MOSAIC_HOSTING_CLIENT_ID: $(mosaicHostingClientIdFlxAcc)
+              MOSAIC_HOSTING_CLIENT_SECRET: $(mosaicHostingClientSecretFlxAcc)
+
+      - job: Release_flx_prod
+        dependsOn: Build
+        displayName: 'Release - FLX production'
+        condition: ${{ eq(parameters.flx_production, true) }}
+        variables:
+          PKG_VER: $[ dependencies.Build.outputs['setPackageVersion.pkgVer'] ]
+        steps:
+          - script: |
+              npm run $(packageBuildCommand)
+            displayName: 'Build pilet'
+
+          - download: current
+            artifact: drop
+            displayName: 'Download build artifact'
+
+          - task: Bash@3
+            displayName:
+              'Upload pilet to FLX production environment'
+            inputs:
+              targetType: 'inline'
+              script: |
+                yarn run pilet publish --no-fresh --url "https://frontends.service.eu.axinom.net/v1/pilets/$(tenantId)/4bc394b5-8d01-4072-b9b0-4c138fb63303" --api-key "$(serviceAccountCredentialsFlxProd)" --fields.MANAGEMENT_HOST "dc-flx-ms-user.axprod.net" --fields.MANAGEMENT_HTTP_PROTOCOL "https" $(Pipeline.Workspace)/drop/user-workflows-$(PKG_VER).tgz
+            env:
+              MOSAIC_HOSTING_CLIENT_ID: $(mosaicHostingClientIdFlxProd)
+              MOSAIC_HOSTING_CLIENT_SECRET: $(mosaicHostingClientSecretFlxProd)
