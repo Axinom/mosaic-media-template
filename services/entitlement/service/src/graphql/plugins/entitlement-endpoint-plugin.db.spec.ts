@@ -36,12 +36,24 @@ const catalogMock = getCatalogSdk as jest.MockedFunction<typeof getCatalogSdk>;
 catalogMock.mockReturnValue(catalogStub);
 
 let countryCode: string | undefined = 'LK';
-// Mock geoip-country.lookup which is used in entitlement-endpoint.
-jest.mock('geoip-country', () => ({
-  lookup: (_ip: string) => {
-    return { country: countryCode };
-  },
-}));
+// Mock maxmind-country. Which is used in entitlement-endpoint.
+jest.mock('maxmind', () => {
+  const mockReader = {
+    get: jest.fn((_ip: string) => {
+      if (!countryCode) {
+        return undefined;
+      }
+      return { country: { iso_code: countryCode } };
+    }),
+  };
+
+  return {
+    __esModule: true,
+    default: {
+      open: jest.fn(async () => mockReader),
+    },
+  };
+});
 
 const ENTITLEMENT_REQUEST = gql`
   query Entitlement($input: EntitlementInput) {

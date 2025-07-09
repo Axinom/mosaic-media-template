@@ -14,6 +14,7 @@ import { from } from 'env-var';
 
 export const GEOLITE2_LICENSE_KEY = 'GEOLITE2_LICENSE_KEY';
 export const GEOLITE2_DOWNLOAD_URL = 'GEOLITE2_DOWNLOAD_URL';
+export const MAXMIND_ACCOUNT_ID = 'MAXMIND_ACCOUNT_ID';
 
 /**
  * Get an object that contains all the configuration declaration functions to
@@ -51,7 +52,12 @@ export const getConfigDefinitions = (
     geolite2LicenseKey: function () {
       return env.get(GEOLITE2_LICENSE_KEY).required(!this.isDev()).asString();
     },
-    geolite2DownloadUrl: () => env.get(GEOLITE2_DOWNLOAD_URL).asString(),
+    geolite2DownloadUrl: function () {
+      return env.get(GEOLITE2_DOWNLOAD_URL).required().asString();
+    },
+    maxmindAccountId: function () {
+      return env.get(MAXMIND_ACCOUNT_ID).required(!this.isDev()).asString();
+    },
 
     drmLicenseCommunicationKeyBuffer: function () {
       return Buffer.from(this.drmLicenseCommunicationKey(), 'base64');

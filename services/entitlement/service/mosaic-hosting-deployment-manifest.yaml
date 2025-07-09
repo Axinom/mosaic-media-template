@@ -6,6 +6,8 @@
 # The following environment variables need to be replaced with your own values.
 #
 # GEOLITE2_LICENSE_KEY
+# GEOLITE2_DOWNLOAD_URL
+# MAXMIND_ACCOUNT_ID
 # DRM_LICENSE_COMMUNICATION_KEY
 # DRM_LICENSE_COMMUNICATION_KEY_ID
 
@@ -89,6 +91,8 @@ secureVariables:
 
   # GeoLite License Key
   GEOLITE2_LICENSE_KEY: 'REPLACE_WITH_VALID_GEOLITE2_LICENSE_KEY'
+  MAXMIND_ACCOUNT_ID: 'REPLACE_WITH_VALID_MAXMIND_ACCOUNT_ID'
+  GEOLITE2_DOWNLOAD_URL: 'https://download.maxmind.com/app/geoip_download'
 
   # DRM License Communication Key and ID
   DRM_LICENSE_COMMUNICATION_KEY: 'REPLACE_WITH_VALID_DRM_LICENSE_COMMUNICATION_KEY'

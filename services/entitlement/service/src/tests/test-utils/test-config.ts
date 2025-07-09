@@ -32,6 +32,8 @@ export const createTestConfig = (
     DATABASE_GQL_ROLE: createTestDbIdentifier(process.env.DATABASE_GQL_ROLE),
     GEOLITE2_LICENSE_KEY:
       'Fake value to satisfy required validation, since during tests isDev is false',
+    MAXMIND_ACCOUNT_ID:
+      'Fake value to satisfy required validation, since during tests isDev is false',
     SECURE_LOGGING_MODE: 'SECRETS_HIDDEN',
   };
 
