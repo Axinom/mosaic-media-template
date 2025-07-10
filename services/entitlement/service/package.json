@@ -42,7 +42,7 @@
     "util:load-vars": "env-cmd -f .env env-cmd -f ../../../.env",
     "util:token": "yarn util:load-vars ts-node --files scripts/token.ts",
     "util:pg-dump": "yarn util:load-vars mosaic pg-dump",
-    "util:update-geo-db": "env-cmd -f .env --use-shell \"cd ../../../node_modules/geoip-country && npm run-script updatedb\"",
+    "util:update-geo-db": "yarn util:load-vars ts-node --files scripts/update-geo-db.ts",
     "util:define-func-migration": "yarn mosaic generate-define-func-migration"
   },
   "dependencies": {
@@ -61,7 +61,6 @@
     "env-cmd": "^10.1.0",
     "env-var": "^6.3.0",
     "express": "^4.18.1",
-    "geoip-country": "^4.2.78",
     "graphile-build": "4.13.0",
     "graphile-build-pg": "4.13.0",
     "graphile-migrate": "^1.4.0",
@@ -71,6 +70,8 @@
     "graphql-tag": "^2.12.6",
     "inflection": "^1.13.4",
     "jsonwebtoken": "^9.0.0",
+    "maxmind": "^4.3.25",
+    "node-cron": "^4.1.0",
     "node-fetch": "^2.6.11",
     "pg": "^8.11.0",
     "pg-transactional-outbox": "^0.5.7",
@@ -90,7 +91,6 @@
     "@graphql-codegen/typescript-graphql-request": "^4.5.5",
     "@graphql-codegen/typescript-operations": "^2.5.3",
     "@types/express": "^4.17.14",
-    "@types/geoip-country": "^4.0.0",
     "@types/inflection": "^1.13.0",
     "@types/jest": "^29.4.1",
     "@types/jsonwebtoken": "^9.0.1",
