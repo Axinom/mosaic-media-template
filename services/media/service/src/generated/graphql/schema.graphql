@@ -2420,6 +2420,7 @@ type Query {
     """
     filter: StringFilter
   ): GetTvshowsTagsValuesConnection
+  ingestedAssets(input: IngestedAssetsInput!): IngestedAssetsPayload
 }
 
 """A connection to a list of `AgeRating` values."""
@@ -17403,6 +17404,22 @@ type GetTvshowsTagsValueEdge {
 
   """The `String` at the end of the edge."""
   node: String
+}
+
+type IngestedAssetsPayload {
+  nodes: [IngestedAssetPayload!]!
+}
+
+type IngestedAssetPayload {
+  assetType: String!
+  id: Int!
+  externalId: String!
+  publishingId: String
+  ingestStatus: String!
+}
+
+input IngestedAssetsInput {
+  ingestDocumentId: Int!
 }
 
 """

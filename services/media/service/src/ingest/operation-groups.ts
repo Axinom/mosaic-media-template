@@ -9,6 +9,7 @@ export const IngestReadOperations = [
   Q.ingestDocuments,
   Q.ingestItem,
   Q.ingestItems,
+  Q.ingestedAssets,
   Q.ingestItemStep,
   Q.ingestItemSteps,
   S.ingestDocumentMutated,
