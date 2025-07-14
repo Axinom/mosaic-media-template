@@ -7,6 +7,7 @@ import {
 import {
   customizeGraphQlErrorFields,
   defaultPgErrorMapper,
+  Logger,
   logGraphQlError,
   MosaicErrors,
 } from '@axinom/mosaic-service-common';
@@ -47,7 +48,17 @@ export function buildPostgraphileOptions(
       );
     })
     .setPgSettings(async (req) => {
+      const logger = new Logger({
+        context: 'postgraphile-options',
+      });
+
       const geoData = geoIpReaderContainer.reader.get(req.ip);
+      logger.debug({
+        message: `Request IP: ${req.ip}`,
+        details: {
+          country: geoData?.country?.iso_code,
+        },
+      });
       return {
         role: config.dbGqlRole,
         ...getMosaicLocaleSetting(req),
