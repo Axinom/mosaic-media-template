@@ -796,6 +796,7 @@ type Collection {
 
   """Short description."""
   synopsis: String
+  isUsingDefaultLocale: Boolean
 
   """Reads and enables pagination through a set of `CollectionImage`."""
   images(
@@ -994,6 +995,9 @@ input CollectionFilter {
   """Filter by the object’s `title` field."""
   title: StringFilter
 
+  """Filter by the object’s `isUsingDefaultLocale` field."""
+  isUsingDefaultLocale: BooleanFilter
+
   """Filter by the object’s `images` relation."""
   images: CollectionToManyCollectionImageFilter
 
@@ -1093,6 +1097,48 @@ input StringListFilter {
   Does the array column contain common values with the specified array value? (case-insensitive)
   """
   iOverlaps: [String]
+}
+
+"""
+A filter to be used against Boolean fields. All fields are combined with a logical ‘and.’
+"""
+input BooleanFilter {
+  """
+  Is null (if `true` is specified) or is not null (if `false` is specified).
+  """
+  isNull: Boolean
+
+  """Equal to the specified value."""
+  equalTo: Boolean
+
+  """Not equal to the specified value."""
+  notEqualTo: Boolean
+
+  """
+  Not equal to the specified value, treating null like an ordinary value.
+  """
+  distinctFrom: Boolean
+
+  """Equal to the specified value, treating null like an ordinary value."""
+  notDistinctFrom: Boolean
+
+  """Included in the specified list."""
+  in: [Boolean!]
+
+  """Not included in the specified list."""
+  notIn: [Boolean!]
+
+  """Less than the specified value."""
+  lessThan: Boolean
+
+  """Less than or equal to the specified value."""
+  lessThanOrEqualTo: Boolean
+
+  """Greater than the specified value."""
+  greaterThan: Boolean
+
+  """Greater than or equal to the specified value."""
+  greaterThanOrEqualTo: Boolean
 }
 
 """
@@ -1266,6 +1312,9 @@ input MovieFilter {
 
   """Filter by the object’s `title` field."""
   title: StringFilter
+
+  """Filter by the object’s `isUsingDefaultLocale` field."""
+  isUsingDefaultLocale: BooleanFilter
 
   """Filter by the object’s `collectionItemsRelationsByMovieId` relation."""
   collectionItemsRelationsByMovieId: MovieToManyCollectionItemsRelationFilter
@@ -1487,6 +1536,9 @@ input MovieGenreFilter {
   """Filter by the object’s `title` field."""
   title: StringFilter
 
+  """Filter by the object’s `isUsingDefaultLocale` field."""
+  isUsingDefaultLocale: BooleanFilter
+
   """Filter by the object’s `movieGenresRelationsByMovieGenreId` relation."""
   movieGenresRelationsByMovieGenreId: MovieGenreToManyMovieGenresRelationFilter
 
@@ -1686,48 +1738,6 @@ A point in time as described by the [ISO
 8601](https://en.wikipedia.org/wiki/ISO_8601) standard. May or may not include a timezone.
 """
 scalar Datetime
-
-"""
-A filter to be used against Boolean fields. All fields are combined with a logical ‘and.’
-"""
-input BooleanFilter {
-  """
-  Is null (if `true` is specified) or is not null (if `false` is specified).
-  """
-  isNull: Boolean
-
-  """Equal to the specified value."""
-  equalTo: Boolean
-
-  """Not equal to the specified value."""
-  notEqualTo: Boolean
-
-  """
-  Not equal to the specified value, treating null like an ordinary value.
-  """
-  distinctFrom: Boolean
-
-  """Equal to the specified value, treating null like an ordinary value."""
-  notDistinctFrom: Boolean
-
-  """Included in the specified list."""
-  in: [Boolean!]
-
-  """Not included in the specified list."""
-  notIn: [Boolean!]
-
-  """Less than the specified value."""
-  lessThan: Boolean
-
-  """Less than or equal to the specified value."""
-  lessThanOrEqualTo: Boolean
-
-  """Greater than the specified value."""
-  greaterThan: Boolean
-
-  """Greater than or equal to the specified value."""
-  greaterThanOrEqualTo: Boolean
-}
 
 """
 A filter to be used against many `MovieVideo` object types. All fields are combined with a logical ‘and.’
@@ -2051,6 +2061,9 @@ input TvshowFilter {
   """Filter by the object’s `title` field."""
   title: StringFilter
 
+  """Filter by the object’s `isUsingDefaultLocale` field."""
+  isUsingDefaultLocale: BooleanFilter
+
   """Filter by the object’s `collectionItemsRelationsByTvshowId` relation."""
   collectionItemsRelationsByTvshowId: TvshowToManyCollectionItemsRelationFilter
 
@@ -2176,6 +2189,9 @@ input SeasonFilter {
 
   """Filter by the object’s `title` field."""
   title: StringFilter
+
+  """Filter by the object’s `isUsingDefaultLocale` field."""
+  isUsingDefaultLocale: BooleanFilter
 
   """Filter by the object’s `collectionItemsRelationsBySeasonId` relation."""
   collectionItemsRelationsBySeasonId: SeasonToManyCollectionItemsRelationFilter
@@ -2324,6 +2340,9 @@ input EpisodeFilter {
   """Filter by the object’s `title` field."""
   title: StringFilter
 
+  """Filter by the object’s `isUsingDefaultLocale` field."""
+  isUsingDefaultLocale: BooleanFilter
+
   """Filter by the object’s `collectionItemsRelationsByEpisodeId` relation."""
   collectionItemsRelationsByEpisodeId: EpisodeToManyCollectionItemsRelationFilter
 
@@ -2460,6 +2479,9 @@ input TvshowGenreFilter {
 
   """Filter by the object’s `title` field."""
   title: StringFilter
+
+  """Filter by the object’s `isUsingDefaultLocale` field."""
+  isUsingDefaultLocale: BooleanFilter
 
   """
   Filter by the object’s `episodeGenresRelationsByTvshowGenreId` relation.
@@ -3615,6 +3637,7 @@ type Movie {
 
   """Short description of the main plot elements."""
   synopsis: String
+  isUsingDefaultLocale: Boolean
 
   """Reads and enables pagination through a set of `MovieGenresRelation`."""
   genres(
@@ -3796,6 +3819,7 @@ type MovieGenre {
 
   """Title of the genre."""
   title: String
+  isUsingDefaultLocale: Boolean
 }
 
 """A `MovieGenresRelation` edge in the connection."""
@@ -4432,6 +4456,7 @@ type Tvshow {
 
   """Short description of the main plot elements."""
   synopsis: String
+  isUsingDefaultLocale: Boolean
 
   """Reads and enables pagination through a set of `Season`."""
   seasons(
@@ -4659,6 +4684,7 @@ type Season {
   """Short description of the main plot elements."""
   synopsis: String
   title: String
+  isUsingDefaultLocale: Boolean
 
   """Reads a single `Tvshow` that is related to this `Season`."""
   tvshow: Tvshow
@@ -4896,6 +4922,7 @@ type Episode {
 
   """Short description of the main plot elements."""
   synopsis: String
+  isUsingDefaultLocale: Boolean
 
   """Reads a single `Season` that is related to this `Episode`."""
   season: Season
@@ -5082,6 +5109,7 @@ type TvshowGenre {
 
   """Title of the genre."""
   title: String
+  isUsingDefaultLocale: Boolean
 }
 
 """A `EpisodeGenresRelation` edge in the connection."""
@@ -5722,6 +5750,8 @@ enum EpisodesOrderBy {
   INTRO_END_TIME_DESC
   TITLE_ASC
   TITLE_DESC
+  IS_USING_DEFAULT_LOCALE_ASC
+  IS_USING_DEFAULT_LOCALE_DESC
   PRIMARY_KEY_ASC
   PRIMARY_KEY_DESC
 }
@@ -5780,6 +5810,9 @@ input EpisodeCondition {
 
   """Checks for equality with the object’s `title` field."""
   title: String
+
+  """Checks for equality with the object’s `isUsingDefaultLocale` field."""
+  isUsingDefaultLocale: Boolean
 }
 
 """A connection to a list of `SeasonGenresRelation` values."""
@@ -6445,6 +6478,8 @@ enum SeasonsOrderBy {
   ORIGINAL_TITLE_DESC
   TITLE_ASC
   TITLE_DESC
+  IS_USING_DEFAULT_LOCALE_ASC
+  IS_USING_DEFAULT_LOCALE_DESC
   PRIMARY_KEY_ASC
   PRIMARY_KEY_DESC
 }
@@ -6488,6 +6523,9 @@ input SeasonCondition {
 
   """Checks for equality with the object’s `title` field."""
   title: String
+
+  """Checks for equality with the object’s `isUsingDefaultLocale` field."""
+  isUsingDefaultLocale: Boolean
 }
 
 """A connection to a list of `TvshowGenresRelation` values."""
@@ -7205,6 +7243,8 @@ enum CollectionsOrderBy {
   ORIGINAL_TITLE_DESC
   TITLE_ASC
   TITLE_DESC
+  IS_USING_DEFAULT_LOCALE_ASC
+  IS_USING_DEFAULT_LOCALE_DESC
   PRIMARY_KEY_ASC
   PRIMARY_KEY_DESC
 }
@@ -7237,6 +7277,9 @@ input CollectionCondition {
 
   """Checks for equality with the object’s `title` field."""
   title: String
+
+  """Checks for equality with the object’s `isUsingDefaultLocale` field."""
+  isUsingDefaultLocale: Boolean
 }
 
 """A connection to a list of `Locale` values."""
@@ -7347,6 +7390,8 @@ enum MovieGenresOrderBy {
   ORDER_NO_DESC
   TITLE_ASC
   TITLE_DESC
+  IS_USING_DEFAULT_LOCALE_ASC
+  IS_USING_DEFAULT_LOCALE_DESC
   PRIMARY_KEY_ASC
   PRIMARY_KEY_DESC
 }
@@ -7364,6 +7409,9 @@ input MovieGenreCondition {
 
   """Checks for equality with the object’s `title` field."""
   title: String
+
+  """Checks for equality with the object’s `isUsingDefaultLocale` field."""
+  isUsingDefaultLocale: Boolean
 }
 
 """A connection to a list of `Movie` values."""
@@ -7431,6 +7479,8 @@ enum MoviesOrderBy {
   ASSET_SUBTYPE_DESC
   TITLE_ASC
   TITLE_DESC
+  IS_USING_DEFAULT_LOCALE_ASC
+  IS_USING_DEFAULT_LOCALE_DESC
   PRIMARY_KEY_ASC
   PRIMARY_KEY_DESC
 }
@@ -7492,6 +7542,9 @@ input MovieCondition {
 
   """Checks for equality with the object’s `title` field."""
   title: String
+
+  """Checks for equality with the object’s `isUsingDefaultLocale` field."""
+  isUsingDefaultLocale: Boolean
 }
 
 """A connection to a list of `TvshowGenre` values."""
@@ -7529,6 +7582,8 @@ enum TvshowGenresOrderBy {
   ORDER_NO_DESC
   TITLE_ASC
   TITLE_DESC
+  IS_USING_DEFAULT_LOCALE_ASC
+  IS_USING_DEFAULT_LOCALE_DESC
   PRIMARY_KEY_ASC
   PRIMARY_KEY_DESC
 }
@@ -7546,6 +7601,9 @@ input TvshowGenreCondition {
 
   """Checks for equality with the object’s `title` field."""
   title: String
+
+  """Checks for equality with the object’s `isUsingDefaultLocale` field."""
+  isUsingDefaultLocale: Boolean
 }
 
 """A connection to a list of `Tvshow` values."""
@@ -7609,6 +7667,8 @@ enum TvshowsOrderBy {
   ASSET_SUBTYPE_DESC
   TITLE_ASC
   TITLE_DESC
+  IS_USING_DEFAULT_LOCALE_ASC
+  IS_USING_DEFAULT_LOCALE_DESC
   PRIMARY_KEY_ASC
   PRIMARY_KEY_DESC
 }
@@ -7664,6 +7724,9 @@ input TvshowCondition {
 
   """Checks for equality with the object’s `title` field."""
   title: String
+
+  """Checks for equality with the object’s `isUsingDefaultLocale` field."""
+  isUsingDefaultLocale: Boolean
 }
 
 """

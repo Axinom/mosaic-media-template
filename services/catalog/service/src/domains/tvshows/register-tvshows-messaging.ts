@@ -1,6 +1,7 @@
 import {
   RabbitMqInboxWriter,
   RascalTransactionalConfigBuilder,
+  StoreOutboxMessage,
 } from '@axinom/mosaic-transactional-inbox-outbox';
 import { PublishServiceMessagingSettings } from 'media-messages';
 import { TransactionalMessageHandler } from 'pg-transactional-outbox';
@@ -58,16 +59,17 @@ export const registerTvshowsMessaging: RegisterContentTypeMessaging = function (
 };
 
 export const registerTvshowsHandlers = (
+  storeOutboxMessage: StoreOutboxMessage,
   config: Config,
 ): TransactionalMessageHandler[] => {
   return [
     new TvshowGenresPublishedEventHandler(config),
     new TvshowGenresUnpublishedEventHandler(config),
-    new TvshowPublishedEventHandler(config),
-    new TvshowUnpublishedEventHandler(config),
-    new SeasonPublishedEventHandler(config),
-    new SeasonUnpublishedEventHandler(config),
-    new EpisodePublishedEventHandler(config),
-    new EpisodeUnpublishedEventHandler(config),
+    new TvshowPublishedEventHandler(storeOutboxMessage, config),
+    new TvshowUnpublishedEventHandler(storeOutboxMessage, config),
+    new SeasonPublishedEventHandler(storeOutboxMessage, config),
+    new SeasonUnpublishedEventHandler(storeOutboxMessage, config),
+    new EpisodePublishedEventHandler(storeOutboxMessage, config),
+    new EpisodeUnpublishedEventHandler(storeOutboxMessage, config),
   ];
 };

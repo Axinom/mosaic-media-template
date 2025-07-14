@@ -1,9 +1,13 @@
 import { isNullOrWhitespace, Logger } from '@axinom/mosaic-service-common';
 import {
+  StoreOutboxMessage,
   TransactionalInboxMessageHandler,
   TypedTransactionalMessage,
+  UNKNOWN_AGGREGATE_ID,
 } from '@axinom/mosaic-transactional-inbox-outbox';
 import {
+  CatalogServiceMessagingSettings,
+  EntityPublishSuccessEvent,
   MoviePublishedEvent,
   PublishServiceMessagingSettings,
 } from 'media-messages';
@@ -17,12 +21,16 @@ import {
   movie_video_streams,
 } from 'zapatos/schema';
 import { Config, syncInMemoryLocales } from '../../../common';
+import { requestServiceAccountToken } from '../../../common/utils/token-utils';
 
 export class MoviePublishedEventHandler extends TransactionalInboxMessageHandler<
   MoviePublishedEvent,
   Config
 > {
-  constructor(config: Config) {
+  constructor(
+    private readonly storeOutboxMessage: StoreOutboxMessage,
+    config: Config
+  ) {
     super(
       PublishServiceMessagingSettings.MoviePublished,
       new Logger({
@@ -190,5 +198,16 @@ export class MoviePublishedEventHandler extends TransactionalInboxMessageHandler
           ),
       ).run(txnClient);
     }
+
+    const accessToken = await requestServiceAccountToken(this.config);
+    await this.storeOutboxMessage<EntityPublishSuccessEvent>(
+      payload.content_id ? payload.content_id : UNKNOWN_AGGREGATE_ID,
+      CatalogServiceMessagingSettings.EntityPublishSuccess,
+      {  
+        content_id: payload.content_id,
+      },
+      txnClient,
+      { envelopeOverrides: { auth_token: accessToken } },
+    );
   }
 }

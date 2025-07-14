@@ -163,6 +163,10 @@
               "delay.30s"
             ]
           }
+        },
+        "EntityPublishSuccess": {
+          "exchange": "event",
+          "routingKey": "catalog-service.entity.entity_publish_success"
         }
       },
       "subscriptions": {
