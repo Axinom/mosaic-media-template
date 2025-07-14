@@ -325,7 +325,7 @@ const Panel: React.FC = () => {
     let cleanCover16x9ImageCount = 0;
     let listImageCount = 0;
     let list1x1ImageCount = 0;
-    let list16x9ImageCount = 0;
+    let list9x13ImageCount = 0;
     
 
     values.moviesImages?.nodes.forEach(({ imageId, imageType }) => {
@@ -358,7 +358,7 @@ const Panel: React.FC = () => {
           listImageCount++;
           break;
         case MovieImageType.MovieList_9X13:
-          list16x9ImageCount++;
+          list9x13ImageCount++;
           break;
         default:
           break;
@@ -453,9 +453,9 @@ const Panel: React.FC = () => {
               </div>
             </div>
             <div className={classes.datalist}>
-              <div>List 16x9</div>
+              <div>List 9x13</div>
               <div className={classes.rightAlignment}>
-                {list16x9ImageCount} / 1
+                {list9x13ImageCount} / 1
               </div>
             </div>
           </Paragraph>
