@@ -285,6 +285,21 @@ export function useMoviesFilters(): {
       property: 'publishingId',
       type: FilterTypes.FreeText,
     },
+    {
+      label: 'Main Video',
+      property: 'mainVideoId',
+      type: FilterTypes.Options,
+      options: [
+        {
+          label: 'Assigned',
+          value: true,
+        },
+        {
+          label: 'Not Assigned',
+          value: false,
+        },
+      ],
+    }
   ];
 
   const transformFilters = (
@@ -361,6 +376,9 @@ export function useMoviesFilters(): {
       released: transformRange,
       createdDate: transformRange,
       publishedDate: transformRange,
+      mainVideoId: (value) => ({
+        isNull: !value,
+      }),
     });
   };
 

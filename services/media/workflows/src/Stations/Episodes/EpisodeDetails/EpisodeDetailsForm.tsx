@@ -332,7 +332,7 @@ const Panel: React.FC = () => {
     let cleanCover16x9ImageCount = 0;
     let listImageCount = 0;
     let list1x1ImageCount = 0;
-    let list16x9ImageCount = 0;
+    let list9x13ImageCount = 0;
 
     values.episodesImages?.nodes.forEach(({ imageId, imageType }) => {
       switch (imageType) {
@@ -364,7 +364,7 @@ const Panel: React.FC = () => {
           list1x1ImageCount++;
           break;
         case EpisodeImageType.EpisodeList_9X13:
-          list16x9ImageCount++;
+          list9x13ImageCount++;
           break;
         default:
           break;
@@ -377,7 +377,6 @@ const Panel: React.FC = () => {
           <ImageCover id={cover1x1ImageId ??  cover16x9ImageId ?? coverImageId} />
         </Section>
         <Section title="Additional Information">
-          <Paragraph title="ID">{values.id}</Paragraph>
           <Paragraph title="Subtype">
             {getEnumLabel(values.assetSubtype)}
           </Paragraph>
@@ -481,9 +480,9 @@ const Panel: React.FC = () => {
                 </div>
               </div>
               <div className={classes.datalist}>
-                <div>List 16x9</div>
+                <div>List 9x13</div>
                 <div className={classes.rightAlignment}>
-                  {list16x9ImageCount} / 1
+                  {list9x13ImageCount} / 1
                 </div>
               </div>
             </Paragraph>

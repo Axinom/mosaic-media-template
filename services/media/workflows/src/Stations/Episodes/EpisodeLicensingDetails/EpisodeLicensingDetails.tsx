@@ -176,7 +176,6 @@ const Panel: React.FC = () => {
     return (
       <InfoPanel>
         <Section title="Additional Information">
-          <Paragraph title="ID">{values.id}</Paragraph>
           <Paragraph title="Created">
             {formatDateTime(values.createdDate)} by {values.createdUser}
           </Paragraph>

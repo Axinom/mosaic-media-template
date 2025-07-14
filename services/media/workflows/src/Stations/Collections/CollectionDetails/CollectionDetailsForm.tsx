@@ -255,7 +255,6 @@ const Panel: React.FC = () => {
           <ImageCover id={cover1x1ImageId ?? cover4x1ImageId ?? coverImageId} />
         </Section>
         <Section title="Additional Information">
-          <Paragraph title="ID">{values.id}</Paragraph>
           <Paragraph title="Subtype">
             {getEnumLabel(values.assetSubtype)}
           </Paragraph>
