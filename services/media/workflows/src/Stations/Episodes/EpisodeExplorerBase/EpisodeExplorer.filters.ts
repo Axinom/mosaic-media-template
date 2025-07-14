@@ -17,12 +17,14 @@ import {
 import { transformRange } from '../../../Util/DateRangeTransformer/DateRangeTransformer';
 import { getEnumLabel } from '../../../Util/StringEnumMapper/StringEnumMapper';
 import { EpisodeData } from './EpisodeExplorer.types';
+import { CountryOptions } from '../../../Util/CountryNames/CountryNames';
 
 interface allOptions {
   allAgeRatings: Option[];
   allContentOwners: Option[];
   allGenres: Option[];
   allCountries: Option[];
+  countryNames: Option[];
 }
 
 export function useEpisodesFilters(): {
@@ -40,6 +42,7 @@ export function useEpisodesFilters(): {
     allContentOwners: [],
     allGenres: [],
     allCountries: [],
+    countryNames: []
   });
 
   const { data, error } = useGetEpisodesFilterOptionsDataQuery({
@@ -74,6 +77,7 @@ export function useEpisodesFilters(): {
             value: 'FAILED_TO_LOAD_ERROR',
           },
         ],
+        countryNames: CountryOptions
       });
     } else {
       let ageRating: Option[] = [];
@@ -109,6 +113,7 @@ export function useEpisodesFilters(): {
         allContentOwners: contentOwner,
         allGenres: genres,
         allCountries: countries,
+        countryNames: CountryOptions
       });
     }
   }, [data]);
@@ -210,7 +215,7 @@ export function useEpisodesFilters(): {
       searchInputPlaceholder: 'Search',
       type: FilterTypes.SearcheableOptions,
       optionsProvider: (searchText) =>
-        AllFilterOptions.allCountries.filter((option) =>
+        AllFilterOptions.countryNames.filter((option) =>
           option.label.toLowerCase().includes(searchText.toLowerCase()),
         ),
     },

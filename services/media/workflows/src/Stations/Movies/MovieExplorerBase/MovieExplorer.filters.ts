@@ -18,6 +18,7 @@ import {
 import { transformRange } from '../../../Util/DateRangeTransformer/DateRangeTransformer';
 import { getEnumLabel } from '../../../Util/StringEnumMapper/StringEnumMapper';
 import { MovieData } from './MovieExplorer.types';
+import { CountryOptions } from '../../../Util/CountryNames/CountryNames';
 
 interface allOptions {
   allAgeRatings: Option[];
@@ -25,6 +26,7 @@ interface allOptions {
   allGenres: Option[];
   allCollections: Option[];
   allCountries: Option[];
+  countryNames: Option[];
 }
 
 export function useMoviesFilters(): {
@@ -40,6 +42,7 @@ export function useMoviesFilters(): {
     allGenres: [],
     allCollections: [],
     allCountries: [],
+    countryNames: []
   });
 
   const { data, error } = useGetMoviesFilterOptionsDataQuery({
@@ -80,6 +83,7 @@ export function useMoviesFilters(): {
             value: 'FAILED_TO_LOAD_ERROR',
           },
         ],
+        countryNames: CountryOptions
       });
     } else {
       let ageRating: Option[] = [];
@@ -124,6 +128,7 @@ export function useMoviesFilters(): {
         allGenres: genres,
         allCollections: collections,
         allCountries: countries,
+        countryNames: CountryOptions
       });
     }
   }, [data, error]);
@@ -207,7 +212,7 @@ export function useMoviesFilters(): {
       searchInputPlaceholder: 'Search',
       type: FilterTypes.SearcheableOptions,
       optionsProvider: (searchText) =>
-        AllFilterOptions.allCountries.filter((option) =>
+        AllFilterOptions.countryNames.filter((option) =>
           option.label.toLowerCase().includes(searchText.toLowerCase()),
         ),
     },
