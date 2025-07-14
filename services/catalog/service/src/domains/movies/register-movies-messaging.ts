@@ -1,8 +1,9 @@
 import {
   RabbitMqInboxWriter,
   RascalTransactionalConfigBuilder,
+  StoreOutboxMessage,
 } from '@axinom/mosaic-transactional-inbox-outbox';
-import { PublishServiceMessagingSettings } from 'media-messages';
+import { CatalogServiceMessagingSettings, PublishServiceMessagingSettings } from 'media-messages';
 import { TransactionalMessageHandler } from 'pg-transactional-outbox';
 import { Config } from '../../common';
 import { RegisterContentTypeMessaging } from '../../messaging';
@@ -34,15 +35,20 @@ export const registerMoviesMessaging: RegisterContentTypeMessaging = function (
       PublishServiceMessagingSettings.MovieGenresUnpublished,
       config,
     ).subscribeForEvent(() => inboxWriter),
+    new RascalTransactionalConfigBuilder(
+      CatalogServiceMessagingSettings.EntityPublishSuccess,
+      config,
+    ).publishEvent(),
   ];
 };
 
 export const registerMoviesHandlers = (
+  storeOutboxMessage: StoreOutboxMessage,
   config: Config,
 ): TransactionalMessageHandler[] => {
   return [
-    new MoviePublishedEventHandler(config),
-    new MovieUnpublishedEventHandler(config),
+    new MoviePublishedEventHandler(storeOutboxMessage, config),
+    new MovieUnpublishedEventHandler(storeOutboxMessage, config),
     new MovieGenresPublishedEventHandler(config),
     new MovieGenresUnpublishedEventHandler(config),
   ];

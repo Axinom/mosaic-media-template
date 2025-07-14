@@ -46,6 +46,7 @@
     "util:define-func-migration": "yarn mosaic generate-define-func-migration"
   },
   "dependencies": {
+    "akamai-edgegrid": "^3.5.3",
     "@axinom/mosaic-db-common": "0.43.0",
     "@axinom/mosaic-graphql-common": "0.19.0",
     "@axinom/mosaic-id-guard": "0.38.0",

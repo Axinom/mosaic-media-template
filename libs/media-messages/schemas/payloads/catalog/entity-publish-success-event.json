@@ -1,0 +1,16 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "type": "object",
+  "title": "entity_publish_success_event",
+  "description": "Entity publish success event schema.",
+  "additionalProperties": false,
+  "required": [
+    "content_id"
+  ],
+  "properties": {
+    "content_id": {
+      "type": "string",
+      "description": "Content id of the entity that was deleted."
+    }
+  }
+}

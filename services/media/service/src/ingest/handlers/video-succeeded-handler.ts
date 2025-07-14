@@ -78,7 +78,7 @@ export abstract class VideoSucceededHandler<
     ).run(ownerClient);
 
     // We only process cue points for the main video.
-    if (messageContext.videoType == 'MAIN') {
+    if (messageContext.videoType === 'MAIN') {
       const cuePointsIngestStep = await selectOne('ingest_item_steps', {
         ingest_item_id: messageContext.ingestItemId,
         type: 'CUE_POINTS',

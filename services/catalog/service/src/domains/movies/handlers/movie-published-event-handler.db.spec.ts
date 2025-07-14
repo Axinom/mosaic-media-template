@@ -8,14 +8,18 @@ import {
   ITestContext,
 } from '../../../tests/test-utils';
 import { MoviePublishedEventHandler } from './movie-published-event-handler';
+import { StoreOutboxMessage } from '@axinom/mosaic-transactional-inbox-outbox';
 
 describe('MoviePublishEventHandler', () => {
   let ctx: ITestContext;
   let handler: MoviePublishedEventHandler;
+  let storeOutboxMessage: StoreOutboxMessage;
+
+  storeOutboxMessage = async ():Promise<void> => {}
 
   beforeAll(async () => {
     ctx = await createTestContext();
-    handler = new MoviePublishedEventHandler(ctx.config);
+    handler = new MoviePublishedEventHandler(storeOutboxMessage, ctx.config);
   });
 
   afterEach(async () => {

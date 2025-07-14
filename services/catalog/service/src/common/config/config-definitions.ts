@@ -46,6 +46,11 @@ export const getConfigDefinitions = (
       'MISSING_GEOIP2_DATABASE_FILE',
     geoIP2UpdateSchedule: () =>
       env.get('GEOIP2_UPDATE_SCHEDULE').required().asString() || '0 0 * * *',
+    serviceAccountClientId: () =>
+      env.get('SERVICE_ACCOUNT_CLIENT_ID').required().asString(),
+    /** @example SERVICE_ACCOUNT_CLIENT_SECRET=seXdE9XWCGv3tj3j56k38xlQ */
+    serviceAccountClientSecret: () =>
+      env.get('SERVICE_ACCOUNT_CLIENT_SECRET').required().asString(),
   };
 };
 

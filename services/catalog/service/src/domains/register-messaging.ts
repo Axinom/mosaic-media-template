@@ -22,10 +22,13 @@ import { ShutdownActionsMiddleware } from '@axinom/mosaic-service-common';
 import {
   RabbitMqInboxWriter,
   setupInboxStorage,
+  setupOutboxStorage,
+  setupPollingOutboxListener,
   TransactionalLogMapper,
 } from '@axinom/mosaic-transactional-inbox-outbox';
 import {
   getInboxPollingListenerSettings,
+  getOutboxPollingListenerSettings,
   initializePollingMessageListener,
   PollingListenerConfig,
 } from 'pg-transactional-outbox';
@@ -36,6 +39,7 @@ export const registerMessaging = async (
   config: Config,
   shutdownActions: ShutdownActionsMiddleware,
 ): Promise<Broker> => {
+  const outboxLogger = new Logger({ context: 'Transactional outbox' });
   const inboxLogger = new Logger({ context: 'Transactional inbox' });
   const logMapper = new TransactionalLogMapper(inboxLogger, config.logLevel);
   const inboxConfig: PollingListenerConfig = {
@@ -45,6 +49,13 @@ export const registerMessaging = async (
     },
     dbHandlerConfig: { connectionString: config.dbOwnerConnectionString },
     settings: getInboxPollingListenerSettings(),
+  };
+  const outboxConfig: PollingListenerConfig = {
+    outboxOrInbox: 'outbox',
+    dbListenerConfig: {
+      connectionString: config.dbOwnerConnectionString,
+    },
+    settings: getOutboxPollingListenerSettings(),
   };
 
   const storeInboxMessage = setupInboxStorage(inboxConfig, inboxLogger, config);
@@ -57,6 +68,12 @@ export const registerMessaging = async (
         message.concurrency = 'parallel';
       },
     },
+  );
+
+  const storeOutboxMessage = setupOutboxStorage(
+    outboxConfig,
+    outboxLogger,
+    config,
   );
 
   const counter = initMessagingCounter(ownerPool);
@@ -75,11 +92,19 @@ export const registerMessaging = async (
     rascalConfigExportPath: './src/generated/messaging/rascal-schema.json',
   });
 
+  const shutdownOutbox = setupPollingOutboxListener(
+    outboxConfig,
+    broker,
+    outboxLogger,
+    config,
+  );
+  shutdownActions.push(shutdownOutbox);
+
   const [shutdownInSrv] = initializePollingMessageListener(
     inboxConfig,
     [
-      ...registerMoviesHandlers(config),
-      ...registerTvshowsHandlers(config),
+      ...registerMoviesHandlers(storeOutboxMessage, config),
+      ...registerTvshowsHandlers(storeOutboxMessage, config),
       ...registerCollectionsHandlers(config),
     ],
     logMapper,

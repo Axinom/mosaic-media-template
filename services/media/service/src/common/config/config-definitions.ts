@@ -82,6 +82,26 @@ export const getConfigDefinitions = (
      */
     devVideoBlobStorageContainer: () =>
       env.get('DEV_VIDEO_BLOB_STORAGE_CONTAINER').asString(),
+
+    /** Akamai CDN base URL */
+    akamaiCacheBaseUrl: () =>
+      env.get('AKAMAI_CACHE_BASE_URL').required().asString(),
+
+    /** Akamai client token for accessing CDN purge feature */
+    akamaiClientToken: () =>
+      env.get('AKAMAI_CLIENT_TOKEN').required().asString(),
+    
+    /** Akamai access token for accessing CDN purge feature */
+    akamaiAccessToken: () =>
+      env.get('AKAMAI_ACCESS_TOKEN').required().asString(),
+
+    /** Akamai client secret for accessing CDN purge feature */
+    akamaiClientSecret: () =>
+      env.get('AKAMAI_CLIENT_SECRET').required().asString(),
+
+    /** Tag prefix of Akamai cached resource */
+    akamaiCacheTagPrefix: () =>
+      env.get('AKAMAI_CACHE_TAG_PREFIX').required().asString(),
   };
 };
 

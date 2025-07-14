@@ -22,6 +22,444 @@ declare module 'zapatos/schema' {
 
   /* --- tables --- */
 
+  export namespace outbox {
+    export type Table = 'outbox';
+    export interface Selectable {
+      /**
+      * **outbox.id**
+      * - `uuid` in database
+      * - `NOT NULL`, no default
+      */
+      id: string;
+      /**
+      * **outbox.aggregate_type**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
+      aggregate_type: string;
+      /**
+      * **outbox.aggregate_id**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
+      aggregate_id: string;
+      /**
+      * **outbox.message_type**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
+      message_type: string;
+      /**
+      * **outbox.segment**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      segment: string | null;
+      /**
+      * **outbox.concurrency**
+      * - `text` in database
+      * - `NOT NULL`, default: `'sequential'::text`
+      */
+      concurrency: string;
+      /**
+      * **outbox.payload**
+      * - `jsonb` in database
+      * - `NOT NULL`, no default
+      */
+      payload: db.JSONValue;
+      /**
+      * **outbox.metadata**
+      * - `jsonb` in database
+      * - Nullable, no default
+      */
+      metadata: db.JSONValue | null;
+      /**
+      * **outbox.locked_until**
+      * - `timestamptz` in database
+      * - `NOT NULL`, default: `to_timestamp((0)::double precision)`
+      */
+      locked_until: Date;
+      /**
+      * **outbox.created_at**
+      * - `timestamptz` in database
+      * - `NOT NULL`, default: `clock_timestamp()`
+      */
+      created_at: Date;
+      /**
+      * **outbox.processed_at**
+      * - `timestamptz` in database
+      * - Nullable, no default
+      */
+      processed_at: Date | null;
+      /**
+      * **outbox.abandoned_at**
+      * - `timestamptz` in database
+      * - Nullable, no default
+      */
+      abandoned_at: Date | null;
+      /**
+      * **outbox.started_attempts**
+      * - `int2` in database
+      * - `NOT NULL`, default: `0`
+      */
+      started_attempts: number;
+      /**
+      * **outbox.finished_attempts**
+      * - `int2` in database
+      * - `NOT NULL`, default: `0`
+      */
+      finished_attempts: number;
+    }
+    export interface JSONSelectable {
+      /**
+      * **outbox.id**
+      * - `uuid` in database
+      * - `NOT NULL`, no default
+      */
+      id: string;
+      /**
+      * **outbox.aggregate_type**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
+      aggregate_type: string;
+      /**
+      * **outbox.aggregate_id**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
+      aggregate_id: string;
+      /**
+      * **outbox.message_type**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
+      message_type: string;
+      /**
+      * **outbox.segment**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      segment: string | null;
+      /**
+      * **outbox.concurrency**
+      * - `text` in database
+      * - `NOT NULL`, default: `'sequential'::text`
+      */
+      concurrency: string;
+      /**
+      * **outbox.payload**
+      * - `jsonb` in database
+      * - `NOT NULL`, no default
+      */
+      payload: db.JSONValue;
+      /**
+      * **outbox.metadata**
+      * - `jsonb` in database
+      * - Nullable, no default
+      */
+      metadata: db.JSONValue | null;
+      /**
+      * **outbox.locked_until**
+      * - `timestamptz` in database
+      * - `NOT NULL`, default: `to_timestamp((0)::double precision)`
+      */
+      locked_until: db.DateString;
+      /**
+      * **outbox.created_at**
+      * - `timestamptz` in database
+      * - `NOT NULL`, default: `clock_timestamp()`
+      */
+      created_at: db.DateString;
+      /**
+      * **outbox.processed_at**
+      * - `timestamptz` in database
+      * - Nullable, no default
+      */
+      processed_at: db.DateString | null;
+      /**
+      * **outbox.abandoned_at**
+      * - `timestamptz` in database
+      * - Nullable, no default
+      */
+      abandoned_at: db.DateString | null;
+      /**
+      * **outbox.started_attempts**
+      * - `int2` in database
+      * - `NOT NULL`, default: `0`
+      */
+      started_attempts: number;
+      /**
+      * **outbox.finished_attempts**
+      * - `int2` in database
+      * - `NOT NULL`, default: `0`
+      */
+      finished_attempts: number;
+    }
+    export interface Whereable {
+      /**
+      * **outbox.id**
+      * - `uuid` in database
+      * - `NOT NULL`, no default
+      */
+      id?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
+      /**
+      * **outbox.aggregate_type**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
+      aggregate_type?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
+      /**
+      * **outbox.aggregate_id**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
+      aggregate_id?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
+      /**
+      * **outbox.message_type**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
+      message_type?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
+      /**
+      * **outbox.segment**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      segment?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
+      /**
+      * **outbox.concurrency**
+      * - `text` in database
+      * - `NOT NULL`, default: `'sequential'::text`
+      */
+      concurrency?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
+      /**
+      * **outbox.payload**
+      * - `jsonb` in database
+      * - `NOT NULL`, no default
+      */
+      payload?: db.JSONValue | db.Parameter<db.JSONValue> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, db.JSONValue | db.Parameter<db.JSONValue> | db.SQLFragment | db.ParentColumn>;
+      /**
+      * **outbox.metadata**
+      * - `jsonb` in database
+      * - Nullable, no default
+      */
+      metadata?: db.JSONValue | db.Parameter<db.JSONValue> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, db.JSONValue | db.Parameter<db.JSONValue> | db.SQLFragment | db.ParentColumn>;
+      /**
+      * **outbox.locked_until**
+      * - `timestamptz` in database
+      * - `NOT NULL`, default: `to_timestamp((0)::double precision)`
+      */
+      locked_until?: (Date | db.DateString) | db.Parameter<(Date | db.DateString)> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, (Date | db.DateString) | db.Parameter<(Date | db.DateString)> | db.SQLFragment | db.ParentColumn>;
+      /**
+      * **outbox.created_at**
+      * - `timestamptz` in database
+      * - `NOT NULL`, default: `clock_timestamp()`
+      */
+      created_at?: (Date | db.DateString) | db.Parameter<(Date | db.DateString)> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, (Date | db.DateString) | db.Parameter<(Date | db.DateString)> | db.SQLFragment | db.ParentColumn>;
+      /**
+      * **outbox.processed_at**
+      * - `timestamptz` in database
+      * - Nullable, no default
+      */
+      processed_at?: (Date | db.DateString) | db.Parameter<(Date | db.DateString)> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, (Date | db.DateString) | db.Parameter<(Date | db.DateString)> | db.SQLFragment | db.ParentColumn>;
+      /**
+      * **outbox.abandoned_at**
+      * - `timestamptz` in database
+      * - Nullable, no default
+      */
+      abandoned_at?: (Date | db.DateString) | db.Parameter<(Date | db.DateString)> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, (Date | db.DateString) | db.Parameter<(Date | db.DateString)> | db.SQLFragment | db.ParentColumn>;
+      /**
+      * **outbox.started_attempts**
+      * - `int2` in database
+      * - `NOT NULL`, default: `0`
+      */
+      started_attempts?: number | db.Parameter<number> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, number | db.Parameter<number> | db.SQLFragment | db.ParentColumn>;
+      /**
+      * **outbox.finished_attempts**
+      * - `int2` in database
+      * - `NOT NULL`, default: `0`
+      */
+      finished_attempts?: number | db.Parameter<number> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, number | db.Parameter<number> | db.SQLFragment | db.ParentColumn>;
+    }
+    export interface Insertable {
+      /**
+      * **outbox.id**
+      * - `uuid` in database
+      * - `NOT NULL`, no default
+      */
+      id: string | db.Parameter<string> | db.SQLFragment;
+      /**
+      * **outbox.aggregate_type**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
+      aggregate_type: string | db.Parameter<string> | db.SQLFragment;
+      /**
+      * **outbox.aggregate_id**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
+      aggregate_id: string | db.Parameter<string> | db.SQLFragment;
+      /**
+      * **outbox.message_type**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
+      message_type: string | db.Parameter<string> | db.SQLFragment;
+      /**
+      * **outbox.segment**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      segment?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
+      /**
+      * **outbox.concurrency**
+      * - `text` in database
+      * - `NOT NULL`, default: `'sequential'::text`
+      */
+      concurrency?: string | db.Parameter<string> | db.DefaultType | db.SQLFragment;
+      /**
+      * **outbox.payload**
+      * - `jsonb` in database
+      * - `NOT NULL`, no default
+      */
+      payload: db.JSONValue | db.Parameter<db.JSONValue> | db.SQLFragment;
+      /**
+      * **outbox.metadata**
+      * - `jsonb` in database
+      * - Nullable, no default
+      */
+      metadata?: db.JSONValue | db.Parameter<db.JSONValue> | null | db.DefaultType | db.SQLFragment;
+      /**
+      * **outbox.locked_until**
+      * - `timestamptz` in database
+      * - `NOT NULL`, default: `to_timestamp((0)::double precision)`
+      */
+      locked_until?: (Date | db.DateString) | db.Parameter<(Date | db.DateString)> | db.DefaultType | db.SQLFragment;
+      /**
+      * **outbox.created_at**
+      * - `timestamptz` in database
+      * - `NOT NULL`, default: `clock_timestamp()`
+      */
+      created_at?: (Date | db.DateString) | db.Parameter<(Date | db.DateString)> | db.DefaultType | db.SQLFragment;
+      /**
+      * **outbox.processed_at**
+      * - `timestamptz` in database
+      * - Nullable, no default
+      */
+      processed_at?: (Date | db.DateString) | db.Parameter<(Date | db.DateString)> | null | db.DefaultType | db.SQLFragment;
+      /**
+      * **outbox.abandoned_at**
+      * - `timestamptz` in database
+      * - Nullable, no default
+      */
+      abandoned_at?: (Date | db.DateString) | db.Parameter<(Date | db.DateString)> | null | db.DefaultType | db.SQLFragment;
+      /**
+      * **outbox.started_attempts**
+      * - `int2` in database
+      * - `NOT NULL`, default: `0`
+      */
+      started_attempts?: number | db.Parameter<number> | db.DefaultType | db.SQLFragment;
+      /**
+      * **outbox.finished_attempts**
+      * - `int2` in database
+      * - `NOT NULL`, default: `0`
+      */
+      finished_attempts?: number | db.Parameter<number> | db.DefaultType | db.SQLFragment;
+    }
+    export interface Updatable {
+      /**
+      * **outbox.id**
+      * - `uuid` in database
+      * - `NOT NULL`, no default
+      */
+      id?: string | db.Parameter<string> | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment>;
+      /**
+      * **outbox.aggregate_type**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
+      aggregate_type?: string | db.Parameter<string> | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment>;
+      /**
+      * **outbox.aggregate_id**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
+      aggregate_id?: string | db.Parameter<string> | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment>;
+      /**
+      * **outbox.message_type**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
+      message_type?: string | db.Parameter<string> | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment>;
+      /**
+      * **outbox.segment**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      segment?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
+      /**
+      * **outbox.concurrency**
+      * - `text` in database
+      * - `NOT NULL`, default: `'sequential'::text`
+      */
+      concurrency?: string | db.Parameter<string> | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | db.DefaultType | db.SQLFragment>;
+      /**
+      * **outbox.payload**
+      * - `jsonb` in database
+      * - `NOT NULL`, no default
+      */
+      payload?: db.JSONValue | db.Parameter<db.JSONValue> | db.SQLFragment | db.SQLFragment<any, db.JSONValue | db.Parameter<db.JSONValue> | db.SQLFragment>;
+      /**
+      * **outbox.metadata**
+      * - `jsonb` in database
+      * - Nullable, no default
+      */
+      metadata?: db.JSONValue | db.Parameter<db.JSONValue> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, db.JSONValue | db.Parameter<db.JSONValue> | null | db.DefaultType | db.SQLFragment>;
+      /**
+      * **outbox.locked_until**
+      * - `timestamptz` in database
+      * - `NOT NULL`, default: `to_timestamp((0)::double precision)`
+      */
+      locked_until?: (Date | db.DateString) | db.Parameter<(Date | db.DateString)> | db.DefaultType | db.SQLFragment | db.SQLFragment<any, (Date | db.DateString) | db.Parameter<(Date | db.DateString)> | db.DefaultType | db.SQLFragment>;
+      /**
+      * **outbox.created_at**
+      * - `timestamptz` in database
+      * - `NOT NULL`, default: `clock_timestamp()`
+      */
+      created_at?: (Date | db.DateString) | db.Parameter<(Date | db.DateString)> | db.DefaultType | db.SQLFragment | db.SQLFragment<any, (Date | db.DateString) | db.Parameter<(Date | db.DateString)> | db.DefaultType | db.SQLFragment>;
+      /**
+      * **outbox.processed_at**
+      * - `timestamptz` in database
+      * - Nullable, no default
+      */
+      processed_at?: (Date | db.DateString) | db.Parameter<(Date | db.DateString)> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, (Date | db.DateString) | db.Parameter<(Date | db.DateString)> | null | db.DefaultType | db.SQLFragment>;
+      /**
+      * **outbox.abandoned_at**
+      * - `timestamptz` in database
+      * - Nullable, no default
+      */
+      abandoned_at?: (Date | db.DateString) | db.Parameter<(Date | db.DateString)> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, (Date | db.DateString) | db.Parameter<(Date | db.DateString)> | null | db.DefaultType | db.SQLFragment>;
+      /**
+      * **outbox.started_attempts**
+      * - `int2` in database
+      * - `NOT NULL`, default: `0`
+      */
+      started_attempts?: number | db.Parameter<number> | db.DefaultType | db.SQLFragment | db.SQLFragment<any, number | db.Parameter<number> | db.DefaultType | db.SQLFragment>;
+      /**
+      * **outbox.finished_attempts**
+      * - `int2` in database
+      * - `NOT NULL`, default: `0`
+      */
+      finished_attempts?: number | db.Parameter<number> | db.DefaultType | db.SQLFragment | db.SQLFragment<any, number | db.Parameter<number> | db.DefaultType | db.SQLFragment>;
+    }
+    export type UniqueIndex = 'outbox_pkey';
+    export type Column = keyof Selectable;
+    export type OnlyCols<T extends readonly Column[]> = Pick<Selectable, T[number]>;
+    export type SQLExpression = db.GenericSQLExpression | db.ColumnNames<Updatable | (keyof Updatable)[]> | db.ColumnValues<Updatable> | Table | Whereable | Column;
+    export type SQL = SQLExpression | SQLExpression[];
+  }
 
 
   /* === schema: app_private === */
@@ -18760,15 +19198,15 @@ declare module 'zapatos/schema' {
 
   /* === cross-table types === */
 
-  export type Table = channel.Table | channel_images.Table | collection.Table | collection_images.Table | collection_images_view.Table | collection_items_relation.Table | collection_localizations.Table | collection_view.Table | episode.Table | episode_genres_relation.Table | episode_images.Table | episode_images_view.Table | episode_licenses.Table | episode_localizations.Table | episode_video_cue_points.Table | episode_video_streams.Table | episode_videos.Table | episode_videos_view.Table | episode_view.Table | locales.Table | messaging_counter.Table | movie.Table | movie_genre.Table | movie_genre_localizations.Table | movie_genre_view.Table | movie_genres_relation.Table | movie_images.Table | movie_images_view.Table | movie_licenses.Table | movie_localizations.Table | movie_video_cue_points.Table | movie_video_streams.Table | movie_videos.Table | movie_videos_view.Table | movie_view.Table | season.Table | season_genres_relation.Table | season_images.Table | season_images_view.Table | season_licenses.Table | season_localizations.Table | season_video_cue_points.Table | season_video_streams.Table | season_videos.Table | season_view.Table | tvshow.Table | tvshow_genre.Table | tvshow_genre_localizations.Table | tvshow_genre_view.Table | tvshow_genres_relation.Table | tvshow_images.Table | tvshow_images_view.Table | tvshow_licenses.Table | tvshow_localizations.Table | tvshow_video_cue_points.Table | tvshow_video_streams.Table | tvshow_videos.Table | tvshow_view.Table | video_stream_type.Table;
-  export type Selectable = channel.Selectable | channel_images.Selectable | collection.Selectable | collection_images.Selectable | collection_images_view.Selectable | collection_items_relation.Selectable | collection_localizations.Selectable | collection_view.Selectable | episode.Selectable | episode_genres_relation.Selectable | episode_images.Selectable | episode_images_view.Selectable | episode_licenses.Selectable | episode_localizations.Selectable | episode_video_cue_points.Selectable | episode_video_streams.Selectable | episode_videos.Selectable | episode_videos_view.Selectable | episode_view.Selectable | locales.Selectable | messaging_counter.Selectable | movie.Selectable | movie_genre.Selectable | movie_genre_localizations.Selectable | movie_genre_view.Selectable | movie_genres_relation.Selectable | movie_images.Selectable | movie_images_view.Selectable | movie_licenses.Selectable | movie_localizations.Selectable | movie_video_cue_points.Selectable | movie_video_streams.Selectable | movie_videos.Selectable | movie_videos_view.Selectable | movie_view.Selectable | season.Selectable | season_genres_relation.Selectable | season_images.Selectable | season_images_view.Selectable | season_licenses.Selectable | season_localizations.Selectable | season_video_cue_points.Selectable | season_video_streams.Selectable | season_videos.Selectable | season_view.Selectable | tvshow.Selectable | tvshow_genre.Selectable | tvshow_genre_localizations.Selectable | tvshow_genre_view.Selectable | tvshow_genres_relation.Selectable | tvshow_images.Selectable | tvshow_images_view.Selectable | tvshow_licenses.Selectable | tvshow_localizations.Selectable | tvshow_video_cue_points.Selectable | tvshow_video_streams.Selectable | tvshow_videos.Selectable | tvshow_view.Selectable | video_stream_type.Selectable;
-  export type JSONSelectable = channel.JSONSelectable | channel_images.JSONSelectable | collection.JSONSelectable | collection_images.JSONSelectable | collection_images_view.JSONSelectable | collection_items_relation.JSONSelectable | collection_localizations.JSONSelectable | collection_view.JSONSelectable | episode.JSONSelectable | episode_genres_relation.JSONSelectable | episode_images.JSONSelectable | episode_images_view.JSONSelectable | episode_licenses.JSONSelectable | episode_localizations.JSONSelectable | episode_video_cue_points.JSONSelectable | episode_video_streams.JSONSelectable | episode_videos.JSONSelectable | episode_videos_view.JSONSelectable | episode_view.JSONSelectable | locales.JSONSelectable | messaging_counter.JSONSelectable | movie.JSONSelectable | movie_genre.JSONSelectable | movie_genre_localizations.JSONSelectable | movie_genre_view.JSONSelectable | movie_genres_relation.JSONSelectable | movie_images.JSONSelectable | movie_images_view.JSONSelectable | movie_licenses.JSONSelectable | movie_localizations.JSONSelectable | movie_video_cue_points.JSONSelectable | movie_video_streams.JSONSelectable | movie_videos.JSONSelectable | movie_videos_view.JSONSelectable | movie_view.JSONSelectable | season.JSONSelectable | season_genres_relation.JSONSelectable | season_images.JSONSelectable | season_images_view.JSONSelectable | season_licenses.JSONSelectable | season_localizations.JSONSelectable | season_video_cue_points.JSONSelectable | season_video_streams.JSONSelectable | season_videos.JSONSelectable | season_view.JSONSelectable | tvshow.JSONSelectable | tvshow_genre.JSONSelectable | tvshow_genre_localizations.JSONSelectable | tvshow_genre_view.JSONSelectable | tvshow_genres_relation.JSONSelectable | tvshow_images.JSONSelectable | tvshow_images_view.JSONSelectable | tvshow_licenses.JSONSelectable | tvshow_localizations.JSONSelectable | tvshow_video_cue_points.JSONSelectable | tvshow_video_streams.JSONSelectable | tvshow_videos.JSONSelectable | tvshow_view.JSONSelectable | video_stream_type.JSONSelectable;
-  export type Whereable = channel.Whereable | channel_images.Whereable | collection.Whereable | collection_images.Whereable | collection_images_view.Whereable | collection_items_relation.Whereable | collection_localizations.Whereable | collection_view.Whereable | episode.Whereable | episode_genres_relation.Whereable | episode_images.Whereable | episode_images_view.Whereable | episode_licenses.Whereable | episode_localizations.Whereable | episode_video_cue_points.Whereable | episode_video_streams.Whereable | episode_videos.Whereable | episode_videos_view.Whereable | episode_view.Whereable | locales.Whereable | messaging_counter.Whereable | movie.Whereable | movie_genre.Whereable | movie_genre_localizations.Whereable | movie_genre_view.Whereable | movie_genres_relation.Whereable | movie_images.Whereable | movie_images_view.Whereable | movie_licenses.Whereable | movie_localizations.Whereable | movie_video_cue_points.Whereable | movie_video_streams.Whereable | movie_videos.Whereable | movie_videos_view.Whereable | movie_view.Whereable | season.Whereable | season_genres_relation.Whereable | season_images.Whereable | season_images_view.Whereable | season_licenses.Whereable | season_localizations.Whereable | season_video_cue_points.Whereable | season_video_streams.Whereable | season_videos.Whereable | season_view.Whereable | tvshow.Whereable | tvshow_genre.Whereable | tvshow_genre_localizations.Whereable | tvshow_genre_view.Whereable | tvshow_genres_relation.Whereable | tvshow_images.Whereable | tvshow_images_view.Whereable | tvshow_licenses.Whereable | tvshow_localizations.Whereable | tvshow_video_cue_points.Whereable | tvshow_video_streams.Whereable | tvshow_videos.Whereable | tvshow_view.Whereable | video_stream_type.Whereable;
-  export type Insertable = channel.Insertable | channel_images.Insertable | collection.Insertable | collection_images.Insertable | collection_images_view.Insertable | collection_items_relation.Insertable | collection_localizations.Insertable | collection_view.Insertable | episode.Insertable | episode_genres_relation.Insertable | episode_images.Insertable | episode_images_view.Insertable | episode_licenses.Insertable | episode_localizations.Insertable | episode_video_cue_points.Insertable | episode_video_streams.Insertable | episode_videos.Insertable | episode_videos_view.Insertable | episode_view.Insertable | locales.Insertable | messaging_counter.Insertable | movie.Insertable | movie_genre.Insertable | movie_genre_localizations.Insertable | movie_genre_view.Insertable | movie_genres_relation.Insertable | movie_images.Insertable | movie_images_view.Insertable | movie_licenses.Insertable | movie_localizations.Insertable | movie_video_cue_points.Insertable | movie_video_streams.Insertable | movie_videos.Insertable | movie_videos_view.Insertable | movie_view.Insertable | season.Insertable | season_genres_relation.Insertable | season_images.Insertable | season_images_view.Insertable | season_licenses.Insertable | season_localizations.Insertable | season_video_cue_points.Insertable | season_video_streams.Insertable | season_videos.Insertable | season_view.Insertable | tvshow.Insertable | tvshow_genre.Insertable | tvshow_genre_localizations.Insertable | tvshow_genre_view.Insertable | tvshow_genres_relation.Insertable | tvshow_images.Insertable | tvshow_images_view.Insertable | tvshow_licenses.Insertable | tvshow_localizations.Insertable | tvshow_video_cue_points.Insertable | tvshow_video_streams.Insertable | tvshow_videos.Insertable | tvshow_view.Insertable | video_stream_type.Insertable;
-  export type Updatable = channel.Updatable | channel_images.Updatable | collection.Updatable | collection_images.Updatable | collection_images_view.Updatable | collection_items_relation.Updatable | collection_localizations.Updatable | collection_view.Updatable | episode.Updatable | episode_genres_relation.Updatable | episode_images.Updatable | episode_images_view.Updatable | episode_licenses.Updatable | episode_localizations.Updatable | episode_video_cue_points.Updatable | episode_video_streams.Updatable | episode_videos.Updatable | episode_videos_view.Updatable | episode_view.Updatable | locales.Updatable | messaging_counter.Updatable | movie.Updatable | movie_genre.Updatable | movie_genre_localizations.Updatable | movie_genre_view.Updatable | movie_genres_relation.Updatable | movie_images.Updatable | movie_images_view.Updatable | movie_licenses.Updatable | movie_localizations.Updatable | movie_video_cue_points.Updatable | movie_video_streams.Updatable | movie_videos.Updatable | movie_videos_view.Updatable | movie_view.Updatable | season.Updatable | season_genres_relation.Updatable | season_images.Updatable | season_images_view.Updatable | season_licenses.Updatable | season_localizations.Updatable | season_video_cue_points.Updatable | season_video_streams.Updatable | season_videos.Updatable | season_view.Updatable | tvshow.Updatable | tvshow_genre.Updatable | tvshow_genre_localizations.Updatable | tvshow_genre_view.Updatable | tvshow_genres_relation.Updatable | tvshow_images.Updatable | tvshow_images_view.Updatable | tvshow_licenses.Updatable | tvshow_localizations.Updatable | tvshow_video_cue_points.Updatable | tvshow_video_streams.Updatable | tvshow_videos.Updatable | tvshow_view.Updatable | video_stream_type.Updatable;
-  export type UniqueIndex = channel.UniqueIndex | channel_images.UniqueIndex | collection.UniqueIndex | collection_images.UniqueIndex | collection_images_view.UniqueIndex | collection_items_relation.UniqueIndex | collection_localizations.UniqueIndex | collection_view.UniqueIndex | episode.UniqueIndex | episode_genres_relation.UniqueIndex | episode_images.UniqueIndex | episode_images_view.UniqueIndex | episode_licenses.UniqueIndex | episode_localizations.UniqueIndex | episode_video_cue_points.UniqueIndex | episode_video_streams.UniqueIndex | episode_videos.UniqueIndex | episode_videos_view.UniqueIndex | episode_view.UniqueIndex | locales.UniqueIndex | messaging_counter.UniqueIndex | movie.UniqueIndex | movie_genre.UniqueIndex | movie_genre_localizations.UniqueIndex | movie_genre_view.UniqueIndex | movie_genres_relation.UniqueIndex | movie_images.UniqueIndex | movie_images_view.UniqueIndex | movie_licenses.UniqueIndex | movie_localizations.UniqueIndex | movie_video_cue_points.UniqueIndex | movie_video_streams.UniqueIndex | movie_videos.UniqueIndex | movie_videos_view.UniqueIndex | movie_view.UniqueIndex | season.UniqueIndex | season_genres_relation.UniqueIndex | season_images.UniqueIndex | season_images_view.UniqueIndex | season_licenses.UniqueIndex | season_localizations.UniqueIndex | season_video_cue_points.UniqueIndex | season_video_streams.UniqueIndex | season_videos.UniqueIndex | season_view.UniqueIndex | tvshow.UniqueIndex | tvshow_genre.UniqueIndex | tvshow_genre_localizations.UniqueIndex | tvshow_genre_view.UniqueIndex | tvshow_genres_relation.UniqueIndex | tvshow_images.UniqueIndex | tvshow_images_view.UniqueIndex | tvshow_licenses.UniqueIndex | tvshow_localizations.UniqueIndex | tvshow_video_cue_points.UniqueIndex | tvshow_video_streams.UniqueIndex | tvshow_videos.UniqueIndex | tvshow_view.UniqueIndex | video_stream_type.UniqueIndex;
-  export type Column = channel.Column | channel_images.Column | collection.Column | collection_images.Column | collection_images_view.Column | collection_items_relation.Column | collection_localizations.Column | collection_view.Column | episode.Column | episode_genres_relation.Column | episode_images.Column | episode_images_view.Column | episode_licenses.Column | episode_localizations.Column | episode_video_cue_points.Column | episode_video_streams.Column | episode_videos.Column | episode_videos_view.Column | episode_view.Column | locales.Column | messaging_counter.Column | movie.Column | movie_genre.Column | movie_genre_localizations.Column | movie_genre_view.Column | movie_genres_relation.Column | movie_images.Column | movie_images_view.Column | movie_licenses.Column | movie_localizations.Column | movie_video_cue_points.Column | movie_video_streams.Column | movie_videos.Column | movie_videos_view.Column | movie_view.Column | season.Column | season_genres_relation.Column | season_images.Column | season_images_view.Column | season_licenses.Column | season_localizations.Column | season_video_cue_points.Column | season_video_streams.Column | season_videos.Column | season_view.Column | tvshow.Column | tvshow_genre.Column | tvshow_genre_localizations.Column | tvshow_genre_view.Column | tvshow_genres_relation.Column | tvshow_images.Column | tvshow_images_view.Column | tvshow_licenses.Column | tvshow_localizations.Column | tvshow_video_cue_points.Column | tvshow_video_streams.Column | tvshow_videos.Column | tvshow_view.Column | video_stream_type.Column;
-  export type AllTables = [channel.Table, channel_images.Table, collection.Table, collection_images.Table, collection_images_view.Table, collection_items_relation.Table, collection_localizations.Table, collection_view.Table, episode.Table, episode_genres_relation.Table, episode_images.Table, episode_images_view.Table, episode_licenses.Table, episode_localizations.Table, episode_video_cue_points.Table, episode_video_streams.Table, episode_videos.Table, episode_videos_view.Table, episode_view.Table, locales.Table, messaging_counter.Table, movie.Table, movie_genre.Table, movie_genre_localizations.Table, movie_genre_view.Table, movie_genres_relation.Table, movie_images.Table, movie_images_view.Table, movie_licenses.Table, movie_localizations.Table, movie_video_cue_points.Table, movie_video_streams.Table, movie_videos.Table, movie_videos_view.Table, movie_view.Table, season.Table, season_genres_relation.Table, season_images.Table, season_images_view.Table, season_licenses.Table, season_localizations.Table, season_video_cue_points.Table, season_video_streams.Table, season_videos.Table, season_view.Table, tvshow.Table, tvshow_genre.Table, tvshow_genre_localizations.Table, tvshow_genre_view.Table, tvshow_genres_relation.Table, tvshow_images.Table, tvshow_images_view.Table, tvshow_licenses.Table, tvshow_localizations.Table, tvshow_video_cue_points.Table, tvshow_video_streams.Table, tvshow_videos.Table, tvshow_view.Table, video_stream_type.Table];
+  export type Table = channel.Table | channel_images.Table | collection.Table | collection_images.Table | collection_images_view.Table | collection_items_relation.Table | collection_localizations.Table | collection_view.Table | episode.Table | episode_genres_relation.Table | episode_images.Table | episode_images_view.Table | episode_licenses.Table | episode_localizations.Table | episode_video_cue_points.Table | episode_video_streams.Table | episode_videos.Table | episode_videos_view.Table | episode_view.Table | locales.Table | messaging_counter.Table | movie.Table | movie_genre.Table | movie_genre_localizations.Table | movie_genre_view.Table | movie_genres_relation.Table | movie_images.Table | movie_images_view.Table | movie_licenses.Table | movie_localizations.Table | movie_video_cue_points.Table | movie_video_streams.Table | movie_videos.Table | movie_videos_view.Table | movie_view.Table | outbox.Table | season.Table | season_genres_relation.Table | season_images.Table | season_images_view.Table | season_licenses.Table | season_localizations.Table | season_video_cue_points.Table | season_video_streams.Table | season_videos.Table | season_view.Table | tvshow.Table | tvshow_genre.Table | tvshow_genre_localizations.Table | tvshow_genre_view.Table | tvshow_genres_relation.Table | tvshow_images.Table | tvshow_images_view.Table | tvshow_licenses.Table | tvshow_localizations.Table | tvshow_video_cue_points.Table | tvshow_video_streams.Table | tvshow_videos.Table | tvshow_view.Table | video_stream_type.Table;
+  export type Selectable = channel.Selectable | channel_images.Selectable | collection.Selectable | collection_images.Selectable | collection_images_view.Selectable | collection_items_relation.Selectable | collection_localizations.Selectable | collection_view.Selectable | episode.Selectable | episode_genres_relation.Selectable | episode_images.Selectable | episode_images_view.Selectable | episode_licenses.Selectable | episode_localizations.Selectable | episode_video_cue_points.Selectable | episode_video_streams.Selectable | episode_videos.Selectable | episode_videos_view.Selectable | episode_view.Selectable | locales.Selectable | messaging_counter.Selectable | movie.Selectable | movie_genre.Selectable | movie_genre_localizations.Selectable | movie_genre_view.Selectable | movie_genres_relation.Selectable | movie_images.Selectable | movie_images_view.Selectable | movie_licenses.Selectable | movie_localizations.Selectable | movie_video_cue_points.Selectable | movie_video_streams.Selectable | movie_videos.Selectable | movie_videos_view.Selectable | movie_view.Selectable | outbox.Selectable | season.Selectable | season_genres_relation.Selectable | season_images.Selectable | season_images_view.Selectable | season_licenses.Selectable | season_localizations.Selectable | season_video_cue_points.Selectable | season_video_streams.Selectable | season_videos.Selectable | season_view.Selectable | tvshow.Selectable | tvshow_genre.Selectable | tvshow_genre_localizations.Selectable | tvshow_genre_view.Selectable | tvshow_genres_relation.Selectable | tvshow_images.Selectable | tvshow_images_view.Selectable | tvshow_licenses.Selectable | tvshow_localizations.Selectable | tvshow_video_cue_points.Selectable | tvshow_video_streams.Selectable | tvshow_videos.Selectable | tvshow_view.Selectable | video_stream_type.Selectable;
+  export type JSONSelectable = channel.JSONSelectable | channel_images.JSONSelectable | collection.JSONSelectable | collection_images.JSONSelectable | collection_images_view.JSONSelectable | collection_items_relation.JSONSelectable | collection_localizations.JSONSelectable | collection_view.JSONSelectable | episode.JSONSelectable | episode_genres_relation.JSONSelectable | episode_images.JSONSelectable | episode_images_view.JSONSelectable | episode_licenses.JSONSelectable | episode_localizations.JSONSelectable | episode_video_cue_points.JSONSelectable | episode_video_streams.JSONSelectable | episode_videos.JSONSelectable | episode_videos_view.JSONSelectable | episode_view.JSONSelectable | locales.JSONSelectable | messaging_counter.JSONSelectable | movie.JSONSelectable | movie_genre.JSONSelectable | movie_genre_localizations.JSONSelectable | movie_genre_view.JSONSelectable | movie_genres_relation.JSONSelectable | movie_images.JSONSelectable | movie_images_view.JSONSelectable | movie_licenses.JSONSelectable | movie_localizations.JSONSelectable | movie_video_cue_points.JSONSelectable | movie_video_streams.JSONSelectable | movie_videos.JSONSelectable | movie_videos_view.JSONSelectable | movie_view.JSONSelectable | outbox.JSONSelectable | season.JSONSelectable | season_genres_relation.JSONSelectable | season_images.JSONSelectable | season_images_view.JSONSelectable | season_licenses.JSONSelectable | season_localizations.JSONSelectable | season_video_cue_points.JSONSelectable | season_video_streams.JSONSelectable | season_videos.JSONSelectable | season_view.JSONSelectable | tvshow.JSONSelectable | tvshow_genre.JSONSelectable | tvshow_genre_localizations.JSONSelectable | tvshow_genre_view.JSONSelectable | tvshow_genres_relation.JSONSelectable | tvshow_images.JSONSelectable | tvshow_images_view.JSONSelectable | tvshow_licenses.JSONSelectable | tvshow_localizations.JSONSelectable | tvshow_video_cue_points.JSONSelectable | tvshow_video_streams.JSONSelectable | tvshow_videos.JSONSelectable | tvshow_view.JSONSelectable | video_stream_type.JSONSelectable;
+  export type Whereable = channel.Whereable | channel_images.Whereable | collection.Whereable | collection_images.Whereable | collection_images_view.Whereable | collection_items_relation.Whereable | collection_localizations.Whereable | collection_view.Whereable | episode.Whereable | episode_genres_relation.Whereable | episode_images.Whereable | episode_images_view.Whereable | episode_licenses.Whereable | episode_localizations.Whereable | episode_video_cue_points.Whereable | episode_video_streams.Whereable | episode_videos.Whereable | episode_videos_view.Whereable | episode_view.Whereable | locales.Whereable | messaging_counter.Whereable | movie.Whereable | movie_genre.Whereable | movie_genre_localizations.Whereable | movie_genre_view.Whereable | movie_genres_relation.Whereable | movie_images.Whereable | movie_images_view.Whereable | movie_licenses.Whereable | movie_localizations.Whereable | movie_video_cue_points.Whereable | movie_video_streams.Whereable | movie_videos.Whereable | movie_videos_view.Whereable | movie_view.Whereable | outbox.Whereable | season.Whereable | season_genres_relation.Whereable | season_images.Whereable | season_images_view.Whereable | season_licenses.Whereable | season_localizations.Whereable | season_video_cue_points.Whereable | season_video_streams.Whereable | season_videos.Whereable | season_view.Whereable | tvshow.Whereable | tvshow_genre.Whereable | tvshow_genre_localizations.Whereable | tvshow_genre_view.Whereable | tvshow_genres_relation.Whereable | tvshow_images.Whereable | tvshow_images_view.Whereable | tvshow_licenses.Whereable | tvshow_localizations.Whereable | tvshow_video_cue_points.Whereable | tvshow_video_streams.Whereable | tvshow_videos.Whereable | tvshow_view.Whereable | video_stream_type.Whereable;
+  export type Insertable = channel.Insertable | channel_images.Insertable | collection.Insertable | collection_images.Insertable | collection_images_view.Insertable | collection_items_relation.Insertable | collection_localizations.Insertable | collection_view.Insertable | episode.Insertable | episode_genres_relation.Insertable | episode_images.Insertable | episode_images_view.Insertable | episode_licenses.Insertable | episode_localizations.Insertable | episode_video_cue_points.Insertable | episode_video_streams.Insertable | episode_videos.Insertable | episode_videos_view.Insertable | episode_view.Insertable | locales.Insertable | messaging_counter.Insertable | movie.Insertable | movie_genre.Insertable | movie_genre_localizations.Insertable | movie_genre_view.Insertable | movie_genres_relation.Insertable | movie_images.Insertable | movie_images_view.Insertable | movie_licenses.Insertable | movie_localizations.Insertable | movie_video_cue_points.Insertable | movie_video_streams.Insertable | movie_videos.Insertable | movie_videos_view.Insertable | movie_view.Insertable | outbox.Insertable | season.Insertable | season_genres_relation.Insertable | season_images.Insertable | season_images_view.Insertable | season_licenses.Insertable | season_localizations.Insertable | season_video_cue_points.Insertable | season_video_streams.Insertable | season_videos.Insertable | season_view.Insertable | tvshow.Insertable | tvshow_genre.Insertable | tvshow_genre_localizations.Insertable | tvshow_genre_view.Insertable | tvshow_genres_relation.Insertable | tvshow_images.Insertable | tvshow_images_view.Insertable | tvshow_licenses.Insertable | tvshow_localizations.Insertable | tvshow_video_cue_points.Insertable | tvshow_video_streams.Insertable | tvshow_videos.Insertable | tvshow_view.Insertable | video_stream_type.Insertable;
+  export type Updatable = channel.Updatable | channel_images.Updatable | collection.Updatable | collection_images.Updatable | collection_images_view.Updatable | collection_items_relation.Updatable | collection_localizations.Updatable | collection_view.Updatable | episode.Updatable | episode_genres_relation.Updatable | episode_images.Updatable | episode_images_view.Updatable | episode_licenses.Updatable | episode_localizations.Updatable | episode_video_cue_points.Updatable | episode_video_streams.Updatable | episode_videos.Updatable | episode_videos_view.Updatable | episode_view.Updatable | locales.Updatable | messaging_counter.Updatable | movie.Updatable | movie_genre.Updatable | movie_genre_localizations.Updatable | movie_genre_view.Updatable | movie_genres_relation.Updatable | movie_images.Updatable | movie_images_view.Updatable | movie_licenses.Updatable | movie_localizations.Updatable | movie_video_cue_points.Updatable | movie_video_streams.Updatable | movie_videos.Updatable | movie_videos_view.Updatable | movie_view.Updatable | outbox.Updatable | season.Updatable | season_genres_relation.Updatable | season_images.Updatable | season_images_view.Updatable | season_licenses.Updatable | season_localizations.Updatable | season_video_cue_points.Updatable | season_video_streams.Updatable | season_videos.Updatable | season_view.Updatable | tvshow.Updatable | tvshow_genre.Updatable | tvshow_genre_localizations.Updatable | tvshow_genre_view.Updatable | tvshow_genres_relation.Updatable | tvshow_images.Updatable | tvshow_images_view.Updatable | tvshow_licenses.Updatable | tvshow_localizations.Updatable | tvshow_video_cue_points.Updatable | tvshow_video_streams.Updatable | tvshow_videos.Updatable | tvshow_view.Updatable | video_stream_type.Updatable;
+  export type UniqueIndex = channel.UniqueIndex | channel_images.UniqueIndex | collection.UniqueIndex | collection_images.UniqueIndex | collection_images_view.UniqueIndex | collection_items_relation.UniqueIndex | collection_localizations.UniqueIndex | collection_view.UniqueIndex | episode.UniqueIndex | episode_genres_relation.UniqueIndex | episode_images.UniqueIndex | episode_images_view.UniqueIndex | episode_licenses.UniqueIndex | episode_localizations.UniqueIndex | episode_video_cue_points.UniqueIndex | episode_video_streams.UniqueIndex | episode_videos.UniqueIndex | episode_videos_view.UniqueIndex | episode_view.UniqueIndex | locales.UniqueIndex | messaging_counter.UniqueIndex | movie.UniqueIndex | movie_genre.UniqueIndex | movie_genre_localizations.UniqueIndex | movie_genre_view.UniqueIndex | movie_genres_relation.UniqueIndex | movie_images.UniqueIndex | movie_images_view.UniqueIndex | movie_licenses.UniqueIndex | movie_localizations.UniqueIndex | movie_video_cue_points.UniqueIndex | movie_video_streams.UniqueIndex | movie_videos.UniqueIndex | movie_videos_view.UniqueIndex | movie_view.UniqueIndex | outbox.UniqueIndex | season.UniqueIndex | season_genres_relation.UniqueIndex | season_images.UniqueIndex | season_images_view.UniqueIndex | season_licenses.UniqueIndex | season_localizations.UniqueIndex | season_video_cue_points.UniqueIndex | season_video_streams.UniqueIndex | season_videos.UniqueIndex | season_view.UniqueIndex | tvshow.UniqueIndex | tvshow_genre.UniqueIndex | tvshow_genre_localizations.UniqueIndex | tvshow_genre_view.UniqueIndex | tvshow_genres_relation.UniqueIndex | tvshow_images.UniqueIndex | tvshow_images_view.UniqueIndex | tvshow_licenses.UniqueIndex | tvshow_localizations.UniqueIndex | tvshow_video_cue_points.UniqueIndex | tvshow_video_streams.UniqueIndex | tvshow_videos.UniqueIndex | tvshow_view.UniqueIndex | video_stream_type.UniqueIndex;
+  export type Column = channel.Column | channel_images.Column | collection.Column | collection_images.Column | collection_images_view.Column | collection_items_relation.Column | collection_localizations.Column | collection_view.Column | episode.Column | episode_genres_relation.Column | episode_images.Column | episode_images_view.Column | episode_licenses.Column | episode_localizations.Column | episode_video_cue_points.Column | episode_video_streams.Column | episode_videos.Column | episode_videos_view.Column | episode_view.Column | locales.Column | messaging_counter.Column | movie.Column | movie_genre.Column | movie_genre_localizations.Column | movie_genre_view.Column | movie_genres_relation.Column | movie_images.Column | movie_images_view.Column | movie_licenses.Column | movie_localizations.Column | movie_video_cue_points.Column | movie_video_streams.Column | movie_videos.Column | movie_videos_view.Column | movie_view.Column | outbox.Column | season.Column | season_genres_relation.Column | season_images.Column | season_images_view.Column | season_licenses.Column | season_localizations.Column | season_video_cue_points.Column | season_video_streams.Column | season_videos.Column | season_view.Column | tvshow.Column | tvshow_genre.Column | tvshow_genre_localizations.Column | tvshow_genre_view.Column | tvshow_genres_relation.Column | tvshow_images.Column | tvshow_images_view.Column | tvshow_licenses.Column | tvshow_localizations.Column | tvshow_video_cue_points.Column | tvshow_video_streams.Column | tvshow_videos.Column | tvshow_view.Column | video_stream_type.Column;
+  export type AllTables = [channel.Table, channel_images.Table, collection.Table, collection_images.Table, collection_images_view.Table, collection_items_relation.Table, collection_localizations.Table, collection_view.Table, episode.Table, episode_genres_relation.Table, episode_images.Table, episode_images_view.Table, episode_licenses.Table, episode_localizations.Table, episode_video_cue_points.Table, episode_video_streams.Table, episode_videos.Table, episode_videos_view.Table, episode_view.Table, locales.Table, messaging_counter.Table, movie.Table, movie_genre.Table, movie_genre_localizations.Table, movie_genre_view.Table, movie_genres_relation.Table, movie_images.Table, movie_images_view.Table, movie_licenses.Table, movie_localizations.Table, movie_video_cue_points.Table, movie_video_streams.Table, movie_videos.Table, movie_videos_view.Table, movie_view.Table, outbox.Table, season.Table, season_genres_relation.Table, season_images.Table, season_images_view.Table, season_licenses.Table, season_localizations.Table, season_video_cue_points.Table, season_video_streams.Table, season_videos.Table, season_view.Table, tvshow.Table, tvshow_genre.Table, tvshow_genre_localizations.Table, tvshow_genre_view.Table, tvshow_genres_relation.Table, tvshow_images.Table, tvshow_images_view.Table, tvshow_licenses.Table, tvshow_localizations.Table, tvshow_video_cue_points.Table, tvshow_video_streams.Table, tvshow_videos.Table, tvshow_view.Table, video_stream_type.Table];
   export type AllMaterializedViews = [];
 
 
@@ -18808,6 +19246,7 @@ declare module 'zapatos/schema' {
     movie_videos: movie_videos.Selectable;
     movie_videos_view: movie_videos_view.Selectable;
     movie_view: movie_view.Selectable;
+    outbox: outbox.Selectable;
     season: season.Selectable;
     season_genres_relation: season_genres_relation.Selectable;
     season_images: season_images.Selectable;
@@ -18870,6 +19309,7 @@ declare module 'zapatos/schema' {
     movie_videos: movie_videos.JSONSelectable;
     movie_videos_view: movie_videos_view.JSONSelectable;
     movie_view: movie_view.JSONSelectable;
+    outbox: outbox.JSONSelectable;
     season: season.JSONSelectable;
     season_genres_relation: season_genres_relation.JSONSelectable;
     season_images: season_images.JSONSelectable;
@@ -18932,6 +19372,7 @@ declare module 'zapatos/schema' {
     movie_videos: movie_videos.Whereable;
     movie_videos_view: movie_videos_view.Whereable;
     movie_view: movie_view.Whereable;
+    outbox: outbox.Whereable;
     season: season.Whereable;
     season_genres_relation: season_genres_relation.Whereable;
     season_images: season_images.Whereable;
@@ -18994,6 +19435,7 @@ declare module 'zapatos/schema' {
     movie_videos: movie_videos.Insertable;
     movie_videos_view: movie_videos_view.Insertable;
     movie_view: movie_view.Insertable;
+    outbox: outbox.Insertable;
     season: season.Insertable;
     season_genres_relation: season_genres_relation.Insertable;
     season_images: season_images.Insertable;
@@ -19056,6 +19498,7 @@ declare module 'zapatos/schema' {
     movie_videos: movie_videos.Updatable;
     movie_videos_view: movie_videos_view.Updatable;
     movie_view: movie_view.Updatable;
+    outbox: outbox.Updatable;
     season: season.Updatable;
     season_genres_relation: season_genres_relation.Updatable;
     season_images: season_images.Updatable;
@@ -19118,6 +19561,7 @@ declare module 'zapatos/schema' {
     movie_videos: movie_videos.UniqueIndex;
     movie_videos_view: movie_videos_view.UniqueIndex;
     movie_view: movie_view.UniqueIndex;
+    outbox: outbox.UniqueIndex;
     season: season.UniqueIndex;
     season_genres_relation: season_genres_relation.UniqueIndex;
     season_images: season_images.UniqueIndex;
@@ -19180,6 +19624,7 @@ declare module 'zapatos/schema' {
     movie_videos: movie_videos.Column;
     movie_videos_view: movie_videos_view.Column;
     movie_view: movie_view.Column;
+    outbox: outbox.Column;
     season: season.Column;
     season_genres_relation: season_genres_relation.Column;
     season_images: season_images.Column;
@@ -19242,6 +19687,7 @@ declare module 'zapatos/schema' {
     movie_videos: movie_videos.SQL;
     movie_videos_view: movie_videos_view.SQL;
     movie_view: movie_view.SQL;
+    outbox: outbox.SQL;
     season: season.SQL;
     season_genres_relation: season_genres_relation.SQL;
     season_images: season_images.SQL;

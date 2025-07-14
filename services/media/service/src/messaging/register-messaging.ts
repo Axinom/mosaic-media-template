@@ -25,7 +25,10 @@ import {
   StoreOutboxMessage,
   TransactionalLogMapper,
 } from '@axinom/mosaic-transactional-inbox-outbox';
-import { MediaServiceMessagingSettings } from 'media-messages';
+import {
+  CatalogServiceMessagingSettings,
+  MediaServiceMessagingSettings,
+} from 'media-messages';
 import {
   getInboxPollingListenerSettings,
   getOutboxPollingListenerSettings,
@@ -117,6 +120,8 @@ import {
   PublishEntityHandler,
   UnpublishEntityHandler,
 } from '../publishing/handlers';
+import { EntityPublishFailedHandler } from '../publishing/handlers/entity-publish-failed-handler';
+import { EntityPublishSuccessHandler } from '../publishing/handlers/entity-publish-success-handler';
 
 export const registerMessaging = async (
   app: Express,
@@ -310,6 +315,8 @@ const registerTransactionalInboxHandlers = (
       storeOutboxMessage,
       config,
     ),
+    new EntityPublishSuccessHandler(config),
+    new EntityPublishFailedHandler(config),
   ];
   const ingestMessageHandlers: TransactionalMessageHandler[] = [
     new StartIngestHandler(
@@ -437,6 +444,8 @@ const registerRabbitMqMessaging = async (
       ],
       customMessagePreProcessor: (message) => {
         switch (message.messagingSettings.messageType) {
+          case CatalogServiceMessagingSettings.EntityPublishFailed.messageType:
+          case CatalogServiceMessagingSettings.EntityPublishSuccess.messageType:
           case MediaServiceMessagingSettings.StartIngest.messageType:
           case MediaServiceMessagingSettings.StartIngestItem.messageType:
           case MediaServiceMessagingSettings.UpdateMetadata.messageType:
@@ -571,6 +580,14 @@ const registerRabbitMqMessaging = async (
     ...entityPublishEventSettings.map((settings) =>
       new RascalTransactionalConfigBuilder(settings, config).publishEvent(),
     ),
+    new RascalTransactionalConfigBuilder(
+      CatalogServiceMessagingSettings.EntityPublishFailed,
+      config,
+    ).subscribeForEvent(() => inboxWriter),
+    new RascalTransactionalConfigBuilder(
+      CatalogServiceMessagingSettings.EntityPublishSuccess,
+      config,
+    ).subscribeForEvent(() => inboxWriter),
   ];
 
   const commonBuilders: RascalConfigBuilder[] = [

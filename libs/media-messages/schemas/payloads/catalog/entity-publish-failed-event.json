@@ -1,0 +1,21 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "type": "object",
+  "title": "entity_publish_failed_event",
+  "description": "Entity publish failed event schema.",
+  "additionalProperties": false,
+  "required": [
+    "content_id",
+    "message"
+  ],
+  "properties": {
+    "content_id": {
+      "type": "string",
+      "description": "Content id of the entity that was deleted."
+    },
+    "message": {
+      "type": "string",
+      "description": "Message that describes the reason for entity publication failure."
+    }
+  }
+}

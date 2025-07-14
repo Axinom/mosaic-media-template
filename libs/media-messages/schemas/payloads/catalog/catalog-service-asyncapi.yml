@@ -1,0 +1,44 @@
+asyncapi: 2.0.0
+info:
+  title: Catalog Service
+  version: '1.0.0'
+  description: |
+    Catalog Service
+# AsyncAPI extension, used to define service id. If not defined, as service id will be used info.title in lower-kebab-case
+x-service-id: catalog-service
+
+channels:
+  # events
+  'entity.entity_publish_failed':
+     bindings:
+       amqp:
+         queue:
+           name: inbox
+     subscribe:
+       message:
+         $ref: '#/components/messages/entity-publish-failed-event'
+  'entity.entity_publish_success':
+     bindings:
+       amqp:
+         queue:
+           name: inbox
+     subscribe:
+       message:
+         $ref: '#/components/messages/entity-publish-success-event'
+
+components:
+  messages:
+    entity-publish-failed-event:
+      tags:
+        - name: aggregate-type:entity
+        - name: aggregate-id-field:entity ID
+      contentType: application/json
+      payload:
+        $ref: 'entity-publish-failed-event.json'
+    entity-publish-success-event:
+      tags:
+        - name: aggregate-type:entity
+        - name: aggregate-id-field:entity ID
+      contentType: application/json
+      payload:
+        $ref: 'entity-publish-success-event.json'
