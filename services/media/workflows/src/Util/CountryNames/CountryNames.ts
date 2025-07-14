@@ -18,6 +18,13 @@ export const CountryNames = Object.keys(IsoAlphaTwoCountryCodes)
   }))
   .sort((v1, v2) => (v1.display > v2.display ? 1 : -1));
 
+export const CountryOptions = Object.keys(IsoAlphaTwoCountryCodes)
+  .map((key) => ({
+    label: getCountryName(IsoAlphaTwoCountryCodes[key]),
+    value: IsoAlphaTwoCountryCodes[key],
+  }))
+  .sort((v1, v2) => (v1.label > v2.label ? 1 : -1));
+
 export const getCountryCode = (countryName: string): string => {
   return countries.getAlpha2Code(countryName, 'en');
 };

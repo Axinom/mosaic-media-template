@@ -17,12 +17,14 @@ import {
 import { transformRange } from '../../../Util/DateRangeTransformer/DateRangeTransformer';
 import { getEnumLabel } from '../../../Util/StringEnumMapper/StringEnumMapper';
 import { SeasonData } from './SeasonExplorer.types';
+import { CountryOptions } from '../../../Util/CountryNames/CountryNames';
 
 interface allOptions {
   allAgeRatings: Option[];
   allContentOwners: Option[];
   allGenres: Option[];
   allCountries: Option[];
+  countryNames: Option[];
 }
 
 export function useSeasonsFilters(): {
@@ -40,6 +42,7 @@ export function useSeasonsFilters(): {
     allContentOwners: [],
     allGenres: [],
     allCountries: [],
+    countryNames: []
   });
 
   const { data, error } = useGetSeasonsFilterOptionsDataQuery({
@@ -74,6 +77,7 @@ export function useSeasonsFilters(): {
             value: 'FAILED_TO_LOAD_ERROR',
           },
         ],
+        countryNames: CountryOptions
       });
     } else {
       let ageRating: Option[] = [];
@@ -109,6 +113,7 @@ export function useSeasonsFilters(): {
         allContentOwners: contentOwner,
         allGenres: genres,
         allCountries: countries,
+        countryNames: CountryOptions
       });
     }
   }, [data]);
@@ -205,7 +210,7 @@ export function useSeasonsFilters(): {
       searchInputPlaceholder: 'Search',
       type: FilterTypes.SearcheableOptions,
       optionsProvider: (searchText) =>
-        AllFilterOptions.allCountries.filter((option) =>
+        AllFilterOptions.countryNames.filter((option) =>
           option.label.toLowerCase().includes(searchText.toLowerCase()),
         ),
     },

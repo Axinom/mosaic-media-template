@@ -18,12 +18,14 @@ import {
 import { transformRange } from '../../../Util/DateRangeTransformer/DateRangeTransformer';
 import { getEnumLabel } from '../../../Util/StringEnumMapper/StringEnumMapper';
 import { TvShowData } from './TvShowExplorer.types';
+import { CountryOptions } from '../../../Util/CountryNames/CountryNames';
 
 interface allOptions {
   allAgeRatings: Option[];
   allContentOwners: Option[];
   allGenres: Option[];
   allCountries: Option[];
+  countryNames: Option[];
 }
 
 export function useTvShowsFilters(): {
@@ -38,6 +40,7 @@ export function useTvShowsFilters(): {
     allContentOwners: [],
     allGenres: [],
     allCountries: [],
+    countryNames: []
   });
 
   const { data, error } = useGetTvShowsFilterOptionsDataQuery({
@@ -72,6 +75,7 @@ export function useTvShowsFilters(): {
             value: 'FAILED_TO_LOAD_ERROR',
           },
         ],
+        countryNames: CountryOptions
       });
     } else {
       let ageRating: Option[] = [];
@@ -107,6 +111,7 @@ export function useTvShowsFilters(): {
         allContentOwners: contentOwner,
         allGenres: genres,
         allCountries: countries,
+        countryNames: CountryOptions
       });
     }
   }, [data]);
@@ -220,7 +225,7 @@ export function useTvShowsFilters(): {
       searchInputPlaceholder: 'Search',
       type: FilterTypes.SearcheableOptions,
       optionsProvider: (searchText) =>
-        AllFilterOptions.allCountries.filter((option) =>
+        AllFilterOptions.countryNames.filter((option) =>
           option.label.toLowerCase().includes(searchText.toLowerCase()),
         ),
     },
