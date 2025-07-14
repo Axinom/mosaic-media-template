@@ -367,6 +367,7 @@
         "ingestDocuments",
         "ingestItem",
         "ingestItems",
+        "ingestedAssets",
         "ingestItemStep",
         "ingestItemSteps",
         "ingestDocumentMutated",
@@ -930,6 +931,7 @@
         "ingestDocuments",
         "ingestItem",
         "ingestItems",
+        "ingestedAssets",
         "ingestItemStep",
         "ingestItemSteps",
         "ingestDocumentMutated"
@@ -943,6 +945,7 @@
         "ingestDocuments",
         "ingestItem",
         "ingestItems",
+        "ingestedAssets",
         "ingestItemStep",
         "ingestItemSteps",
         "ingestDocumentMutated",
