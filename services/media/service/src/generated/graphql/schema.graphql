@@ -13373,7 +13373,7 @@ type EpisodesSnapshotsEdge {
 
 """
 A connection to a list of `EpisodesDirector` values.
-@permissions: TVSHOW_READER,TVSHOW_EDITOR,ADMIN
+@permissions: TVSHOWS_VIEW,TVSHOWS_EDIT,ADMIN
 """
 type EpisodesDirectorsConnection {
   """A list of `EpisodesDirector` objects."""
@@ -13393,7 +13393,7 @@ type EpisodesDirectorsConnection {
   totalCount: Int!
 }
 
-"""@permissions: TVSHOW_READER,TVSHOW_EDITOR,ADMIN"""
+"""@permissions: TVSHOWS_VIEW,TVSHOWS_EDIT,ADMIN"""
 type EpisodesDirector {
   episodeId: Int!
   name: String!
@@ -19709,7 +19709,7 @@ type CreateEpisodesDirectorPayload {
 
 """
 All input for the create `EpisodesDirector` mutation.
-@permissions: TVSHOW_EDITOR,ADMIN
+@permissions: TVSHOWS_EDIT,ADMIN
 """
 input CreateEpisodesDirectorInput {
   """
@@ -22409,7 +22409,7 @@ type UpdateEpisodesDirectorPayload {
 
 """
 All input for the `updateEpisodesDirector` mutation.
-@permissions: TVSHOW_EDITOR,ADMIN
+@permissions: TVSHOWS_EDIT,ADMIN
 """
 input UpdateEpisodesDirectorInput {
   """
@@ -24874,7 +24874,7 @@ type DeleteEpisodesDirectorPayload {
 
 """
 All input for the `deleteEpisodesDirector` mutation.
-@permissions: TVSHOW_EDITOR,ADMIN
+@permissions: TVSHOWS_EDIT,ADMIN
 """
 input DeleteEpisodesDirectorInput {
   """
