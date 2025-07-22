@@ -58,9 +58,9 @@ regularVariables:
   RECURLY_ENTITLEMENT_MOCK_REQUESTS: '#{RECURLY-ENTITLEMENT-MOCK-REQUESTS}#'
 
   # Preview entitlement settings
-  WIDEVINE_LICENSE_SERVICE_URL: 'https://drm-widevine-licensing.axprod.net/AcquireLicense'
-  PLAYREADY_LICENSE_SERVICE_URL: 'https://drm-playready-licensing.axtest.net/AcquireLicense'
-  FAIRPLAY_LICENSE_SERVICE_URL: 'https://drm-fairplay-licensing.axtest.net/AcquireLicense'
+  WIDEVINE_LICENSE_SERVICE_URL: '#{WIDEVINE_LICENSE_SERVICE_URL}#'
+  PLAYREADY_LICENSE_SERVICE_URL: '#{PLAYREADY_LICENSE_SERVICE_URL}#'
+  FAIRPLAY_LICENSE_SERVICE_URL: '#{FAIRPLAY_LICENSE_SERVICE_URL}#'
   FAIRPLAY_STREAMING_CERTIFICATE_URL: 'https://vtb.axinom.com/FPScert/fairplay.cer'
 
 secureVariables:
