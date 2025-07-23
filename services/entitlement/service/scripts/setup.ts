@@ -4,7 +4,6 @@ import {
   isNullOrWhitespace,
   pick,
 } from '@axinom/mosaic-service-common';
-import { serviceAccountSetup } from '../../../../scripts/helpers';
 import { getConfigDefinitions } from '../src/common';
 import { userApplicationSetup } from './resources';
 
@@ -38,18 +37,6 @@ async function main(): Promise<void> {
   }
 
   await userApplicationSetup(config);
-  await serviceAccountSetup(
-    config.idServiceAuthBaseUrl,
-    config.devServiceAccountClientId,
-    config.devServiceAccountClientSecret,
-    config.serviceId,
-    [
-      {
-        serviceId: 'ax-monetization-grants-service',
-        permissions: ['CLAIM_DEFINITIONS_SYNCHRONIZE'],
-      },
-    ],
-  );
 }
 
 main().catch((error) => {
