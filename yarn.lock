@@ -469,11 +469,6 @@
   resolved "https://registry.yarnpkg.com/@axinom/mosaic-video-messages/-/mosaic-video-messages-0.3.0.tgz#90381bd2539175b9a15d15d07a168959cc2a5e8f"
   integrity sha512-MBfLNKSGqUTn4P4mWTZr2+LUXGfa+NMGW3Ej3nqlQRqSmG9CO0kN2W+98uB4c3Cj8zqJz/ztwpQiUJau/3OPIQ==
 
-"@axinom/mosaic-video-messages@0.3.0":
-  version "0.3.0"
-  resolved "https://registry.yarnpkg.com/@axinom/mosaic-video-messages/-/mosaic-video-messages-0.3.0.tgz#90381bd2539175b9a15d15d07a168959cc2a5e8f"
-  integrity sha512-MBfLNKSGqUTn4P4mWTZr2+LUXGfa+NMGW3Ej3nqlQRqSmG9CO0kN2W+98uB4c3Cj8zqJz/ztwpQiUJau/3OPIQ==
-
 "@azure/abort-controller@^1.0.0":
   version "1.1.0"
   resolved "https://registry.yarnpkg.com/@azure/abort-controller/-/abort-controller-1.1.0.tgz#788ee78457a55af8a1ad342acb182383d2119249"
