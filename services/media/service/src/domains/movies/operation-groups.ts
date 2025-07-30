@@ -103,6 +103,7 @@ export const MoviesMutateOperations = [
   M.unpublishMovies,
   M.createMovieSnapshot,
   M.createMovieSnapshots,
+  M.bulkEditMoviesAsync,
 ];
 
 export const MoviesDevOperations = [M.populateMovies];

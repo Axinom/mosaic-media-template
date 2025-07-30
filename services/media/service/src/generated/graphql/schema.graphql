@@ -15035,6 +15035,7 @@ type Mutation {
 
   """Creates a new Tvshow genres snapshot."""
   createTvshowGenresSnapshot: Snapshot
+  bulkEditMoviesAsync(filter: MovieFilter, set: MoviePatch, relatedEntitiesToRemove: BulkEditAsyncMovieRemoveInput, relatedEntitiesToAdd: BulkEditAsyncMovieAddInput): BulkEditAsyncPayloadType
   populateCollections(
     """
     The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
@@ -21117,6 +21118,126 @@ type BulkMutationPayload {
 type BulkMutationIntPayload {
   affectedIds: [Int]
   totalCount: Int
+}
+
+type BulkEditAsyncPayloadType {
+  filterMatchedIds: [String]
+}
+
+input BulkEditAsyncMovieRemoveInput {
+  moviesTags: [BulkEditAsyncMovieRemoveMoviesTagInput]
+  moviesCasts: [BulkEditAsyncMovieRemoveMoviesCastInput]
+  moviesLicenses: [BulkEditAsyncMovieRemoveMoviesLicenseInput]
+  moviesProductionCountries: [BulkEditAsyncMovieRemoveMoviesProductionCountryInput]
+  moviesMovieGenres: [BulkEditAsyncMovieRemoveMoviesMovieGenreInput]
+  moviesImages: [BulkEditAsyncMovieRemoveMoviesImageInput]
+  moviesTrailers: [BulkEditAsyncMovieRemoveMoviesTrailerInput]
+  collectionRelations: [BulkEditAsyncMovieRemoveCollectionRelationInput]
+  moviesSnapshots: [BulkEditAsyncMovieRemoveMoviesSnapshotInput]
+}
+
+input BulkEditAsyncMovieRemoveMoviesTagInput {
+  """@notEmpty()"""
+  name: String!
+}
+
+input BulkEditAsyncMovieRemoveMoviesCastInput {
+  """@notEmpty()"""
+  name: String!
+}
+
+input BulkEditAsyncMovieRemoveMoviesLicenseInput {
+  licenseStart: Datetime
+  licenseEnd: Datetime
+}
+
+input BulkEditAsyncMovieRemoveMoviesProductionCountryInput {
+  """@notEmpty()"""
+  name: String!
+}
+
+input BulkEditAsyncMovieRemoveMoviesMovieGenreInput {
+  movieGenresId: Int!
+}
+
+input BulkEditAsyncMovieRemoveMoviesImageInput {
+  imageId: UUID!
+  imageType: MovieImageType!
+}
+
+input BulkEditAsyncMovieRemoveMoviesTrailerInput {
+  videoId: UUID!
+}
+
+input BulkEditAsyncMovieRemoveCollectionRelationInput {
+  id: Int
+  collectionId: Int!
+  sortOrder: Int!
+  tvshowId: Int
+  seasonId: Int
+  episodeId: Int
+}
+
+input BulkEditAsyncMovieRemoveMoviesSnapshotInput {
+  snapshotId: Int!
+}
+
+input BulkEditAsyncMovieAddInput {
+  moviesTags: [BulkEditAsyncMovieAddMoviesTagInput]
+  moviesCasts: [BulkEditAsyncMovieAddMoviesCastInput]
+  moviesLicenses: [BulkEditAsyncMovieAddMoviesLicenseInput]
+  moviesProductionCountries: [BulkEditAsyncMovieAddMoviesProductionCountryInput]
+  moviesMovieGenres: [BulkEditAsyncMovieAddMoviesMovieGenreInput]
+  moviesImages: [BulkEditAsyncMovieAddMoviesImageInput]
+  moviesTrailers: [BulkEditAsyncMovieAddMoviesTrailerInput]
+  collectionRelations: [BulkEditAsyncMovieAddCollectionRelationInput]
+  moviesSnapshots: [BulkEditAsyncMovieAddMoviesSnapshotInput]
+}
+
+input BulkEditAsyncMovieAddMoviesTagInput {
+  """@notEmpty()"""
+  name: String!
+}
+
+input BulkEditAsyncMovieAddMoviesCastInput {
+  """@notEmpty()"""
+  name: String!
+}
+
+input BulkEditAsyncMovieAddMoviesLicenseInput {
+  licenseStart: Datetime
+  licenseEnd: Datetime
+}
+
+input BulkEditAsyncMovieAddMoviesProductionCountryInput {
+  """@notEmpty()"""
+  name: String!
+}
+
+input BulkEditAsyncMovieAddMoviesMovieGenreInput {
+  movieGenresId: Int!
+}
+
+input BulkEditAsyncMovieAddMoviesImageInput {
+  imageId: UUID!
+  imageType: MovieImageType!
+}
+
+input BulkEditAsyncMovieAddMoviesTrailerInput {
+  videoId: UUID!
+}
+
+input BulkEditAsyncMovieAddCollectionRelationInput {
+  id: Int
+  collectionId: Int!
+  sortOrder: Int!
+  tvshowId: Int
+  seasonId: Int
+  episodeId: Int
+}
+
+input BulkEditAsyncMovieAddMoviesSnapshotInput {
+  snapshotId: Int!
 }
 
 type PopulatePayload {

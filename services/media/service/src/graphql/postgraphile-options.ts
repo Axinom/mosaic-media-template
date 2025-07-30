@@ -2,6 +2,7 @@ import { buildPgSettings, OwnerPgPool } from '@axinom/mosaic-db-common';
 import {
   AddErrorCodesEnumPluginFactory,
   AnnotateTypesWithPermissionsPlugin,
+  BulkEditAsyncPluginFactory,
   enhanceGraphqlErrors,
   getWebsocketFromRequest,
   OperationsEnumGeneratorPluginFactory,
@@ -34,7 +35,12 @@ import {
   getMutationAtomicityContext,
 } from 'postgraphile-plugin-atomic-mutations';
 import ConnectionFilterPlugin from 'postgraphile-plugin-connection-filter';
-import { CommonErrors, Config, mediaPgErrorMapper } from '../common';
+import {
+  CommonErrors,
+  Config,
+  getLongLivedToken,
+  mediaPgErrorMapper,
+} from '../common';
 import {
   AllModulesDevPlugins,
   AllModulesPlugins,
@@ -88,6 +94,12 @@ export const buildPostgraphileOptions = (
       AllIngestPlugins,
       AllPublishingPlugins,
       AllModulesPlugins,
+      BulkEditAsyncPluginFactory(
+        'movies',
+        'bulkEditMoviesAsync',
+        (originalToken, config) =>
+          getLongLivedToken(originalToken, config as Config),
+      ),
     )
     .addConditionalPlugins(
       config.isDev,

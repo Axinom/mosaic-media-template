@@ -1,4 +1,5 @@
 export enum Mutations {
+  bulkEditMoviesAsync = 'bulkEditMoviesAsync',
   createCollection = 'createCollection',
   createCollectionRelation = 'createCollectionRelation',
   createCollectionSnapshot = 'createCollectionSnapshot',

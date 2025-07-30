@@ -207,6 +207,11 @@
           "source": "event",
           "bindingKey": "ax-localization-service.*.*.entity_definition.delete_finished",
           "destination": "media-service:inbox"
+        },
+        "media-service.generic_entity_type.perform_item_change": {
+          "source": "command",
+          "bindingKey": "media-service.generic_entity_type.perform_item_change",
+          "destination": "media-service:inbox"
         }
       },
       "publications": {
@@ -321,6 +326,10 @@
         "DeleteLocalizationSourceEntity": {
           "exchange": "command",
           "routingKey": "ax-localization-service.*.*.localization_source_entity.delete"
+        },
+        "PerformItemChange": {
+          "exchange": "command",
+          "routingKey": "media-service.generic_entity_type.perform_item_change"
         }
       },
       "subscriptions": {
