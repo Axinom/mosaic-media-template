@@ -98,12 +98,7 @@ secureVariables:
   DRM_LICENSE_COMMUNICATION_KEY: 'REPLACE_WITH_VALID_DRM_LICENSE_COMMUNICATION_KEY'
   DRM_LICENSE_COMMUNICATION_KEY_ID: 'REPLACE_WITH_VALID_DRM_LICENSE_COMMUNICATION_KEY_ID'
 
-serviceAccounts:
-  - name: 'primary'
-    permissionStructure:
-      - serviceId: 'ax-monetization-grants-service'
-        permissions:
-          - 'CLAIM_DEFINITIONS_SYNCHRONIZE'
+serviceAccounts: []
 
 pilets:
   # Defines the pilets (i.e. micro-frontends) associated with the service, and the required key-value pairs to run the pilet.
