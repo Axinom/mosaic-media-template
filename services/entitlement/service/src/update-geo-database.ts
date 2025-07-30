@@ -11,7 +11,9 @@ import cron from 'node-cron';
 import fetch from 'node-fetch';
 import path from 'path';
 import { pipeline } from 'stream';
+import tar from 'tar-stream';
 import { promisify } from 'util';
+import zlib from 'zlib';
 import { Config, GEOLITE2_LICENSE_KEY, MAXMIND_ACCOUNT_ID } from './common';
 
 /**
@@ -63,12 +65,11 @@ const downloadGeoDb = async (
   licenseKey: string,
   downloadUrl: string,
 ): Promise<void> => {
-  const GEO_DB_DEST = path.join(__dirname, 'data/GeoLite2-Country.mmdb');
-  const GEO_DB_DIR = path.dirname(GEO_DB_DEST);
+  const GEO_DB_DEST_DIR = path.join(__dirname, 'data');
+  const GEO_DB_DEST = path.join(GEO_DB_DEST_DIR, 'GeoLite2-Country.mmdb');
 
-  // Ensure the data directory exists
-  if (!fs.existsSync(GEO_DB_DIR)) {
-    fs.mkdirSync(GEO_DB_DIR, { recursive: true });
+  if (!fs.existsSync(GEO_DB_DEST_DIR)) {
+    fs.mkdirSync(GEO_DB_DEST_DIR, { recursive: true });
   }
 
   const url = new URL(downloadUrl);
@@ -83,10 +84,22 @@ const downloadGeoDb = async (
       `Failed to download Geo DB: ${res.status} ${res.statusText}`,
     );
   }
-  await streamPipeline(res.body, fs.createWriteStream(GEO_DB_DEST));
+  const extract = tar.extract();
+
+  extract.on('entry', async (header, stream, next) => {
+    if (header.name.endsWith('.mmdb')) {
+      const outStream = fs.createWriteStream(GEO_DB_DEST);
+      await streamPipeline(stream, outStream);
+    } else {
+      stream.resume(); // skip other files
+    }
+    next();
+  });
+
+  await streamPipeline(res.body, zlib.createGunzip(), extract);
 
   if (!fs.existsSync(GEO_DB_DEST)) {
-    throw new Error('Downloaded Geo DB file not found at expected path.');
+    throw new Error('Extracted .mmdb file not found at expected location.');
   }
 };
 
