@@ -247,18 +247,35 @@ async function getUsernameFromDockerConfig(): Promise<string | undefined> {
 
         const usernames: { registry: string; username: string }[] = [];
 
-        for (const registry in auths) {
-          if (Object.prototype.hasOwnProperty.call(auths, registry)) {
-            const auth = auths[registry];
-            if (auth.username) {
-              usernames.push({ registry, username: auth.username });
+        // Handle credsStore-based credential lookup
+        if (config.credsStore) {
+          // If credsStore is set, we try to get the username from the credential store.
+          // This is useful for systems that use credential helpers like Docker Desktop.
+          const servers = Object.keys(auths);
+          for (const server of servers) {
+            const username = getUsernameFromCredStore(
+              server,
+              config.credsStore,
+            );
+            if (username) {
+              usernames.push({ registry: server, username });
             }
+          }
+        } else {
+          // Handle inline credentials
+          for (const registry in auths) {
+            if (Object.prototype.hasOwnProperty.call(auths, registry)) {
+              const auth = auths[registry];
+              if (auth.username) {
+                usernames.push({ registry, username: auth.username });
+              }
 
-            if (auth.auth) {
-              const [username] = Buffer.from(auth.auth, 'base64')
-                .toString()
-                .split(':');
-              usernames.push({ registry, username });
+              if (auth.auth) {
+                const [username] = Buffer.from(auth.auth, 'base64')
+                  .toString()
+                  .split(':');
+                usernames.push({ registry, username });
+              }
             }
           }
         }
@@ -284,6 +301,25 @@ async function getUsernameFromDockerConfig(): Promise<string | undefined> {
       }
     } catch (error) {
       console.error(`Error reading Docker config.json from ${configPath}`);
+    }
+  }
+  // Helper function to call docker-credential {credStore} to get the username
+  function getUsernameFromCredStore(
+    serverUrl: string,
+    credStore: string,
+  ): string | undefined {
+    try {
+      const output = execSync(
+        `echo ${serverUrl} | docker-credential-${credStore} get`,
+      ).toString();
+      const credentials = JSON.parse(output);
+
+      return credentials.Username;
+    } catch (err) {
+      console.warn(
+        `Failed to get credentials from docker-credential-${credStore} for ${serverUrl}`,
+      );
+      return undefined;
     }
   }
 
