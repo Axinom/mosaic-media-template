@@ -356,6 +356,20 @@
     graphql "^15.4.0"
     graphql-tag "^2.11.0"
 
+"@axinom/mosaic-id-link-be@^0.31.6":
+  version "0.31.7"
+  resolved "https://registry.yarnpkg.com/@axinom/mosaic-id-link-be/-/mosaic-id-link-be-0.31.7.tgz#a034911d7d8ee98d5049215362f0fa4ca784fa37"
+  integrity sha512-MhxPZ3A7sS/Cs5dxiknxYhCEzmwiyOHms1OoLrkTAKrEzy0fXnb9eYS0Udb9bEuXQFAMqz5xUdBWdmDH7Y52Jg==
+  dependencies:
+    "@apollo/client" "^3.7.9"
+    "@axinom/mosaic-core" "^0.4.30"
+    "@axinom/mosaic-id-utils" "^0.23.0"
+    "@axinom/mosaic-service-common" "^0.61.0"
+    axios "^1.8.3"
+    cross-fetch "^3.0.4"
+    graphql "^15.4.0"
+    graphql-tag "^2.11.0"
+
 "@axinom/mosaic-id-utils@0.23.0", "@axinom/mosaic-id-utils@^0.23.0":
   version "0.23.0"
   resolved "https://registry.yarnpkg.com/@axinom/mosaic-id-utils/-/mosaic-id-utils-0.23.0.tgz#533105dd480fa5d19f33eb78c854e75fe6c64f2d"
