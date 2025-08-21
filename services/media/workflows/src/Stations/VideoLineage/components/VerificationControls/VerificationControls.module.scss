@@ -1,0 +1,191 @@
+// Verification Controls Component Styles - Compatible with Mosaic Design System
+
+.verificationControls {
+  background: var(--color-bg-secondary);
+  border-radius: var(--size-medium);
+  padding: var(--size-large);
+}
+
+.controlsHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: var(--size-large);
+}
+
+.controlsTitle {
+  color: var(--color-text-primary);
+  font-weight: var(--font-weight-medium);
+  font-size: var(--font-size-large);
+  margin: 0;
+}
+
+.controlsDescription {
+  color: var(--color-text-secondary);
+  font-size: var(--font-size-medium);
+}
+
+.controlsButtons {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--size-large);
+  margin-bottom: var(--size-large);
+}
+
+.controlButton {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  border-radius: var(--size-medium);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-family: inherit;
+
+  &.primary {
+    padding: var(--size-medium);
+    background: var(--color-primary);
+    color: var(--color-text-on-primary);
+
+    &:hover:not(:disabled) {
+      background: var(--color-primary-hover);
+    }
+
+    &:active {
+      background: var(--color-primary-active);
+    }
+  }
+
+  &.secondary {
+    padding: var(--size-medium);
+    background: var(--color-bg-tertiary);
+    color: var(--color-text-primary);
+
+    &:hover:not(:disabled) {
+      background: var(--color-bg-quaternary);
+    }
+
+    &:active {
+      background: var(--color-bg-quinary);
+    }
+  }
+
+  &:focus {
+    outline: 2px solid var(--color-focus);
+    outline-offset: 2px;
+  }
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+}
+
+.seekContainer {
+  display: flex;
+  flex-direction: column;
+  gap: var(--size-small);
+}
+
+.seekLabels {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.seekTime {
+  color: var(--color-text-secondary);
+  font-size: var(--font-size-small);
+  font-family: var(--font-mono);
+}
+
+.seekSlider {
+  width: 100%;
+  height: 4px;
+  border-radius: 2px;
+  background: var(--color-bg-tertiary);
+  outline: none;
+  cursor: pointer;
+
+  &::-webkit-slider-thumb {
+    appearance: none;
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    background: var(--color-primary);
+    cursor: pointer;
+    border: 2px solid var(--color-bg-primary);
+    transition: all 0.2s ease;
+
+    &:hover {
+      transform: scale(1.1);
+    }
+  }
+
+  &::-moz-range-thumb {
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    background: var(--color-primary);
+    cursor: pointer;
+    border: 2px solid var(--color-bg-primary);
+    transition: all 0.2s ease;
+
+    &:hover {
+      transform: scale(1.1);
+    }
+  }
+
+  &::-webkit-slider-track {
+    height: 4px;
+    border-radius: 2px;
+    background: var(--color-bg-tertiary);
+  }
+
+  &::-moz-range-track {
+    height: 4px;
+    border-radius: 2px;
+    background: var(--color-bg-tertiary);
+    border: none;
+  }
+
+  &:focus {
+    outline: 2px solid var(--color-focus);
+    outline-offset: 2px;
+  }
+}
+
+// Responsive adjustments
+@media (max-width: 768px) {
+  .controlsHeader {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--size-small);
+  }
+
+  .controlsButtons {
+    flex-wrap: wrap;
+    gap: var(--size-medium);
+  }
+
+  .controlButton {
+    &.primary {
+      padding: var(--size-large);
+    }
+  }
+}
+
+@media (max-width: 480px) {
+  .controlsButtons {
+    gap: var(--size-small);
+  }
+
+  .controlButton {
+    padding: var(--size-small);
+    
+    &.primary {
+      padding: var(--size-medium);
+    }
+  }
+}

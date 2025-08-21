@@ -15,6 +15,7 @@ import { register as registerMovies } from './Stations/Movies/registrations';
 import { register as registerSnapshotRegistry } from './Stations/Publishing/registrations';
 import { register as registerSeasons } from './Stations/Seasons/registrations';
 import { register as registerTvShows } from './Stations/TvShows/registrations';
+import { register as registerVideoLineage } from './Stations/VideoLineage';
 import {
   transformNavigationItems,
   transformNavigationTree,
@@ -61,4 +62,5 @@ export function setup(app: PiletApi): void {
   registerSnapshotRegistry(app, extensions);
   registerCollections(app, extensions);
   registerFASTProviders(app);
+  registerVideoLineage(app, extensions);
 }

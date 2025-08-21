@@ -1,0 +1,201 @@
+// Video Player Component Styles - Compatible with Mosaic Design System
+
+.videoPlayer {
+  background: var(--color-bg-secondary);
+  border-radius: var(--size-medium);
+  overflow: hidden;
+}
+
+.videoContainer {
+  position: relative;
+  aspect-ratio: 16 / 9;
+  background: var(--color-bg-primary);
+}
+
+.videoElement {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  cursor: pointer;
+}
+
+.videoOverlay {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 0, 0, 0.4);
+  z-index: 10;
+}
+
+.playIndicator {
+  position: absolute;
+  top: var(--size-medium);
+  left: var(--size-medium);
+  display: flex;
+  align-items: center;
+  gap: var(--size-small);
+  background: var(--color-error);
+  color: var(--color-text-on-error);
+  padding: var(--size-small) var(--size-medium);
+  border-radius: var(--size-small);
+  font-size: var(--font-size-small);
+  font-weight: var(--font-weight-medium);
+  z-index: 15;
+}
+
+.indicatorDot {
+  width: 0.5rem;
+  height: 0.5rem;
+  background: var(--color-text-on-error);
+  border-radius: 50%;
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+}
+
+.timeDisplay {
+  position: absolute;
+  bottom: var(--size-medium);
+  left: var(--size-medium);
+  background: rgba(0, 0, 0, 0.7);
+  color: var(--color-text-primary);
+  padding: var(--size-small) var(--size-medium);
+  border-radius: var(--size-small);
+  font-size: var(--font-size-small);
+  font-family: var(--font-mono);
+  z-index: 15;
+}
+
+.videoControls {
+  padding: var(--size-large);
+}
+
+.controlRow {
+  display: flex;
+  align-items: center;
+  gap: var(--size-large);
+}
+
+.playButton {
+  display: flex;
+  align-items: center;
+  gap: var(--size-medium);
+  background: var(--color-primary);
+  color: var(--color-text-on-primary);
+  border: none;
+  border-radius: var(--size-medium);
+  padding: var(--size-medium) var(--size-large);
+  font-weight: var(--font-weight-medium);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-family: inherit;
+
+  &:hover:not(:disabled) {
+    background: var(--color-primary-hover);
+  }
+
+  &:active {
+    background: var(--color-primary-active);
+  }
+
+  &:focus {
+    outline: 2px solid var(--color-focus);
+    outline-offset: 2px;
+  }
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+}
+
+.seekContainer {
+  flex: 1;
+}
+
+.seekBar {
+  width: 100%;
+  height: 4px;
+  border-radius: 2px;
+  background: var(--color-bg-tertiary);
+  outline: none;
+  cursor: pointer;
+
+  &::-webkit-slider-thumb {
+    appearance: none;
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    background: var(--color-primary);
+    cursor: pointer;
+    border: 2px solid var(--color-bg-primary);
+    transition: all 0.2s ease;
+
+    &:hover {
+      transform: scale(1.1);
+    }
+  }
+
+  &::-moz-range-thumb {
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    background: var(--color-primary);
+    cursor: pointer;
+    border: 2px solid var(--color-bg-primary);
+    transition: all 0.2s ease;
+
+    &:hover {
+      transform: scale(1.1);
+    }
+  }
+
+  &::-webkit-slider-track {
+    height: 4px;
+    border-radius: 2px;
+    background: var(--color-bg-tertiary);
+  }
+
+  &::-moz-range-track {
+    height: 4px;
+    border-radius: 2px;
+    background: var(--color-bg-tertiary);
+    border: none;
+  }
+
+  &:focus {
+    outline: 2px solid var(--color-focus);
+    outline-offset: 2px;
+  }
+}
+
+// Border variations for comparison mode
+.videoPlayer.mainVideo {
+  border: 2px solid var(--color-primary);
+}
+
+.videoPlayer.sourceVideo {
+  border: 2px solid var(--color-success);
+}
+
+// Responsive adjustments
+@media (max-width: 768px) {
+  .controlRow {
+    flex-direction: column;
+    gap: var(--size-small);
+    align-items: stretch;
+  }
+
+  .playButton {
+    justify-content: center;
+  }
+}

@@ -1,0 +1,130 @@
+// Verification Actions Component Styles - Compatible with Mosaic Design System
+
+.verificationActions {
+  background: var(--color-bg-primary);
+  border-radius: var(--size-large);
+  padding: var(--size-xlarge);
+}
+
+.actionsTitle {
+  color: var(--color-text-primary);
+  font-weight: var(--font-weight-medium);
+  font-size: var(--font-size-large);
+  margin: 0 0 var(--size-large);
+}
+
+.actionsButtons {
+  display: flex;
+  gap: var(--size-large);
+  flex-wrap: wrap;
+}
+
+.actionButton {
+  display: flex;
+  align-items: center;
+  gap: var(--size-medium);
+  padding: var(--size-medium) var(--size-xlarge);
+  border: none;
+  border-radius: var(--size-medium);
+  font-weight: var(--font-weight-medium);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-family: inherit;
+  white-space: nowrap;
+
+  &:focus {
+    outline: 2px solid var(--color-focus);
+    outline-offset: 2px;
+  }
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+
+  &.accept {
+    background: var(--color-success);
+    color: var(--color-text-on-success);
+
+    &:hover:not(:disabled) {
+      background: var(--color-success-hover);
+    }
+
+    &:active {
+      background: var(--color-success-active);
+    }
+  }
+
+  &.reject {
+    background: var(--color-error);
+    color: var(--color-text-on-error);
+
+    &:hover:not(:disabled) {
+      background: var(--color-error-hover);
+    }
+
+    &:active {
+      background: var(--color-error-active);
+    }
+  }
+
+  &.flag {
+    background: var(--color-warning);
+    color: var(--color-text-on-warning);
+
+    &:hover:not(:disabled) {
+      background: var(--color-warning-hover);
+    }
+
+    &:active {
+      background: var(--color-warning-active);
+    }
+  }
+
+  &.cancel {
+    background: var(--color-bg-tertiary);
+    color: var(--color-text-primary);
+    margin-left: auto;
+
+    &:hover:not(:disabled) {
+      background: var(--color-bg-quaternary);
+    }
+
+    &:active {
+      background: var(--color-bg-quinary);
+    }
+  }
+}
+
+// Responsive adjustments
+@media (max-width: 768px) {
+  .actionsButtons {
+    flex-direction: column;
+    gap: var(--size-small);
+  }
+  
+  .actionButton {
+    justify-content: center;
+    
+    &.cancel {
+      margin-left: 0;
+      order: -1; // Move cancel to top on mobile
+    }
+  }
+}
+
+@media (max-width: 1024px) {
+  .actionsButtons {
+    flex-wrap: wrap;
+  }
+  
+  .actionButton {
+    flex: 1;
+    min-width: fit-content;
+    
+    &.cancel {
+      flex-basis: 100%;
+      margin-left: 0;
+    }
+  }
+}

@@ -1,0 +1,154 @@
+// Source Summary Card Component Styles - Compatible with Mosaic Design System
+
+.source-summary-card {
+  background: var(--mosaic-color-bg-primary, #111827);
+  border-radius: var(--mosaic-border-radius-lg, 0.5rem);
+  padding: var(--mosaic-spacing-4, 1rem);
+  cursor: pointer;
+  transition: all var(--mosaic-transition-duration-normal, 0.2s) var(--mosaic-transition-timing-ease, ease);
+  border: 1px solid transparent;
+
+  &:hover:not(.processing) {
+    background: var(--mosaic-color-bg-secondary, #1f2937);
+    border-color: var(--mosaic-color-border-hover, #4b5563);
+  }
+
+  &:focus {
+    outline: 2px solid var(--mosaic-color-focus, #3b82f6);
+    outline-offset: 2px;
+  }
+
+  &.flagged {
+    opacity: 0.6;
+    border-color: var(--mosaic-color-error, #ef4444);
+  }
+
+  &.processing {
+    opacity: 0.7;
+    cursor: not-allowed;
+  }
+}
+
+.card-header {
+  display: flex;
+  align-items: center;
+  gap: var(--mosaic-spacing-3, 0.75rem);
+  margin-bottom: var(--mosaic-spacing-3, 0.75rem);
+}
+
+.color-indicator {
+  width: 1rem;
+  height: 1rem;
+  border-radius: var(--mosaic-border-radius-base, 0.25rem);
+  flex-shrink: 0;
+}
+
+.source-title {
+  color: var(--mosaic-color-text-primary, #ffffff);
+  font-weight: var(--mosaic-font-weight-medium, 500);
+  font-size: var(--mosaic-font-size-sm, 0.875rem);
+  margin: 0;
+  line-height: 1.4;
+  word-break: break-word;
+}
+
+.card-content {
+  display: flex;
+  flex-direction: column;
+  gap: var(--mosaic-spacing-2, 0.5rem);
+}
+
+.timing-info {
+  display: flex;
+  flex-direction: column;
+  gap: var(--mosaic-spacing-1, 0.25rem);
+}
+
+.timing-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: var(--mosaic-spacing-2, 0.5rem);
+  
+  .label {
+    color: var(--mosaic-color-text-secondary, #9ca3af);
+    font-size: var(--mosaic-font-size-xs, 0.75rem);
+    flex-shrink: 0;
+  }
+  
+  .value {
+    color: var(--mosaic-color-text-primary, #ffffff);
+    font-size: var(--mosaic-font-size-xs, 0.75rem);
+    font-family: var(--mosaic-font-mono, 'Monaco', monospace);
+    text-align: right;
+    
+    &.confidence {
+      font-weight: var(--mosaic-font-weight-medium, 500);
+    }
+  }
+}
+
+.flag-indicator {
+  color: var(--mosaic-color-error, #ef4444);
+  font-size: var(--mosaic-font-size-xs, 0.75rem);
+  font-weight: var(--mosaic-font-weight-medium, 500);
+  text-align: center;
+  padding: var(--mosaic-spacing-1, 0.25rem);
+  background: rgba(239, 68, 68, 0.1);
+  border-radius: var(--mosaic-border-radius-base, 0.25rem);
+  border: 1px solid rgba(239, 68, 68, 0.2);
+}
+
+.processing-indicator {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--mosaic-spacing-2, 0.5rem);
+  color: var(--mosaic-color-text-secondary, #9ca3af);
+  font-size: var(--mosaic-font-size-xs, 0.75rem);
+  padding: var(--mosaic-spacing-1, 0.25rem);
+}
+
+.spinner {
+  width: 0.75rem;
+  height: 0.75rem;
+  border: 1px solid var(--mosaic-color-text-tertiary, #6b7280);
+  border-top-color: var(--mosaic-color-primary, #3b82f6);
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+// Responsive adjustments
+@media (max-width: 768px) {
+  .source-summary-card {
+    padding: var(--mosaic-spacing-3, 0.75rem);
+  }
+  
+  .card-header {
+    gap: var(--mosaic-spacing-2, 0.5rem);
+    margin-bottom: var(--mosaic-spacing-2, 0.5rem);
+  }
+  
+  .source-title {
+    font-size: var(--mosaic-font-size-xs, 0.75rem);
+  }
+  
+  .timing-row {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--mosaic-spacing-1, 0.25rem);
+    
+    .value {
+      text-align: left;
+    }
+  }
+}

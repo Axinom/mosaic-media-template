@@ -1,0 +1,122 @@
+// Timeline Component Styles - Compatible with Mosaic Design System
+
+.videoTimeline {
+  background: var(--color-bg-secondary);
+  border-radius: var(--size-medium);
+  padding: var(--size-large);
+}
+
+.timelineHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: var(--size-medium);
+}
+
+.timelineTitle {
+  color: var(--color-text-primary);
+  font-weight: var(--font-weight-medium);
+  font-size: var(--font-size-large);
+  margin: 0;
+}
+
+.timelineTime {
+  color: var(--color-text-secondary);
+  font-size: var(--font-size-medium);
+}
+
+.timelineContainer {
+  position: relative;
+  height: 4rem;
+  border-radius: var(--size-medium);
+  overflow: hidden;
+}
+
+.timelineTrack {
+  position: absolute;
+  inset: 0;
+}
+
+.timelineBackground {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to right, 
+    var(--color-bg-tertiary), 
+    var(--color-bg-quaternary)
+  );
+}
+
+.timelineSegment {
+  position: absolute;
+  top: 0.5rem;
+  bottom: 0.5rem;
+  border-radius: var(--size-small);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  
+  &:hover {
+    transform: scaleY(1.1);
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+  }
+
+  &.flagged {
+    opacity: 0.5;
+  }
+}
+
+.segmentContent {
+  height: 100%;
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: inherit;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 var(--size-small);
+}
+
+.segmentTitle {
+  color: var(--color-text-primary);
+  font-size: var(--font-size-small);
+  font-weight: var(--font-weight-medium);
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
+}
+
+.timelinePlayhead {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 1px;
+  background: var(--color-primary);
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+  z-index: 20;
+}
+
+.playheadHandle {
+  position: absolute;
+  top: -0.5rem;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 0.75rem;
+  height: 0.75rem;
+  background: var(--color-primary);
+  border-radius: 50%;
+}
+
+// Responsive adjustments
+@media (max-width: 768px) {
+  .timelineContainer {
+    height: 3rem;
+  }
+  
+  .segmentTitle {
+    font-size: var(--font-size-small);
+  }
+  
+  .timelineHeader {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--size-small);
+  }
+}
