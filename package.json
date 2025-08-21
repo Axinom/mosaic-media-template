@@ -56,7 +56,7 @@
     "yarn:de-dupe": "npx yarn-deduplicate yarn.lock"
   },
   "devDependencies": {
-    "@axinom/mosaic-cli": "0.48.0",
+    "@axinom/mosaic-cli": "0.49.0-rc.11",
     "@jest/globals": "^29.5.0",
     "@types/jest": "^29.4.1",
     "@types/node": "^18.11.19",

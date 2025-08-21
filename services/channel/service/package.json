@@ -51,9 +51,9 @@
     "@axinom/mosaic-message-bus": "0.42.0",
     "@axinom/mosaic-message-bus-abstractions": "0.24.0",
     "@axinom/mosaic-messages": "0.59.0",
-    "@axinom/mosaic-video-messages": "0.3.0",
     "@axinom/mosaic-service-common": "0.61.0",
     "@axinom/mosaic-transactional-inbox-outbox": "0.21.0",
+    "@axinom/mosaic-video-messages": "0.3.0",
     "@graphile-contrib/pg-simplify-inflector": "^6.1.0",
     "dotenv": "^8.6.0",
     "env-cmd": "^10.1.0",
@@ -82,7 +82,7 @@
     "zapatos": "^3.6.0"
   },
   "devDependencies": {
-    "@axinom/mosaic-cli": "0.48.0",
+    "@axinom/mosaic-cli": "0.49.0-rc.11",
     "@graphql-codegen/cli": "^4.0.1",
     "@graphql-codegen/typescript": "^2.7.3",
     "@graphql-codegen/typescript-graphql-request": "^4.5.5",
