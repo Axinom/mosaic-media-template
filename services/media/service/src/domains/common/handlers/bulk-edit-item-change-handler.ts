@@ -13,6 +13,7 @@ import {
   TypedTransactionalMessage,
 } from '@axinom/mosaic-transactional-inbox-outbox';
 import { ClientBase } from 'pg';
+import { deletes, insert } from 'zapatos/db';
 import { Config } from '../../../common';
 import { MediaGuardedTransactionalInboxMessageHandler } from '../../../messaging';
 import { PermissionKey } from '../../permission-definition';
@@ -42,6 +43,23 @@ export class BulkEditItemChangeHandler extends MediaGuardedTransactionalInboxMes
     _context: GuardedContext,
   ): Promise<void> {
     this.logger.debug({ details: { ...message.payload } });
+
+    if (message.payload.table_name === 'movies_images') {
+      if (message.payload.action === 'ADD_RELATED_ENTITY') {
+        await deletes(message.payload.table_name, {
+          movie_id: JSON.parse(message.payload.stringified_payload).movie_id,
+          image_type: JSON.parse(message.payload.stringified_payload)
+            .image_type,
+        }).run(envOwnerClient);
+
+        await insert(
+          message.payload.table_name,
+          JSON.parse(message.payload.stringified_payload),
+        ).run(envOwnerClient);
+
+        return;
+      }
+    }
 
     await handlePerformItemChangeCommand(message.payload, envOwnerClient);
   }
