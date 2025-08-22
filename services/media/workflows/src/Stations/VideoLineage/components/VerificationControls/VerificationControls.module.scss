@@ -1,36 +1,36 @@
 // Verification Controls Component Styles - Compatible with Mosaic Design System
 
 .verificationControls {
-  background: var(--color-bg-secondary);
-  border-radius: var(--size-medium);
-  padding: var(--size-large);
+  background: #f9fafb;
+  border-radius: 0.375rem;
+  padding: 1.5rem;
 }
 
 .controlsHeader {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-bottom: var(--size-large);
+  margin-bottom: 1.5rem;
 }
 
 .controlsTitle {
-  color: var(--color-text-primary);
-  font-weight: var(--font-weight-medium);
-  font-size: var(--font-size-large);
+  color: #1f2937;
+  font-weight: 500;
+  font-size: 1.125rem;
   margin: 0;
 }
 
 .controlsDescription {
-  color: var(--color-text-secondary);
-  font-size: var(--font-size-medium);
+  color: #9ca3af;
+  font-size: 1rem;
 }
 
 .controlsButtons {
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: var(--size-large);
-  margin-bottom: var(--size-large);
+  gap: 1.5rem;
+  margin-bottom: 1.5rem;
 }
 
 .controlButton {
@@ -38,41 +38,41 @@
   align-items: center;
   justify-content: center;
   border: none;
-  border-radius: var(--size-medium);
+  border-radius: 0.375rem;
   cursor: pointer;
   transition: all 0.2s ease;
   font-family: inherit;
 
   &.primary {
-    padding: var(--size-medium);
-    background: var(--color-primary);
-    color: var(--color-text-on-primary);
+    padding: 1rem;
+    background: #3b82f6;
+    color: #ffffff;
 
     &:hover:not(:disabled) {
-      background: var(--color-primary-hover);
+      background: #2563eb;
     }
 
     &:active {
-      background: var(--color-primary-active);
+      background: #1d4ed8;
     }
   }
 
   &.secondary {
-    padding: var(--size-medium);
-    background: var(--color-bg-tertiary);
-    color: var(--color-text-primary);
+    padding: 1rem;
+    background: #f3f4f6;
+    color: #1f2937;
 
     &:hover:not(:disabled) {
-      background: var(--color-bg-quaternary);
+      background: #e5e7eb;
     }
 
     &:active {
-      background: var(--color-bg-quinary);
+      background: #d1d5db;
     }
   }
 
   &:focus {
-    outline: 2px solid var(--color-focus);
+    outline: 2px solid #3b82f6;
     outline-offset: 2px;
   }
 
@@ -85,7 +85,7 @@
 .seekContainer {
   display: flex;
   flex-direction: column;
-  gap: var(--size-small);
+  gap: 0.5rem;
 }
 
 .seekLabels {
@@ -95,16 +95,16 @@
 }
 
 .seekTime {
-  color: var(--color-text-secondary);
-  font-size: var(--font-size-small);
-  font-family: var(--font-mono);
+  color: #9ca3af;
+  font-size: 0.875rem;
+  font-family: 'Monaco', monospace;
 }
 
 .seekSlider {
   width: 100%;
   height: 4px;
   border-radius: 2px;
-  background: var(--color-bg-tertiary);
+  background: #f3f4f6;
   outline: none;
   cursor: pointer;
 
@@ -113,9 +113,9 @@
     width: 16px;
     height: 16px;
     border-radius: 50%;
-    background: var(--color-primary);
+    background: #3b82f6;
     cursor: pointer;
-    border: 2px solid var(--color-bg-primary);
+    border: 2px solid #ffffff;
     transition: all 0.2s ease;
 
     &:hover {
@@ -127,9 +127,9 @@
     width: 16px;
     height: 16px;
     border-radius: 50%;
-    background: var(--color-primary);
+    background: #3b82f6;
     cursor: pointer;
-    border: 2px solid var(--color-bg-primary);
+    border: 2px solid #ffffff;
     transition: all 0.2s ease;
 
     &:hover {
@@ -140,18 +140,18 @@
   &::-webkit-slider-track {
     height: 4px;
     border-radius: 2px;
-    background: var(--color-bg-tertiary);
+    background: #f3f4f6;
   }
 
   &::-moz-range-track {
     height: 4px;
     border-radius: 2px;
-    background: var(--color-bg-tertiary);
+    background: #f3f4f6;
     border: none;
   }
 
   &:focus {
-    outline: 2px solid var(--color-focus);
+    outline: 2px solid #3b82f6;
     outline-offset: 2px;
   }
 }
@@ -161,31 +161,31 @@
   .controlsHeader {
     flex-direction: column;
     align-items: flex-start;
-    gap: var(--size-small);
+    gap: 0.5rem;
   }
 
   .controlsButtons {
     flex-wrap: wrap;
-    gap: var(--size-medium);
+    gap: 1rem;
   }
 
   .controlButton {
     &.primary {
-      padding: var(--size-large);
+      padding: 1.5rem;
     }
   }
 }
 
 @media (max-width: 480px) {
   .controlsButtons {
-    gap: var(--size-small);
+    gap: 0.5rem;
   }
 
   .controlButton {
-    padding: var(--size-small);
+    padding: 0.5rem;
     
     &.primary {
-      padding: var(--size-medium);
+      padding: 1rem;
     }
   }
 }

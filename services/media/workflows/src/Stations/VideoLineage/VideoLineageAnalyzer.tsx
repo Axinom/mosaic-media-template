@@ -1,5 +1,5 @@
-import { InfoPanel, Paragraph, Section } from '@axinom/mosaic-ui';
-import { AlertTriangle, CheckCircle, Clock, Network } from 'lucide-react';
+import { EmptyStation, InfoPanel, Paragraph, Section } from '@axinom/mosaic-ui';
+import { AlertTriangle, Clock, Network } from 'lucide-react';
 import React, { useCallback, useMemo, useState } from 'react';
 
 // Hooks and utilities
@@ -171,250 +171,245 @@ export const VideoLineageAnalyzer: React.FC<VideoLineageAnalyzerProps> = ({
   const { video, sourceMatches, analysisMetadata } = analysisData;
 
   return (
-    <div className={classes.videoLineageAnalyzer}>
-      {/* Header */}
-      <div className={classes.analyzerHeader}>
-        <div className={classes.headerContent}>
-          <div className={classes.headerTitle}>
-            <h1>Video Content Lineage Analyzer</h1>
-            <p>AI-powered video source detection and content tracking</p>
-          </div>
-          <div className={classes.detectionStatus}>
-            <CheckCircle size={16} />
-            <span>{sourceMatches.length} Sources Detected</span>
-          </div>
-        </div>
+    <EmptyStation
+      title="Video Lineage Analyzer"
+      subtitle={`${sourceMatches.length} Sources Detected`}
+    >
+      <div className={classes.main}>
+        <div className={classes.videoLineageAnalyzer}>
+          {/* Demo Controls */}
+          <DemoControls onRefresh={refetch} isLoading={loading} />
 
-        {/* View Toggle - hide in verification mode */}
-        {!verificationMode && (
-          <div className={classes.viewToggle}>
-            <button
-              onClick={() => setActiveView('timeline')}
-              className={`${classes.toggleButton} ${
-                activeView === 'timeline' ? classes.active : ''
-              }`}
-              type="button"
-            >
-              <Clock size={16} />
-              Timeline View
-            </button>
-            <button
-              onClick={() => setActiveView('network')}
-              className={`${classes.toggleButton} ${
-                activeView === 'network' ? classes.active : ''
-              }`}
-              type="button"
-            >
-              <Network size={16} />
-              Network View
-            </button>
-          </div>
-        )}
-      </div>
-
-      {/* Demo Controls */}
-      <DemoControls onRefresh={refetch} isLoading={loading} />
-
-      {/* Main Content */}
-      <div className={classes.analyzerContent}>
-        <div className={classes.mainContent}>
-          {verificationMode ? (
-            /* Verification View */
-            <div className={classes.verificationView}>
-              <div className={classes.verificationHeader}>
-                <div className={classes.verificationInfo}>
-                  <h3>Verifying: {selectedSegment?.sourceVideo.title}</h3>
-                  <p>Compare segments to verify match accuracy</p>
-                </div>
+          {/* Header */}
+          <div className={classes.analyzerHeader}>
+            {/* View Toggle - hide in verification mode */}
+            {!verificationMode && (
+              <div className={classes.viewToggle}>
                 <button
-                  onClick={exitVerification}
-                  className={classes.backButton}
+                  onClick={() => setActiveView('timeline')}
+                  className={`${classes.toggleButton} ${
+                    activeView === 'timeline' ? classes.active : ''
+                  }`}
                   type="button"
                 >
-                  ← Back to Overview
+                  <Clock size={16} />
+                  Timeline View
+                </button>
+                <button
+                  onClick={() => setActiveView('network')}
+                  className={`${classes.toggleButton} ${
+                    activeView === 'network' ? classes.active : ''
+                  }`}
+                  type="button"
+                >
+                  <Network size={16} />
+                  Network View
                 </button>
               </div>
+            )}
+          </div>
 
-              {/* Main Video */}
-              <div className={classes.videoSection}>
-                <h4>Main Video - Segment Being Verified</h4>
-                <VideoPlayer
-                  video={video}
-                  currentTime={
-                    selectedSegment
-                      ? selectedSegment.mainVideoSegment.startTime +
-                        verificationTime
-                      : 0
-                  }
-                  isPlaying={isPlaying}
-                  onTimeUpdate={() => {
-                    // TODO: Implement time update handler
-                  }}
-                  onPlayToggle={() => {
-                    // TODO: Implement play toggle handler
-                  }}
-                  showControls={false}
-                  className={classes.mainVideo}
-                />
-              </div>
-
-              {/* Source Video */}
-              <div className={classes.videoSection}>
-                <h4>Source Video - Detected Match</h4>
-                <VideoPlayer
-                  video={selectedSegment?.sourceVideo || video}
-                  currentTime={
-                    selectedSegment
-                      ? selectedSegment.sourceVideoSegment.startTime +
-                        verificationTime
-                      : 0
-                  }
-                  isPlaying={isPlaying}
-                  onTimeUpdate={() => {
-                    // TODO: Implement time update handler
-                  }}
-                  onPlayToggle={() => {
-                    // TODO: Implement play toggle handler
-                  }}
-                  showControls={false}
-                  className={classes.sourceVideo}
-                />
-              </div>
-
-              {/* Verification Controls */}
-              {selectedSegment && (
-                <VerificationControls
-                  currentTime={verificationTime}
-                  duration={
-                    selectedSegment.mainVideoSegment.endTime -
-                    selectedSegment.mainVideoSegment.startTime
-                  }
-                  isPlaying={isPlaying}
-                  onTimeUpdate={handleVerificationTimeUpdate}
-                  onPlayToggle={handlePlayToggle}
-                  onSkipToStart={() => setVerificationTime(0)}
-                  onSkipToEnd={() => {
-                    const duration =
-                      selectedSegment.mainVideoSegment.endTime -
-                      selectedSegment.mainVideoSegment.startTime;
-                    setVerificationTime(duration);
-                  }}
-                  onStepBackward={() =>
-                    setVerificationTime(Math.max(0, verificationTime - 1))
-                  }
-                  onStepForward={() => {
-                    const duration =
-                      selectedSegment.mainVideoSegment.endTime -
-                      selectedSegment.mainVideoSegment.startTime;
-                    setVerificationTime(
-                      Math.min(duration, verificationTime + 1),
-                    );
-                  }}
-                />
-              )}
-
-              {/* Verification Actions */}
-              <VerificationActions
-                onAccept={() => handleVerifySegment('verified')}
-                onReject={() => handleVerifySegment('rejected')}
-                onFlag={() => handleVerifySegment('flagged')}
-                onCancel={exitVerification}
-              />
-            </div>
-          ) : activeView === 'timeline' ? (
-            /* Timeline View */
-            <div className={classes.timelineView}>
-              <div className={classes.mainVideoSection}>
-                <VideoPlayer
-                  video={video}
-                  currentTime={currentTime}
-                  isPlaying={isPlaying}
-                  onTimeUpdate={handleTimeUpdate}
-                  onPlayToggle={handlePlayToggle}
-                />
-
-                <Timeline
-                  video={video}
-                  sourceMatches={sortedSourceMatches}
-                  currentTime={currentTime}
-                  onSegmentClick={handleSegmentClick}
-                  flaggedSegments={flaggedSegments}
-                />
-              </div>
-
-              {/* Source Summary Cards */}
-              <div className={classes.sourceSummaryGrid}>
-                {sortedSourceMatches.map((match, index) => (
-                  <SourceSummaryCard
-                    key={match.id}
-                    match={match}
-                    index={index}
-                    onClick={handleSegmentClick}
-                    isFlagged={isFlagged(match.id)}
-                    isProcessing={isProcessing(match.id)}
-                  />
-                ))}
-              </div>
-
-              {/* Active Segment Hint */}
-              {activeSegment && (
-                <div className={classes.activeSegmentHint}>
-                  <div className={classes.hintContent}>
-                    <strong>Currently viewing:</strong>{' '}
-                    {activeSegment.sourceVideo.title}
+          {/* Main Content */}
+          <div className={classes.analyzerContent}>
+            <div className={classes.mainContent}>
+              {verificationMode ? (
+                /* Verification View */
+                <div className={classes.verificationView}>
+                  <div className={classes.verificationHeader}>
+                    <div className={classes.verificationInfo}>
+                      <h3>Verifying: {selectedSegment?.sourceVideo.title}</h3>
+                      <p>Compare segments to verify match accuracy</p>
+                    </div>
+                    <button
+                      onClick={exitVerification}
+                      className={classes.backButton}
+                      type="button"
+                    >
+                      ← Back to Overview
+                    </button>
                   </div>
-                  <button
-                    onClick={() => handleSegmentClick(activeSegment)}
-                    className={classes.verifyButton}
-                    type="button"
-                  >
-                    Verify Match
-                  </button>
+
+                  {/* Main Video */}
+                  <div className={classes.videoSection}>
+                    <h4>Main Video - Segment Being Verified</h4>
+                    <VideoPlayer
+                      video={video}
+                      currentTime={
+                        selectedSegment
+                          ? selectedSegment.mainVideoSegment.startTime +
+                            verificationTime
+                          : 0
+                      }
+                      isPlaying={isPlaying}
+                      onTimeUpdate={() => {
+                        // TODO: Implement time update handler
+                      }}
+                      onPlayToggle={() => {
+                        // TODO: Implement play toggle handler
+                      }}
+                      showControls={false}
+                      className={classes.mainVideo}
+                    />
+                  </div>
+
+                  {/* Source Video */}
+                  <div className={classes.videoSection}>
+                    <h4>Source Video - Detected Match</h4>
+                    <VideoPlayer
+                      video={selectedSegment?.sourceVideo || video}
+                      currentTime={
+                        selectedSegment
+                          ? selectedSegment.sourceVideoSegment.startTime +
+                            verificationTime
+                          : 0
+                      }
+                      isPlaying={isPlaying}
+                      onTimeUpdate={() => {
+                        // TODO: Implement time update handler
+                      }}
+                      onPlayToggle={() => {
+                        // TODO: Implement play toggle handler
+                      }}
+                      showControls={false}
+                      className={classes.sourceVideo}
+                    />
+                  </div>
+
+                  {/* Verification Controls */}
+                  {selectedSegment && (
+                    <VerificationControls
+                      currentTime={verificationTime}
+                      duration={
+                        selectedSegment.mainVideoSegment.endTime -
+                        selectedSegment.mainVideoSegment.startTime
+                      }
+                      isPlaying={isPlaying}
+                      onTimeUpdate={handleVerificationTimeUpdate}
+                      onPlayToggle={handlePlayToggle}
+                      onSkipToStart={() => setVerificationTime(0)}
+                      onSkipToEnd={() => {
+                        const duration =
+                          selectedSegment.mainVideoSegment.endTime -
+                          selectedSegment.mainVideoSegment.startTime;
+                        setVerificationTime(duration);
+                      }}
+                      onStepBackward={() =>
+                        setVerificationTime(Math.max(0, verificationTime - 1))
+                      }
+                      onStepForward={() => {
+                        const duration =
+                          selectedSegment.mainVideoSegment.endTime -
+                          selectedSegment.mainVideoSegment.startTime;
+                        setVerificationTime(
+                          Math.min(duration, verificationTime + 1),
+                        );
+                      }}
+                    />
+                  )}
+
+                  {/* Verification Actions */}
+                  <VerificationActions
+                    onAccept={() => handleVerifySegment('verified')}
+                    onReject={() => handleVerifySegment('rejected')}
+                    onFlag={() => handleVerifySegment('flagged')}
+                    onCancel={exitVerification}
+                  />
+                </div>
+              ) : activeView === 'timeline' ? (
+                /* Timeline View */
+                <div className={classes.timelineView}>
+                  <div className={classes.mainVideoSection}>
+                    <VideoPlayer
+                      video={video}
+                      currentTime={currentTime}
+                      isPlaying={isPlaying}
+                      onTimeUpdate={handleTimeUpdate}
+                      onPlayToggle={handlePlayToggle}
+                    />
+
+                    <Timeline
+                      video={video}
+                      sourceMatches={sortedSourceMatches}
+                      currentTime={currentTime}
+                      onSegmentClick={handleSegmentClick}
+                      flaggedSegments={flaggedSegments}
+                    />
+                  </div>
+
+                  {/* Source Summary Cards */}
+                  <div className={classes.sourceSummaryGrid}>
+                    {sortedSourceMatches.map((match, index) => (
+                      <SourceSummaryCard
+                        key={match.id}
+                        match={match}
+                        index={index}
+                        onClick={handleSegmentClick}
+                        isFlagged={isFlagged(match.id)}
+                        isProcessing={isProcessing(match.id)}
+                      />
+                    ))}
+                  </div>
+
+                  {/* Active Segment Hint */}
+                  {activeSegment && (
+                    <div className={classes.activeSegmentHint}>
+                      <div className={classes.hintContent}>
+                        <strong>Currently viewing:</strong>{' '}
+                        {activeSegment.sourceVideo.title}
+                      </div>
+                      <button
+                        onClick={() => handleSegmentClick(activeSegment)}
+                        className={classes.verifyButton}
+                        type="button"
+                      >
+                        Verify Match
+                      </button>
+                    </div>
+                  )}
+                </div>
+              ) : (
+                /* Network View - Placeholder for now */
+                <div className={classes.networkView}>
+                  <div className={classes.networkPlaceholder}>
+                    <Network size={64} />
+                    <h3>Network View</h3>
+                    <p>
+                      Content relationship network visualization coming soon
+                    </p>
+                  </div>
                 </div>
               )}
             </div>
-          ) : (
-            /* Network View - Placeholder for now */
-            <div className={classes.networkView}>
-              <div className={classes.networkPlaceholder}>
-                <Network size={64} />
-                <h3>Network View</h3>
-                <p>Content relationship network visualization coming soon</p>
-              </div>
-            </div>
-          )}
+          </div>
         </div>
-
         {/* Sidebar - only show in overview mode */}
         {!verificationMode && (
-          <div className={classes.analyzerSidebar}>
-            <InfoPanel>
-              <Section title="Analysis Summary">
-                <Paragraph title="Processing Time">
-                  {analysisMetadata.processingTime}s
-                </Paragraph>
-                <Paragraph title="Frames Analyzed">
-                  {analysisMetadata.totalFramesAnalyzed.toLocaleString()}
-                </Paragraph>
-                <Paragraph title="Average Confidence">
-                  {analysisMetadata.confidence.average}%
-                </Paragraph>
-              </Section>
-              <Section title="Detection Details">
-                <Paragraph title="High Confidence">
-                  {analysisMetadata.confidence.high} matches (≥90%)
-                </Paragraph>
-                <Paragraph title="Medium Confidence">
-                  {analysisMetadata.confidence.medium} matches (75-89%)
-                </Paragraph>
-                <Paragraph title="Low Confidence">
-                  {analysisMetadata.confidence.low} matches (&lt;75%)
-                </Paragraph>
-              </Section>
-            </InfoPanel>
-          </div>
+          <InfoPanel>
+            <Section title="Analysis Summary">
+              <Paragraph title="Processing Time">
+                {analysisMetadata.processingTime}s
+              </Paragraph>
+              <Paragraph title="Frames Analyzed">
+                {analysisMetadata.totalFramesAnalyzed.toLocaleString()}
+              </Paragraph>
+              <Paragraph title="Average Confidence">
+                {analysisMetadata.confidence.average}%
+              </Paragraph>
+            </Section>
+            <Section title="Detection Details">
+              <Paragraph title="High Confidence">
+                {analysisMetadata.confidence.high} matches (≥90%)
+              </Paragraph>
+              <Paragraph title="Medium Confidence">
+                {analysisMetadata.confidence.medium} matches (75-89%)
+              </Paragraph>
+              <Paragraph title="Low Confidence">
+                {analysisMetadata.confidence.low} matches (&lt;75%)
+              </Paragraph>
+            </Section>
+          </InfoPanel>
         )}
       </div>
-    </div>
+    </EmptyStation>
   );
 };

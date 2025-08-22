@@ -1,39 +1,39 @@
 // Verification Actions Component Styles - Compatible with Mosaic Design System
 
 .verificationActions {
-  background: var(--color-bg-primary);
-  border-radius: var(--size-large);
-  padding: var(--size-xlarge);
+  background: #ffffff;
+  border-radius: 0.5rem;
+  padding: 2rem;
 }
 
 .actionsTitle {
-  color: var(--color-text-primary);
-  font-weight: var(--font-weight-medium);
-  font-size: var(--font-size-large);
-  margin: 0 0 var(--size-large);
+  color: #1f2937;
+  font-weight: 500;
+  font-size: 1.125rem;
+  margin: 0 0 1.5rem;
 }
 
 .actionsButtons {
   display: flex;
-  gap: var(--size-large);
+  gap: 1.5rem;
   flex-wrap: wrap;
 }
 
 .actionButton {
   display: flex;
   align-items: center;
-  gap: var(--size-medium);
-  padding: var(--size-medium) var(--size-xlarge);
+  gap: 1rem;
+  padding: 1rem 2rem;
   border: none;
-  border-radius: var(--size-medium);
-  font-weight: var(--font-weight-medium);
+  border-radius: 0.375rem;
+  font-weight: 500;
   cursor: pointer;
   transition: all 0.2s ease;
   font-family: inherit;
   white-space: nowrap;
 
   &:focus {
-    outline: 2px solid var(--color-focus);
+    outline: 2px solid #3b82f6;
     outline-offset: 2px;
   }
 
@@ -43,55 +43,55 @@
   }
 
   &.accept {
-    background: var(--color-success);
-    color: var(--color-text-on-success);
+    background: #10b981;
+    color: #ffffff;
 
     &:hover:not(:disabled) {
-      background: var(--color-success-hover);
+      background: #059669;
     }
 
     &:active {
-      background: var(--color-success-active);
+      background: #047857;
     }
   }
 
   &.reject {
-    background: var(--color-error);
-    color: var(--color-text-on-error);
+    background: #ef4444;
+    color: #ffffff;
 
     &:hover:not(:disabled) {
-      background: var(--color-error-hover);
+      background: #dc2626;
     }
 
     &:active {
-      background: var(--color-error-active);
+      background: #b91c1c;
     }
   }
 
   &.flag {
-    background: var(--color-warning);
-    color: var(--color-text-on-warning);
+    background: #f59e0b;
+    color: #ffffff;
 
     &:hover:not(:disabled) {
-      background: var(--color-warning-hover);
+      background: #d97706;
     }
 
     &:active {
-      background: var(--color-warning-active);
+      background: #b45309;
     }
   }
 
   &.cancel {
-    background: var(--color-bg-tertiary);
-    color: var(--color-text-primary);
+    background: #f3f4f6;
+    color: #1f2937;
     margin-left: auto;
 
     &:hover:not(:disabled) {
-      background: var(--color-bg-quaternary);
+      background: #e5e7eb;
     }
 
     &:active {
-      background: var(--color-bg-quinary);
+      background: #d1d5db;
     }
   }
 }
@@ -100,7 +100,7 @@
 @media (max-width: 768px) {
   .actionsButtons {
     flex-direction: column;
-    gap: var(--size-small);
+    gap: 0.5rem;
   }
   
   .actionButton {

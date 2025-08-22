@@ -1,10 +1,14 @@
 // Video Lineage Analyzer Main Component Styles - Compatible with Mosaic Design System
+.main {
+    display: grid;
+    grid: 1fr / minmax(740px, 1fr) auto;
+}
 
 .videoLineageAnalyzer {
   min-height: 100vh;
-  background: var(--color-bg-primary);
-  color: var(--color-text-primary);
-  padding: var(--size-medium);
+  background: #ffffff;
+  color: #1f2937;
+  // padding: 1rem;
 }
 
 // Loading state
@@ -14,20 +18,20 @@
   align-items: center;
   justify-content: center;
   min-height: 60vh;
-  gap: var(--size-medium);
+  gap: 1rem;
 
   .loadingSpinner {
     width: 3rem;
     height: 3rem;
-    border: 2px solid var(--color-border-primary);
-    border-top-color: var(--color-primary-500);
+    border: 2px solid #e5e7eb;
+    border-top-color: #3b82f6;
     border-radius: 50%;
     animation: spin 1s linear infinite;
   }
 
   .loadingText {
-    color: var(--color-text-muted);
-    font-size: var(--font-size-medium);
+    color: #6b7280;
+    font-size: 1rem;
   }
 }
 
@@ -46,35 +50,35 @@
   text-align: center;
 
   .errorIcon {
-    color: var(--color-error-500);
-    margin-bottom: var(--size-medium);
+    color: #ef4444;
+    margin-bottom: 1rem;
   }
 
   .errorMessage {
     h3 {
-      color: var(--color-error-500);
-      margin-bottom: var(--size-small);
-      font-size: var(--font-size-large);
+      color: #ef4444;
+      margin-bottom: 0.5rem;
+      font-size: 1.125rem;
     }
 
     p {
-      color: var(--color-text-muted);
-      margin-bottom: var(--size-medium);
+      color: #6b7280;
+      margin-bottom: 1rem;
     }
   }
 
   .retryButton {
-    background: var(--color-primary-500);
-    color: var(--color-text-on-primary);
+    background: #3b82f6;
+    color: #ffffff;
     border: none;
-    border-radius: var(--border-radius-medium);
-    padding: var(--size-small) var(--size-medium);
-    font-weight: var(--font-weight-medium);
+    border-radius: 0.375rem;
+    padding: 0.5rem 1rem;
+    font-weight: 500;
     cursor: pointer;
     transition: all 0.2s ease;
 
     &:hover {
-      background: var(--color-primary-600);
+      background: #2563eb;
     }
   }
 }
@@ -87,80 +91,80 @@
   min-height: 60vh;
 
   .emptyMessage {
-    color: var(--color-text-muted);
-    font-size: var(--font-size-large);
+    color: #6b7280;
+    font-size: 1.125rem;
   }
 }
 
 // Header
 .analyzerHeader {
-  margin-bottom: var(--size-large);
+  margin-bottom: 1.5rem;
 
   .headerContent {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    margin-bottom: var(--size-medium);
+    margin-bottom: 1rem;
 
     .headerTitle {
       h1 {
-        font-size: var(--font-size-xxlarge);
-        font-weight: var(--font-weight-bold);
-        color: var(--color-text-primary);
-        margin: 0 0 var(--size-tiny);
+        font-size: 1.875rem;
+        font-weight: 700;
+        color: #1f2937;
+        margin: 0 0 0.25rem;
       }
 
       p {
-        color: var(--color-text-muted);
+        color: #6b7280;
         margin: 0;
-        font-size: var(--font-size-medium);
+        font-size: 1rem;
       }
     }
 
     .detectionStatus {
       display: flex;
       align-items: center;
-      gap: var(--size-small);
-      background: var(--color-success-50);
-      border: 1px solid var(--color-success-200);
-      border-radius: var(--border-radius-medium);
-      padding: var(--size-small) var(--size-medium);
-      color: var(--color-success-700);
-      font-weight: var(--font-weight-medium);
-      font-size: var(--font-size-small);
+      gap: 0.5rem;
+      background: #f0fdf4;
+      border: 1px solid #bbf7d0;
+      border-radius: 0.375rem;
+      padding: 0.5rem 1rem;
+      color: #15803d;
+      font-weight: 500;
+      font-size: 0.875rem;
     }
   }
 
   .viewToggle {
     display: flex;
-    gap: var(--size-tiny);
-    background: var(--color-bg-secondary);
-    padding: var(--size-tiny);
-    border-radius: var(--border-radius-medium);
+    gap: 0.25rem;
+    background: #f9fafb;
+    padding: 0.25rem;
+    border-radius: 0.375rem;
     width: fit-content;
 
     .toggleButton {
       display: flex;
       align-items: center;
-      gap: var(--size-small);
-      padding: var(--size-small) var(--size-medium);
+      gap: 0.5rem;
+      padding: 0.5rem 1rem;
       border: none;
-      border-radius: var(--border-radius-small);
+      border-radius: 0.25rem;
       background: transparent;
-      color: var(--color-text-muted);
+      color: #6b7280;
       cursor: pointer;
       transition: all 0.2s ease;
       font-family: inherit;
-      font-size: var(--font-size-small);
+      font-size: 0.875rem;
 
       &:hover {
-        color: var(--color-text-primary);
-        background: var(--color-bg-hover);
+        color: #1f2937;
+        background: #f3f4f6;
       }
 
       &.active {
-        background: var(--color-primary-500);
-        color: var(--color-text-on-primary);
+        background: #3b82f6;
+        color: #ffffff;
       }
     }
   }
@@ -170,7 +174,7 @@
 .analyzerContent {
   display: grid;
   grid-template-columns: 1fr 300px;
-  gap: var(--size-medium);
+  gap: 1rem;
 
   .mainContent {
     min-width: 0; // Prevent grid overflow
@@ -179,7 +183,7 @@
   .analyzerSidebar {
     display: flex;
     flex-direction: column;
-    gap: var(--size-medium);
+    gap: 1rem;
   }
 }
 
@@ -187,48 +191,48 @@
 .timelineView {
   display: flex;
   flex-direction: column;
-  gap: var(--size-medium);
+  gap: 1rem;
 
   .mainVideoSection {
-    background: var(--color-bg-primary);
-    border: 1px solid var(--color-border-primary);
-    border-radius: var(--border-radius-large);
-    padding: var(--size-medium);
+    background: #ffffff;
+    border: 1px solid #e5e7eb;
+    border-radius: 0.5rem;
+    padding: 1rem;
   }
 
   .sourceSummaryGrid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-    gap: var(--size-medium);
+    gap: 1rem;
   }
 
   .activeSegmentHint {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    background: var(--color-primary-50);
-    border: 1px solid var(--color-primary-200);
-    border-radius: var(--border-radius-medium);
-    padding: var(--size-medium);
+    background: #eff6ff;
+    border: 1px solid #bfdbfe;
+    border-radius: 0.375rem;
+    padding: 1rem;
 
     .hintContent {
-      color: var(--color-primary-700);
-      font-size: var(--font-size-small);
+      color: #1d4ed8;
+      font-size: 0.875rem;
     }
 
     .verifyButton {
-      background: var(--color-primary-500);
-      color: var(--color-text-on-primary);
+      background: #3b82f6;
+      color: #ffffff;
       border: none;
-      border-radius: var(--border-radius-small);
-      padding: var(--size-tiny) var(--size-small);
-      font-size: var(--font-size-small);
+      border-radius: 0.25rem;
+      padding: 0.25rem 0.5rem;
+      font-size: 0.875rem;
       cursor: pointer;
       transition: all 0.2s ease;
       font-family: inherit;
 
       &:hover {
-        background: var(--color-primary-600);
+        background: #2563eb;
       }
     }
   }
@@ -238,7 +242,7 @@
 .verificationView {
   display: flex;
   flex-direction: column;
-  gap: var(--size-medium);
+  gap: 1rem;
 
   .verificationHeader {
     display: flex;
@@ -247,47 +251,47 @@
 
     .verificationInfo {
       h3 {
-        color: var(--color-text-primary);
-        font-size: var(--font-size-large);
-        font-weight: var(--font-weight-semibold);
-        margin: 0 0 var(--size-tiny);
+        color: #1f2937;
+        font-size: 1.125rem;
+        font-weight: 600;
+        margin: 0 0 0.25rem;
       }
 
       p {
-        color: var(--color-text-muted);
+        color: #6b7280;
         margin: 0;
-        font-size: var(--font-size-medium);
+        font-size: 1rem;
       }
     }
 
     .backButton {
-      background: var(--color-bg-secondary);
-      color: var(--color-text-primary);
-      border: 1px solid var(--color-border-primary);
-      border-radius: var(--border-radius-medium);
-      padding: var(--size-small) var(--size-medium);
+      background: #f9fafb;
+      color: #1f2937;
+      border: 1px solid #e5e7eb;
+      border-radius: 0.375rem;
+      padding: 0.5rem 1rem;
       cursor: pointer;
       transition: all 0.2s ease;
       font-family: inherit;
-      font-size: var(--font-size-small);
+      font-size: 0.875rem;
 
       &:hover {
-        background: var(--color-bg-hover);
+        background: #f3f4f6;
       }
     }
   }
 
   .videoSection {
-    background: var(--color-bg-primary);
-    border: 1px solid var(--color-border-primary);
-    border-radius: var(--border-radius-large);
-    padding: var(--size-medium);
+    background: #ffffff;
+    border: 1px solid #e5e7eb;
+    border-radius: 0.5rem;
+    padding: 1rem;
 
     h4 {
-      color: var(--color-text-primary);
-      font-weight: var(--font-weight-medium);
-      margin: 0 0 var(--size-small);
-      font-size: var(--font-size-medium);
+      color: #1f2937;
+      font-weight: 500;
+      margin: 0 0 0.5rem;
+      font-size: 1rem;
     }
   }
 }
@@ -301,15 +305,15 @@
 
   .networkPlaceholder {
     text-align: center;
-    color: var(--color-text-muted);
+    color: #6b7280;
 
     h3 {
-      margin: var(--size-medium) 0 var(--size-small);
-      font-size: var(--font-size-large);
+      margin: 1rem 0 0.5rem;
+      font-size: 1.125rem;
     }
 
     p {
-      font-size: var(--font-size-medium);
+      font-size: 1rem;
     }
   }
 }
@@ -327,14 +331,14 @@
 
 @media (max-width: 768px) {
   .videoLineageAnalyzer {
-    padding: var(--size-small);
+    padding: 0.5rem;
   }
 
   .analyzerHeader {
     .headerContent {
       flex-direction: column;
       align-items: flex-start;
-      gap: var(--size-medium);
+      gap: 1rem;
     }
 
     .viewToggle {
@@ -355,7 +359,7 @@
     .activeSegmentHint {
       flex-direction: column;
       align-items: flex-start;
-      gap: var(--size-small);
+      gap: 0.5rem;
     }
   }
 
@@ -363,41 +367,41 @@
     .verificationHeader {
       flex-direction: column;
       align-items: flex-start;
-      gap: var(--size-small);
+      gap: 0.5rem;
     }
   }
 }
 
 // Additional Missing Classes
 .videoSection {
-  margin-bottom: var(--size-large);
+  margin-bottom: 1.5rem;
 
   h4 {
-    margin: 0 0 var(--size-small);
-    color: var(--color-text-primary);
-    font-size: var(--font-size-medium);
-    font-weight: var(--font-weight-medium);
+    margin: 0 0 0.5rem;
+    color: #1f2937;
+    font-size: 1rem;
+    font-weight: 500;
   }
 }
 
 .mainVideo, .sourceVideo {
-  border-radius: var(--size-small);
+  border-radius: 0.5rem;
   overflow: hidden;
 }
 
 .mainVideoSection {
-  margin-bottom: var(--size-large);
+  margin-bottom: 1.5rem;
 }
 
 .sourceSummaryGrid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-  gap: var(--size-medium);
-  margin-bottom: var(--size-large);
+  gap: 1rem;
+  margin-bottom: 1.5rem;
 }
 
 .networkView {
-  padding: var(--size-large);
+  padding: 1.5rem;
 }
 
 .networkPlaceholder {
@@ -405,8 +409,8 @@
   align-items: center;
   justify-content: center;
   min-height: 400px;
-  background: var(--color-bg-secondary);
-  border-radius: var(--size-small);
-  color: var(--color-text-secondary);
-  font-size: var(--font-size-medium);
+  background: #f9fafb;
+  border-radius: 0.5rem;
+  color: #9ca3af;
+  font-size: 1rem;
 }
