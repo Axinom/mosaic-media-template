@@ -89,11 +89,17 @@ export const IngestItemsList: React.FC<IngestItemsListProps> = ({ items }) => {
               header={
                 <div className={classes.header}>
                   {getStatusIcon(item.status)}
-                  <div className={classes.externalID}>
+                  <div
+                    data-test-id="entity-external-id"
+                    className={classes.externalID}
+                  >
                     External ID: {item.externalId},
                   </div>
                   <div>{item.displayTitle}</div>
-                  <div className={classes.status}>
+                  <div
+                    data-test-id="entity-operation"
+                    className={classes.status}
+                  >
                     {item.type} {getExistStatusText(item.existsStatus)}
                   </div>
                 </div>
