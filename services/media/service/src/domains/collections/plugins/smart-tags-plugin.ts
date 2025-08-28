@@ -42,6 +42,13 @@ export const SmartTagsPlugin = makeJSONPgSmartTagsPlugin({
             },
           },
         },
+        attribute: {
+          sort_order: {
+            tags: {
+              hasDefault: true,
+            },
+          },
+        },
       },
       'app_public.collections_snapshots': {
         tags: { omit: 'all,create,update,delete' },
