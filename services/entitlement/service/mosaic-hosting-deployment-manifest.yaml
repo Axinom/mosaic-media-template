@@ -19,6 +19,7 @@ regularVariables:
   SERVICE_ID: 'entitlement-service'
   NODE_ENV: 'production'
   LOG_LEVEL: 'WARN'
+  LOG_MASK_KEYWORDS: 'secret,credential,password,mail,authorization,connectionString,sig=,postgres://,postgresql://,amqp://,amqps://,AccountKey,SharedAccessKey,Tenant-Auth,clientIpAddress'
   GRAPHQL_GUI_ENABLED: true
   DEMO_MODE: true
   PORT: '${__ax_hosted__.port.api}'
@@ -80,17 +81,13 @@ regularVariables:
   USER_SERVICE_AUTH_BASE_URL: '${__ax_hosted__.svc.ax-user-service.auth_base_url}'
 
   # Custom Service URLs
-  CATALOG_SERVICE_BASE_URL:
-    'https://${__ax_hosted__.dns.catalog-service.api}'
+  CATALOG_SERVICE_BASE_URL: 'https://${__ax_hosted__.dns.catalog-service.api}'
 
-    # DRM License Service URLs
+  # DRM License Service URLs
   WIDEVINE_LICENSE_SERVICE_URL: 'https://drm-widevine-licensing.axtest.net/AcquireLicense'
   PLAYREADY_LICENSE_SERVICE_URL: 'https://drm-playready-licensing.axtest.net/AcquireLicense'
   FAIRPLAY_LICENSE_SERVICE_URL: 'https://drm-fairplay-licensing.axtest.net/AcquireLicense'
   FAIRPLAY_STREAMING_CERTIFICATE_URL: 'https://vtb.axinom.com/FPScert/fairplay.cer'
-
-  # Logging
-  LOG_MASK_KEYWORDS: 'secret,credential,password,mail,authorization,connectionString,sig=,postgres://,postgresql://,amqp://,amqps://,AccountKey,SharedAccessKey,Tenant-Auth,clientIpAddress'
 
 secureVariables:
   # Use this section to store any custom environment variables which contain sensitive data.
@@ -106,10 +103,9 @@ secureVariables:
 
   # DRM License Communication Key and ID
   DRM_LICENSE_COMMUNICATION_KEY: 'REPLACE_WITH_VALID_DRM_LICENSE_COMMUNICATION_KEY'
-  DRM_LICENSE_COMMUNICATION_KEY_ID:
-    'REPLACE_WITH_VALID_DRM_LICENSE_COMMUNICATION_KEY_ID'
+  DRM_LICENSE_COMMUNICATION_KEY_ID: 'REPLACE_WITH_VALID_DRM_LICENSE_COMMUNICATION_KEY_ID'
 
-    # Webhook Secret
+  # Webhook Secret
   MANIFEST_WEBHOOK_SECRET: 'REPLACE_WITH_VALID_MANIFEST_WEBHOOK_SECRET'
   ENTITLEMENT_WEBHOOK_SECRET: 'REPLACE_WITH_VALID_ENTITLEMENT_WEBHOOK_SECRET'
 
