@@ -3,6 +3,7 @@ import { useFormikContext } from 'formik';
 import React from 'react';
 import { PublishValidationMessage } from '../../generated/graphql';
 import { SeverityRenderer } from './SeverityRenderer/SeverityRenderer';
+import classes from './ValidationResultsTable.module.scss';
 
 type ValidationValidationSeverity = 'WARNING' | 'ERROR' | 'SUCCESS';
 type ValidationValidationContext =
@@ -52,6 +53,7 @@ export const ValidationResultsTable: React.FC = () => {
       allowReordering={false}
       allowNewData={false}
       textWrap={true}
+      className={classes.validationResultsTable}
       columns={[
         {
           propertyName: 'context',

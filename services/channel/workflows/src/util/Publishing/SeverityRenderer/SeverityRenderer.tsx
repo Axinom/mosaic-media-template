@@ -21,7 +21,7 @@ export const SeverityRenderer: ColumnRenderer<Data> = (val): ReactNode => {
     return (
       <div className={classes.container}>
         {image}
-        {formatTitleCase(val as string)}
+        <div className={classes.text}>{formatTitleCase(val as string)}</div>
       </div>
     );
   }

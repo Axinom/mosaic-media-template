@@ -1,6 +1,12 @@
 .container {
   display: grid;
-  grid-template-columns: 24px min-content;
+  grid-template-columns: 24px auto;
   align-items: center;
   gap: 5px;
+
+  .text {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
 }
