@@ -385,7 +385,7 @@ export type CollectionRelationInput = {
   id?: InputMaybe<Scalars['Int']>;
   movieId?: InputMaybe<Scalars['Int']>;
   seasonId?: InputMaybe<Scalars['Int']>;
-  sortOrder: Scalars['Int'];
+  sortOrder?: InputMaybe<Scalars['Int']>;
   tvshowId?: InputMaybe<Scalars['Int']>;
 };
 
@@ -17085,6 +17085,34 @@ export type MoviesMutatedSubscriptionVariables = Exact<{ [key: string]: never; }
 
 export type MoviesMutatedSubscription = { __typename?: 'Subscription', movieMutated?: { __typename?: 'MovieSubscriptionPayload', id: number, eventKey?: MovieSubscriptionEventKey | null, movie?: { __typename?: 'Movie', id: number, title: string, originalTitle?: string | null, externalId?: string | null, mainVideoId?: any | null, released?: any | null, studio?: string | null, publishedDate?: any | null, createdDate: any, updatedDate: any, publishStatus: PublishStatus, moviesImages: { __typename?: 'MoviesImagesConnection', nodes: Array<{ __typename?: 'MoviesImage', imageId: any }> }, moviesTags: { __typename?: 'MoviesTagsConnection', nodes: Array<{ __typename?: 'MoviesTag', name: string }> }, moviesMovieGenres: { __typename?: 'MoviesMovieGenresConnection', nodes: Array<{ __typename?: 'MoviesMovieGenre', movieGenres?: { __typename?: 'MovieGenre', title: string } | null }> }, moviesCasts: { __typename?: 'MoviesCastsConnection', nodes: Array<{ __typename?: 'MoviesCast', name: string }> }, moviesProductionCountries: { __typename?: 'MoviesProductionCountriesConnection', nodes: Array<{ __typename?: 'MoviesProductionCountry', name: string }> } } | null } | null };
 
+export type MovieGenresFilterOptionsQueryVariables = Exact<{
+  orderBy?: InputMaybe<Array<MovieGenresOrderBy> | MovieGenresOrderBy>;
+}>;
+
+
+export type MovieGenresFilterOptionsQuery = { __typename?: 'Query', movieGenres?: { __typename?: 'MovieGenresConnection', nodes: Array<{ __typename?: 'MovieGenre', title: string }> } | null };
+
+export type MovieTagsFilterOptionsQueryVariables = Exact<{
+  orderBy?: InputMaybe<Array<MoviesTagsOrderBy> | MoviesTagsOrderBy>;
+}>;
+
+
+export type MovieTagsFilterOptionsQuery = { __typename?: 'Query', moviesTags?: { __typename?: 'MoviesTagsConnection', nodes: Array<{ __typename?: 'MoviesTag', name: string }> } | null };
+
+export type MovieCastsFilterOptionsQueryVariables = Exact<{
+  orderBy?: InputMaybe<Array<MoviesCastsOrderBy> | MoviesCastsOrderBy>;
+}>;
+
+
+export type MovieCastsFilterOptionsQuery = { __typename?: 'Query', moviesCasts?: { __typename?: 'MoviesCastsConnection', nodes: Array<{ __typename?: 'MoviesCast', name: string }> } | null };
+
+export type MovieCountriesFilterOptionsQueryVariables = Exact<{
+  orderBy?: InputMaybe<Array<MoviesProductionCountriesOrderBy> | MoviesProductionCountriesOrderBy>;
+}>;
+
+
+export type MovieCountriesFilterOptionsQuery = { __typename?: 'Query', moviesProductionCountries?: { __typename?: 'MoviesProductionCountriesConnection', nodes: Array<{ __typename?: 'MoviesProductionCountry', name: string }> } | null };
+
 export type MovieGenresQueryVariables = Exact<{ [key: string]: never; }>;
 
 
@@ -20200,6 +20228,154 @@ export function useMoviesMutatedSubscription(baseOptions?: Apollo.SubscriptionHo
       }
 export type MoviesMutatedSubscriptionHookResult = ReturnType<typeof useMoviesMutatedSubscription>;
 export type MoviesMutatedSubscriptionResult = Apollo.SubscriptionResult<MoviesMutatedSubscription>;
+export const MovieGenresFilterOptionsDocument = gql`
+    query MovieGenresFilterOptions($orderBy: [MovieGenresOrderBy!]) {
+  movieGenres(orderBy: $orderBy) {
+    nodes {
+      title
+    }
+  }
+}
+    `;
+
+/**
+ * __useMovieGenresFilterOptionsQuery__
+ *
+ * To run a query within a React component, call `useMovieGenresFilterOptionsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useMovieGenresFilterOptionsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useMovieGenresFilterOptionsQuery({
+ *   variables: {
+ *      orderBy: // value for 'orderBy'
+ *   },
+ * });
+ */
+export function useMovieGenresFilterOptionsQuery(baseOptions?: Apollo.QueryHookOptions<MovieGenresFilterOptionsQuery, MovieGenresFilterOptionsQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<MovieGenresFilterOptionsQuery, MovieGenresFilterOptionsQueryVariables>(MovieGenresFilterOptionsDocument, options);
+      }
+export function useMovieGenresFilterOptionsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<MovieGenresFilterOptionsQuery, MovieGenresFilterOptionsQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<MovieGenresFilterOptionsQuery, MovieGenresFilterOptionsQueryVariables>(MovieGenresFilterOptionsDocument, options);
+        }
+export type MovieGenresFilterOptionsQueryHookResult = ReturnType<typeof useMovieGenresFilterOptionsQuery>;
+export type MovieGenresFilterOptionsLazyQueryHookResult = ReturnType<typeof useMovieGenresFilterOptionsLazyQuery>;
+export type MovieGenresFilterOptionsQueryResult = Apollo.QueryResult<MovieGenresFilterOptionsQuery, MovieGenresFilterOptionsQueryVariables>;
+export const MovieTagsFilterOptionsDocument = gql`
+    query MovieTagsFilterOptions($orderBy: [MoviesTagsOrderBy!]) {
+  moviesTags(orderBy: $orderBy) {
+    nodes {
+      name
+    }
+  }
+}
+    `;
+
+/**
+ * __useMovieTagsFilterOptionsQuery__
+ *
+ * To run a query within a React component, call `useMovieTagsFilterOptionsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useMovieTagsFilterOptionsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useMovieTagsFilterOptionsQuery({
+ *   variables: {
+ *      orderBy: // value for 'orderBy'
+ *   },
+ * });
+ */
+export function useMovieTagsFilterOptionsQuery(baseOptions?: Apollo.QueryHookOptions<MovieTagsFilterOptionsQuery, MovieTagsFilterOptionsQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<MovieTagsFilterOptionsQuery, MovieTagsFilterOptionsQueryVariables>(MovieTagsFilterOptionsDocument, options);
+      }
+export function useMovieTagsFilterOptionsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<MovieTagsFilterOptionsQuery, MovieTagsFilterOptionsQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<MovieTagsFilterOptionsQuery, MovieTagsFilterOptionsQueryVariables>(MovieTagsFilterOptionsDocument, options);
+        }
+export type MovieTagsFilterOptionsQueryHookResult = ReturnType<typeof useMovieTagsFilterOptionsQuery>;
+export type MovieTagsFilterOptionsLazyQueryHookResult = ReturnType<typeof useMovieTagsFilterOptionsLazyQuery>;
+export type MovieTagsFilterOptionsQueryResult = Apollo.QueryResult<MovieTagsFilterOptionsQuery, MovieTagsFilterOptionsQueryVariables>;
+export const MovieCastsFilterOptionsDocument = gql`
+    query MovieCastsFilterOptions($orderBy: [MoviesCastsOrderBy!]) {
+  moviesCasts(orderBy: $orderBy) {
+    nodes {
+      name
+    }
+  }
+}
+    `;
+
+/**
+ * __useMovieCastsFilterOptionsQuery__
+ *
+ * To run a query within a React component, call `useMovieCastsFilterOptionsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useMovieCastsFilterOptionsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useMovieCastsFilterOptionsQuery({
+ *   variables: {
+ *      orderBy: // value for 'orderBy'
+ *   },
+ * });
+ */
+export function useMovieCastsFilterOptionsQuery(baseOptions?: Apollo.QueryHookOptions<MovieCastsFilterOptionsQuery, MovieCastsFilterOptionsQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<MovieCastsFilterOptionsQuery, MovieCastsFilterOptionsQueryVariables>(MovieCastsFilterOptionsDocument, options);
+      }
+export function useMovieCastsFilterOptionsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<MovieCastsFilterOptionsQuery, MovieCastsFilterOptionsQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<MovieCastsFilterOptionsQuery, MovieCastsFilterOptionsQueryVariables>(MovieCastsFilterOptionsDocument, options);
+        }
+export type MovieCastsFilterOptionsQueryHookResult = ReturnType<typeof useMovieCastsFilterOptionsQuery>;
+export type MovieCastsFilterOptionsLazyQueryHookResult = ReturnType<typeof useMovieCastsFilterOptionsLazyQuery>;
+export type MovieCastsFilterOptionsQueryResult = Apollo.QueryResult<MovieCastsFilterOptionsQuery, MovieCastsFilterOptionsQueryVariables>;
+export const MovieCountriesFilterOptionsDocument = gql`
+    query MovieCountriesFilterOptions($orderBy: [MoviesProductionCountriesOrderBy!]) {
+  moviesProductionCountries(orderBy: $orderBy) {
+    nodes {
+      name
+    }
+  }
+}
+    `;
+
+/**
+ * __useMovieCountriesFilterOptionsQuery__
+ *
+ * To run a query within a React component, call `useMovieCountriesFilterOptionsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useMovieCountriesFilterOptionsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useMovieCountriesFilterOptionsQuery({
+ *   variables: {
+ *      orderBy: // value for 'orderBy'
+ *   },
+ * });
+ */
+export function useMovieCountriesFilterOptionsQuery(baseOptions?: Apollo.QueryHookOptions<MovieCountriesFilterOptionsQuery, MovieCountriesFilterOptionsQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<MovieCountriesFilterOptionsQuery, MovieCountriesFilterOptionsQueryVariables>(MovieCountriesFilterOptionsDocument, options);
+      }
+export function useMovieCountriesFilterOptionsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<MovieCountriesFilterOptionsQuery, MovieCountriesFilterOptionsQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<MovieCountriesFilterOptionsQuery, MovieCountriesFilterOptionsQueryVariables>(MovieCountriesFilterOptionsDocument, options);
+        }
+export type MovieCountriesFilterOptionsQueryHookResult = ReturnType<typeof useMovieCountriesFilterOptionsQuery>;
+export type MovieCountriesFilterOptionsLazyQueryHookResult = ReturnType<typeof useMovieCountriesFilterOptionsLazyQuery>;
+export type MovieCountriesFilterOptionsQueryResult = Apollo.QueryResult<MovieCountriesFilterOptionsQuery, MovieCountriesFilterOptionsQueryVariables>;
 export const MovieGenresDocument = gql`
     query MovieGenres {
   movieGenres(orderBy: SORT_ORDER_ASC) {
