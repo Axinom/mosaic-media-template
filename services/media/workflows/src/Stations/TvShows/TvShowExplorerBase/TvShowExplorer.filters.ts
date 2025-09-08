@@ -2,11 +2,34 @@ import {
   createDateRangeFilterValidators,
   filterToPostGraphileFilter,
   FilterType,
-  FilterTypes,
   FilterValues,
   transformRange,
 } from '@axinom/mosaic-ui';
-import { PublishStatus, TvshowFilter } from '../../../generated/graphql';
+import { client } from '../../../apolloClient';
+import { Constants } from '../../../constants';
+import {
+  PublishStatus,
+  TvShowCastsFilterOptionsQuery,
+  TvshowFilter,
+  TvShowGenresFilterOptionsQuery,
+  TvshowGenresOrderBy,
+  TvShowProductionCountriesFilterOptionsQuery,
+  TvshowsCastsOrderBy,
+  TvshowsProductionCountriesOrderBy,
+  TvshowsTagsOrderBy,
+  TvShowTagsFilterOptionsQuery,
+  useTvShowCastsFilterOptionsQuery,
+  useTvShowGenresFilterOptionsQuery,
+  useTvShowProductionCountriesFilterOptionsQuery,
+  useTvShowTagsFilterOptionsQuery,
+} from '../../../generated/graphql';
+import {
+  createDateRangeFilters,
+  createNumericFilter,
+  createOptionsFilter,
+  createSearchableFilter,
+  createTextFilter,
+} from '../../../Util/FilterUtils';
 import { getEnumLabel } from '../../../Util/StringEnumMapper/StringEnumMapper';
 import { TvShowData } from './TvShowExplorer.types';
 
@@ -20,97 +43,72 @@ export function useTvShowsFilters(): {
   const [createFromDateFilterValidator, createToDateFilterValidator] =
     createDateRangeFilterValidators<TvShowData>();
 
+  const { genres, tags, casts, countries } = useTvShowFilterData();
+
   const filterOptions: FilterType<TvShowData>[] = [
-    {
-      label: 'Title',
-      property: 'title',
-      type: FilterTypes.FreeText,
-    },
-    {
-      label: 'Original Title',
-      property: 'originalTitle',
-      type: FilterTypes.FreeText,
-    },
-    {
-      label: 'External ID',
-      property: 'externalId',
-      type: FilterTypes.FreeText,
-    },
-    {
-      label: 'Tags',
-      property: 'tvshowsTags',
-      type: FilterTypes.FreeText,
-    },
-    {
-      label: 'Genre',
-      property: 'tvshowsTvshowGenres',
-      type: FilterTypes.FreeText,
-    },
-    {
-      label: 'Cast',
-      property: 'tvshowsCasts',
-      type: FilterTypes.FreeText,
-    },
-    {
-      label: 'Release Period (From)',
-      property: 'released',
-      type: FilterTypes.Date,
-      onValidate: createFromDateFilterValidator('released'),
-    },
-    {
-      label: 'Release Period (To)',
-      property: 'released',
-      type: FilterTypes.Date,
-      onValidate: createToDateFilterValidator('released'),
-    },
-    {
-      label: 'Production Country',
-      property: 'tvshowsProductionCountries',
-      type: FilterTypes.FreeText,
-    },
-    {
-      label: 'Studio',
-      property: 'studio',
-      type: FilterTypes.FreeText,
-    },
-    {
-      label: 'Publication Status',
-      property: 'publishStatus',
-      type: FilterTypes.Options,
-      options: Object.keys(PublishStatus).map((key) => ({
-        value: PublishStatus[key],
-        label: getEnumLabel(PublishStatus[key]),
+    createTextFilter(Constants.TITLE, 'title'),
+    createTextFilter(Constants.ORIGINAL_TITLE, 'originalTitle'),
+    createTextFilter(Constants.EXTERNAL_ID, 'externalId'),
+    createSearchableFilter(
+      Constants.TAGS,
+      'tvshowsTags',
+      tags,
+      (tag) => tag?.name ?? '',
+      Constants.SEARCH_TAGS,
+    ),
+    createSearchableFilter(
+      Constants.GENRE,
+      'tvshowsTvshowGenres',
+      genres,
+      (genre) => genre?.title ?? '',
+      Constants.SEARCH_GENRES,
+    ),
+    createSearchableFilter(
+      Constants.CAST,
+      'tvshowsCasts',
+      casts,
+      (cast) => cast?.name ?? '',
+      Constants.SEARCH_CAST_MEMBERS,
+    ),
+    ...createDateRangeFilters(
+      'released',
+      Constants.RELEASE_PERIOD_FROM,
+      Constants.RELEASE_PERIOD_TO,
+      createFromDateFilterValidator,
+      createToDateFilterValidator,
+    ),
+    createSearchableFilter(
+      Constants.PRODUCTION_COUNTRY,
+      'tvshowsProductionCountries',
+      countries,
+      (country) => country?.name ?? '',
+      Constants.SEARCH_COUNTRIES,
+    ),
+    createTextFilter(Constants.STUDIO, 'studio'),
+
+    createOptionsFilter(
+      Constants.PUBLICATION_STATUS,
+      'publishStatus',
+      Object.values(PublishStatus).map((status) => ({
+        value: status,
+        label: getEnumLabel(status),
       })),
-    },
-    {
-      label: 'Publication Period (From)',
-      property: 'publishedDate',
-      type: FilterTypes.Date,
-      onValidate: createFromDateFilterValidator('publishedDate'),
-    },
-    {
-      label: 'Publication Period (To)',
-      property: 'publishedDate',
-      type: FilterTypes.Date,
-      onValidate: createToDateFilterValidator('publishedDate'),
-    },
-    {
-      label: 'Creation Period (From)',
-      property: 'createdDate',
-      type: FilterTypes.Date,
-      onValidate: createFromDateFilterValidator('createdDate'),
-    },
-    {
-      label: 'Creation Period (To)',
-      property: 'createdDate',
-      type: FilterTypes.Date,
-      onValidate: createToDateFilterValidator('createdDate'),
-    },
-    {
-      label: 'ID',
-      property: 'id',
-      type: FilterTypes.Numeric,
-    },
+    ),
+    ...createDateRangeFilters(
+      'publishedDate',
+      Constants.PUBLICATION_PERIOD_FROM,
+      Constants.PUBLICATION_PERIOD_TO,
+      createFromDateFilterValidator,
+      createToDateFilterValidator,
+    ),
+    ...createDateRangeFilters(
+      'createdDate',
+      Constants.CREATION_PERIOD_FROM,
+      Constants.CREATION_PERIOD_TO,
+      createFromDateFilterValidator,
+      createToDateFilterValidator,
+    ),
+    createNumericFilter(Constants.ID, 'id'),
   ];
 
   const transformFilters = (
@@ -133,14 +131,11 @@ export function useTvShowsFilters(): {
       studio: 'includesInsensitive',
       publishStatus: 'in',
       id: (value) => {
-        if (typeof value === 'number') {
-          // User filter
-          return {
+        if (typeof value === 'number') {          return {
             equalTo: value,
             notIn: excludeItems,
           };
         } else {
-          // Exclude items
           return {
             notIn: excludeItems,
           };
@@ -153,4 +148,46 @@ export function useTvShowsFilters(): {
   };
 
   return { filterOptions, transformFilters };
+}
+
+const fetchPolicy = 'network-only';
+
+function useTvShowFilterData(): {
+  genres: NonNullable<TvShowGenresFilterOptionsQuery['tvshowGenres']>['nodes'];
+  tags: NonNullable<TvShowTagsFilterOptionsQuery['tvshowsTags']>['nodes'];
+  casts: NonNullable<TvShowCastsFilterOptionsQuery['tvshowsCasts']>['nodes'];
+  countries: NonNullable<
+    TvShowProductionCountriesFilterOptionsQuery['tvshowsProductionCountries']
+  >['nodes'];
+} {
+  const genres = useTvShowGenresFilterOptionsQuery({
+    client,
+    variables: { orderBy: [TvshowGenresOrderBy.TitleAsc] },
+    fetchPolicy,
+  });
+
+  const tags = useTvShowTagsFilterOptionsQuery({
+    client,
+    variables: { orderBy: [TvshowsTagsOrderBy.NameAsc] },
+    fetchPolicy,
+  });
+
+  const casts = useTvShowCastsFilterOptionsQuery({
+    client,
+    variables: { orderBy: [TvshowsCastsOrderBy.NameAsc] },
+    fetchPolicy,
+  });
+
+  const countries = useTvShowProductionCountriesFilterOptionsQuery({
+    client,
+    variables: { orderBy: [TvshowsProductionCountriesOrderBy.NameAsc] },
+    fetchPolicy,
+  });
+
+  return {
+    genres: genres.data?.tvshowGenres?.nodes ?? [],
+    tags: tags.data?.tvshowsTags?.nodes ?? [],
+    casts: casts.data?.tvshowsCasts?.nodes ?? [],
+    countries: countries.data?.tvshowsProductionCountries?.nodes ?? [],
+  };
 }

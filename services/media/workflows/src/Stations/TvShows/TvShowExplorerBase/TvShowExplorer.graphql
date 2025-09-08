@@ -72,3 +72,37 @@ subscription TVShowsMutated {
     }
   }
 }
+
+query TvShowGenresFilterOptions($orderBy: [TvshowGenresOrderBy!]) {
+  tvshowGenres(orderBy: $orderBy) {
+    nodes {
+      title
+    }
+  }
+}
+
+query TvShowTagsFilterOptions($orderBy: [TvshowsTagsOrderBy!]) {
+  tvshowsTags(orderBy: $orderBy) {
+    nodes {
+      name
+    }
+  }
+}
+
+query TvShowCastsFilterOptions($orderBy: [TvshowsCastsOrderBy!]) {
+  tvshowsCasts(orderBy: $orderBy) {
+    nodes {
+      name
+    }
+  }
+}
+
+query TvShowProductionCountriesFilterOptions(
+  $orderBy: [TvshowsProductionCountriesOrderBy!]
+) {
+  tvshowsProductionCountries(orderBy: $orderBy) {
+    nodes {
+      name
+    }
+  }
+}

@@ -17573,6 +17573,34 @@ export type TvShowsMutatedSubscriptionVariables = Exact<{ [key: string]: never; 
 
 export type TvShowsMutatedSubscription = { __typename?: 'Subscription', tvshowMutated?: { __typename?: 'TvshowSubscriptionPayload', id: number, eventKey?: TvshowSubscriptionEventKey | null, tvshow?: { __typename?: 'Tvshow', id: number, publishStatus: PublishStatus, title: string, externalId?: string | null, createdDate: any, updatedDate: any, originalTitle?: string | null, released?: any | null, studio?: string | null, publishedDate?: any | null, tvshowsImages: { __typename?: 'TvshowsImagesConnection', nodes: Array<{ __typename?: 'TvshowsImage', imageId: any }> }, tvshowsTvshowGenres: { __typename?: 'TvshowsTvshowGenresConnection', nodes: Array<{ __typename?: 'TvshowsTvshowGenre', tvshowGenres?: { __typename?: 'TvshowGenre', title: string } | null }> }, tvshowsTags: { __typename?: 'TvshowsTagsConnection', nodes: Array<{ __typename?: 'TvshowsTag', name: string }> }, tvshowsCasts: { __typename?: 'TvshowsCastsConnection', nodes: Array<{ __typename?: 'TvshowsCast', name: string }> }, tvshowsProductionCountries: { __typename?: 'TvshowsProductionCountriesConnection', nodes: Array<{ __typename?: 'TvshowsProductionCountry', name: string }> } } | null } | null };
 
+export type TvShowGenresFilterOptionsQueryVariables = Exact<{
+  orderBy?: InputMaybe<Array<TvshowGenresOrderBy> | TvshowGenresOrderBy>;
+}>;
+
+
+export type TvShowGenresFilterOptionsQuery = { __typename?: 'Query', tvshowGenres?: { __typename?: 'TvshowGenresConnection', nodes: Array<{ __typename?: 'TvshowGenre', title: string }> } | null };
+
+export type TvShowTagsFilterOptionsQueryVariables = Exact<{
+  orderBy?: InputMaybe<Array<TvshowsTagsOrderBy> | TvshowsTagsOrderBy>;
+}>;
+
+
+export type TvShowTagsFilterOptionsQuery = { __typename?: 'Query', tvshowsTags?: { __typename?: 'TvshowsTagsConnection', nodes: Array<{ __typename?: 'TvshowsTag', name: string }> } | null };
+
+export type TvShowCastsFilterOptionsQueryVariables = Exact<{
+  orderBy?: InputMaybe<Array<TvshowsCastsOrderBy> | TvshowsCastsOrderBy>;
+}>;
+
+
+export type TvShowCastsFilterOptionsQuery = { __typename?: 'Query', tvshowsCasts?: { __typename?: 'TvshowsCastsConnection', nodes: Array<{ __typename?: 'TvshowsCast', name: string }> } | null };
+
+export type TvShowProductionCountriesFilterOptionsQueryVariables = Exact<{
+  orderBy?: InputMaybe<Array<TvshowsProductionCountriesOrderBy> | TvshowsProductionCountriesOrderBy>;
+}>;
+
+
+export type TvShowProductionCountriesFilterOptionsQuery = { __typename?: 'Query', tvshowsProductionCountries?: { __typename?: 'TvshowsProductionCountriesConnection', nodes: Array<{ __typename?: 'TvshowsProductionCountry', name: string }> } | null };
+
 export type TvShowGenresQueryVariables = Exact<{ [key: string]: never; }>;
 
 
@@ -22850,6 +22878,154 @@ export function useTvShowsMutatedSubscription(baseOptions?: Apollo.SubscriptionH
       }
 export type TvShowsMutatedSubscriptionHookResult = ReturnType<typeof useTvShowsMutatedSubscription>;
 export type TvShowsMutatedSubscriptionResult = Apollo.SubscriptionResult<TvShowsMutatedSubscription>;
+export const TvShowGenresFilterOptionsDocument = gql`
+    query TvShowGenresFilterOptions($orderBy: [TvshowGenresOrderBy!]) {
+  tvshowGenres(orderBy: $orderBy) {
+    nodes {
+      title
+    }
+  }
+}
+    `;
+
+/**
+ * __useTvShowGenresFilterOptionsQuery__
+ *
+ * To run a query within a React component, call `useTvShowGenresFilterOptionsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useTvShowGenresFilterOptionsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useTvShowGenresFilterOptionsQuery({
+ *   variables: {
+ *      orderBy: // value for 'orderBy'
+ *   },
+ * });
+ */
+export function useTvShowGenresFilterOptionsQuery(baseOptions?: Apollo.QueryHookOptions<TvShowGenresFilterOptionsQuery, TvShowGenresFilterOptionsQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<TvShowGenresFilterOptionsQuery, TvShowGenresFilterOptionsQueryVariables>(TvShowGenresFilterOptionsDocument, options);
+      }
+export function useTvShowGenresFilterOptionsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<TvShowGenresFilterOptionsQuery, TvShowGenresFilterOptionsQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<TvShowGenresFilterOptionsQuery, TvShowGenresFilterOptionsQueryVariables>(TvShowGenresFilterOptionsDocument, options);
+        }
+export type TvShowGenresFilterOptionsQueryHookResult = ReturnType<typeof useTvShowGenresFilterOptionsQuery>;
+export type TvShowGenresFilterOptionsLazyQueryHookResult = ReturnType<typeof useTvShowGenresFilterOptionsLazyQuery>;
+export type TvShowGenresFilterOptionsQueryResult = Apollo.QueryResult<TvShowGenresFilterOptionsQuery, TvShowGenresFilterOptionsQueryVariables>;
+export const TvShowTagsFilterOptionsDocument = gql`
+    query TvShowTagsFilterOptions($orderBy: [TvshowsTagsOrderBy!]) {
+  tvshowsTags(orderBy: $orderBy) {
+    nodes {
+      name
+    }
+  }
+}
+    `;
+
+/**
+ * __useTvShowTagsFilterOptionsQuery__
+ *
+ * To run a query within a React component, call `useTvShowTagsFilterOptionsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useTvShowTagsFilterOptionsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useTvShowTagsFilterOptionsQuery({
+ *   variables: {
+ *      orderBy: // value for 'orderBy'
+ *   },
+ * });
+ */
+export function useTvShowTagsFilterOptionsQuery(baseOptions?: Apollo.QueryHookOptions<TvShowTagsFilterOptionsQuery, TvShowTagsFilterOptionsQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<TvShowTagsFilterOptionsQuery, TvShowTagsFilterOptionsQueryVariables>(TvShowTagsFilterOptionsDocument, options);
+      }
+export function useTvShowTagsFilterOptionsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<TvShowTagsFilterOptionsQuery, TvShowTagsFilterOptionsQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<TvShowTagsFilterOptionsQuery, TvShowTagsFilterOptionsQueryVariables>(TvShowTagsFilterOptionsDocument, options);
+        }
+export type TvShowTagsFilterOptionsQueryHookResult = ReturnType<typeof useTvShowTagsFilterOptionsQuery>;
+export type TvShowTagsFilterOptionsLazyQueryHookResult = ReturnType<typeof useTvShowTagsFilterOptionsLazyQuery>;
+export type TvShowTagsFilterOptionsQueryResult = Apollo.QueryResult<TvShowTagsFilterOptionsQuery, TvShowTagsFilterOptionsQueryVariables>;
+export const TvShowCastsFilterOptionsDocument = gql`
+    query TvShowCastsFilterOptions($orderBy: [TvshowsCastsOrderBy!]) {
+  tvshowsCasts(orderBy: $orderBy) {
+    nodes {
+      name
+    }
+  }
+}
+    `;
+
+/**
+ * __useTvShowCastsFilterOptionsQuery__
+ *
+ * To run a query within a React component, call `useTvShowCastsFilterOptionsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useTvShowCastsFilterOptionsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useTvShowCastsFilterOptionsQuery({
+ *   variables: {
+ *      orderBy: // value for 'orderBy'
+ *   },
+ * });
+ */
+export function useTvShowCastsFilterOptionsQuery(baseOptions?: Apollo.QueryHookOptions<TvShowCastsFilterOptionsQuery, TvShowCastsFilterOptionsQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<TvShowCastsFilterOptionsQuery, TvShowCastsFilterOptionsQueryVariables>(TvShowCastsFilterOptionsDocument, options);
+      }
+export function useTvShowCastsFilterOptionsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<TvShowCastsFilterOptionsQuery, TvShowCastsFilterOptionsQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<TvShowCastsFilterOptionsQuery, TvShowCastsFilterOptionsQueryVariables>(TvShowCastsFilterOptionsDocument, options);
+        }
+export type TvShowCastsFilterOptionsQueryHookResult = ReturnType<typeof useTvShowCastsFilterOptionsQuery>;
+export type TvShowCastsFilterOptionsLazyQueryHookResult = ReturnType<typeof useTvShowCastsFilterOptionsLazyQuery>;
+export type TvShowCastsFilterOptionsQueryResult = Apollo.QueryResult<TvShowCastsFilterOptionsQuery, TvShowCastsFilterOptionsQueryVariables>;
+export const TvShowProductionCountriesFilterOptionsDocument = gql`
+    query TvShowProductionCountriesFilterOptions($orderBy: [TvshowsProductionCountriesOrderBy!]) {
+  tvshowsProductionCountries(orderBy: $orderBy) {
+    nodes {
+      name
+    }
+  }
+}
+    `;
+
+/**
+ * __useTvShowProductionCountriesFilterOptionsQuery__
+ *
+ * To run a query within a React component, call `useTvShowProductionCountriesFilterOptionsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useTvShowProductionCountriesFilterOptionsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useTvShowProductionCountriesFilterOptionsQuery({
+ *   variables: {
+ *      orderBy: // value for 'orderBy'
+ *   },
+ * });
+ */
+export function useTvShowProductionCountriesFilterOptionsQuery(baseOptions?: Apollo.QueryHookOptions<TvShowProductionCountriesFilterOptionsQuery, TvShowProductionCountriesFilterOptionsQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<TvShowProductionCountriesFilterOptionsQuery, TvShowProductionCountriesFilterOptionsQueryVariables>(TvShowProductionCountriesFilterOptionsDocument, options);
+      }
+export function useTvShowProductionCountriesFilterOptionsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<TvShowProductionCountriesFilterOptionsQuery, TvShowProductionCountriesFilterOptionsQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<TvShowProductionCountriesFilterOptionsQuery, TvShowProductionCountriesFilterOptionsQueryVariables>(TvShowProductionCountriesFilterOptionsDocument, options);
+        }
+export type TvShowProductionCountriesFilterOptionsQueryHookResult = ReturnType<typeof useTvShowProductionCountriesFilterOptionsQuery>;
+export type TvShowProductionCountriesFilterOptionsLazyQueryHookResult = ReturnType<typeof useTvShowProductionCountriesFilterOptionsLazyQuery>;
+export type TvShowProductionCountriesFilterOptionsQueryResult = Apollo.QueryResult<TvShowProductionCountriesFilterOptionsQuery, TvShowProductionCountriesFilterOptionsQueryVariables>;
 export const TvShowGenresDocument = gql`
     query TvShowGenres {
   tvshowGenres(orderBy: SORT_ORDER_ASC) {
