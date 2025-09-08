@@ -141,3 +141,25 @@ stages:
             env:
               MOSAIC_HOSTING_CLIENT_ID: $(mosaicHostingClientIdLovProd)
               MOSAIC_HOSTING_CLIENT_SECRET: $(mosaicHostingClientSecretLovProd)
+
+          - task: Bash@3
+            displayName:
+              'Upload pilet to FLX acceptance environment'
+            inputs:
+              targetType: 'inline'
+              script: |
+                yarn mosaic hosting pilet register -i "$(serviceId)" -p "$(Build.ArtifactStagingDirectory)/media-workflows-$(pkgVer).tgz" -m "https://frontends.service.eu.axinom.net"
+            env:
+              MOSAIC_HOSTING_CLIENT_ID: $(mosaicHostingClientIdFlxAcc)
+              MOSAIC_HOSTING_CLIENT_SECRET: $(mosaicHostingClientSecretFlxAcc)
+
+          - task: Bash@3
+            displayName:
+              'Upload pilet to FLX production environment'
+            inputs:
+              targetType: 'inline'
+              script: |
+                yarn mosaic hosting pilet register -i "$(serviceId)" -p "$(Build.ArtifactStagingDirectory)/media-workflows-$(pkgVer).tgz" -m "https://frontends.service.eu.axinom.net"
+            env:
+              MOSAIC_HOSTING_CLIENT_ID: $(mosaicHostingClientIdFlxProd)
+              MOSAIC_HOSTING_CLIENT_SECRET: $(mosaicHostingClientSecretFlxProd)
