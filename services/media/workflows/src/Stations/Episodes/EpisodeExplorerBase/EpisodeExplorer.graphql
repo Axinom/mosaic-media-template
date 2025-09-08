@@ -81,3 +81,41 @@ subscription EpisodesMutated {
     }
   }
 }
+
+query EpisodesTvshowGenresFilterOptions(
+  $orderBy: [EpisodesTvshowGenresOrderBy!]
+) {
+  episodesTvshowGenres(orderBy: $orderBy) {
+    nodes {
+      tvshowGenres {
+        title
+      }
+    }
+  }
+}
+
+query EpisodesCastsFilterOptions($orderBy: [EpisodesCastsOrderBy!]) {
+  episodesCasts(orderBy: $orderBy) {
+    nodes {
+      name
+    }
+  }
+}
+
+query EpisodesTagsFilterOptions($orderBy: [EpisodesTagsOrderBy!]) {
+  episodesTags(orderBy: $orderBy) {
+    nodes {
+      name
+    }
+  }
+}
+
+query EpisodesProductionCountriesFilterOptions(
+  $orderBy: [EpisodesProductionCountriesOrderBy!]
+) {
+  episodesProductionCountries(orderBy: $orderBy) {
+    nodes {
+      name
+    }
+  }
+}
