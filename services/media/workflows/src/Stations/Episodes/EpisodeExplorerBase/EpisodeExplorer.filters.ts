@@ -51,14 +51,14 @@ export function useEpisodesFilters(): {
     }
   >[] = [
     createTextFilter(Constants.TITLE, 'title'),
-    createNumericFilter('Episode Index', 'index'),
-    createOptionsFilter('Parent Entity', 'seasonExists', [
+    createNumericFilter(Constants.EPISODE_INDEX, 'index'),
+    createOptionsFilter(Constants.PARENT_ENTITY, 'seasonExists', [
       {
-        label: 'true',
+        label: Constants.TRUE,
         value: true,
       },
       {
-        label: 'false',
+        label: Constants.FALSE,
         value: false,
       },
     ]),

@@ -46,6 +46,9 @@ export const Constants = {
   CREATION_PERIOD_TO: 'Creation Period (To)',
   ID: 'ID',
   MAIN_VIDEO: 'Main Video',
+  EPISODE_INDEX: 'Episode Index',
+  SEASON_INDEX: 'Season Index',
+  PARENT_ENTITY: 'Parent Entity',
 
   // Filter Placeholders
   SEARCH_TAGS: 'Search tags',
@@ -56,4 +59,6 @@ export const Constants = {
   // Options
   ASSIGNED: 'Assigned',
   NOT_ASSIGNED: 'Not Assigned',
+  TRUE: 'true',
+  FALSE: 'false',
 };

@@ -6,6 +6,7 @@ import {
   transformRange,
 } from '@axinom/mosaic-ui';
 import { client } from '../../../apolloClient';
+import { Constants } from '../../../constants';
 import {
   PublishStatus,
   SeasonFilter,
@@ -49,34 +50,34 @@ export function useSeasonsFilters(): {
       tvshowExists?: boolean;
     }
   >[] = [
-    createNumericFilter('Season Index', 'index'),
-    createOptionsFilter('Parent Entity', 'tvshowExists', [
+    createNumericFilter(Constants.SEASON_INDEX, 'index'),
+    createOptionsFilter(Constants.PARENT_ENTITY, 'tvshowExists', [
       {
-        label: 'true',
+        label: Constants.TRUE,
         value: true,
       },
       {
-        label: 'false',
+        label: Constants.FALSE,
         value: false,
       },
     ]),
-    createTextFilter('External ID', 'externalId'),
+    createTextFilter(Constants.EXTERNAL_ID, 'externalId'),
     createSearchableFilter(
-      'Tags',
+      Constants.TAGS,
       'seasonsTags',
       tags,
       (tag) => tag?.name ?? '',
       'Search tags',
     ),
     createSearchableFilter(
-      'Genre',
+      Constants.GENRE,
       'seasonsTvshowGenres',
       genres,
       (genre) => genre?.title ?? '',
       'Search genres',
     ),
     createSearchableFilter(
-      'Cast',
+      Constants.CAST,
       'seasonsCasts',
       casts,
       (cast) => cast?.name ?? '',
@@ -84,21 +85,21 @@ export function useSeasonsFilters(): {
     ),
     ...createDateRangeFilters(
       'released',
-      'Release Period (From)',
-      'Release Period (To)',
+      Constants.RELEASE_PERIOD_FROM,
+      Constants.RELEASE_PERIOD_TO,
       createFromDateFilterValidator,
       createToDateFilterValidator,
     ),
     createSearchableFilter(
-      'Production Country',
+      Constants.PRODUCTION_COUNTRY,
       'seasonsProductionCountries',
       countries,
       (country) => country?.name ?? '',
       'Search countries',
     ),
-    createTextFilter('Studio', 'studio'),
+    createTextFilter(Constants.STUDIO, 'studio'),
     createOptionsFilter(
-      'Publication Status',
+      Constants.PUBLICATION_STATUS,
       'publishStatus',
       Object.values(PublishStatus).map((status) => ({
         value: status,
@@ -107,19 +108,19 @@ export function useSeasonsFilters(): {
     ),
     ...createDateRangeFilters(
       'publishedDate',
-      'Publication Period (From)',
-      'Publication Period (To)',
+      Constants.PUBLICATION_PERIOD_FROM,
+      Constants.PUBLICATION_PERIOD_TO,
       createFromDateFilterValidator,
       createToDateFilterValidator,
     ),
     ...createDateRangeFilters(
       'createdDate',
-      'Creation Period (From)',
-      'Creation Period (To)',
+      Constants.CREATION_PERIOD_FROM,
+      Constants.CREATION_PERIOD_TO,
       createFromDateFilterValidator,
       createToDateFilterValidator,
     ),
-    createNumericFilter('ID', 'id'),
+    createNumericFilter(Constants.ID, 'id'),
   ];
 
   const transformFilters = (
