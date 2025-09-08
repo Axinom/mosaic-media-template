@@ -17405,6 +17405,34 @@ export type SeasonsMutatedSubscriptionVariables = Exact<{ [key: string]: never; 
 
 export type SeasonsMutatedSubscription = { __typename?: 'Subscription', seasonMutated?: { __typename?: 'SeasonSubscriptionPayload', id: number, eventKey?: SeasonSubscriptionEventKey | null, season?: { __typename?: 'Season', id: number, publishStatus: PublishStatus, index: number, externalId?: string | null, createdDate: any, updatedDate: any, released?: any | null, studio?: string | null, publishedDate?: any | null, tvshow?: { __typename?: 'Tvshow', id: number, title: string } | null, seasonsImages: { __typename?: 'SeasonsImagesConnection', nodes: Array<{ __typename?: 'SeasonsImage', imageId: any }> }, seasonsTvshowGenres: { __typename?: 'SeasonsTvshowGenresConnection', nodes: Array<{ __typename?: 'SeasonsTvshowGenre', tvshowGenres?: { __typename?: 'TvshowGenre', title: string } | null }> }, seasonsTags: { __typename?: 'SeasonsTagsConnection', nodes: Array<{ __typename?: 'SeasonsTag', name: string }> }, seasonsCasts: { __typename?: 'SeasonsCastsConnection', nodes: Array<{ __typename?: 'SeasonsCast', name: string }> }, seasonsProductionCountries: { __typename?: 'SeasonsProductionCountriesConnection', nodes: Array<{ __typename?: 'SeasonsProductionCountry', name: string }> } } | null } | null };
 
+export type SeasonsGenresFilterOptionsQueryVariables = Exact<{
+  orderBy?: InputMaybe<Array<SeasonsTvshowGenresOrderBy> | SeasonsTvshowGenresOrderBy>;
+}>;
+
+
+export type SeasonsGenresFilterOptionsQuery = { __typename?: 'Query', seasonsTvshowGenres?: { __typename?: 'SeasonsTvshowGenresConnection', nodes: Array<{ __typename?: 'SeasonsTvshowGenre', tvshowGenres?: { __typename?: 'TvshowGenre', title: string } | null }> } | null };
+
+export type SeasonsCastsFilterOptionsQueryVariables = Exact<{
+  orderBy?: InputMaybe<Array<SeasonsCastsOrderBy> | SeasonsCastsOrderBy>;
+}>;
+
+
+export type SeasonsCastsFilterOptionsQuery = { __typename?: 'Query', seasonsCasts?: { __typename?: 'SeasonsCastsConnection', nodes: Array<{ __typename?: 'SeasonsCast', name: string }> } | null };
+
+export type SeasonsTagsFilterOptionsQueryVariables = Exact<{
+  orderBy?: InputMaybe<Array<SeasonsTagsOrderBy> | SeasonsTagsOrderBy>;
+}>;
+
+
+export type SeasonsTagsFilterOptionsQuery = { __typename?: 'Query', seasonsTags?: { __typename?: 'SeasonsTagsConnection', nodes: Array<{ __typename?: 'SeasonsTag', name: string }> } | null };
+
+export type SeasonsProductionCountriesFilterOptionsQueryVariables = Exact<{
+  orderBy?: InputMaybe<Array<SeasonsProductionCountriesOrderBy> | SeasonsProductionCountriesOrderBy>;
+}>;
+
+
+export type SeasonsProductionCountriesFilterOptionsQuery = { __typename?: 'Query', seasonsProductionCountries?: { __typename?: 'SeasonsProductionCountriesConnection', nodes: Array<{ __typename?: 'SeasonsProductionCountry', name: string }> } | null };
+
 export type SeasonImagesQueryVariables = Exact<{
   id: Scalars['Int'];
 }>;
@@ -21986,6 +22014,156 @@ export function useSeasonsMutatedSubscription(baseOptions?: Apollo.SubscriptionH
       }
 export type SeasonsMutatedSubscriptionHookResult = ReturnType<typeof useSeasonsMutatedSubscription>;
 export type SeasonsMutatedSubscriptionResult = Apollo.SubscriptionResult<SeasonsMutatedSubscription>;
+export const SeasonsGenresFilterOptionsDocument = gql`
+    query SeasonsGenresFilterOptions($orderBy: [SeasonsTvshowGenresOrderBy!]) {
+  seasonsTvshowGenres(orderBy: $orderBy) {
+    nodes {
+      tvshowGenres {
+        title
+      }
+    }
+  }
+}
+    `;
+
+/**
+ * __useSeasonsGenresFilterOptionsQuery__
+ *
+ * To run a query within a React component, call `useSeasonsGenresFilterOptionsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useSeasonsGenresFilterOptionsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useSeasonsGenresFilterOptionsQuery({
+ *   variables: {
+ *      orderBy: // value for 'orderBy'
+ *   },
+ * });
+ */
+export function useSeasonsGenresFilterOptionsQuery(baseOptions?: Apollo.QueryHookOptions<SeasonsGenresFilterOptionsQuery, SeasonsGenresFilterOptionsQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<SeasonsGenresFilterOptionsQuery, SeasonsGenresFilterOptionsQueryVariables>(SeasonsGenresFilterOptionsDocument, options);
+      }
+export function useSeasonsGenresFilterOptionsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<SeasonsGenresFilterOptionsQuery, SeasonsGenresFilterOptionsQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<SeasonsGenresFilterOptionsQuery, SeasonsGenresFilterOptionsQueryVariables>(SeasonsGenresFilterOptionsDocument, options);
+        }
+export type SeasonsGenresFilterOptionsQueryHookResult = ReturnType<typeof useSeasonsGenresFilterOptionsQuery>;
+export type SeasonsGenresFilterOptionsLazyQueryHookResult = ReturnType<typeof useSeasonsGenresFilterOptionsLazyQuery>;
+export type SeasonsGenresFilterOptionsQueryResult = Apollo.QueryResult<SeasonsGenresFilterOptionsQuery, SeasonsGenresFilterOptionsQueryVariables>;
+export const SeasonsCastsFilterOptionsDocument = gql`
+    query SeasonsCastsFilterOptions($orderBy: [SeasonsCastsOrderBy!]) {
+  seasonsCasts(orderBy: $orderBy) {
+    nodes {
+      name
+    }
+  }
+}
+    `;
+
+/**
+ * __useSeasonsCastsFilterOptionsQuery__
+ *
+ * To run a query within a React component, call `useSeasonsCastsFilterOptionsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useSeasonsCastsFilterOptionsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useSeasonsCastsFilterOptionsQuery({
+ *   variables: {
+ *      orderBy: // value for 'orderBy'
+ *   },
+ * });
+ */
+export function useSeasonsCastsFilterOptionsQuery(baseOptions?: Apollo.QueryHookOptions<SeasonsCastsFilterOptionsQuery, SeasonsCastsFilterOptionsQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<SeasonsCastsFilterOptionsQuery, SeasonsCastsFilterOptionsQueryVariables>(SeasonsCastsFilterOptionsDocument, options);
+      }
+export function useSeasonsCastsFilterOptionsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<SeasonsCastsFilterOptionsQuery, SeasonsCastsFilterOptionsQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<SeasonsCastsFilterOptionsQuery, SeasonsCastsFilterOptionsQueryVariables>(SeasonsCastsFilterOptionsDocument, options);
+        }
+export type SeasonsCastsFilterOptionsQueryHookResult = ReturnType<typeof useSeasonsCastsFilterOptionsQuery>;
+export type SeasonsCastsFilterOptionsLazyQueryHookResult = ReturnType<typeof useSeasonsCastsFilterOptionsLazyQuery>;
+export type SeasonsCastsFilterOptionsQueryResult = Apollo.QueryResult<SeasonsCastsFilterOptionsQuery, SeasonsCastsFilterOptionsQueryVariables>;
+export const SeasonsTagsFilterOptionsDocument = gql`
+    query SeasonsTagsFilterOptions($orderBy: [SeasonsTagsOrderBy!]) {
+  seasonsTags(orderBy: $orderBy) {
+    nodes {
+      name
+    }
+  }
+}
+    `;
+
+/**
+ * __useSeasonsTagsFilterOptionsQuery__
+ *
+ * To run a query within a React component, call `useSeasonsTagsFilterOptionsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useSeasonsTagsFilterOptionsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useSeasonsTagsFilterOptionsQuery({
+ *   variables: {
+ *      orderBy: // value for 'orderBy'
+ *   },
+ * });
+ */
+export function useSeasonsTagsFilterOptionsQuery(baseOptions?: Apollo.QueryHookOptions<SeasonsTagsFilterOptionsQuery, SeasonsTagsFilterOptionsQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<SeasonsTagsFilterOptionsQuery, SeasonsTagsFilterOptionsQueryVariables>(SeasonsTagsFilterOptionsDocument, options);
+      }
+export function useSeasonsTagsFilterOptionsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<SeasonsTagsFilterOptionsQuery, SeasonsTagsFilterOptionsQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<SeasonsTagsFilterOptionsQuery, SeasonsTagsFilterOptionsQueryVariables>(SeasonsTagsFilterOptionsDocument, options);
+        }
+export type SeasonsTagsFilterOptionsQueryHookResult = ReturnType<typeof useSeasonsTagsFilterOptionsQuery>;
+export type SeasonsTagsFilterOptionsLazyQueryHookResult = ReturnType<typeof useSeasonsTagsFilterOptionsLazyQuery>;
+export type SeasonsTagsFilterOptionsQueryResult = Apollo.QueryResult<SeasonsTagsFilterOptionsQuery, SeasonsTagsFilterOptionsQueryVariables>;
+export const SeasonsProductionCountriesFilterOptionsDocument = gql`
+    query SeasonsProductionCountriesFilterOptions($orderBy: [SeasonsProductionCountriesOrderBy!]) {
+  seasonsProductionCountries(orderBy: $orderBy) {
+    nodes {
+      name
+    }
+  }
+}
+    `;
+
+/**
+ * __useSeasonsProductionCountriesFilterOptionsQuery__
+ *
+ * To run a query within a React component, call `useSeasonsProductionCountriesFilterOptionsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useSeasonsProductionCountriesFilterOptionsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useSeasonsProductionCountriesFilterOptionsQuery({
+ *   variables: {
+ *      orderBy: // value for 'orderBy'
+ *   },
+ * });
+ */
+export function useSeasonsProductionCountriesFilterOptionsQuery(baseOptions?: Apollo.QueryHookOptions<SeasonsProductionCountriesFilterOptionsQuery, SeasonsProductionCountriesFilterOptionsQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<SeasonsProductionCountriesFilterOptionsQuery, SeasonsProductionCountriesFilterOptionsQueryVariables>(SeasonsProductionCountriesFilterOptionsDocument, options);
+      }
+export function useSeasonsProductionCountriesFilterOptionsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<SeasonsProductionCountriesFilterOptionsQuery, SeasonsProductionCountriesFilterOptionsQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<SeasonsProductionCountriesFilterOptionsQuery, SeasonsProductionCountriesFilterOptionsQueryVariables>(SeasonsProductionCountriesFilterOptionsDocument, options);
+        }
+export type SeasonsProductionCountriesFilterOptionsQueryHookResult = ReturnType<typeof useSeasonsProductionCountriesFilterOptionsQuery>;
+export type SeasonsProductionCountriesFilterOptionsLazyQueryHookResult = ReturnType<typeof useSeasonsProductionCountriesFilterOptionsLazyQuery>;
+export type SeasonsProductionCountriesFilterOptionsQueryResult = Apollo.QueryResult<SeasonsProductionCountriesFilterOptionsQuery, SeasonsProductionCountriesFilterOptionsQueryVariables>;
 export const SeasonImagesDocument = gql`
     query SeasonImages($id: Int!) {
   season(id: $id) {

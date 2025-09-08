@@ -89,9 +89,13 @@ function createSearchableOptionsProvider<T>(
 ): (searchText: string) => { label: string; value: string }[] {
   return (searchText: string) => {
     const searchLower = searchText.trim().toLowerCase();
+
+    // Remove duplicates based on the value before filtering and slicing
+    const uniqueItems = removeDuplicatesBy(items || [], valueSelector);
+
     return (
-      items
-        ?.filter((item) =>
+      uniqueItems
+        .filter((item) =>
           labelSelector(item).toLowerCase().includes(searchLower),
         )
         .slice(0, maxItems)
@@ -101,4 +105,20 @@ function createSearchableOptionsProvider<T>(
         })) || []
     );
   };
+}
+
+// Add the removeDuplicatesBy function if not already present
+function removeDuplicatesBy<T, K extends string | number>(
+  array: T[],
+  keySelector: (item: T) => K | null | undefined,
+): T[] {
+  const seen = new Set<K>();
+  return array.filter((item) => {
+    const key = keySelector(item);
+    if (key != null && !seen.has(key)) {
+      seen.add(key);
+      return true;
+    }
+    return false;
+  });
 }
