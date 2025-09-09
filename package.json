@@ -104,12 +104,12 @@
     "wsrun": "^5.2.4",
     "yargs": "^16.2.0"
   },
-  "dependencies": {},
   "resolutions": {
     "@types/jest": "^29",
     "css-loader": "^6.7.3",
     "jest": "^29",
     "jest-cli": "^29",
     "jsonpath-plus": "^10.2.0"
-  }
+  },
+  "packageManager": "yarn@4.9.4"
 }
