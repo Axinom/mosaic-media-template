@@ -6,6 +6,7 @@ generates:
       - 'typescript'
       - 'typescript-operations'
       - 'typescript-react-apollo'
+      - '@axinom/mosaic-graphql-codegen-plugins/generate-bulk-edit-ui-config'
     config:
       withHOC: false
       withComponent: false

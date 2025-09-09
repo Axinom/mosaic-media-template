@@ -28,7 +28,7 @@
   "dependencies": {
     "@apollo/client": "^3.7.10",
     "@axinom/mosaic-managed-workflow-integration": "0.25.5",
-    "@axinom/mosaic-ui": "0.62.0",
+    "@axinom/mosaic-ui": "0.64.0-rc.16",
     "clsx": "^1.2.1",
     "env-cmd": "^10.1.0",
     "formik": "^2.2.9",

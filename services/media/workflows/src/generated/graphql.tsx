@@ -49,6 +49,127 @@ export type BooleanFilter = {
   notIn?: InputMaybe<Array<Scalars['Boolean']>>;
 };
 
+export type BulkEditAsyncMovieAddCollectionRelationInput = {
+  collectionId: Scalars['Int'];
+  episodeId?: InputMaybe<Scalars['Int']>;
+  id?: InputMaybe<Scalars['Int']>;
+  seasonId?: InputMaybe<Scalars['Int']>;
+  sortOrder: Scalars['Int'];
+  tvshowId?: InputMaybe<Scalars['Int']>;
+};
+
+export type BulkEditAsyncMovieAddInput = {
+  collectionRelations?: InputMaybe<Array<InputMaybe<BulkEditAsyncMovieAddCollectionRelationInput>>>;
+  moviesCasts?: InputMaybe<Array<InputMaybe<BulkEditAsyncMovieAddMoviesCastInput>>>;
+  moviesImages?: InputMaybe<Array<InputMaybe<BulkEditAsyncMovieAddMoviesImageInput>>>;
+  moviesLicenses?: InputMaybe<Array<InputMaybe<BulkEditAsyncMovieAddMoviesLicenseInput>>>;
+  moviesMovieGenres?: InputMaybe<Array<InputMaybe<BulkEditAsyncMovieAddMoviesMovieGenreInput>>>;
+  moviesProductionCountries?: InputMaybe<Array<InputMaybe<BulkEditAsyncMovieAddMoviesProductionCountryInput>>>;
+  moviesSnapshots?: InputMaybe<Array<InputMaybe<BulkEditAsyncMovieAddMoviesSnapshotInput>>>;
+  moviesTags?: InputMaybe<Array<InputMaybe<BulkEditAsyncMovieAddMoviesTagInput>>>;
+  moviesTrailers?: InputMaybe<Array<InputMaybe<BulkEditAsyncMovieAddMoviesTrailerInput>>>;
+};
+
+export type BulkEditAsyncMovieAddMoviesCastInput = {
+  /** @notEmpty() */
+  name: Scalars['String'];
+};
+
+export type BulkEditAsyncMovieAddMoviesImageInput = {
+  imageId: Scalars['UUID'];
+  imageType: MovieImageType;
+};
+
+export type BulkEditAsyncMovieAddMoviesLicenseInput = {
+  licenseEnd?: InputMaybe<Scalars['Datetime']>;
+  licenseStart?: InputMaybe<Scalars['Datetime']>;
+};
+
+export type BulkEditAsyncMovieAddMoviesMovieGenreInput = {
+  movieGenresId: Scalars['Int'];
+};
+
+export type BulkEditAsyncMovieAddMoviesProductionCountryInput = {
+  /** @notEmpty() */
+  name: Scalars['String'];
+};
+
+export type BulkEditAsyncMovieAddMoviesSnapshotInput = {
+  snapshotId: Scalars['Int'];
+};
+
+export type BulkEditAsyncMovieAddMoviesTagInput = {
+  /** @notEmpty() */
+  name: Scalars['String'];
+};
+
+export type BulkEditAsyncMovieAddMoviesTrailerInput = {
+  videoId: Scalars['UUID'];
+};
+
+export type BulkEditAsyncMovieRemoveCollectionRelationInput = {
+  collectionId: Scalars['Int'];
+  episodeId?: InputMaybe<Scalars['Int']>;
+  id?: InputMaybe<Scalars['Int']>;
+  seasonId?: InputMaybe<Scalars['Int']>;
+  sortOrder: Scalars['Int'];
+  tvshowId?: InputMaybe<Scalars['Int']>;
+};
+
+export type BulkEditAsyncMovieRemoveInput = {
+  collectionRelations?: InputMaybe<Array<InputMaybe<BulkEditAsyncMovieRemoveCollectionRelationInput>>>;
+  moviesCasts?: InputMaybe<Array<InputMaybe<BulkEditAsyncMovieRemoveMoviesCastInput>>>;
+  moviesImages?: InputMaybe<Array<InputMaybe<BulkEditAsyncMovieRemoveMoviesImageInput>>>;
+  moviesLicenses?: InputMaybe<Array<InputMaybe<BulkEditAsyncMovieRemoveMoviesLicenseInput>>>;
+  moviesMovieGenres?: InputMaybe<Array<InputMaybe<BulkEditAsyncMovieRemoveMoviesMovieGenreInput>>>;
+  moviesProductionCountries?: InputMaybe<Array<InputMaybe<BulkEditAsyncMovieRemoveMoviesProductionCountryInput>>>;
+  moviesSnapshots?: InputMaybe<Array<InputMaybe<BulkEditAsyncMovieRemoveMoviesSnapshotInput>>>;
+  moviesTags?: InputMaybe<Array<InputMaybe<BulkEditAsyncMovieRemoveMoviesTagInput>>>;
+  moviesTrailers?: InputMaybe<Array<InputMaybe<BulkEditAsyncMovieRemoveMoviesTrailerInput>>>;
+};
+
+export type BulkEditAsyncMovieRemoveMoviesCastInput = {
+  /** @notEmpty() */
+  name: Scalars['String'];
+};
+
+export type BulkEditAsyncMovieRemoveMoviesImageInput = {
+  imageId: Scalars['UUID'];
+  imageType: MovieImageType;
+};
+
+export type BulkEditAsyncMovieRemoveMoviesLicenseInput = {
+  licenseEnd?: InputMaybe<Scalars['Datetime']>;
+  licenseStart?: InputMaybe<Scalars['Datetime']>;
+};
+
+export type BulkEditAsyncMovieRemoveMoviesMovieGenreInput = {
+  movieGenresId: Scalars['Int'];
+};
+
+export type BulkEditAsyncMovieRemoveMoviesProductionCountryInput = {
+  /** @notEmpty() */
+  name: Scalars['String'];
+};
+
+export type BulkEditAsyncMovieRemoveMoviesSnapshotInput = {
+  snapshotId: Scalars['Int'];
+};
+
+export type BulkEditAsyncMovieRemoveMoviesTagInput = {
+  /** @notEmpty() */
+  name: Scalars['String'];
+};
+
+export type BulkEditAsyncMovieRemoveMoviesTrailerInput = {
+  videoId: Scalars['UUID'];
+};
+
+export type BulkEditAsyncPayloadType = {
+  __typename?: 'BulkEditAsyncPayloadType';
+  filterMatchedIds?: Maybe<Array<Maybe<Scalars['String']>>>;
+};
+
 /** Bulk mutation payload type. */
 export type BulkMutationIntPayload = {
   __typename?: 'BulkMutationIntPayload';
@@ -8720,6 +8841,7 @@ export type MovieToManyMoviesTrailerFilter = {
 /** The root mutation type which contains root level fields which mutate data. */
 export type Mutation = {
   __typename?: 'Mutation';
+  bulkEditMoviesAsync?: Maybe<BulkEditAsyncPayloadType>;
   /** Creates a single `Collection`. */
   createCollection?: Maybe<CreateCollectionPayload>;
   /** Creates a single `CollectionRelation`. */
@@ -9059,6 +9181,15 @@ export type Mutation = {
   updateTvshowsProductionCountry?: Maybe<UpdateTvshowsProductionCountryPayload>;
   /** Updates a single `TvshowsTag` using a unique key and a patch. */
   updateTvshowsTag?: Maybe<UpdateTvshowsTagPayload>;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationBulkEditMoviesAsyncArgs = {
+  filter?: InputMaybe<MovieFilter>;
+  relatedEntitiesToAdd?: InputMaybe<BulkEditAsyncMovieAddInput>;
+  relatedEntitiesToRemove?: InputMaybe<BulkEditAsyncMovieRemoveInput>;
+  set?: InputMaybe<MoviePatch>;
 };
 
 
@@ -23299,3 +23430,276 @@ export function useBulkCreateTvShowSnapshotsMutation(baseOptions?: Apollo.Mutati
 export type BulkCreateTvShowSnapshotsMutationHookResult = ReturnType<typeof useBulkCreateTvShowSnapshotsMutation>;
 export type BulkCreateTvShowSnapshotsMutationResult = Apollo.MutationResult<BulkCreateTvShowSnapshotsMutation>;
 export type BulkCreateTvShowSnapshotsMutationOptions = Apollo.BaseMutationOptions<BulkCreateTvShowSnapshotsMutation, BulkCreateTvShowSnapshotsMutationVariables>;
+/** Bulk Edit Configurations **/
+export const BulkEditMoviesAsyncFormFieldsConfig = { mutation: 'bulkEditMoviesAsync', keys: { add: 'relatedEntitiesToAdd', remove: 'relatedEntitiesToRemove', set: 'set', filter: 'filter' }, fields: {
+  "collectionRelationsAdd": {
+    "type": [
+      {
+        "collectionId": "Int!"
+      },
+      {
+        "episodeId": "Int"
+      },
+      {
+        "id": "Int"
+      },
+      {
+        "seasonId": "Int"
+      },
+      {
+        "sortOrder": "Int!"
+      },
+      {
+        "tvshowId": "Int"
+      }
+    ],
+    "label": "Collection Relations (Add)",
+    "originalFieldName": "collectionRelations",
+    "action": "relatedEntitiesToAdd"
+  },
+  "moviesCastsAdd": {
+    "type": [
+      {
+        "name": "String!"
+      }
+    ],
+    "label": "Movies Casts (Add)",
+    "originalFieldName": "moviesCasts",
+    "action": "relatedEntitiesToAdd"
+  },
+  "moviesImagesAdd": {
+    "type": [
+      {
+        "imageId": "UUID!"
+      },
+      {
+        "imageType": "MovieImageType!"
+      }
+    ],
+    "label": "Movies Images (Add)",
+    "originalFieldName": "moviesImages",
+    "action": "relatedEntitiesToAdd"
+  },
+  "moviesLicensesAdd": {
+    "type": [
+      {
+        "licenseEnd": "Datetime"
+      },
+      {
+        "licenseStart": "Datetime"
+      }
+    ],
+    "label": "Movies Licenses (Add)",
+    "originalFieldName": "moviesLicenses",
+    "action": "relatedEntitiesToAdd"
+  },
+  "moviesMovieGenresAdd": {
+    "type": [
+      {
+        "movieGenresId": "Int!"
+      }
+    ],
+    "label": "Movies Movie Genres (Add)",
+    "originalFieldName": "moviesMovieGenres",
+    "action": "relatedEntitiesToAdd"
+  },
+  "moviesProductionCountriesAdd": {
+    "type": [
+      {
+        "name": "String!"
+      }
+    ],
+    "label": "Movies Production Countries (Add)",
+    "originalFieldName": "moviesProductionCountries",
+    "action": "relatedEntitiesToAdd"
+  },
+  "moviesSnapshotsAdd": {
+    "type": [
+      {
+        "snapshotId": "Int!"
+      }
+    ],
+    "label": "Movies Snapshots (Add)",
+    "originalFieldName": "moviesSnapshots",
+    "action": "relatedEntitiesToAdd"
+  },
+  "moviesTagsAdd": {
+    "type": [
+      {
+        "name": "String!"
+      }
+    ],
+    "label": "Movies Tags (Add)",
+    "originalFieldName": "moviesTags",
+    "action": "relatedEntitiesToAdd"
+  },
+  "moviesTrailersAdd": {
+    "type": [
+      {
+        "videoId": "UUID!"
+      }
+    ],
+    "label": "Movies Trailers (Add)",
+    "originalFieldName": "moviesTrailers",
+    "action": "relatedEntitiesToAdd"
+  },
+  "collectionRelationsRemove": {
+    "type": [
+      {
+        "collectionId": "Int!"
+      },
+      {
+        "episodeId": "Int"
+      },
+      {
+        "id": "Int"
+      },
+      {
+        "seasonId": "Int"
+      },
+      {
+        "sortOrder": "Int!"
+      },
+      {
+        "tvshowId": "Int"
+      }
+    ],
+    "label": "Collection Relations (Remove)",
+    "originalFieldName": "collectionRelations",
+    "action": "relatedEntitiesToRemove"
+  },
+  "moviesCastsRemove": {
+    "type": [
+      {
+        "name": "String!"
+      }
+    ],
+    "label": "Movies Casts (Remove)",
+    "originalFieldName": "moviesCasts",
+    "action": "relatedEntitiesToRemove"
+  },
+  "moviesImagesRemove": {
+    "type": [
+      {
+        "imageId": "UUID!"
+      },
+      {
+        "imageType": "MovieImageType!"
+      }
+    ],
+    "label": "Movies Images (Remove)",
+    "originalFieldName": "moviesImages",
+    "action": "relatedEntitiesToRemove"
+  },
+  "moviesLicensesRemove": {
+    "type": [
+      {
+        "licenseEnd": "Datetime"
+      },
+      {
+        "licenseStart": "Datetime"
+      }
+    ],
+    "label": "Movies Licenses (Remove)",
+    "originalFieldName": "moviesLicenses",
+    "action": "relatedEntitiesToRemove"
+  },
+  "moviesMovieGenresRemove": {
+    "type": [
+      {
+        "movieGenresId": "Int!"
+      }
+    ],
+    "label": "Movies Movie Genres (Remove)",
+    "originalFieldName": "moviesMovieGenres",
+    "action": "relatedEntitiesToRemove"
+  },
+  "moviesProductionCountriesRemove": {
+    "type": [
+      {
+        "name": "String!"
+      }
+    ],
+    "label": "Movies Production Countries (Remove)",
+    "originalFieldName": "moviesProductionCountries",
+    "action": "relatedEntitiesToRemove"
+  },
+  "moviesSnapshotsRemove": {
+    "type": [
+      {
+        "snapshotId": "Int!"
+      }
+    ],
+    "label": "Movies Snapshots (Remove)",
+    "originalFieldName": "moviesSnapshots",
+    "action": "relatedEntitiesToRemove"
+  },
+  "moviesTagsRemove": {
+    "type": [
+      {
+        "name": "String!"
+      }
+    ],
+    "label": "Movies Tags (Remove)",
+    "originalFieldName": "moviesTags",
+    "action": "relatedEntitiesToRemove"
+  },
+  "moviesTrailersRemove": {
+    "type": [
+      {
+        "videoId": "UUID!"
+      }
+    ],
+    "label": "Movies Trailers (Remove)",
+    "originalFieldName": "moviesTrailers",
+    "action": "relatedEntitiesToRemove"
+  },
+  "description": {
+    "type": "String",
+    "label": "Description",
+    "originalFieldName": "description",
+    "action": "set"
+  },
+  "externalId": {
+    "type": "String",
+    "label": "External Id",
+    "originalFieldName": "externalId",
+    "action": "set"
+  },
+  "mainVideoId": {
+    "type": "UUID",
+    "label": "Main Video Id",
+    "originalFieldName": "mainVideoId",
+    "action": "set"
+  },
+  "originalTitle": {
+    "type": "String",
+    "label": "Original Title",
+    "originalFieldName": "originalTitle",
+    "action": "set"
+  },
+  "released": {
+    "type": "Date",
+    "label": "Released",
+    "originalFieldName": "released",
+    "action": "set"
+  },
+  "studio": {
+    "type": "String",
+    "label": "Studio",
+    "originalFieldName": "studio",
+    "action": "set"
+  },
+  "synopsis": {
+    "type": "String",
+    "label": "Synopsis",
+    "originalFieldName": "synopsis",
+    "action": "set"
+  },
+  "title": {
+    "type": "String",
+    "label": "Title",
+    "originalFieldName": "title",
+    "action": "set"
+  }
+}};
