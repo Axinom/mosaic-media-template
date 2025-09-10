@@ -166,7 +166,8 @@ primarily be used from 'localhost', so this value is not too important for now
 and is also possible to be changed later still.
 
 After hitting 'Proceed', the environment will be created and the 'Environment
-Connection' screen will show up. You can use this screen to retrieve all the
+Connection' screen will show up. If you need to regenerate the values, there are
+'Re-Generate All Connection' button. You can use this screen to retrieve all the
 information you need for connecting the media-template solution to the created
 environment.
 
