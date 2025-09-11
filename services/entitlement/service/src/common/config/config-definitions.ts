@@ -2,7 +2,6 @@
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
 import {
   getBasicConfigDefinitions,
-  getBasicCustomizableConfigDefinitions,
   getBasicDbConfigDefinitions,
   getBasicGraphQlConfigDefinitions,
   getBasicMetricsEndpointDefinitions,
@@ -32,7 +31,11 @@ export const getConfigDefinitions = (
     ...getBasicGraphQlConfigDefinitions(10200, variables),
     ...getBasicDbConfigDefinitions(variables),
     ...getBasicRabbitMqConfigDefinitions(variables),
-    ...getBasicCustomizableConfigDefinitions(variables),
+
+    tenantId: () => env.get('TENANT_ID').required().asString(),
+    environmentId: () => env.get('ENVIRONMENT_ID').required().asString(),
+    idServiceAuthBaseUrl: () =>
+      env.get('ID_SERVICE_AUTH_BASE_URL').required().asUrlString(),
 
     userServiceAuthBaseUrl: () =>
       env.get('USER_SERVICE_AUTH_BASE_URL').required().asUrlString(),
