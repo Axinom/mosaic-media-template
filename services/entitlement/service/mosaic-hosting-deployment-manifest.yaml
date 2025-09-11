@@ -92,10 +92,6 @@ regularVariables:
 secureVariables:
   # Use this section to store any custom environment variables which contain sensitive data.
 
-  # Service Account Variables
-  SERVICE_ACCOUNT_CLIENT_ID: '${__ax_hosted__.sa.client_id.primary}'
-  SERVICE_ACCOUNT_CLIENT_SECRET: '${__ax_hosted__.sa.client_secret.primary}'
-
   # GeoLite License Key
   GEOLITE2_LICENSE_KEY: 'REPLACE_WITH_VALID_GEOLITE2_LICENSE_KEY'
   MAXMIND_ACCOUNT_ID: 'REPLACE_WITH_VALID_MAXMIND_ACCOUNT_ID'
