@@ -1,17 +1,5 @@
 import { BulkEditMoviesAsyncFormFieldsConfig } from '../../../../generated/graphql';
-
-const labelMapper = (
-  fields: Partial<typeof BulkEditMoviesAsyncFormFieldsConfig.fields>,
-  labelMap: {
-    [key in keyof typeof BulkEditMoviesAsyncFormFieldsConfig.fields]?: string;
-  },
-): void => {
-  for (const key in fields) {
-    if (labelMap[key]) {
-      fields[key].label = labelMap[key];
-    }
-  }
-};
+import { labelMapper, typeMapper } from '../../../../Util/BulkEdit';
 
 export const MoviesBulkEditConfig = (() => {
   const fields: Partial<typeof BulkEditMoviesAsyncFormFieldsConfig.fields> = {
@@ -28,6 +16,11 @@ export const MoviesBulkEditConfig = (() => {
     moviesTrailersAdd: 'Trailer (Add)',
     moviesTrailersRemove: 'Trailer (Remove)',
     mainVideoId: 'Main Video',
+  });
+
+  typeMapper(fields, {
+    moviesTrailersAdd: 'VideoSelection',
+    moviesTrailersRemove: 'VideoSelection',
   });
 
   delete fields['collectionRelationsAdd'];
@@ -67,14 +60,6 @@ export const MoviesBulkEditConfig = (() => {
     originalFieldName: 'moviesImages',
     action: BulkEditMoviesAsyncFormFieldsConfig.keys.remove,
   };
-
-  for (const key in fields) {
-    if (Array.isArray(fields[key].type)) {
-      if (Object.keys(fields[key].type[0]).includes('videoId')) {
-        fields[key].type = 'VideoSelection';
-      }
-    }
-  }
 
   return {
     ...BulkEditMoviesAsyncFormFieldsConfig,

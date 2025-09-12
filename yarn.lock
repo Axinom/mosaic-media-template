@@ -448,6 +448,30 @@
     pg-transactional-outbox "^0.5.7"
     prom-client "^15.1.0"
 
+"@axinom/mosaic-ui@0.64.0":
+  version "0.64.0"
+  resolved "https://registry.yarnpkg.com/@axinom/mosaic-ui/-/mosaic-ui-0.64.0.tgz#2a2495ab80dd96618ed8494eef020000515cdfce"
+  integrity sha512-pQecQ+F5LkG4nwMRSoX1z/rdmZPbuujxx9VfFreXjRAYKv/TYieSrBGehb55vHREYvzWcKWnUaINw7L30x+W2Q==
+  dependencies:
+    "@axinom/mosaic-core" "^0.4.30"
+    "@faker-js/faker" "^7.4.0"
+    "@geoffcox/react-splitter" "^2.1.2"
+    "@mui/base" "5.0.0-beta.40"
+    "@popperjs/core" "^2.11.8"
+    clsx "^1.1.0"
+    json-to-graphql-query "^2.3.0"
+    lodash "^4.17.21"
+    luxon "^3.3.0"
+    postcss "^8.4.4"
+    react-beautiful-dnd "^13.1.1"
+    react-calendar "^3.3.1"
+    react-content-loader "^6.0.3"
+    react-imask "^6.4.3"
+    react-popper "^2.2.5"
+    react-tabs "4.3.0"
+    react-transition-group "^4.3.0"
+    yup "^0.32.11"
+
 "@axinom/mosaic-ui@0.64.0-rc.16":
   version "0.64.0-rc.16"
   resolved "https://registry.yarnpkg.com/@axinom/mosaic-ui/-/mosaic-ui-0.64.0-rc.16.tgz#b523787189be68b1c96ab65b8606782ba32851ce"
