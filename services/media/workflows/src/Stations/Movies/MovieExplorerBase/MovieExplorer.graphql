@@ -69,3 +69,37 @@ subscription MoviesMutated {
     }
   }
 }
+
+query MovieGenresFilterOptions($orderBy: [MovieGenresOrderBy!]) {
+  movieGenres(orderBy: $orderBy) {
+    nodes {
+      title
+    }
+  }
+}
+
+query MovieTagsFilterOptions($orderBy: [MoviesTagsOrderBy!]) {
+  moviesTags(orderBy: $orderBy) {
+    nodes {
+      name
+    }
+  }
+}
+
+query MovieCastsFilterOptions($orderBy: [MoviesCastsOrderBy!]) {
+  moviesCasts(orderBy: $orderBy) {
+    nodes {
+      name
+    }
+  }
+}
+
+query MovieCountriesFilterOptions(
+  $orderBy: [MoviesProductionCountriesOrderBy!]
+) {
+  moviesProductionCountries(orderBy: $orderBy) {
+    nodes {
+      name
+    }
+  }
+}

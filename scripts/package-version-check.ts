@@ -24,7 +24,7 @@ Please run "yarn pilet upgrade" in "%s" to update.`);
 async function checkPackageVersion(): Promise<void> {
   let latestVersion = '';
   try {
-    latestVersion = execSync(`yarn info ${packageName} version`)
+    latestVersion = execSync(`npm info ${packageName} version`)
       .toString()
       .trim();
   } catch (error) {
