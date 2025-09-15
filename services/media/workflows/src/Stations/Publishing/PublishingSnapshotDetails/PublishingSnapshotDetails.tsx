@@ -112,6 +112,7 @@ const Form: React.FC = () => {
   return (
     <GenericField label={'Validation Details'} name="snapshotValidationResults">
       <List<ValidationData>
+        className={classes.validationResultsList}
         columns={[
           {
             propertyName: 'context',
