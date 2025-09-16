@@ -7,8 +7,8 @@ import {
   NavigationExplorer,
   sortToPostGraphileOrderBy,
 } from '@axinom/mosaic-ui';
-import React from 'react';
-import { useHistory, useParams } from 'react-router-dom';
+import React, { useCallback } from 'react';
+import { useHistory } from 'react-router-dom';
 import { client } from '../../../apolloClient';
 import {
   PublishingSnapshotMutatedDocument,
@@ -32,12 +32,7 @@ import {
 
 export const PublishingSnapshotExplorer: React.FC<
   PublishingSnapshotExplorerProps
-> = ({ entityId, entityType, ...props }) => {
-  const movieId = Number(
-    useParams<{
-      movieId: string;
-    }>().movieId,
-  );
+> = ({ entityId, entityType, calculateNavigateUrl, ...props }) => {
   const history = useHistory();
 
   const [deleteSnapshotMutation] = useDeleteSnapshotMutation({
@@ -140,27 +135,34 @@ export const PublishingSnapshotExplorer: React.FC<
     },
   };
 
-  const generateInlineMenuActions: (data: SnapshotData) => ActionData[] = ({
-    id,
-  }) => {
-    return [
-      {
-        label: 'Delete',
-        onActionSelected: async () => {
-          await deleteSnapshotMutation({
-            variables: { input: { id } },
-          });
-          history.push(`/movies/${movieId}/snapshots`);
+  const generateInlineMenuActions = useCallback(
+    (data: SnapshotData): ActionData[] => {
+      const { id } = data;
+      const detailsUrl = calculateNavigateUrl
+        ? calculateNavigateUrl(data)
+        : `/snapshots/${id}`;
+      const listUrl = detailsUrl.substring(0, detailsUrl.lastIndexOf('/'));
+
+      return [
+        {
+          label: 'Delete',
+          onActionSelected: async () => {
+            await deleteSnapshotMutation({
+              variables: { input: { id } },
+            });
+            history.push(listUrl);
+          },
+          icon: IconName.Delete,
+          confirmationMode: 'Simple',
         },
-        icon: IconName.Delete,
-        confirmationMode: 'Simple',
-      },
-      {
-        label: 'Open Details',
-        path: `/movies/${movieId}/snapshots/${id}`,
-      },
-    ];
-  };
+        {
+          label: 'Open Details',
+          path: detailsUrl,
+        },
+      ];
+    },
+    [calculateNavigateUrl, deleteSnapshotMutation, history],
+  );
 
   return (
     <NavigationExplorer<SnapshotData>
@@ -177,6 +179,7 @@ export const PublishingSnapshotExplorer: React.FC<
           label: 'Publishing Validation',
         },
       ]}
+      calculateNavigateUrl={calculateNavigateUrl}
     />
   );
 };
