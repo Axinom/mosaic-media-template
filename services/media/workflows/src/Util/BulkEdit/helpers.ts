@@ -7,8 +7,10 @@ export const labelMapper = <T extends BulkEditFieldConfigMap>(
   },
 ): void => {
   for (const key in fields) {
-    if (labelMap[key] && fields[key]) {
-      fields[key].label = labelMap[key];
+    const labelValue = labelMap[key];
+    const fieldValue = fields[key];
+    if (labelValue && fieldValue) {
+      fieldValue.label = labelValue;
     }
   }
 };
@@ -20,8 +22,10 @@ export const typeMapper = <T extends BulkEditFieldConfigMap>(
   },
 ): void => {
   for (const key in fields) {
-    if (typeMap[key] && fields[key]) {
-      fields[key].type = typeMap[key];
+    const typeValue = typeMap[key];
+    const fieldValue = fields[key];
+    if (typeValue && fieldValue) {
+      fieldValue.type = typeValue;
     }
   }
 };
