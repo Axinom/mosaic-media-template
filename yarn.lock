@@ -8307,6 +8307,7 @@ __metadata:
     "@types/rascal": "npm:^10.0.6"
     "@types/verror": "npm:^1.10.6"
     add: "npm:^2.0.6"
+    concurrently: "npm:^6.5.1"
     dotenv: "npm:^8.6.0"
     env-cmd: "npm:^10.1.0"
     env-var: "npm:^6.3.0"
