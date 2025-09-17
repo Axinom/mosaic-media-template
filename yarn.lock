@@ -15176,6 +15176,13 @@ __metadata:
     url-join: "npm:^4.0.1"
     wsrun: "npm:^5.2.4"
     yargs: "npm:^16.2.0"
+  dependenciesMeta:
+    "@hyperjump/json-pointer":
+      built: false
+    "@hyperjump/json-schema-core":
+      built: false
+    "@hyperjump/pact":
+      built: false
   languageName: unknown
   linkType: soft
 

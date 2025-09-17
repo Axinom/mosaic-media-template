@@ -111,5 +111,16 @@
     "jest-cli": "^29",
     "jsonpath-plus": "^10.2.0"
   },
+  "dependenciesMeta": {
+    "@hyperjump/json-pointer": {
+      "built": false
+    },
+    "@hyperjump/json-schema-core": {
+      "built": false
+    },
+    "@hyperjump/pact": {
+      "built": false
+    }
+  },
   "packageManager": "yarn@4.9.4"
 }
