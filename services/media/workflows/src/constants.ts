@@ -27,4 +27,38 @@ export const Constants = {
   IN_PROGRESS: 'In Progress',
   SUCCESS: 'Success',
   PARTIAL_SUCCESS: 'Partial Success',
+
+  // Filter Labels
+  TITLE: 'Title',
+  ORIGINAL_TITLE: 'Original Title',
+  EXTERNAL_ID: 'External ID',
+  TAGS: 'Tags',
+  GENRE: 'Genre',
+  CAST: 'Cast',
+  RELEASE_PERIOD_FROM: 'Release Period (From)',
+  RELEASE_PERIOD_TO: 'Release Period (To)',
+  PRODUCTION_COUNTRY: 'Production Country',
+  STUDIO: 'Studio',
+  PUBLICATION_STATUS: 'Publication Status',
+  PUBLICATION_PERIOD_FROM: 'Publication Period (From)',
+  PUBLICATION_PERIOD_TO: 'Publication Period (To)',
+  CREATION_PERIOD_FROM: 'Creation Period (From)',
+  CREATION_PERIOD_TO: 'Creation Period (To)',
+  ID: 'ID',
+  MAIN_VIDEO: 'Main Video',
+  EPISODE_INDEX: 'Episode Index',
+  SEASON_INDEX: 'Season Index',
+  PARENT_ENTITY: 'Parent Entity',
+
+  // Filter Placeholders
+  SEARCH_TAGS: 'Search tags',
+  SEARCH_GENRES: 'Search genres',
+  SEARCH_CAST_MEMBERS: 'Search cast members',
+  SEARCH_COUNTRIES: 'Search countries',
+
+  // Options
+  ASSIGNED: 'Assigned',
+  NOT_ASSIGNED: 'Not Assigned',
+  TRUE: 'true',
+  FALSE: 'false',
 };
