@@ -15115,7 +15115,7 @@ input CreateCollectionRelationInput {
 input CollectionRelationInput {
   id: Int
   collectionId: Int!
-  sortOrder: Int!
+  sortOrder: Int
   movieId: Int
   tvshowId: Int
   seasonId: Int

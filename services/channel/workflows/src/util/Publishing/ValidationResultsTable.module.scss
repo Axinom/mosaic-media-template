@@ -1,0 +1,8 @@
+.validationResultsTable {  
+  :global(.dynamic-list-row-container [class*="DynamicListRow_wrapper_"]:first-child [class*="DynamicListRow_column_"]),
+  :global(.dynamic-list-row-container [class*="DynamicListRow_wrapper_"]:nth-child(2) [class*="DynamicListRow_column_"]) {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }  
+}

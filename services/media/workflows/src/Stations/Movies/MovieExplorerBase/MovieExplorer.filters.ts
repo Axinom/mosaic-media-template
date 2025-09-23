@@ -2,11 +2,34 @@ import {
   createDateRangeFilterValidators,
   filterToPostGraphileFilter,
   FilterType,
-  FilterTypes,
   FilterValues,
   transformRange,
 } from '@axinom/mosaic-ui';
-import { MovieFilter, PublishStatus } from '../../../generated/graphql';
+import { client } from '../../../apolloClient';
+import { Constants } from '../../../constants';
+import {
+  MovieCastsFilterOptionsQuery,
+  MovieCountriesFilterOptionsQuery,
+  MovieFilter,
+  MovieGenresFilterOptionsQuery,
+  MovieGenresOrderBy,
+  MoviesCastsOrderBy,
+  MoviesProductionCountriesOrderBy,
+  MoviesTagsOrderBy,
+  MovieTagsFilterOptionsQuery,
+  PublishStatus,
+  useMovieCastsFilterOptionsQuery,
+  useMovieCountriesFilterOptionsQuery,
+  useMovieGenresFilterOptionsQuery,
+  useMovieTagsFilterOptionsQuery,
+} from '../../../generated/graphql';
+import {
+  createDateRangeFilters,
+  createNumericFilter,
+  createOptionsFilter,
+  createSearchableFilter,
+  createTextFilter,
+} from '../../../Util/FilterUtils';
 import { getEnumLabel } from '../../../Util/StringEnumMapper/StringEnumMapper';
 import { MovieData } from './MovieExplorer.types';
 
@@ -20,112 +43,81 @@ export function useMoviesFilters(): {
   const [createFromDateFilterValidator, createToDateFilterValidator] =
     createDateRangeFilterValidators<MovieData>();
 
+  const { genres, tags, casts, countries } = useMovieFilterData();
+
   const filterOptions: FilterType<MovieData>[] = [
-    {
-      label: 'Title',
-      property: 'title',
-      type: FilterTypes.FreeText,
-    },
-    {
-      label: 'Original Title',
-      property: 'originalTitle',
-      type: FilterTypes.FreeText,
-    },
-    {
-      label: 'External ID',
-      property: 'externalId',
-      type: FilterTypes.FreeText,
-    },
-    {
-      label: 'Tags',
-      property: 'moviesTags',
-      type: FilterTypes.FreeText,
-    },
-    {
-      label: 'Genre',
-      property: 'moviesMovieGenres',
-      type: FilterTypes.FreeText,
-    },
-    {
-      label: 'Cast',
-      property: 'moviesCasts',
-      type: FilterTypes.FreeText,
-    },
-    {
-      label: 'Release Period (From)',
-      property: 'released',
-      type: FilterTypes.Date,
-      onValidate: createFromDateFilterValidator('released'),
-    },
-    {
-      label: 'Release Period (To)',
-      property: 'released',
-      type: FilterTypes.Date,
-      onValidate: createToDateFilterValidator('released'),
-    },
-    {
-      label: 'Production Country',
-      property: 'moviesProductionCountries',
-      type: FilterTypes.FreeText,
-    },
-    {
-      label: 'Studio',
-      property: 'studio',
-      type: FilterTypes.FreeText,
-    },
-    {
-      label: 'Publication Status',
-      property: 'publishStatus',
-      type: FilterTypes.Options,
-      options: Object.keys(PublishStatus).map((key) => ({
-        value: PublishStatus[key],
-        label: getEnumLabel(PublishStatus[key]),
+    createTextFilter(Constants.TITLE, 'title'),
+    createTextFilter(Constants.ORIGINAL_TITLE, 'originalTitle'),
+    createTextFilter(Constants.EXTERNAL_ID, 'externalId'),
+    createSearchableFilter(
+      Constants.TAGS,
+      'moviesTags',
+      tags,
+      (tag) => tag?.name ?? '',
+      Constants.SEARCH_TAGS,
+    ),
+    createSearchableFilter(
+      Constants.GENRE,
+      'moviesMovieGenres',
+      genres,
+      (genre) => genre?.title ?? '',
+      Constants.SEARCH_GENRES,
+    ),
+    createSearchableFilter(
+      Constants.CAST,
+      'moviesCasts',
+      casts,
+      (cast) => cast?.name ?? '',
+      Constants.SEARCH_CAST_MEMBERS,
+    ),
+    ...createDateRangeFilters(
+      'released',
+      Constants.RELEASE_PERIOD_FROM,
+      Constants.RELEASE_PERIOD_TO,
+      createFromDateFilterValidator,
+      createToDateFilterValidator,
+    ),
+    createSearchableFilter(
+      Constants.PRODUCTION_COUNTRY,
+      'moviesProductionCountries',
+      countries,
+      (country) => country?.name ?? '',
+      Constants.SEARCH_COUNTRIES,
+    ),
+    createTextFilter(Constants.STUDIO, 'studio'),
+    createOptionsFilter(
+      Constants.PUBLICATION_STATUS,
+      'publishStatus',
+      Object.values(PublishStatus).map((status) => ({
+        value: status,
+        label: getEnumLabel(status),
       })),
-    },
-    {
-      label: 'Publication Period (From)',
-      property: 'publishedDate',
-      type: FilterTypes.Date,
-      onValidate: createFromDateFilterValidator('publishedDate'),
-    },
-    {
-      label: 'Publication Period (To)',
-      property: 'publishedDate',
-      type: FilterTypes.Date,
-      onValidate: createToDateFilterValidator('publishedDate'),
-    },
-    {
-      label: 'Creation Period (From)',
-      property: 'createdDate',
-      type: FilterTypes.Date,
-      onValidate: createFromDateFilterValidator('createdDate'),
-    },
-    {
-      label: 'Creation Period (To)',
-      property: 'createdDate',
-      type: FilterTypes.Date,
-      onValidate: createToDateFilterValidator('createdDate'),
-    },
-    {
-      label: 'ID',
-      property: 'id',
-      type: FilterTypes.Numeric,
-    },
-    {
-      label: 'Main Video',
-      property: 'mainVideoId',
-      type: FilterTypes.Options,
-      options: [
-        {
-          label: 'Assigned',
-          value: true,
-        },
-        {
-          label: 'Not Assigned',
-          value: false,
-        },
-      ],
-    },
+    ),
+    ...createDateRangeFilters(
+      'publishedDate',
+      Constants.PUBLICATION_PERIOD_FROM,
+      Constants.PUBLICATION_PERIOD_TO,
+      createFromDateFilterValidator,
+      createToDateFilterValidator,
+    ),
+    ...createDateRangeFilters(
+      'createdDate',
+      Constants.CREATION_PERIOD_FROM,
+      Constants.CREATION_PERIOD_TO,
+      createFromDateFilterValidator,
+      createToDateFilterValidator,
+    ),
+    createNumericFilter(Constants.ID, 'id'),
+    createOptionsFilter(Constants.MAIN_VIDEO, 'mainVideoId', [
+      {
+        label: Constants.ASSIGNED,
+        value: true,
+      },
+      {
+        label: Constants.NOT_ASSIGNED,
+        value: false,
+      },
+    ]),
   ];
 
   const transformFilters = (
@@ -171,4 +163,46 @@ export function useMoviesFilters(): {
   };
 
   return { filterOptions, transformFilters };
+}
+
+const fetchPolicy = 'network-only';
+
+function useMovieFilterData(): {
+  genres: NonNullable<MovieGenresFilterOptionsQuery['movieGenres']>['nodes'];
+  tags: NonNullable<MovieTagsFilterOptionsQuery['moviesTags']>['nodes'];
+  casts: NonNullable<MovieCastsFilterOptionsQuery['moviesCasts']>['nodes'];
+  countries: NonNullable<
+    MovieCountriesFilterOptionsQuery['moviesProductionCountries']
+  >['nodes'];
+} {
+  const genres = useMovieGenresFilterOptionsQuery({
+    client,
+    variables: { orderBy: [MovieGenresOrderBy.TitleAsc] },
+    fetchPolicy,
+  });
+
+  const tags = useMovieTagsFilterOptionsQuery({
+    client,
+    variables: { orderBy: [MoviesTagsOrderBy.NameAsc] },
+    fetchPolicy,
+  });
+
+  const casts = useMovieCastsFilterOptionsQuery({
+    client,
+    variables: { orderBy: [MoviesCastsOrderBy.NameAsc] },
+    fetchPolicy,
+  });
+
+  const countries = useMovieCountriesFilterOptionsQuery({
+    client,
+    variables: { orderBy: [MoviesProductionCountriesOrderBy.NameAsc] },
+    fetchPolicy,
+  });
+
+  return {
+    genres: genres.data?.movieGenres?.nodes ?? [],
+    tags: tags.data?.moviesTags?.nodes ?? [],
+    casts: casts.data?.moviesCasts?.nodes ?? [],
+    countries: countries.data?.moviesProductionCountries?.nodes ?? [],
+  };
 }

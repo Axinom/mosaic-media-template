@@ -63,6 +63,26 @@ For a better development experience i.e. being able to run `docker` commands
 without `sudo`, please see
 [Docker post-installation steps for Linux](https://docs.docker.com/engine/install/linux-postinstall/).
 
+### Note for Mac users
+
+If you encounter build errors like this, when running `Quick Deploy`,
+
+```sh
+Error while loading metadata for docker.io/...
+```
+
+It may be due to DNS resolution issues with the Docker daemon. Verify your
+Docker daemon’s DNS configuration. Check your Docker daemon config
+(/etc/docker/daemon.json or Docker Desktop settings), and add:
+
+```sh
+{
+  "dns": ["8.8.8.8", "1.1.1.1"]
+}
+```
+
+Then restart Docker.
+
 ## Prepare and connect the media-template solution
 
 > :warning: This section is describing the steps on how to setup the solution
@@ -195,21 +215,23 @@ To deploy the workflows into an environment run a command like:
 ```sh
 yarn run pilet publish --no-fresh --url "https://frontends.service.eu.axinom.net/v1/pilets/{tenantId}/{environmentId}" --api-key "{serviceAccountCredentials}" {packageFile}
 ```
+
 You need a Client ID and Client Secret of a service account to run this command.
 
-This service account must contain the `Pilets: Publish` 
-permission under the "Micro Frontend Service" in order to be authorized to perform 
-the action of publishing the workflows. Client ID and Client Secret will be shown 
-to you alongside with the other secrets when creating a service account or when 
+This service account must contain the `Pilets: Publish` permission under the
+"Micro Frontend Service" in order to be authorized to perform the action of
+publishing the workflows. Client ID and Client Secret will be shown to you
+alongside with the other secrets when creating a service account or when
 generating new secrets for an existing account.
 
 Please note, that you need to provide the 'Base64 Encoded Credentials' of a
-[service account](https://docs.axinom.com/platform/core/identity/authenticate-serviceaccount/#what-is-a-service-account) 
-as the value of `api-key`. 
+[service account](https://docs.axinom.com/platform/core/identity/authenticate-serviceaccount/#what-is-a-service-account)
+as the value of `api-key`.
 
-If you have the plaintext Client ID & the Client Secret of the service account, 
-you can generate the `base64($clientid:$clientSecret)` to be used as the `api-key` 
-using a BASE64 generator tool, such as:: https://portal.axinom.com/mosaic/tools/base64.
+If you have the plaintext Client ID & the Client Secret of the service account,
+you can generate the `base64($clientid:$clientSecret)` to be used as the
+`api-key` using a BASE64 generator tool, such as::
+https://portal.axinom.com/mosaic/tools/base64.
 
 Also make sure that you define all values the pilet expects to receive inside
 the `app.meta.custom` by providing them as additional parameters on this command
@@ -244,8 +266,7 @@ your CI/CD pipelines, we recommend the `Advanced Deploy` option that uses the
 the supplied arguments.
 
 A detailed guide on how to deploy services via Mosaic Hosting Service can be
-found at
-https://docs.axinom.com/platform/hosting/deploy-a-customized-service
+found at https://docs.axinom.com/platform/hosting/deploy-a-customized-service
 
 ### Quick Deploy
 

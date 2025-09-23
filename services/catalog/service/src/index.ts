@@ -13,11 +13,13 @@ import {
   MosaicErrors,
   setupGlobalConsoleOverride,
   setupGlobalLogMiddleware,
+  setupGlobalSkipMaskMiddleware,
   setupLivenessAndReadiness,
   setupMonitoring,
   setupServiceHealthEndpoint,
   setupShutdownActions,
   tenantEnvironmentIdsLogMiddleware,
+  trimErrorsSkipMaskMiddleware,
 } from '@axinom/mosaic-service-common';
 import express from 'express';
 import { PoolConfig } from 'pg';
@@ -35,6 +37,7 @@ const logger = new Logger({ context: 'bootstrap' });
 // Entry point for the service. For annotated version please see /services/media/service/src/index.ts.
 async function bootstrap(): Promise<void> {
   handleGlobalErrors(logger);
+  setupGlobalSkipMaskMiddleware(trimErrorsSkipMaskMiddleware);
   setupGlobalConsoleOverride(logger);
   const config = getFullConfig();
   setupGlobalLogMiddleware([tenantEnvironmentIdsLogMiddleware(config)]);

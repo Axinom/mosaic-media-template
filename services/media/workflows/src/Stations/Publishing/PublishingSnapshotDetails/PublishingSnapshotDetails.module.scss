@@ -10,3 +10,16 @@
 .content {
   padding: 30px;
 }
+
+.validationResultsList {  
+  :global([class*="ListRow_content_"] [class*="ListRow_cellWrapper_"]:first-child [class*="ListRow_cell_"]),
+  :global([class*="ListRow_content_"] [class*="ListRow_cellWrapper_"]:nth-child(2) [class*="ListRow_cell_"]) {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+
+    span {
+      display: content;
+    }
+  }  
+}

@@ -75,3 +75,39 @@ subscription SeasonsMutated {
     }
   }
 }
+
+query SeasonsGenresFilterOptions($orderBy: [SeasonsTvshowGenresOrderBy!]) {
+  seasonsTvshowGenres(orderBy: $orderBy) {
+    nodes {
+      tvshowGenres {
+        title
+      }
+    }
+  }
+}
+
+query SeasonsCastsFilterOptions($orderBy: [SeasonsCastsOrderBy!]) {
+  seasonsCasts(orderBy: $orderBy) {
+    nodes {
+      name
+    }
+  }
+}
+
+query SeasonsTagsFilterOptions($orderBy: [SeasonsTagsOrderBy!]) {
+  seasonsTags(orderBy: $orderBy) {
+    nodes {
+      name
+    }
+  }
+}
+
+query SeasonsProductionCountriesFilterOptions(
+  $orderBy: [SeasonsProductionCountriesOrderBy!]
+) {
+  seasonsProductionCountries(orderBy: $orderBy) {
+    nodes {
+      name
+    }
+  }
+}
