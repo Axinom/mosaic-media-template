@@ -10,6 +10,12 @@
     "mosaic",
     "axinom mosaic"
   ],
+  "importmap": {
+    "imports": {},
+    "inherit": [
+      "@axinom/mosaic-portal"
+    ]
+  },
   "scripts": {
     "clean": "rimraf dist .cache",
     "build": "pilet build --source-maps=false",
@@ -70,12 +76,10 @@
     "typescript-plugin-css-modules": "^5.0.2"
   },
   "peerDependencies": {
-    "@axinom/mosaic-portal": "*",
     "react": "*",
     "react-dom": "*",
     "react-router": "*",
-    "react-router-dom": "*",
-    "tslib": "*"
+    "react-router-dom": "*"
   },
   "peerModules": []
 }
