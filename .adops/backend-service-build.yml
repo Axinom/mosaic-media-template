@@ -14,11 +14,6 @@ stages:
       - job: Build
         displayName: Build
         steps:
-          - task: NodeTool@0
-            inputs:
-              versionSpec: '18.x'
-            displayName: 'Install Node.js'
-
           - task: Docker@2
             displayName: Build Docker Image
             inputs:
@@ -27,7 +22,7 @@ stages:
               command: build
               Dockerfile: Dockerfile
               buildContext: '.'
-              tags: $(tag)
+              tags: '$(tag),latest'
               arguments:
                 '--build-arg PACKAGE_ROOT=$(packageRoot) --build-arg PACKAGE_BUILD_COMMAND=$(packageBuildCommand)'
 
@@ -37,7 +32,14 @@ stages:
               containerRegistry: $(containerRegistry)
               repository: beyonddutch-mosaic/$(imageRepo)
               command: push
-              tags: $(tag)
+              tags: '$(tag),latest'
+
+          - task: trivy@1
+            displayName: Image scanning
+            inputs:
+              docker: false
+              exitCode: 0
+              image: 'harbor.axinom.com/beyonddutch-mosaic/$(imageRepo):$(tag)'
 
           - script: |
               echo "$(Build.BuildNumber)" > buildNumber.txt
