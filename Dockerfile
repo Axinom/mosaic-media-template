@@ -30,7 +30,7 @@ RUN mkdir -p "$PACKAGE_ROOT/node_modules"
 RUN if [ ! -d /checkout/$PACKAGE_ROOT/migrations ]; then mkdir -p /checkout/$PACKAGE_ROOT/migrations; fi
 
 # RELEASE
-FROM node:22-bookworm-slim
+FROM node:22-alpine 
 
 ARG PACKAGE_ROOT
 ARG PACKAGE_BUILD_COMMAND
@@ -44,6 +44,11 @@ COPY --from=build ["/checkout/$PACKAGE_ROOT/dist", "./dist/"]
 COPY --from=build ["/checkout/$PACKAGE_ROOT/migrations", "./migrations/"]
 
 RUN chown -R node:node /app
+
+RUN apk add --no-cache --upgrade ca-certificates \
+    && update-ca-certificates
+
+
 USER node
 
 CMD ["node", "dist/index.js"]
