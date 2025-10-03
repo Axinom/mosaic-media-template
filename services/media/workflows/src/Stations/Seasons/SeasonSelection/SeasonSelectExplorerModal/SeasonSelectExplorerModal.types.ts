@@ -1,4 +1,4 @@
-import { SeasonSelectionExplorerProps } from '../SeasonExplorerBase/SeasonExplorer.types';
+import { SeasonSelectionExplorerProps } from '../../SeasonExplorerBase/SeasonExplorer.types';
 
 export interface UseSeasonSelectExplorerModalOptions {
   title?: string;

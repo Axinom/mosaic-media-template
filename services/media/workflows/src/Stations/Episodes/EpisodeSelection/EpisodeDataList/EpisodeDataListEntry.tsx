@@ -4,25 +4,25 @@ import {
   DynamicListDataEntryProps,
 } from '@axinom/mosaic-ui';
 import React, { useMemo } from 'react';
-import { useEpisodeSelectExplorerModal } from '../../../Episodes/EpisodeSelectExplorerModal/EpisodeSelectExplorerModal';
-import { SeasonEpisode } from '../SeasonEpisodeManagement.types';
+import { EpisodeData } from '../../EpisodeExplorerBase/EpisodeExplorer.types';
+import { useEpisodeSelectExplorerModal } from '../EpisodeSelectExplorerModal/EpisodeSelectExplorerModal';
 
 interface UseEpisodeDataListDataEntryOptions {
-  excludeItems: SeasonEpisode[];
+  excludeItems: EpisodeData[];
 }
 
 interface UseEpisodeDataListDataEntryResult {
-  EpisodeDataListDataEntry: React.FC<DynamicListDataEntryProps<SeasonEpisode>>;
+  EpisodeDataListDataEntry: React.FC<DynamicListDataEntryProps<EpisodeData>>;
 }
 
 export const useEpisodeDataListDataEntry = (
   options: UseEpisodeDataListDataEntryOptions,
 ): UseEpisodeDataListDataEntryResult => {
   const EpisodeDataListDataEntry: React.FC<
-    DynamicListDataEntryProps<SeasonEpisode>
+    DynamicListDataEntryProps<EpisodeData>
   > = useMemo(() => {
     const EpisodeDataListDataEntry: React.FC<
-      DynamicListDataEntryProps<SeasonEpisode>
+      DynamicListDataEntryProps<EpisodeData>
     > = (props) => {
       const { onActionClicked, ...rest } = props;
 

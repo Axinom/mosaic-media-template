@@ -15036,6 +15036,10 @@ type Mutation {
   """Creates a new Tvshow genres snapshot."""
   createTvshowGenresSnapshot: Snapshot
   bulkEditMoviesAsync(filter: MovieFilter, set: MoviePatch, relatedEntitiesToRemove: BulkEditAsyncMovieRemoveInput, relatedEntitiesToAdd: BulkEditAsyncMovieAddInput): BulkEditAsyncPayloadType
+  bulkEditTvShowsAsync(filter: TvshowFilter, set: TvshowPatch, relatedEntitiesToRemove: BulkEditAsyncTvshowRemoveInput, relatedEntitiesToAdd: BulkEditAsyncTvshowAddInput): BulkEditAsyncPayloadType
+  bulkEditSeasonsAsync(filter: SeasonFilter, set: SeasonPatch, relatedEntitiesToRemove: BulkEditAsyncSeasonRemoveInput, relatedEntitiesToAdd: BulkEditAsyncSeasonAddInput): BulkEditAsyncPayloadType
+  bulkEditEpisodesAsync(filter: EpisodeFilter, set: EpisodePatch, relatedEntitiesToRemove: BulkEditAsyncEpisodeRemoveInput, relatedEntitiesToAdd: BulkEditAsyncEpisodeAddInput): BulkEditAsyncPayloadType
+  bulkEditCollectionsAsync(filter: CollectionFilter, set: CollectionPatch, relatedEntitiesToRemove: BulkEditAsyncCollectionRemoveInput, relatedEntitiesToAdd: BulkEditAsyncCollectionAddInput): BulkEditAsyncPayloadType
   populateCollections(
     """
     The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
@@ -21172,7 +21176,7 @@ input BulkEditAsyncMovieRemoveMoviesTrailerInput {
 input BulkEditAsyncMovieRemoveCollectionRelationInput {
   id: Int
   collectionId: Int!
-  sortOrder: Int!
+  sortOrder: Int
   tvshowId: Int
   seasonId: Int
   episodeId: Int
@@ -21230,13 +21234,477 @@ input BulkEditAsyncMovieAddMoviesTrailerInput {
 input BulkEditAsyncMovieAddCollectionRelationInput {
   id: Int
   collectionId: Int!
-  sortOrder: Int!
+  sortOrder: Int
   tvshowId: Int
   seasonId: Int
   episodeId: Int
 }
 
 input BulkEditAsyncMovieAddMoviesSnapshotInput {
+  snapshotId: Int!
+}
+
+input BulkEditAsyncTvshowRemoveInput {
+  tvshowsTags: [BulkEditAsyncTvshowRemoveTvshowsTagInput]
+  tvshowsCasts: [BulkEditAsyncTvshowRemoveTvshowsCastInput]
+  tvshowsLicenses: [BulkEditAsyncTvshowRemoveTvshowsLicenseInput]
+  tvshowsProductionCountries: [BulkEditAsyncTvshowRemoveTvshowsProductionCountryInput]
+  tvshowsTvshowGenres: [BulkEditAsyncTvshowRemoveTvshowsTvshowGenreInput]
+  tvshowsImages: [BulkEditAsyncTvshowRemoveTvshowsImageInput]
+  tvshowsTrailers: [BulkEditAsyncTvshowRemoveTvshowsTrailerInput]
+  seasons: [BulkEditAsyncTvshowRemoveSeasonInput]
+  collectionRelations: [BulkEditAsyncTvshowRemoveCollectionRelationInput]
+  tvshowsSnapshots: [BulkEditAsyncTvshowRemoveTvshowsSnapshotInput]
+}
+
+input BulkEditAsyncTvshowRemoveTvshowsTagInput {
+  """@notEmpty()"""
+  name: String!
+}
+
+input BulkEditAsyncTvshowRemoveTvshowsCastInput {
+  """@notEmpty()"""
+  name: String!
+}
+
+input BulkEditAsyncTvshowRemoveTvshowsLicenseInput {
+  licenseStart: Datetime
+  licenseEnd: Datetime
+}
+
+input BulkEditAsyncTvshowRemoveTvshowsProductionCountryInput {
+  """@notEmpty()"""
+  name: String!
+}
+
+input BulkEditAsyncTvshowRemoveTvshowsTvshowGenreInput {
+  tvshowGenresId: Int!
+}
+
+input BulkEditAsyncTvshowRemoveTvshowsImageInput {
+  imageId: UUID!
+  imageType: TvshowImageType!
+}
+
+input BulkEditAsyncTvshowRemoveTvshowsTrailerInput {
+  videoId: UUID!
+}
+
+input BulkEditAsyncTvshowRemoveSeasonInput {
+  index: Int!
+  externalId: String
+  synopsis: String
+  description: String
+  studio: String
+  released: Date
+}
+
+input BulkEditAsyncTvshowRemoveCollectionRelationInput {
+  id: Int
+  collectionId: Int!
+  sortOrder: Int
+  movieId: Int
+  seasonId: Int
+  episodeId: Int
+}
+
+input BulkEditAsyncTvshowRemoveTvshowsSnapshotInput {
+  snapshotId: Int!
+}
+
+input BulkEditAsyncTvshowAddInput {
+  tvshowsTags: [BulkEditAsyncTvshowAddTvshowsTagInput]
+  tvshowsCasts: [BulkEditAsyncTvshowAddTvshowsCastInput]
+  tvshowsLicenses: [BulkEditAsyncTvshowAddTvshowsLicenseInput]
+  tvshowsProductionCountries: [BulkEditAsyncTvshowAddTvshowsProductionCountryInput]
+  tvshowsTvshowGenres: [BulkEditAsyncTvshowAddTvshowsTvshowGenreInput]
+  tvshowsImages: [BulkEditAsyncTvshowAddTvshowsImageInput]
+  tvshowsTrailers: [BulkEditAsyncTvshowAddTvshowsTrailerInput]
+  seasons: [BulkEditAsyncTvshowAddSeasonInput]
+  collectionRelations: [BulkEditAsyncTvshowAddCollectionRelationInput]
+  tvshowsSnapshots: [BulkEditAsyncTvshowAddTvshowsSnapshotInput]
+}
+
+input BulkEditAsyncTvshowAddTvshowsTagInput {
+  """@notEmpty()"""
+  name: String!
+}
+
+input BulkEditAsyncTvshowAddTvshowsCastInput {
+  """@notEmpty()"""
+  name: String!
+}
+
+input BulkEditAsyncTvshowAddTvshowsLicenseInput {
+  licenseStart: Datetime
+  licenseEnd: Datetime
+}
+
+input BulkEditAsyncTvshowAddTvshowsProductionCountryInput {
+  """@notEmpty()"""
+  name: String!
+}
+
+input BulkEditAsyncTvshowAddTvshowsTvshowGenreInput {
+  tvshowGenresId: Int!
+}
+
+input BulkEditAsyncTvshowAddTvshowsImageInput {
+  imageId: UUID!
+  imageType: TvshowImageType!
+}
+
+input BulkEditAsyncTvshowAddTvshowsTrailerInput {
+  videoId: UUID!
+}
+
+input BulkEditAsyncTvshowAddSeasonInput {
+  index: Int!
+  externalId: String
+  synopsis: String
+  description: String
+  studio: String
+  released: Date
+}
+
+input BulkEditAsyncTvshowAddCollectionRelationInput {
+  id: Int
+  collectionId: Int!
+  sortOrder: Int
+  movieId: Int
+  seasonId: Int
+  episodeId: Int
+}
+
+input BulkEditAsyncTvshowAddTvshowsSnapshotInput {
+  snapshotId: Int!
+}
+
+input BulkEditAsyncSeasonRemoveInput {
+  seasonsTags: [BulkEditAsyncSeasonRemoveSeasonsTagInput]
+  seasonsCasts: [BulkEditAsyncSeasonRemoveSeasonsCastInput]
+  seasonsLicenses: [BulkEditAsyncSeasonRemoveSeasonsLicenseInput]
+  seasonsProductionCountries: [BulkEditAsyncSeasonRemoveSeasonsProductionCountryInput]
+  seasonsTvshowGenres: [BulkEditAsyncSeasonRemoveSeasonsTvshowGenreInput]
+  seasonsImages: [BulkEditAsyncSeasonRemoveSeasonsImageInput]
+  seasonsTrailers: [BulkEditAsyncSeasonRemoveSeasonsTrailerInput]
+  episodes: [BulkEditAsyncSeasonRemoveEpisodeInput]
+  collectionRelations: [BulkEditAsyncSeasonRemoveCollectionRelationInput]
+  seasonsSnapshots: [BulkEditAsyncSeasonRemoveSeasonsSnapshotInput]
+}
+
+input BulkEditAsyncSeasonRemoveSeasonsTagInput {
+  """@notEmpty()"""
+  name: String!
+}
+
+input BulkEditAsyncSeasonRemoveSeasonsCastInput {
+  """@notEmpty()"""
+  name: String!
+}
+
+input BulkEditAsyncSeasonRemoveSeasonsLicenseInput {
+  licenseStart: Datetime
+  licenseEnd: Datetime
+}
+
+input BulkEditAsyncSeasonRemoveSeasonsProductionCountryInput {
+  """@notEmpty()"""
+  name: String!
+}
+
+input BulkEditAsyncSeasonRemoveSeasonsTvshowGenreInput {
+  tvshowGenresId: Int!
+}
+
+input BulkEditAsyncSeasonRemoveSeasonsImageInput {
+  imageId: UUID!
+  imageType: SeasonImageType!
+}
+
+input BulkEditAsyncSeasonRemoveSeasonsTrailerInput {
+  videoId: UUID!
+}
+
+input BulkEditAsyncSeasonRemoveEpisodeInput {
+  index: Int!
+
+  """
+  @maxLength(100)
+  @notEmpty()
+  """
+  title: String!
+  externalId: String
+  originalTitle: String
+  synopsis: String
+  description: String
+  studio: String
+  released: Date
+  mainVideoId: UUID
+}
+
+input BulkEditAsyncSeasonRemoveCollectionRelationInput {
+  id: Int
+  collectionId: Int!
+  sortOrder: Int
+  movieId: Int
+  tvshowId: Int
+  episodeId: Int
+}
+
+input BulkEditAsyncSeasonRemoveSeasonsSnapshotInput {
+  snapshotId: Int!
+}
+
+input BulkEditAsyncSeasonAddInput {
+  seasonsTags: [BulkEditAsyncSeasonAddSeasonsTagInput]
+  seasonsCasts: [BulkEditAsyncSeasonAddSeasonsCastInput]
+  seasonsLicenses: [BulkEditAsyncSeasonAddSeasonsLicenseInput]
+  seasonsProductionCountries: [BulkEditAsyncSeasonAddSeasonsProductionCountryInput]
+  seasonsTvshowGenres: [BulkEditAsyncSeasonAddSeasonsTvshowGenreInput]
+  seasonsImages: [BulkEditAsyncSeasonAddSeasonsImageInput]
+  seasonsTrailers: [BulkEditAsyncSeasonAddSeasonsTrailerInput]
+  episodes: [BulkEditAsyncSeasonAddEpisodeInput]
+  collectionRelations: [BulkEditAsyncSeasonAddCollectionRelationInput]
+  seasonsSnapshots: [BulkEditAsyncSeasonAddSeasonsSnapshotInput]
+}
+
+input BulkEditAsyncSeasonAddSeasonsTagInput {
+  """@notEmpty()"""
+  name: String!
+}
+
+input BulkEditAsyncSeasonAddSeasonsCastInput {
+  """@notEmpty()"""
+  name: String!
+}
+
+input BulkEditAsyncSeasonAddSeasonsLicenseInput {
+  licenseStart: Datetime
+  licenseEnd: Datetime
+}
+
+input BulkEditAsyncSeasonAddSeasonsProductionCountryInput {
+  """@notEmpty()"""
+  name: String!
+}
+
+input BulkEditAsyncSeasonAddSeasonsTvshowGenreInput {
+  tvshowGenresId: Int!
+}
+
+input BulkEditAsyncSeasonAddSeasonsImageInput {
+  imageId: UUID!
+  imageType: SeasonImageType!
+}
+
+input BulkEditAsyncSeasonAddSeasonsTrailerInput {
+  videoId: UUID!
+}
+
+input BulkEditAsyncSeasonAddEpisodeInput {
+  index: Int!
+
+  """
+  @maxLength(100)
+  @notEmpty()
+  """
+  title: String!
+  externalId: String
+  originalTitle: String
+  synopsis: String
+  description: String
+  studio: String
+  released: Date
+  mainVideoId: UUID
+}
+
+input BulkEditAsyncSeasonAddCollectionRelationInput {
+  id: Int
+  collectionId: Int!
+  sortOrder: Int
+  movieId: Int
+  tvshowId: Int
+  episodeId: Int
+}
+
+input BulkEditAsyncSeasonAddSeasonsSnapshotInput {
+  snapshotId: Int!
+}
+
+input BulkEditAsyncEpisodeRemoveInput {
+  episodesTags: [BulkEditAsyncEpisodeRemoveEpisodesTagInput]
+  episodesCasts: [BulkEditAsyncEpisodeRemoveEpisodesCastInput]
+  episodesLicenses: [BulkEditAsyncEpisodeRemoveEpisodesLicenseInput]
+  episodesProductionCountries: [BulkEditAsyncEpisodeRemoveEpisodesProductionCountryInput]
+  episodesTvshowGenres: [BulkEditAsyncEpisodeRemoveEpisodesTvshowGenreInput]
+  episodesImages: [BulkEditAsyncEpisodeRemoveEpisodesImageInput]
+  episodesTrailers: [BulkEditAsyncEpisodeRemoveEpisodesTrailerInput]
+  collectionRelations: [BulkEditAsyncEpisodeRemoveCollectionRelationInput]
+  episodesSnapshots: [BulkEditAsyncEpisodeRemoveEpisodesSnapshotInput]
+}
+
+input BulkEditAsyncEpisodeRemoveEpisodesTagInput {
+  """@notEmpty()"""
+  name: String!
+}
+
+input BulkEditAsyncEpisodeRemoveEpisodesCastInput {
+  """@notEmpty()"""
+  name: String!
+}
+
+input BulkEditAsyncEpisodeRemoveEpisodesLicenseInput {
+  licenseStart: Datetime
+  licenseEnd: Datetime
+}
+
+input BulkEditAsyncEpisodeRemoveEpisodesProductionCountryInput {
+  """@notEmpty()"""
+  name: String!
+}
+
+input BulkEditAsyncEpisodeRemoveEpisodesTvshowGenreInput {
+  tvshowGenresId: Int!
+}
+
+input BulkEditAsyncEpisodeRemoveEpisodesImageInput {
+  imageId: UUID!
+  imageType: EpisodeImageType!
+}
+
+input BulkEditAsyncEpisodeRemoveEpisodesTrailerInput {
+  videoId: UUID!
+}
+
+input BulkEditAsyncEpisodeRemoveCollectionRelationInput {
+  id: Int
+  collectionId: Int!
+  sortOrder: Int
+  movieId: Int
+  tvshowId: Int
+  seasonId: Int
+}
+
+input BulkEditAsyncEpisodeRemoveEpisodesSnapshotInput {
+  snapshotId: Int!
+}
+
+input BulkEditAsyncEpisodeAddInput {
+  episodesTags: [BulkEditAsyncEpisodeAddEpisodesTagInput]
+  episodesCasts: [BulkEditAsyncEpisodeAddEpisodesCastInput]
+  episodesLicenses: [BulkEditAsyncEpisodeAddEpisodesLicenseInput]
+  episodesProductionCountries: [BulkEditAsyncEpisodeAddEpisodesProductionCountryInput]
+  episodesTvshowGenres: [BulkEditAsyncEpisodeAddEpisodesTvshowGenreInput]
+  episodesImages: [BulkEditAsyncEpisodeAddEpisodesImageInput]
+  episodesTrailers: [BulkEditAsyncEpisodeAddEpisodesTrailerInput]
+  collectionRelations: [BulkEditAsyncEpisodeAddCollectionRelationInput]
+  episodesSnapshots: [BulkEditAsyncEpisodeAddEpisodesSnapshotInput]
+}
+
+input BulkEditAsyncEpisodeAddEpisodesTagInput {
+  """@notEmpty()"""
+  name: String!
+}
+
+input BulkEditAsyncEpisodeAddEpisodesCastInput {
+  """@notEmpty()"""
+  name: String!
+}
+
+input BulkEditAsyncEpisodeAddEpisodesLicenseInput {
+  licenseStart: Datetime
+  licenseEnd: Datetime
+}
+
+input BulkEditAsyncEpisodeAddEpisodesProductionCountryInput {
+  """@notEmpty()"""
+  name: String!
+}
+
+input BulkEditAsyncEpisodeAddEpisodesTvshowGenreInput {
+  tvshowGenresId: Int!
+}
+
+input BulkEditAsyncEpisodeAddEpisodesImageInput {
+  imageId: UUID!
+  imageType: EpisodeImageType!
+}
+
+input BulkEditAsyncEpisodeAddEpisodesTrailerInput {
+  videoId: UUID!
+}
+
+input BulkEditAsyncEpisodeAddCollectionRelationInput {
+  id: Int
+  collectionId: Int!
+  sortOrder: Int
+  movieId: Int
+  tvshowId: Int
+  seasonId: Int
+}
+
+input BulkEditAsyncEpisodeAddEpisodesSnapshotInput {
+  snapshotId: Int!
+}
+
+input BulkEditAsyncCollectionRemoveInput {
+  collectionRelations: [BulkEditAsyncCollectionRemoveCollectionRelationInput]
+  collectionsTags: [BulkEditAsyncCollectionRemoveCollectionsTagInput]
+  collectionsImages: [BulkEditAsyncCollectionRemoveCollectionsImageInput]
+  collectionsSnapshots: [BulkEditAsyncCollectionRemoveCollectionsSnapshotInput]
+}
+
+input BulkEditAsyncCollectionRemoveCollectionRelationInput {
+  id: Int
+  sortOrder: Int
+  movieId: Int
+  tvshowId: Int
+  seasonId: Int
+  episodeId: Int
+}
+
+input BulkEditAsyncCollectionRemoveCollectionsTagInput {
+  """@notEmpty()"""
+  name: String!
+}
+
+input BulkEditAsyncCollectionRemoveCollectionsImageInput {
+  imageId: UUID!
+  imageType: CollectionImageType!
+}
+
+input BulkEditAsyncCollectionRemoveCollectionsSnapshotInput {
+  snapshotId: Int!
+}
+
+input BulkEditAsyncCollectionAddInput {
+  collectionRelations: [BulkEditAsyncCollectionAddCollectionRelationInput]
+  collectionsTags: [BulkEditAsyncCollectionAddCollectionsTagInput]
+  collectionsImages: [BulkEditAsyncCollectionAddCollectionsImageInput]
+  collectionsSnapshots: [BulkEditAsyncCollectionAddCollectionsSnapshotInput]
+}
+
+input BulkEditAsyncCollectionAddCollectionRelationInput {
+  id: Int
+  sortOrder: Int
+  movieId: Int
+  tvshowId: Int
+  seasonId: Int
+  episodeId: Int
+}
+
+input BulkEditAsyncCollectionAddCollectionsTagInput {
+  """@notEmpty()"""
+  name: String!
+}
+
+input BulkEditAsyncCollectionAddCollectionsImageInput {
+  imageId: UUID!
+  imageType: CollectionImageType!
+}
+
+input BulkEditAsyncCollectionAddCollectionsSnapshotInput {
   snapshotId: Int!
 }
 

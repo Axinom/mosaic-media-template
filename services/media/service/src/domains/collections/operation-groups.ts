@@ -59,6 +59,7 @@ export const CollectionsMutateOperations = [
   M.unpublishCollections,
   M.createCollectionSnapshot,
   M.createCollectionSnapshots,
+  M.bulkEditCollectionsAsync,
 ];
 
 export const CollectionDevOperations = [M.populateCollections];

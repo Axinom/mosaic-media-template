@@ -46,7 +46,7 @@
   },
   "dependencies": {
     "@axinom/mosaic-db-common": "0.50.0",
-    "@axinom/mosaic-graphql-common": "0.26.0",
+    "@axinom/mosaic-graphql-common": "0.27.0-rc.3",
     "@axinom/mosaic-id-guard": "0.42.8",
     "@axinom/mosaic-id-link-be": "0.32.0",
     "@axinom/mosaic-message-bus": "0.43.0",

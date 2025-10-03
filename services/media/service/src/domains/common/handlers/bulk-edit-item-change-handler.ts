@@ -44,10 +44,63 @@ export class BulkEditItemChangeHandler extends MediaGuardedTransactionalInboxMes
   ): Promise<void> {
     this.logger.debug({ details: { ...message.payload } });
 
+    // TODO: Refactor this when we have time to make it cleaner.
     if (message.payload.table_name === 'movies_images') {
       if (message.payload.action === 'ADD_RELATED_ENTITY') {
         await deletes(message.payload.table_name, {
           movie_id: JSON.parse(message.payload.stringified_payload).movie_id,
+          image_type: JSON.parse(message.payload.stringified_payload)
+            .image_type,
+        }).run(envOwnerClient);
+
+        await insert(
+          message.payload.table_name,
+          JSON.parse(message.payload.stringified_payload),
+        ).run(envOwnerClient);
+
+        return;
+      }
+    }
+
+    if (message.payload.table_name === 'tvshows_images') {
+      if (message.payload.action === 'ADD_RELATED_ENTITY') {
+        await deletes(message.payload.table_name, {
+          tvshow_id: JSON.parse(message.payload.stringified_payload).tvshow_id,
+          image_type: JSON.parse(message.payload.stringified_payload)
+            .image_type,
+        }).run(envOwnerClient);
+
+        await insert(
+          message.payload.table_name,
+          JSON.parse(message.payload.stringified_payload),
+        ).run(envOwnerClient);
+
+        return;
+      }
+    }
+
+    if (message.payload.table_name === 'seasons_images') {
+      if (message.payload.action === 'ADD_RELATED_ENTITY') {
+        await deletes(message.payload.table_name, {
+          season_id: JSON.parse(message.payload.stringified_payload).season_id,
+          image_type: JSON.parse(message.payload.stringified_payload)
+            .image_type,
+        }).run(envOwnerClient);
+
+        await insert(
+          message.payload.table_name,
+          JSON.parse(message.payload.stringified_payload),
+        ).run(envOwnerClient);
+
+        return;
+      }
+    }
+
+    if (message.payload.table_name === 'episodes_images') {
+      if (message.payload.action === 'ADD_RELATED_ENTITY') {
+        await deletes(message.payload.table_name, {
+          episode_id: JSON.parse(message.payload.stringified_payload)
+            .episode_id,
           image_type: JSON.parse(message.payload.stringified_payload)
             .image_type,
         }).run(envOwnerClient);

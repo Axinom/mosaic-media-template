@@ -112,6 +112,7 @@ export const TvShowsMutateOperations = [
   M.unpublishTvshows,
   M.createTvshowSnapshot,
   M.createTvshowSnapshots,
+  M.bulkEditTvShowsAsync,
 ];
 
 export const SeasonsReadOperations = [
@@ -178,6 +179,7 @@ export const SeasonsMutateOperations = [
   M.unpublishSeasons,
   M.createSeasonSnapshot,
   M.createSeasonSnapshots,
+  M.bulkEditSeasonsAsync,
 ];
 
 export const EpisodesReadOperations = [
@@ -244,6 +246,7 @@ export const EpisodesMutateOperations = [
   M.unpublishEpisodes,
   M.createEpisodeSnapshot,
   M.createEpisodeSnapshots,
+  M.bulkEditEpisodesAsync,
 ];
 
 export const TvshowsDevOperations = [M.populateTvshows];

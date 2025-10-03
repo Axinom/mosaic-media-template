@@ -100,6 +100,30 @@ export const buildPostgraphileOptions = (
         (originalToken, config) =>
           getLongLivedToken(originalToken, config as Config),
       ),
+      BulkEditAsyncPluginFactory(
+        'tvshows',
+        'bulkEditTvShowsAsync',
+        (originalToken, config) =>
+          getLongLivedToken(originalToken, config as Config),
+      ),
+      BulkEditAsyncPluginFactory(
+        'seasons',
+        'bulkEditSeasonsAsync',
+        (originalToken, config) =>
+          getLongLivedToken(originalToken, config as Config),
+      ),
+      BulkEditAsyncPluginFactory(
+        'episodes',
+        'bulkEditEpisodesAsync',
+        (originalToken, config) =>
+          getLongLivedToken(originalToken, config as Config),
+      ),
+      BulkEditAsyncPluginFactory(
+        'collections',
+        'bulkEditCollectionsAsync',
+        (originalToken, config) =>
+          getLongLivedToken(originalToken, config as Config),
+      ),
     )
     .addConditionalPlugins(
       config.isDev,

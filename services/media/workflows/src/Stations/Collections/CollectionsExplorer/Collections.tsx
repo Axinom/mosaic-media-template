@@ -5,10 +5,12 @@ import {
   createConnectionRenderer,
   DateRenderer,
   ExplorerDataProvider,
+  generateBulkEditMutation,
   IconName,
   NavigationExplorer,
   sortToPostGraphileOrderBy,
 } from '@axinom/mosaic-ui';
+import gql from 'graphql-tag';
 import React from 'react';
 import { useHistory } from 'react-router-dom';
 import { client } from '../../../apolloClient';
@@ -30,6 +32,8 @@ import { PublishStatusStateMap } from '../../../Util/PublishStatusStateMap/Publi
 import { CollectionDetailsQuickEdit } from '../CollectionDetails/CollectionDetailsQuickEdit';
 import { CollectionEntityManagementQuickEdit } from '../CollectionEntityManagement/CollectionEntityManagementQuickEdit';
 import { CollectionImageManagementQuickEdit } from '../CollectionImageManagement/CollectionImageManagementQuickEdit';
+import { CollectionsBulkEdit } from './BulkEdit/CollectionsBulkEdit';
+import { CollectionsBulkEditConfig } from './BulkEdit/CollectionsBulkEditConfig';
 import { useCollectionsActions } from './Collections.actions';
 import { useCollectionsFilters } from './Collections.filters';
 import { CollectionData } from './Collections.types';
@@ -217,6 +221,35 @@ export const Collections: React.FC = () => {
           generateDetailsLink: (item) => `/collections/${item.id}/images`,
         },
       ]}
+      bulkEditRegistration={{
+        component: <CollectionsBulkEdit />,
+        saveData: async (data, items) => {
+          let filter = undefined as Record<string, unknown> | undefined;
+          if (
+            items.mode === 'SINGLE_ITEMS' &&
+            items.items &&
+            items.items.length > 0
+          ) {
+            filter = { id: { in: items.items.map((item) => item.id) } };
+          }
+
+          if (items.mode === 'SELECT_ALL') {
+            filter = transformFilters(items.filters);
+          }
+
+          const mutation = generateBulkEditMutation(
+            CollectionsBulkEditConfig,
+            data,
+            filter,
+          );
+
+          await client.mutate({
+            mutation: gql`
+              ${mutation}
+            `,
+          });
+        },
+      }}
     />
   );
 };

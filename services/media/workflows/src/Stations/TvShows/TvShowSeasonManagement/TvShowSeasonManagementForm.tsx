@@ -15,7 +15,7 @@ import {
   MutationUpdateSeasonArgs,
   useTvShowSeasonsQuery,
 } from '../../../generated/graphql';
-import { SeasonSelectField } from './SeasonSelectField/SeasonSelectField';
+import { SeasonSelectField } from '../../Seasons/SeasonSelection';
 import { TvShowSeason } from './TvShowSeasonManagement.types';
 
 interface TvShowSeasonManagementFormProps {

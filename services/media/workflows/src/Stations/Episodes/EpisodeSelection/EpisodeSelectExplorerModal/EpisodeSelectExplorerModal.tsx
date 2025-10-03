@@ -1,18 +1,18 @@
 import { IconName, useModal, UseModalResult } from '@axinom/mosaic-ui';
 import React from 'react';
-import { SeasonExplorer } from '../SeasonExplorerBase/SeasonExplorer';
-import { UseSeasonSelectExplorerModalOptions } from './SeasonSelectExplorerModal.types';
+import { EpisodeExplorer } from '../../EpisodeExplorerBase/EpisodeExplorer';
+import { UseEpisodeSelectExplorerModalOptions } from './EpisodeSelectExplorerModal.types';
 
-export const useSeasonSelectExplorerModal = ({
+export const useEpisodeSelectExplorerModal = ({
   excludeItems,
-  title = 'Select Season',
+  title = 'Select Episode',
   onSelection,
-}: UseSeasonSelectExplorerModalOptions): UseModalResult =>
+}: UseEpisodeSelectExplorerModalOptions): UseModalResult =>
   useModal(({ closeModal }) => (
-    <SeasonExplorer
+    <EpisodeExplorer
       kind="SelectionExplorer"
       title={title}
-      stationKey={'SeasonSelection'}
+      stationKey={'EpisodeSelection'}
       onSelection={(selection) => {
         onSelection?.(selection);
         closeModal();
@@ -22,7 +22,7 @@ export const useSeasonSelectExplorerModal = ({
         {
           label: 'New',
           openInNewTab: true,
-          path: '/seasons/create',
+          path: '/episodes/create',
         },
         {
           label: 'Cancel',

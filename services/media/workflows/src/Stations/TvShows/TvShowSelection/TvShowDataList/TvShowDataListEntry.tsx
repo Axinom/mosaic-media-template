@@ -4,33 +4,33 @@ import {
   DynamicListDataEntryProps,
 } from '@axinom/mosaic-ui';
 import React, { useMemo } from 'react';
-import { useSeasonSelectExplorerModal } from '../../../Seasons/SeasonSelectExplorerModal/SeasonSelectExplorerModal';
-import { TvShowSeason } from '../TvShowSeasonManagement.types';
+import { TvShowData } from '../../TvShowExplorerBase/TvShowExplorer.types';
+import { useTvShowSelectExplorerModal } from '../TvShowSelectExplorerModal/TvShowSelectExplorerModal';
 
-interface UseSeasonDataListDataEntryOptions {
-  excludeItems: TvShowSeason[];
+interface UseTvShowDataListDataEntryOptions {
+  excludeItems: TvShowData[];
 }
 
-interface UseSeasonDataListDataEntryResult {
-  SeasonDataListDataEntry: React.FC<DynamicListDataEntryProps<TvShowSeason>>;
+interface UseTvShowDataListDataEntryResult {
+  TvShowDataListDataEntry: React.FC<DynamicListDataEntryProps<TvShowData>>;
 }
 
-export const useSeasonDataListDataEntry = (
-  options: UseSeasonDataListDataEntryOptions,
-): UseSeasonDataListDataEntryResult => {
-  const SeasonDataListDataEntry: React.FC<
-    DynamicListDataEntryProps<TvShowSeason>
+export const useTvShowDataListDataEntry = (
+  options: UseTvShowDataListDataEntryOptions,
+): UseTvShowDataListDataEntryResult => {
+  const TvShowDataListDataEntry: React.FC<
+    DynamicListDataEntryProps<TvShowData>
   > = useMemo(() => {
-    const SeasonDataListDataEntry: React.FC<
-      DynamicListDataEntryProps<TvShowSeason>
+    const TvShowDataListDataEntry: React.FC<
+      DynamicListDataEntryProps<TvShowData>
     > = (props) => {
       const { onActionClicked, ...rest } = props;
 
       const {
-        ModalWrapper: SeasonSelectExplorerModal,
+        ModalWrapper: TvShowSelectExplorerModal,
         openModal,
         closeModal,
-      } = useSeasonSelectExplorerModal({
+      } = useTvShowSelectExplorerModal({
         excludeItems: options.excludeItems.map((item) => item.id),
         onSelection: (selection) => {
           if (selection.mode === 'SINGLE_ITEMS') {
@@ -50,13 +50,13 @@ export const useSeasonDataListDataEntry = (
             {...rest}
             actionButtonContext={ButtonContext.Active}
           />
-          <SeasonSelectExplorerModal />
+          <TvShowSelectExplorerModal />
         </>
       );
     };
 
-    return SeasonDataListDataEntry;
+    return TvShowDataListDataEntry;
   }, [options.excludeItems]);
 
-  return { SeasonDataListDataEntry };
+  return { TvShowDataListDataEntry };
 };

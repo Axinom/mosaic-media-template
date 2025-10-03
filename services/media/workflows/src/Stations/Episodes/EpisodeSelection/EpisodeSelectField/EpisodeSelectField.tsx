@@ -1,23 +1,25 @@
 import { GenericField } from '@axinom/mosaic-ui';
 import { FieldHookConfig, useField } from 'formik';
 import React from 'react';
-import { SeasonDataList } from '../SeasonDataList/SeasonDataList';
-import { TvShowSeason } from '../TvShowSeasonManagement.types';
+import { EpisodeData } from '../../EpisodeExplorerBase/EpisodeExplorer.types';
+import { EpisodeDataList } from '../EpisodeDataList/EpisodeDataList';
 
-type SeasonSelectFieldProps = FieldHookConfig<TvShowSeason[]> & {
+type EpisodeSelectFieldProps = FieldHookConfig<EpisodeData[]> & {
   /** Maximum number of items which can be assigned */
   maxItems?: number;
   /** Label to be displayed */
   label: string;
 };
 
-export const SeasonSelectField: React.FC<SeasonSelectFieldProps> = (props) => {
+export const EpisodeSelectField: React.FC<EpisodeSelectFieldProps> = (
+  props,
+) => {
   const [field, , helpers] = useField(props);
 
   return (
     <>
-      <GenericField label={props.label} name={props.name}>
-        <SeasonDataList
+      <GenericField label={props.label} name={field.name}>
+        <EpisodeDataList
           maxItems={props.maxItems}
           value={field.value}
           onChange={(value) => helpers.setValue(value)}

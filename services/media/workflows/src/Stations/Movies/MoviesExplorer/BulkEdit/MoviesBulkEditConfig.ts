@@ -16,6 +16,8 @@ export const MoviesBulkEditConfig = (() => {
     moviesTrailersAdd: 'Trailer (Add)',
     moviesTrailersRemove: 'Trailer (Remove)',
     mainVideoId: 'Main Video',
+    moviesTagsAdd: 'Tags (Add)',
+    moviesTagsRemove: 'Tags (Remove)',
   });
 
   typeMapper(fields, {

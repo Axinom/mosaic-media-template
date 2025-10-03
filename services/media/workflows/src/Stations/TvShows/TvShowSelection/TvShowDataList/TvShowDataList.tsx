@@ -5,41 +5,39 @@ import {
   IconName,
 } from '@axinom/mosaic-ui';
 import React, { ReactNode, useCallback, useMemo } from 'react';
-import { useHistory } from 'react-router-dom';
-import { TvShowSeason } from '../TvShowSeasonManagement.types';
-import classes from './SeasonDataList.module.scss';
-import { useSeasonDataListDataEntry } from './SeasonDataListEntry';
+import { TvShowData } from '../../TvShowExplorerBase/TvShowExplorer.types';
+import classes from './TvShowDataList.module.scss';
+import { useTvShowDataListDataEntry } from './TvShowDataListEntry';
 
-interface SeasonDataListProps {
-  /** Seasons of the Tv Show */
-  value: TvShowSeason[];
+interface TvShowDataListProps {
+  /** TvShows which should be displayed */
+  value: TvShowData[];
   /** Maximum number of items which can be assigned */
   maxItems?: number;
   /** Raised when the list has changed */
-  onChange: (values: TvShowSeason[]) => void;
+  onChange: (values: TvShowData[]) => void;
 }
 
-export const SeasonDataList: React.FC<SeasonDataListProps> = ({
-  maxItems,
+export const TvShowDataList: React.FC<TvShowDataListProps> = ({
   value,
+  maxItems,
   onChange,
 }) => {
-  const history = useHistory();
-  const { SeasonDataListDataEntry } = useSeasonDataListDataEntry({
+  const { TvShowDataListDataEntry } = useTvShowDataListDataEntry({
     excludeItems: value,
   });
 
   const handleUnassign = useCallback(
-    (id: TvShowSeason['id']) => {
+    (id: TvShowData['id']) => {
       onChange(value.filter((val) => val.id !== id));
     },
     [onChange, value],
   );
 
-  const columns: DynamicListColumn<TvShowSeason>[] = useMemo(
-    (): DynamicListColumn<TvShowSeason>[] => [
+  const columns: DynamicListColumn<TvShowData>[] = useMemo(
+    (): DynamicListColumn<TvShowData>[] => [
       {
-        propertyName: 'index',
+        propertyName: 'title',
         size: '3fr',
         render: TitleRenderer,
       },
@@ -51,7 +49,7 @@ export const SeasonDataList: React.FC<SeasonDataListProps> = ({
     [],
   );
 
-  const generateInlineMenuActions: (data: TvShowSeason) => ActionData[] = ({
+  const generateInlineMenuActions: (data: TvShowData) => ActionData[] = ({
     id,
   }) => {
     return [
@@ -63,21 +61,21 @@ export const SeasonDataList: React.FC<SeasonDataListProps> = ({
       },
       {
         label: 'Open Details',
-        path: `/seasons/${id}`,
+        path: `/tvshows/${id}`,
         icon: IconName.NavigateRight,
       },
     ];
   };
 
   return (
-    <DynamicDataList<TvShowSeason>
+    <DynamicDataList<TvShowData>
       value={value}
       columns={columns}
       onChange={onChange}
       allowReordering={false}
       showHeader={false}
       allowNewData={maxItems === undefined || value.length < maxItems}
-      customDataEntry={SeasonDataListDataEntry}
+      customDataEntry={TvShowDataListDataEntry}
       stickyHeader={false}
       inlineMenuActions={generateInlineMenuActions}
     />
@@ -86,8 +84,8 @@ export const SeasonDataList: React.FC<SeasonDataListProps> = ({
 
 const TitleRenderer = (val: unknown): ReactNode => {
   if (!val) {
-    return <div className={classes.error}>Season not Found</div>;
+    return <div className={classes.error}>TV Show not Found</div>;
   }
 
-  return `Season ${val}`;
+  return String(val);
 };

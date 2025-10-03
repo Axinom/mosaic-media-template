@@ -1,4 +1,4 @@
-import { EpisodeSelectionExplorerProps } from '../EpisodeExplorerBase/EpisodeExplorer.types';
+import { EpisodeSelectionExplorerProps } from '../../EpisodeExplorerBase/EpisodeExplorer.types';
 
 export interface UseEpisodeSelectExplorerModalOptions {
   title?: string;

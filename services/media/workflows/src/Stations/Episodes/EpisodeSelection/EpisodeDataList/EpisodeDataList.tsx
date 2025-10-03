@@ -5,18 +5,17 @@ import {
   IconName,
 } from '@axinom/mosaic-ui';
 import React, { ReactNode, useCallback, useMemo } from 'react';
-import { useHistory } from 'react-router-dom';
-import { SeasonEpisode } from '../SeasonEpisodeManagement.types';
+import { EpisodeData } from '../../EpisodeExplorerBase/EpisodeExplorer.types';
 import classes from './EpisodeDataList.module.scss';
 import { useEpisodeDataListDataEntry } from './EpisodeDataListEntry';
 
 interface EpisodeDataListProps {
   /** Episodes which should be displayed */
-  value: SeasonEpisode[];
+  value: EpisodeData[];
   /** Maximum number of items which can be assigned */
   maxItems?: number;
   /** Raised when the list has changed */
-  onChange: (values: SeasonEpisode[]) => void;
+  onChange: (values: EpisodeData[]) => void;
 }
 
 export const EpisodeDataList: React.FC<EpisodeDataListProps> = ({
@@ -24,20 +23,19 @@ export const EpisodeDataList: React.FC<EpisodeDataListProps> = ({
   maxItems,
   onChange,
 }) => {
-  const history = useHistory();
   const { EpisodeDataListDataEntry } = useEpisodeDataListDataEntry({
     excludeItems: value,
   });
 
   const handleUnassign = useCallback(
-    (id: SeasonEpisode['id']) => {
+    (id: EpisodeData['id']) => {
       onChange(value.filter((val) => val.id !== id));
     },
     [onChange, value],
   );
 
-  const columns: DynamicListColumn<SeasonEpisode>[] = useMemo(
-    (): DynamicListColumn<SeasonEpisode>[] => [
+  const columns: DynamicListColumn<EpisodeData>[] = useMemo(
+    (): DynamicListColumn<EpisodeData>[] => [
       {
         propertyName: 'title',
         size: '3fr',
@@ -54,7 +52,7 @@ export const EpisodeDataList: React.FC<EpisodeDataListProps> = ({
     [],
   );
 
-  const generateInlineMenuActions: (data: SeasonEpisode) => ActionData[] = ({
+  const generateInlineMenuActions: (data: EpisodeData) => ActionData[] = ({
     id,
   }) => {
     return [
@@ -73,7 +71,7 @@ export const EpisodeDataList: React.FC<EpisodeDataListProps> = ({
   };
 
   return (
-    <DynamicDataList<SeasonEpisode>
+    <DynamicDataList<EpisodeData>
       value={value}
       columns={columns}
       onChange={onChange}

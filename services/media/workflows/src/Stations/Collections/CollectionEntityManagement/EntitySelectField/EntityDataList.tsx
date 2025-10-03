@@ -18,6 +18,10 @@ interface EntityDataListProps {
   value: CollectionRelatedEntity[];
   /** Raised when the list has changed */
   onChange: (values: CollectionRelatedEntity[]) => void;
+  /** Allow reordering of items */
+  allowReordering?: boolean;
+  /** Display the header */
+  showHeader?: boolean;
 }
 
 type EntityIDEntityType =
@@ -25,7 +29,9 @@ type EntityIDEntityType =
 
 export const EntityDataList: React.FC<EntityDataListProps> = ({
   onChange,
-  value,
+  value = [],
+  allowReordering = true,
+  showHeader = true,
 }) => {
   const { EntityDataListDataEntry } = useEntityDataListDataEntry({
     excludeItems: value,
@@ -89,9 +95,10 @@ export const EntityDataList: React.FC<EntityDataListProps> = ({
       value={value}
       columns={columns}
       onChange={onChange}
-      allowReordering={true}
+      allowReordering={allowReordering}
       allowNewData={true}
-      positionPropertyName="sortOrder"
+      showHeader={showHeader}
+      positionPropertyName={allowReordering ? 'sortOrder' : undefined}
       customDataEntry={EntityDataListDataEntry}
       stickyHeader={false}
       inlineMenuActions={generateInlineMenuActions}
