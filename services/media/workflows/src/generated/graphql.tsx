@@ -17626,7 +17626,7 @@ export type IngestDocumentQueryVariables = Exact<{
 }>;
 
 
-export type IngestDocumentQuery = { __typename?: 'Query', ingestDocument?: { __typename?: 'IngestDocument', id: number, title: string, errorCount: number, itemsCount: number, successCount: number, inProgressCount: number, updatedDate: any, createdDate: any, status: IngestStatus, document: any, ingestItems: { __typename?: 'IngestItemsConnection', nodes: Array<{ __typename?: 'IngestItem', id: number, status: IngestItemStatus, externalId: string, type: IngestItemType, existsStatus: IngestEntityExistsStatus, errors: Array<any | null>, item: any, displayTitle: string, ingestItemSteps: { __typename?: 'IngestItemStepsConnection', nodes: Array<{ __typename?: 'IngestItemStep', id: any, status: IngestItemStepStatus, subType: string, type: IngestItemStepType, responseMessage?: string | null }> } }> } } | null };
+export type IngestDocumentQuery = { __typename?: 'Query', ingestDocument?: { __typename?: 'IngestDocument', id: number, title: string, errorCount: number, itemsCount: number, successCount: number, inProgressCount: number, updatedDate: any, createdDate: any, status: IngestStatus, document: any, ingestItems: { __typename?: 'IngestItemsConnection', nodes: Array<{ __typename?: 'IngestItem', id: number, status: IngestItemStatus, externalId: string, entityId: number, type: IngestItemType, existsStatus: IngestEntityExistsStatus, errors: Array<any | null>, item: any, displayTitle: string, ingestItemSteps: { __typename?: 'IngestItemStepsConnection', nodes: Array<{ __typename?: 'IngestItemStep', id: any, status: IngestItemStepStatus, subType: string, type: IngestItemStepType, responseMessage?: string | null, entityId?: string | null }> } }> } } | null };
 
 export type UpdateIngestDocumentMutationVariables = Exact<{
   input: UpdateIngestDocumentInput;
@@ -20416,6 +20416,7 @@ export const IngestDocumentDocument = gql`
         id
         status
         externalId
+        entityId
         type
         existsStatus
         errors
@@ -20428,6 +20429,8 @@ export const IngestDocumentDocument = gql`
             subType
             type
             responseMessage
+            type
+            entityId
           }
         }
       }

@@ -1,4 +1,10 @@
-import { Accordion, AccordionItem, Tags } from '@axinom/mosaic-ui';
+import {
+  Accordion,
+  AccordionItem,
+  Button,
+  IconName,
+  Tags,
+} from '@axinom/mosaic-ui';
 import React, { ReactNode, useEffect, useRef, useState } from 'react';
 import {
   StatusIcon,
@@ -8,7 +14,10 @@ import {
   IngestDocumentQuery,
   IngestEntityExistsStatus,
   IngestItemStatus,
+  IngestItemStepType,
+  IngestItemType,
 } from '../../../../generated/graphql';
+import { fillPathTemplate } from '../../../../Util/PathUtils';
 import classes from './IngestItemsList.module.scss';
 
 type IngestItems = NonNullable<
@@ -161,8 +170,96 @@ const IngestItemSteps: React.FC<IngestItemStepsProps> = ({ item }) => {
           <div>{step.subType}</div>
           <div>{step.status}</div>
           <div>{step.responseMessage}</div>
+          <div>
+            <StepActionButton
+              stepType={step.type}
+              itemType={item.type}
+              entityId={step.entityId ?? undefined}
+              itemEntityId={item.entityId}
+              className={classes.actionButton}
+            />
+          </div>
         </div>
       ))}
     </div>
+  );
+};
+
+// Generalized path templates
+type PathTemplateKey =
+  | `${IngestItemType}_${IngestItemStepType}`
+  | IngestItemType
+  | IngestItemStepType;
+
+const PATH_TEMPLATES: Partial<Record<PathTemplateKey, string>> = {
+  // Special cases for localizations
+  MOVIE_LOCALIZATIONS: '/movies/:itemEntityId/localization',
+  EPISODE_LOCALIZATIONS: '/episodes/:itemEntityId/localization',
+  SEASON_LOCALIZATIONS: '/seasons/:itemEntityId/localization',
+  TVSHOW_LOCALIZATIONS: '/tvshows/:itemEntityId/localization',
+
+  // Default entity paths
+  MOVIE: '/movies/:itemEntityId',
+  EPISODE: '/episodes/:itemEntityId',
+  SEASON: '/seasons/:itemEntityId',
+  TVSHOW: '/tvshows/:itemEntityId',
+
+  // Step type fallbacks
+  IMAGE: '/images/:entityId',
+  VIDEO: '/videos/:entityId',
+};
+
+function resolvePathTemplate(
+  itemType: IngestItemType,
+  stepType: IngestItemStepType,
+  params: {
+    itemEntityId: string | number;
+    entityId?: string | number;
+    type: string;
+  },
+): string | undefined {
+  // Try most specific key first
+  const specificKey = `${itemType}_${stepType}` as PathTemplateKey;
+  let template = PATH_TEMPLATES[specificKey];
+
+  // Fallback to itemType or stepType
+  if (!template) {
+    template =
+      stepType === IngestItemStepType.Entity
+        ? PATH_TEMPLATES[itemType]
+        : PATH_TEMPLATES[stepType];
+  }
+
+  return template ? fillPathTemplate(template, params) : undefined;
+}
+
+interface StepActionButtonProps {
+  stepType: IngestItemStepType;
+  itemType: IngestItemType;
+  entityId: string | number | undefined;
+  itemEntityId: string | number;
+  className?: string;
+}
+
+const StepActionButton: React.FC<StepActionButtonProps> = ({
+  stepType,
+  itemType,
+  entityId,
+  itemEntityId,
+  className,
+}) => {
+  const path = resolvePathTemplate(itemType, stepType, {
+    itemEntityId,
+    entityId,
+    type: itemType.toLowerCase(),
+  });
+
+  // If path is not resolved or still contains a placeholder, do not render the button
+  if (!path || /:([a-zA-Z0-9_]+)/.test(path)) {
+    return <></>;
+  }
+
+  return (
+    <Button className={className} icon={IconName.NavigateRight} path={path} />
   );
 };
