@@ -14,6 +14,7 @@ query IngestDocument($id: Int!) {
         id
         status
         externalId
+        entityId
         type
         existsStatus
         errors
@@ -26,6 +27,8 @@ query IngestDocument($id: Int!) {
             subType
             type
             responseMessage
+            type
+            entityId
           }
         }
       }
