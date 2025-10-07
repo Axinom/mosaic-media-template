@@ -1,8 +1,8 @@
 import { EntityType } from '../../../../../generated/graphql';
-import { useEpisodeSelectExplorerModal } from '../../../../Episodes/EpisodeSelectExplorerModal/EpisodeSelectExplorerModal';
+import { useEpisodeSelectExplorerModal } from '../../../../Episodes/EpisodeSelection';
 import { useMovieSelectExplorerModal } from '../../../../Movies/MovieSelectExplorerModal/MovieSelectExplorerModal';
-import { useSeasonSelectExplorerModal } from '../../../../Seasons/SeasonSelectExplorerModal/SeasonSelectExplorerModal';
-import { useTvShowSelectExplorerModal } from '../../../../TvShows/TvShowSelectExplorerModal/TvShowSelectExplorerModal';
+import { useSeasonSelectExplorerModal } from '../../../../Seasons/SeasonSelection';
+import { useTvShowSelectExplorerModal } from '../../../../TvShows/TvShowSelection';
 import { UseAddOptionsResult } from './EntityDataListDataEntry.types';
 
 export const useAddOptions: UseAddOptionsResult = (

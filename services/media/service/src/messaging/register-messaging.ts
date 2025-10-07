@@ -10,6 +10,7 @@ import { Config } from '../common';
 import { getMessagingMiddleware } from './middleware';
 
 import {
+  CommonServiceMessagingSettings,
   ImageServiceMultiTenantMessagingSettings,
   LocalizationServiceMultiTenantMessagingSettings,
 } from '@axinom/mosaic-messages';
@@ -43,6 +44,7 @@ import {
   LocalizableCollectionUpdatedDbMessageHandler,
 } from '../domains/collections';
 import {
+  BulkEditItemChangeHandler,
   CuePointTypesDeclaredHandler,
   CuePointTypesDeclareFailedHandler,
   DeleteEntityHandler,
@@ -350,6 +352,7 @@ const registerTransactionalInboxHandlers = (
     ),
     new EntityDefinitionDeleteFailedHandler(config),
     new EntityDefinitionDeleteFinishedHandler(config),
+    new BulkEditItemChangeHandler(storeOutboxMessage, config),
   ];
   const [shutdownInSrv] = initializePollingMessageListener(
     inboxConfig,
@@ -416,6 +419,9 @@ const registerRabbitMqMessaging = async (
         LocalizationServiceMultiTenantMessagingSettings.EntityDefinitionDeleteFailed,
         LocalizationServiceMultiTenantMessagingSettings.EntityDefinitionDeclareFinished,
         LocalizationServiceMultiTenantMessagingSettings.EntityDefinitionDeclareFailed,
+        CommonServiceMessagingSettings.GetPerformItemChangeSettings(
+          config.serviceId,
+        ),
       ],
       customMessagePreProcessor: (message) => {
         switch (message.messagingSettings.messageType) {
@@ -594,6 +600,14 @@ const registerRabbitMqMessaging = async (
       LocalizationServiceMultiTenantMessagingSettings.DeleteLocalizationSourceEntity,
       config,
     ).sendCommand(),
+    new RascalTransactionalConfigBuilder(
+      CommonServiceMessagingSettings.GetPerformItemChangeSettings(
+        config.serviceId,
+      ),
+      config,
+    )
+      .sendCommand()
+      .subscribeForCommand(() => inboxWriter),
   ];
 
   const counter = initMessagingCounter(ownerPool);

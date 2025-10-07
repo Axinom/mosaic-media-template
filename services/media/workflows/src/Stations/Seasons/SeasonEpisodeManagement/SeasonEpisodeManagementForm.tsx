@@ -15,7 +15,7 @@ import {
   MutationUpdateEpisodeArgs,
   useSeasonEpisodesQuery,
 } from '../../../generated/graphql';
-import { EpisodeSelectField } from './EpisodeSelectField/EpisodeSelectField';
+import { EpisodeSelectField } from '../../Episodes/EpisodeSelection/EpisodeSelectField/EpisodeSelectField';
 import { SeasonEpisode } from './SeasonEpisodeManagement.types';
 
 interface SeasonEpisodeManagementFormProps {
