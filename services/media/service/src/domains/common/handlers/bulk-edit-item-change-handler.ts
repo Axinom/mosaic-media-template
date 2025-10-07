@@ -44,77 +44,53 @@ export class BulkEditItemChangeHandler extends MediaGuardedTransactionalInboxMes
   ): Promise<void> {
     this.logger.debug({ details: { ...message.payload } });
 
-    // TODO: Refactor this when we have time to make it cleaner.
-    if (message.payload.table_name === 'movies_images') {
-      if (message.payload.action === 'ADD_RELATED_ENTITY') {
-        await deletes(message.payload.table_name, {
-          movie_id: JSON.parse(message.payload.stringified_payload).movie_id,
-          image_type: JSON.parse(message.payload.stringified_payload)
-            .image_type,
-        }).run(envOwnerClient);
+    const handled = await this.handleImageTableAddRelated(
+      message.payload,
+      envOwnerClient,
+    );
 
-        await insert(
-          message.payload.table_name,
-          JSON.parse(message.payload.stringified_payload),
-        ).run(envOwnerClient);
+    if (!handled) {
+      await handlePerformItemChangeCommand(message.payload, envOwnerClient);
+    }
+  }
 
-        return;
-      }
+  private async handleImageTableAddRelated(
+    payload: PerformItemChangeCommand,
+    envOwnerClient: ClientBase,
+  ): Promise<boolean> {
+    if (payload.action !== 'ADD_RELATED_ENTITY') {
+      return false;
     }
 
-    if (message.payload.table_name === 'tvshows_images') {
-      if (message.payload.action === 'ADD_RELATED_ENTITY') {
-        await deletes(message.payload.table_name, {
-          tvshow_id: JSON.parse(message.payload.stringified_payload).tvshow_id,
-          image_type: JSON.parse(message.payload.stringified_payload)
-            .image_type,
-        }).run(envOwnerClient);
+    // Handle special upsert logic for image relation tables
+    const imageTableMap = {
+      movies_images: 'movie_id',
+      tvshows_images: 'tvshow_id',
+      seasons_images: 'season_id',
+      episodes_images: 'episode_id',
+      collections_images: 'collection_id',
+    } as const;
 
-        await insert(
-          message.payload.table_name,
-          JSON.parse(message.payload.stringified_payload),
-        ).run(envOwnerClient);
+    const entityIdField =
+      imageTableMap[payload.table_name as keyof typeof imageTableMap];
 
-        return;
-      }
+    if (!entityIdField) {
+      return false;
     }
 
-    if (message.payload.table_name === 'seasons_images') {
-      if (message.payload.action === 'ADD_RELATED_ENTITY') {
-        await deletes(message.payload.table_name, {
-          season_id: JSON.parse(message.payload.stringified_payload).season_id,
-          image_type: JSON.parse(message.payload.stringified_payload)
-            .image_type,
-        }).run(envOwnerClient);
+    const parsedPayload = JSON.parse(payload.stringified_payload);
 
-        await insert(
-          message.payload.table_name,
-          JSON.parse(message.payload.stringified_payload),
-        ).run(envOwnerClient);
+    // Delete existing image of the same type, then insert new one
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    await deletes(payload.table_name as any, {
+      [entityIdField]: parsedPayload[entityIdField],
+      image_type: parsedPayload.image_type,
+    }).run(envOwnerClient);
 
-        return;
-      }
-    }
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    await insert(payload.table_name as any, parsedPayload).run(envOwnerClient);
 
-    if (message.payload.table_name === 'episodes_images') {
-      if (message.payload.action === 'ADD_RELATED_ENTITY') {
-        await deletes(message.payload.table_name, {
-          episode_id: JSON.parse(message.payload.stringified_payload)
-            .episode_id,
-          image_type: JSON.parse(message.payload.stringified_payload)
-            .image_type,
-        }).run(envOwnerClient);
-
-        await insert(
-          message.payload.table_name,
-          JSON.parse(message.payload.stringified_payload),
-        ).run(envOwnerClient);
-
-        return;
-      }
-    }
-
-    await handlePerformItemChangeCommand(message.payload, envOwnerClient);
+    return true;
   }
 
   public override async handleErrorMessage(
