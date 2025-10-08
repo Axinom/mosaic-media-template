@@ -28,26 +28,53 @@ function runYarnCommand(args: string[], wsPath?: string): string {
 }
 
 function getYarnWorkspaces(): YarnWorkspaces {
-  const stdout = runYarnCommand(['workspaces', 'info']);
-  const ws = JSON.parse(stdout) as YarnWorkspaces;
+  const stdout = runYarnCommand(['workspaces', 'list', '--json']);
+  const lines = stdout.trim().split('\n');
+  const ws: YarnWorkspaces = {};
+
+  for (const line of lines) {
+    try {
+      const workspace = JSON.parse(line);
+      ws[workspace.name] = { location: workspace.location };
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
   // adding the workspace root package
   ws.root = { location: '.' };
   return ws;
 }
 
 function getPackageDistTags(packageName: string): PackageDistTags {
-  const stdout = runYarnCommand(['info', packageName, 'dist-tags']);
-  // yarn info <pkg> returns a "relaxed" JSON i.e. JSON5. This is a hack to make it work without additional deps.
-  const distTags = eval(`(${stdout})`) as PackageDistTags;
-  return distTags;
+  const stdout = runYarnCommand([
+    'npm',
+    'info',
+    packageName,
+    '--fields',
+    'dist-tags',
+    '--json',
+  ]);
+  const info = JSON.parse(stdout);
+  return info['dist-tags'] as PackageDistTags;
+}
+
+interface PackageJson {
+  dependencies?: Record<string, string>;
+  devDependencies?: Record<string, string>;
 }
 
 function updateMosaicDeps(
-  packageJson: any,
+  packageJson: PackageJson,
   dependencyType: 'dependencies' | 'devDependencies',
   tag: DistTagType,
 ): void {
-  const dependencies = Object.keys(packageJson[dependencyType] ?? {});
+  const depsObject = packageJson[dependencyType];
+  if (!depsObject) {
+    return;
+  }
+
+  const dependencies = Object.keys(depsObject);
   const mosaicDependencies = dependencies.filter((d) =>
     d.startsWith('@axinom/mosaic-'),
   );
@@ -59,18 +86,20 @@ function updateMosaicDeps(
   console.log(` | ${dependencyType}`);
   for (const packageName of mosaicDependencies) {
     const distTags = getPackageDistTags(packageName);
-    const currentVersion = packageJson[dependencyType][packageName];
+    const currentVersion = depsObject[packageName];
     const newVersion = distTags[tag];
     if (currentVersion !== newVersion) {
       console.log(` |  ${packageName}@${currentVersion} > ${newVersion}`);
-      packageJson[dependencyType][packageName] = newVersion;
+      depsObject[packageName] = newVersion;
     }
   }
 }
 
 function updatePackageJson(wsPath: string, tag: DistTagType): void {
   const packageJsonPath = path.join(wsPath, 'package.json');
-  const packageJson = JSON.parse(fs.readFileSync(packageJsonPath, 'utf-8'));
+  const packageJson = JSON.parse(
+    fs.readFileSync(packageJsonPath, 'utf-8'),
+  ) as PackageJson;
 
   updateMosaicDeps(packageJson, 'dependencies', tag);
   updateMosaicDeps(packageJson, 'devDependencies', tag);
