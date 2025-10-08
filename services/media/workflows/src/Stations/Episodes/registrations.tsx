@@ -1,4 +1,7 @@
-import { registerLocalizationEntryPoints } from '@axinom/mosaic-managed-workflow-integration';
+import {
+  getLocalizationEntryPoint,
+  registerLocalizationEntryPoints,
+} from '@axinom/mosaic-managed-workflow-integration';
 import { PiletApi } from '@axinom/mosaic-portal';
 import React from 'react';
 import { Extensions, ExtensionsContext } from '../../externals';
@@ -35,6 +38,18 @@ export function register(app: PiletApi, extensions: Extensions): void {
       },
     ]);
   }
+
+  app.setRouteResolver('episode-localizations', (dynamicRouteSegments) => {
+    const localizationPath = getLocalizationEntryPoint('episode');
+    const episodeId =
+      typeof dynamicRouteSegments === 'string'
+        ? dynamicRouteSegments
+        : dynamicRouteSegments?.episodeId;
+
+    return episodeId
+      ? localizationPath?.replace(/:episodeId/g, String(episodeId))
+      : undefined;
+  });
 
   app.setRouteResolver(
     'episode-details',

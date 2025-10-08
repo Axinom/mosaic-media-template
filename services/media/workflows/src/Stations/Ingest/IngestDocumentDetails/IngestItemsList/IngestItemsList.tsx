@@ -10,6 +10,7 @@ import {
   StatusIcon,
   StatusIcons,
 } from '../../../../components/StatusIcons/StatusIcons';
+import { usePortal } from '../../../../context/portalContext';
 import {
   IngestDocumentQuery,
   IngestEntityExistsStatus,
@@ -17,7 +18,6 @@ import {
   IngestItemStepType,
   IngestItemType,
 } from '../../../../generated/graphql';
-import { fillPathTemplate } from '../../../../Util/PathUtils';
 import classes from './IngestItemsList.module.scss';
 
 type IngestItems = NonNullable<
@@ -174,9 +174,8 @@ const IngestItemSteps: React.FC<IngestItemStepsProps> = ({ item }) => {
             <StepActionButton
               stepType={step.type}
               itemType={item.type}
-              entityId={step.entityId ?? undefined}
+              stepEntityId={step.entityId ?? undefined}
               itemEntityId={item.entityId}
-              className={classes.actionButton}
             />
           </div>
         </div>
@@ -185,81 +184,59 @@ const IngestItemSteps: React.FC<IngestItemStepsProps> = ({ item }) => {
   );
 };
 
-// Generalized path templates
-type PathTemplateKey =
-  | `${IngestItemType}_${IngestItemStepType}`
-  | IngestItemType
-  | IngestItemStepType;
-
-const PATH_TEMPLATES: Partial<Record<PathTemplateKey, string>> = {
-  // Special cases for localizations
-  MOVIE_LOCALIZATIONS: '/movies/:itemEntityId/localization',
-  EPISODE_LOCALIZATIONS: '/episodes/:itemEntityId/localization',
-  SEASON_LOCALIZATIONS: '/seasons/:itemEntityId/localization',
-  TVSHOW_LOCALIZATIONS: '/tvshows/:itemEntityId/localization',
-
-  // Default entity paths
-  MOVIE: '/movies/:itemEntityId',
-  EPISODE: '/episodes/:itemEntityId',
-  SEASON: '/seasons/:itemEntityId',
-  TVSHOW: '/tvshows/:itemEntityId',
-
-  // Step type fallbacks
-  IMAGE: '/images/:entityId',
-  VIDEO: '/videos/:entityId',
-};
-
-function resolvePathTemplate(
-  itemType: IngestItemType,
-  stepType: IngestItemStepType,
-  params: {
-    itemEntityId: string | number;
-    entityId?: string | number;
-    type: string;
-  },
-): string | undefined {
-  // Try most specific key first
-  const specificKey = `${itemType}_${stepType}` as PathTemplateKey;
-  let template = PATH_TEMPLATES[specificKey];
-
-  // Fallback to itemType or stepType
-  if (!template) {
-    template =
-      stepType === IngestItemStepType.Entity
-        ? PATH_TEMPLATES[itemType]
-        : PATH_TEMPLATES[stepType];
-  }
-
-  return template ? fillPathTemplate(template, params) : undefined;
-}
-
 interface StepActionButtonProps {
   stepType: IngestItemStepType;
   itemType: IngestItemType;
-  entityId: string | number | undefined;
+  stepEntityId: string | undefined;
   itemEntityId: string | number;
-  className?: string;
 }
 
 const StepActionButton: React.FC<StepActionButtonProps> = ({
   stepType,
+  stepEntityId,
   itemType,
-  entityId,
   itemEntityId,
-  className,
 }) => {
-  const path = resolvePathTemplate(itemType, stepType, {
-    itemEntityId,
-    entityId,
-    type: itemType.toLowerCase(),
-  });
+  const { resolveRoute } = usePortal();
 
-  // If path is not resolved or still contains a placeholder, do not render the button
-  if (!path || /:([a-zA-Z0-9_]+)/.test(path)) {
+  let path: string | undefined;
+
+  switch (stepType) {
+    case IngestItemStepType.Entity:
+      path = getStationRoute(`${itemType}-details`, stepEntityId, resolveRoute);
+      break;
+    case IngestItemStepType.Localizations:
+      path = getStationRoute(
+        `${itemType}-${stepType}`,
+        itemEntityId,
+        resolveRoute,
+      );
+      break;
+    case IngestItemStepType.Video:
+    case IngestItemStepType.Image:
+      path = getStationRoute(`${stepType}-details`, stepEntityId, resolveRoute);
+      break;
+    default:
+      break;
+  }
+
+  if (!path) {
     return <></>;
   }
 
-  return (
-    <Button className={className} icon={IconName.NavigateRight} path={path} />
-  );
+  return <Button icon={IconName.NavigateRight} path={path} />;
 };
+
+function getStationRoute(
+  station: string,
+  id: string | number | undefined,
+  resolveRoute: (
+    station: string,
+    dynamicRouteSegment?: string,
+  ) => string | undefined,
+): string | undefined {
+  if (!id) {
+    return undefined;
+  }
+  return resolveRoute(station.toLowerCase(), id.toString());
+}
