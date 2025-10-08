@@ -1,24 +1,16 @@
-import {
-  Accordion,
-  AccordionItem,
-  Button,
-  IconName,
-  Tags,
-} from '@axinom/mosaic-ui';
+import { Accordion, AccordionItem, Tags } from '@axinom/mosaic-ui';
 import React, { ReactNode, useEffect, useRef, useState } from 'react';
 import {
   StatusIcon,
   StatusIcons,
 } from '../../../../components/StatusIcons/StatusIcons';
-import { usePortal } from '../../../../context/portalContext';
 import {
   IngestDocumentQuery,
   IngestEntityExistsStatus,
   IngestItemStatus,
-  IngestItemStepType,
-  IngestItemType,
 } from '../../../../generated/graphql';
 import classes from './IngestItemsList.module.scss';
+import { StepActionButton } from './StepActionButton/StepActionButton';
 
 type IngestItems = NonNullable<
   IngestDocumentQuery['ingestDocument']
@@ -183,60 +175,3 @@ const IngestItemSteps: React.FC<IngestItemStepsProps> = ({ item }) => {
     </div>
   );
 };
-
-interface StepActionButtonProps {
-  stepType: IngestItemStepType;
-  itemType: IngestItemType;
-  stepEntityId: string | undefined;
-  itemEntityId: string | number;
-}
-
-const StepActionButton: React.FC<StepActionButtonProps> = ({
-  stepType,
-  stepEntityId,
-  itemType,
-  itemEntityId,
-}) => {
-  const { resolveRoute } = usePortal();
-
-  let path: string | undefined;
-
-  switch (stepType) {
-    case IngestItemStepType.Entity:
-      path = getStationRoute(`${itemType}-details`, stepEntityId, resolveRoute);
-      break;
-    case IngestItemStepType.Localizations:
-      path = getStationRoute(
-        `${itemType}-${stepType}`,
-        itemEntityId,
-        resolveRoute,
-      );
-      break;
-    case IngestItemStepType.Video:
-    case IngestItemStepType.Image:
-      path = getStationRoute(`${stepType}-details`, stepEntityId, resolveRoute);
-      break;
-    default:
-      break;
-  }
-
-  if (!path) {
-    return <></>;
-  }
-
-  return <Button icon={IconName.NavigateRight} path={path} />;
-};
-
-function getStationRoute(
-  station: string,
-  id: string | number | undefined,
-  resolveRoute: (
-    station: string,
-    dynamicRouteSegment?: string,
-  ) => string | undefined,
-): string | undefined {
-  if (!id) {
-    return undefined;
-  }
-  return resolveRoute(station.toLowerCase(), id.toString());
-}
