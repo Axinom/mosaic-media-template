@@ -22,6 +22,7 @@ interface ProgramEntity {
   entityId: string;
   imageId?: Maybe<ID>;
 }
+
 declare module '@axinom/mosaic-portal' {
   /**
    * Route resolver registration function.
@@ -33,6 +34,12 @@ declare module '@axinom/mosaic-portal' {
         dynamicRouteSegments?: Record<string, string> | string,
       ) => void,
     ): string | undefined;
+  }
+
+  interface ResolverFunction {
+    (station: string, dynamicRouteSegments?: Record<string, string> | string):
+      | string
+      | undefined;
   }
 
   interface ProviderRegistration {

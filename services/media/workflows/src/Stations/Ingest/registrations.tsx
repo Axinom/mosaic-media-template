@@ -1,5 +1,6 @@
 import { PiletApi } from '@axinom/mosaic-portal';
 import React from 'react';
+import { PortalContext } from '../../context/portalContext';
 import { Extensions } from '../../externals';
 import { MediaIconName } from '../../MediaIcons';
 import { MediaIcons } from '../../MediaIcons/MediaIcons';
@@ -39,8 +40,18 @@ export function register(app: PiletApi, _extensions: Extensions): void {
     permissions: { 'media-service': ['ADMIN', 'INGESTS_EDIT', 'INGESTS_VIEW'] },
   });
 
-  app.registerPage('/ingest/:ingestId', IngestDocumentDetails, {
-    breadcrumb: IngestDocumentDetailsCrumb,
-    permissions: { 'media-service': ['ADMIN', 'INGESTS_EDIT', 'INGESTS_VIEW'] },
-  });
+  app.registerPage(
+    '/ingest/:ingestId',
+    () => (
+      <PortalContext.Provider value={{ resolveRoute: app.resolveRoute }}>
+        <IngestDocumentDetails />
+      </PortalContext.Provider>
+    ),
+    {
+      breadcrumb: IngestDocumentDetailsCrumb,
+      permissions: {
+        'media-service': ['ADMIN', 'INGESTS_EDIT', 'INGESTS_VIEW'],
+      },
+    },
+  );
 }
