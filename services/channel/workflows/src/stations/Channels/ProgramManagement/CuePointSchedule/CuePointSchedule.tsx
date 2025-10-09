@@ -1,7 +1,6 @@
 // TODO: Remove these disables
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable no-console */
-import { VideoStationNames } from '@axinom/mosaic-managed-workflow-integration';
 import {
   ActionData,
   formatSecondsToTimestamp,
@@ -12,6 +11,7 @@ import {
   timestampToSeconds,
   timestampValidator,
 } from '@axinom/mosaic-ui';
+import { VideoStationNames } from '@axinom/mosaic-video-workflow-integration';
 import clsx from 'clsx';
 import React, { ChangeEvent, useContext, useEffect, useState } from 'react';
 import { Draggable } from 'react-beautiful-dnd';

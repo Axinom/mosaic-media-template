@@ -1,12 +1,14 @@
 import {
   bindImageExtensions,
-  bindVideoExtensions,
   extensionDefaultValue,
   ImageExtensions,
   initializeIntegrationLib,
-  VideoExtensions,
 } from '@axinom/mosaic-managed-workflow-integration';
 import { PiletApi } from '@axinom/mosaic-portal';
+import {
+  bindVideoExtensions,
+  VideoExtensions,
+} from '@axinom/mosaic-video-workflow-integration';
 import React from 'react';
 
 export type Extensions = ImageExtensions & VideoExtensions;

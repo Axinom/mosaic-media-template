@@ -1,9 +1,4 @@
-import {
-  EncodingState,
-  ID,
-  OutputFormat,
-  Video,
-} from '@axinom/mosaic-managed-workflow-integration';
+import { ID } from '@axinom/mosaic-managed-workflow-integration';
 import {
   createUpdateGQLFragmentGenerator,
   Details,
@@ -11,6 +6,11 @@ import {
   FilterValues,
   ObjectSchemaDefinition,
 } from '@axinom/mosaic-ui';
+import {
+  EncodingState,
+  OutputFormat,
+  Video,
+} from '@axinom/mosaic-video-workflow-integration';
 import { Field } from 'formik';
 import gql from 'graphql-tag';
 import React, { useCallback, useContext } from 'react';

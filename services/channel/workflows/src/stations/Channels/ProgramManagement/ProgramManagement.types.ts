@@ -2,9 +2,10 @@ import {
   ID,
   ImagePreviewProps,
   Maybe,
-  Video,
 } from '@axinom/mosaic-managed-workflow-integration';
+
 import { ActionData, Timestamp } from '@axinom/mosaic-ui';
+import { Video } from '@axinom/mosaic-video-workflow-integration';
 import { FormikErrors } from 'formik';
 import {
   CuePointSchedule,
