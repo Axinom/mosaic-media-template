@@ -607,6 +607,18 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@axinom/mosaic-video-workflow-integration@npm:0.2.0-rc.0":
+  version: 0.2.0-rc.0
+  resolution: "@axinom/mosaic-video-workflow-integration@npm:0.2.0-rc.0"
+  peerDependencies:
+    "@axinom/mosaic-portal": "*"
+    "@axinom/mosaic-ui": "*"
+    react: ">=17.0.1"
+    react-dom: ">=17.0.1"
+  checksum: 10c0/afc00ccd8ef42d39a7e6a4b4093f554e9ead5b4157b68192dc9f41116370b8b1bfe033dfdc8c6ab6c8965cd10a35d62a042af17a53b8313ca5e26e157c30f514
+  languageName: node
+  linkType: hard
+
 "@azure/abort-controller@npm:^1.0.0":
   version: 1.1.0
   resolution: "@azure/abort-controller@npm:1.1.0"
@@ -8535,6 +8547,7 @@ __metadata:
     "@axinom/mosaic-managed-workflow-integration": "npm:0.25.7"
     "@axinom/mosaic-portal": "npm:0.41.7"
     "@axinom/mosaic-ui": "npm:0.64.0"
+    "@axinom/mosaic-video-workflow-integration": "npm:0.2.0-rc.0"
     "@graphql-codegen/cli": "npm:^4.0.1"
     "@graphql-codegen/typescript": "npm:^2.7.3"
     "@graphql-codegen/typescript-operations": "npm:^2.5.3"
@@ -15249,6 +15262,7 @@ __metadata:
     "@axinom/mosaic-managed-workflow-integration": "npm:0.25.7"
     "@axinom/mosaic-portal": "npm:0.41.7"
     "@axinom/mosaic-ui": "npm:0.64.0"
+    "@axinom/mosaic-video-workflow-integration": "npm:0.2.0-rc.0"
     "@graphql-codegen/cli": "npm:^4.0.1"
     "@graphql-codegen/typescript": "npm:^2.7.3"
     "@graphql-codegen/typescript-operations": "npm:^2.5.3"

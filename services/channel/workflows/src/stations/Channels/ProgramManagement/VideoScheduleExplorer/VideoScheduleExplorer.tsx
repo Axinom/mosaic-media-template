@@ -1,15 +1,15 @@
 import {
-  EncodingState,
-  OutputFormat,
-  Video,
-  VideoSelectExplorerProps,
-} from '@axinom/mosaic-managed-workflow-integration';
-import {
   FilterValues,
   ItemSelectEventArgs,
   Modal,
   SelectionExplorerProps,
 } from '@axinom/mosaic-ui';
+import {
+  EncodingState,
+  OutputFormat,
+  Video,
+  VideoSelectExplorerProps,
+} from '@axinom/mosaic-video-workflow-integration';
 import React from 'react';
 import { CuePointSelect } from '../ProgramManagement.types';
 
