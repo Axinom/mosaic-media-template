@@ -1,4 +1,4 @@
-import { VideoSelectFieldProps } from '@axinom/mosaic-managed-workflow-integration';
+import { VideoSelectFieldProps } from '@axinom/mosaic-video-workflow-integration';
 import React, { useContext } from 'react';
 import { ExtensionsContext } from '../../externals';
 

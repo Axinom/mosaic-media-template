@@ -1,9 +1,9 @@
+import { StationError } from '@axinom/mosaic-ui';
 import {
   EncodingState,
   getVideoCuePointsData,
   VideoData,
-} from '@axinom/mosaic-managed-workflow-integration';
-import { StationError } from '@axinom/mosaic-ui';
+} from '@axinom/mosaic-video-workflow-integration';
 import { v4 } from 'uuid';
 import {
   ProgramBreakType,
