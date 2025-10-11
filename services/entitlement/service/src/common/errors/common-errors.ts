@@ -5,11 +5,6 @@ export const CommonErrors = {
       "Error(s) occurred while trying to retrieve the %s with ID '%s' from the catalog service. Please contact the service support.",
     code: 'CATALOG_ERRORS',
   },
-  BillingErrors: {
-    message:
-      'Error(s) occurred while trying to retrieve active subscription from the billing service. Please contact the service support.',
-    code: 'BILLING_ERRORS',
-  },
   NoMainVideo: {
     message:
       'The %s does not have a MAIN video. Please contact the service support.',
@@ -23,11 +18,6 @@ export const CommonErrors = {
     message:
       'We were unable to connect to the catalog service. Please contact the service support or try again later.',
     code: 'CATALOG_CONNECTION_FAILED',
-  },
-  BillingConnectionFailed: {
-    message:
-      'We were unable to connect to the billing service. Please contact the service support or try again later.',
-    code: 'BILLING_CONNECTION_FAILED',
   },
   MultipleMainVideos: {
     message:

@@ -2,13 +2,7 @@ import { NavigationItem, NavigationPanelCategory } from '@axinom/mosaic-portal';
 
 const processingCategoryItemName = 'videos';
 const contentCategoryItemName = 'images';
-const curationCategoryItemNames = [
-  'monetization',
-  'monetization-subscriptionplans',
-  'monetization-claimsets',
-  'channels',
-  'localizations',
-];
+const curationCategoryItemNames = ['channels', 'localizations'];
 
 export const transformNavigationItems = (
   items: NavigationItem[],
@@ -55,7 +49,7 @@ export const transformNavigationTree = (
 
 const CategoryItemOrder = {
   Content: ['movies', 'tvshows', 'seasons', 'episodes', 'images'],
-  Curation: ['collections', 'channels', 'monetization'],
+  Curation: ['collections', 'channels'],
   Processing: ['ingest', 'videos', 'snapshots'],
 };
 
