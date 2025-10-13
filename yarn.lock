@@ -569,9 +569,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@axinom/mosaic-ui@npm:0.65.0":
-  version: 0.65.0
-  resolution: "@axinom/mosaic-ui@npm:0.65.0"
+"@axinom/mosaic-ui@npm:0.65.1":
+  version: 0.65.1
+  resolution: "@axinom/mosaic-ui@npm:0.65.1"
   dependencies:
     "@axinom/mosaic-core": "npm:^0.4.30"
     "@faker-js/faker": "npm:^7.4.0"
@@ -596,7 +596,7 @@ __metadata:
     react: ">=17.0.1"
     react-dom: ">=17.0.1"
     react-router-dom: ">=5.2.0"
-  checksum: 10c0/2167a2b7adda1e43c5f5af071c6e8a2ec8c366544c854e8a4985a1d4fa7965ef246fff1948d8d2e9aa75f91bb458cda61d78ef3b78adec10fd7545dff8c10873
+  checksum: 10c0/9c70817a5de07b2244439bb8c1324b6666a7d63ad9a27b1d2c560f87ba7454eede1f6bbaafb58ff58355d632a56738eaeb7abd9383d3d27aa979548c6723269e
   languageName: node
   linkType: hard
 
@@ -8546,7 +8546,7 @@ __metadata:
     "@apollo/client": "npm:^3.7.10"
     "@axinom/mosaic-managed-workflow-integration": "npm:0.25.8"
     "@axinom/mosaic-portal": "npm:0.41.8"
-    "@axinom/mosaic-ui": "npm:0.65.0"
+    "@axinom/mosaic-ui": "npm:0.65.1"
     "@axinom/mosaic-video-workflow-integration": "npm:0.2.0-rc.0"
     "@graphql-codegen/cli": "npm:^4.0.1"
     "@graphql-codegen/typescript": "npm:^2.7.3"
@@ -15261,7 +15261,7 @@ __metadata:
     "@axinom/mosaic-graphql-codegen-plugins": "npm:0.3.0"
     "@axinom/mosaic-managed-workflow-integration": "npm:0.25.8"
     "@axinom/mosaic-portal": "npm:0.41.8"
-    "@axinom/mosaic-ui": "npm:0.65.0"
+    "@axinom/mosaic-ui": "npm:0.65.1"
     "@axinom/mosaic-video-workflow-integration": "npm:0.2.0-rc.0"
     "@graphql-codegen/cli": "npm:^4.0.1"
     "@graphql-codegen/typescript": "npm:^2.7.3"
