@@ -10,6 +10,7 @@ import {
   IngestItemStatus,
 } from '../../../../generated/graphql';
 import classes from './IngestItemsList.module.scss';
+import { StepActionButton } from './StepActionButton/StepActionButton';
 
 type IngestItems = NonNullable<
   IngestDocumentQuery['ingestDocument']
@@ -161,6 +162,14 @@ const IngestItemSteps: React.FC<IngestItemStepsProps> = ({ item }) => {
           <div>{step.subType}</div>
           <div>{step.status}</div>
           <div>{step.responseMessage}</div>
+          <div>
+            <StepActionButton
+              stepType={step.type}
+              itemType={item.type}
+              stepEntityId={step.entityId ?? undefined}
+              itemEntityId={item.entityId}
+            />
+          </div>
         </div>
       ))}
     </div>
