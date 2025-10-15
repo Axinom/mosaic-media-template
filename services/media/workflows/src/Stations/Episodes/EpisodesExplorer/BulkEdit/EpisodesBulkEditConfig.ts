@@ -18,6 +18,7 @@ export const EpisodesBulkEditConfig = (() => {
     episodesTagsAdd: 'Tags (Add)',
     episodesTagsRemove: 'Tags (Remove)',
     seasonId: 'Season',
+    mainVideoId: 'Main Video',
   });
 
   typeMapper(fields, {

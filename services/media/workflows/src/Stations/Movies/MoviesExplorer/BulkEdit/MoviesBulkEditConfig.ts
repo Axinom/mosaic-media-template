@@ -7,8 +7,8 @@ export const MoviesBulkEditConfig = (() => {
   };
 
   labelMapper(fields, {
-    moviesMovieGenresAdd: 'Genre (Add)',
-    moviesMovieGenresRemove: 'Genre (Remove)',
+    moviesMovieGenresAdd: 'Genres (Add)',
+    moviesMovieGenresRemove: 'Genres (Remove)',
     moviesCastsAdd: 'Cast (Add)',
     moviesCastsRemove: 'Cast (Remove)',
     moviesProductionCountriesAdd: 'Production Country (Add)',
@@ -23,6 +23,8 @@ export const MoviesBulkEditConfig = (() => {
   typeMapper(fields, {
     moviesTrailersAdd: 'VideoSelection',
     moviesTrailersRemove: 'VideoSelection',
+    moviesMovieGenresAdd: 'MovieGenreSelection',
+    moviesMovieGenresRemove: 'MovieGenreSelection',
   });
 
   delete fields['collectionRelationsAdd'];

@@ -1,0 +1,1 @@
+export { MovieGenreSelectField } from './MovieGenreSelectField';

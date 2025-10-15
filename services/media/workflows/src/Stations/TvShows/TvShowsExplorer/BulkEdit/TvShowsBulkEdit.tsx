@@ -8,6 +8,7 @@ import {
   getBulkEditImageSelectField,
   getVideoSelectField,
 } from '../../../../Util/BulkEdit';
+import { TvShowGenreSelectField } from './TvShowGenreSelectField';
 import { TvShowsBulkEditConfig } from './TvShowsBulkEditConfig';
 
 export const TvShowsBulkEdit: React.FC = () => {
@@ -24,6 +25,7 @@ export const TvShowsBulkEdit: React.FC = () => {
       1,
     ),
     VideoSelection: getVideoSelectField('TRAILER'),
+    TvShowGenreSelection: TvShowGenreSelectField,
   };
 
   const fields = TvShowsBulkEditConfig.fields;
