@@ -7,8 +7,8 @@ export const TvShowsBulkEditConfig = (() => {
   };
 
   labelMapper(fields, {
-    tvshowsTvshowGenresAdd: 'Genre (Add)',
-    tvshowsTvshowGenresRemove: 'Genre (Remove)',
+    tvshowsTvshowGenresAdd: 'Genres (Add)',
+    tvshowsTvshowGenresRemove: 'Genres (Remove)',
     tvshowsCastsAdd: 'Cast (Add)',
     tvshowsCastsRemove: 'Cast (Remove)',
     tvshowsProductionCountriesAdd: 'Production Country (Add)',
@@ -22,6 +22,8 @@ export const TvShowsBulkEditConfig = (() => {
   typeMapper(fields, {
     tvshowsTrailersAdd: 'VideoSelection',
     tvshowsTrailersRemove: 'VideoSelection',
+    tvshowsTvshowGenresAdd: 'TvShowGenreSelection',
+    tvshowsTvshowGenresRemove: 'TvShowGenreSelection',
   });
 
   delete fields['collectionRelationsAdd'];

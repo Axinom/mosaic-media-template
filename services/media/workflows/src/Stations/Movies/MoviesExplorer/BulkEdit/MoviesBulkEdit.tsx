@@ -9,6 +9,7 @@ import {
   getVideoSelectField,
   MainVideoSelectionField,
 } from '../../../../Util/BulkEdit';
+import { MovieGenreSelectField } from './MovieGenreSelectField';
 import { MoviesBulkEditConfig } from './MoviesBulkEditConfig';
 
 export const MoviesBulkEdit: React.FC = () => {
@@ -26,6 +27,7 @@ export const MoviesBulkEdit: React.FC = () => {
     ),
     VideoSelection: getVideoSelectField('TRAILER'),
     UUID: MainVideoSelectionField,
+    MovieGenreSelection: MovieGenreSelectField,
   };
 
   const fields = MoviesBulkEditConfig.fields;
