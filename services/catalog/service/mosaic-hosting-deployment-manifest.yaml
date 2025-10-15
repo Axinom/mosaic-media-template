@@ -74,9 +74,19 @@ secureVariables:
   GEOIP2_BLOB_STORAGE_ACCOUNT: 'fc92815cac35ea297008806d'
   GEOIP2_BLOB_CONTAINER: 'maxmindgeodb'
 
+  # Service Account Variables
+  SERVICE_ACCOUNT_CLIENT_ID: '${__ax_hosted__.sa.client_id.primary}'
+  SERVICE_ACCOUNT_CLIENT_SECRET: '${__ax_hosted__.sa.client_secret.primary}'
+
 serviceAccounts:
   # Defines the service accounts that will be provisioned for this service.
-  []
+  - name: 'primary'
+    permissionStructure:
+      - serviceId: 'media-service'
+        permissions:
+          - 'MOVIES_EDIT'
+          - 'TVSHOWS_EDIT'
+          - 'COLLECTIONS_EDIT'
 
 pilets:
   # Defines the pilets (i.e. micro-frontends) associated with the service, and the required key-value pairs to run the pilet.
