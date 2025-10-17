@@ -1,15 +1,15 @@
 import { MessagingSettings } from '@axinom/mosaic-message-bus-abstractions';
-import {
-  EnsureVideoExistsAlreadyExistedEvent,
-  EnsureVideoExistsCreationStartedEvent,
-  RegisterCuePointsCommand,
-  VideoServiceMultiTenantMessagingSettings,
-} from '@axinom/mosaic-messages';
 import { Logger, MosaicError } from '@axinom/mosaic-service-common';
 import {
   StoreOutboxMessage,
   TypedTransactionalMessage,
 } from '@axinom/mosaic-transactional-inbox-outbox';
+import {
+  EnsureVideoExistsAlreadyExistedEvent,
+  EnsureVideoExistsCreationStartedEvent,
+  RegisterCuePointsCommand,
+  VideoServiceMultiTenantMessagingSettings,
+} from '@axinom/mosaic-video-messages';
 import { CuePointsIngestElement, VideoMessageContext } from 'media-messages';
 import { ClientBase } from 'pg';
 import { selectExactlyOne, selectOne, update } from 'zapatos/db';

@@ -1,6 +1,6 @@
 import { AuthenticatedManagementSubject } from '@axinom/mosaic-id-guard';
-import { EnsureVideoExistsFailedEvent } from '@axinom/mosaic-messages';
 import { TypedTransactionalMessage } from '@axinom/mosaic-transactional-inbox-outbox';
+import { EnsureVideoExistsFailedEvent } from '@axinom/mosaic-video-messages';
 import { stub } from 'jest-auto-stub';
 import 'jest-extended';
 import { randomUUID } from 'node:crypto';

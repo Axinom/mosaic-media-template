@@ -12482,14 +12482,14 @@ ALTER TABLE app_public.episodes_directors ENABLE ROW LEVEL SECURITY;
 -- Name: episodes_directors episodes_directors_authorization; Type: POLICY; Schema: app_public; Owner: -
 --
 
-CREATE POLICY episodes_directors_authorization ON app_public.episodes_directors USING ((( SELECT ax_utils.user_has_permission('TVSHOW_READER,TVSHOW_EDITOR,ADMIN'::text) AS user_has_permission) AND (1 = 1))) WITH CHECK ((( SELECT ax_utils.user_has_permission('TVSHOW_EDITOR,ADMIN'::text) AS user_has_permission) AND (1 = 1)));
+CREATE POLICY episodes_directors_authorization ON app_public.episodes_directors USING ((( SELECT ax_utils.user_has_permission('TVSHOWS_VIEW,TVSHOWS_EDIT,ADMIN'::text) AS user_has_permission) AND (1 = 1))) WITH CHECK ((( SELECT ax_utils.user_has_permission('TVSHOWS_EDIT,ADMIN'::text) AS user_has_permission) AND (1 = 1)));
 
 
 --
 -- Name: episodes_directors episodes_directors_authorization_delete; Type: POLICY; Schema: app_public; Owner: -
 --
 
-CREATE POLICY episodes_directors_authorization_delete ON app_public.episodes_directors AS RESTRICTIVE FOR DELETE USING (( SELECT ax_utils.user_has_permission('TVSHOW_EDITOR,ADMIN'::text) AS user_has_permission));
+CREATE POLICY episodes_directors_authorization_delete ON app_public.episodes_directors AS RESTRICTIVE FOR DELETE USING (( SELECT ax_utils.user_has_permission('TVSHOWS_EDIT,ADMIN'::text) AS user_has_permission));
 
 
 --

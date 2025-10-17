@@ -16,6 +16,7 @@ export const ExtensionsContext = React.createContext<Extensions>({
   ImagePreview: extensionDefaultValue,
   ImageSelectExplorer: extensionDefaultValue,
   ImageSelectField: extensionDefaultValue,
+  SingleImageSelectField: extensionDefaultValue,
   VideoSelectField: extensionDefaultValue,
   VideoSelectExplorer: extensionDefaultValue,
 });
@@ -30,19 +31,10 @@ export const ExtensionsContext = React.createContext<Extensions>({
 export const bindExtensions = (app: PiletApi): Extensions => {
   initializeIntegrationLib(app);
 
-  /** Video Extensions */
-  const { VideoSelectExplorer, VideoSelectField } = bindVideoExtensions(app);
-
-  /** Image Extensions */
-  const { ImageCover, ImagePreview, ImageSelectExplorer, ImageSelectField } =
-    bindImageExtensions(app);
-
   return {
-    VideoSelectExplorer,
-    ImageCover,
-    ImagePreview,
-    ImageSelectExplorer,
-    ImageSelectField,
-    VideoSelectField,
+    /** Video Extensions */
+    ...bindVideoExtensions(app),
+    /** Image Extensions */
+    ...bindImageExtensions(app),
   };
 };

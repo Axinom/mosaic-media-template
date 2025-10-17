@@ -1,8 +1,8 @@
+import { StoreOutboxMessage } from '@axinom/mosaic-transactional-inbox-outbox';
 import {
   EnsureVideoExistsAlreadyExistedEvent,
   VideoServiceMultiTenantMessagingSettings,
-} from '@axinom/mosaic-messages';
-import { StoreOutboxMessage } from '@axinom/mosaic-transactional-inbox-outbox';
+} from '@axinom/mosaic-video-messages';
 import { Config } from '../../common';
 import { IngestEntityProcessor } from '../models';
 import { VideoSucceededHandler } from './video-succeeded-handler';

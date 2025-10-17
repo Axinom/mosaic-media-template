@@ -1,12 +1,14 @@
 import {
   bindImageExtensions,
-  bindVideoExtensions,
   extensionDefaultValue,
   ImageExtensions,
   initializeIntegrationLib,
-  VideoExtensions,
 } from '@axinom/mosaic-managed-workflow-integration';
 import { PiletApi } from '@axinom/mosaic-portal';
+import {
+  bindVideoExtensions,
+  VideoExtensions,
+} from '@axinom/mosaic-video-workflow-integration';
 import React from 'react';
 
 export type Extensions = ImageExtensions & VideoExtensions;
@@ -16,6 +18,7 @@ export const ExtensionsContext = React.createContext<Extensions>({
   ImagePreview: extensionDefaultValue,
   ImageSelectExplorer: extensionDefaultValue,
   ImageSelectField: extensionDefaultValue,
+  SingleImageSelectField: extensionDefaultValue,
   VideoSelectField: extensionDefaultValue,
   VideoSelectExplorer: extensionDefaultValue,
 });
@@ -30,19 +33,10 @@ export const ExtensionsContext = React.createContext<Extensions>({
 export const bindExtensions = (app: PiletApi): Extensions => {
   initializeIntegrationLib(app);
 
-  /** Video Extensions */
-  const { VideoSelectExplorer, VideoSelectField } = bindVideoExtensions(app);
-
-  /** Image Extensions */
-  const { ImageCover, ImagePreview, ImageSelectExplorer, ImageSelectField } =
-    bindImageExtensions(app);
-
   return {
-    VideoSelectExplorer,
-    ImageCover,
-    ImagePreview,
-    ImageSelectExplorer,
-    ImageSelectField,
-    VideoSelectField,
+    /** Video Extensions */
+    ...bindVideoExtensions(app),
+    /** Image Extensions */
+    ...bindImageExtensions(app),
   };
 };
