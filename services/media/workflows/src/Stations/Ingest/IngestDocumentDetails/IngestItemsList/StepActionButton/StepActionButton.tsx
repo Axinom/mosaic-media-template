@@ -23,10 +23,14 @@ export const StepActionButton: React.FC<StepActionButtonProps> = ({
 
   let path: string | undefined;
 
+  itemType =
+    itemType === IngestItemType.Tvshow ? IngestItemType.Tvshow : itemType;
+
   switch (stepType) {
-    case IngestItemStepType.Entity:
+    case IngestItemStepType.Entity: {
       path = getStationRoute(`${itemType}-details`, stepEntityId, resolveRoute);
       break;
+    }
     case IngestItemStepType.Localizations:
       path = getStationRoute(
         `${itemType}-${stepType}`,
