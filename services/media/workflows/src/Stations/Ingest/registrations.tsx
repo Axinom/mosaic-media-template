@@ -30,10 +30,20 @@ export function register(app: PiletApi, _extensions: Extensions): void {
     categoryName: 'Processing',
   });
 
-  app.registerPage('/ingest', IngestDocuments, {
-    breadcrumb: () => 'Ingest Explorer',
-    permissions: { 'media-service': ['ADMIN', 'INGESTS_EDIT', 'INGESTS_VIEW'] },
-  });
+  app.registerPage(
+    '/ingest',
+    () => (
+      <PortalContext.Provider value={{ resolveRoute: app.resolveRoute }}>
+        <IngestDocuments />
+      </PortalContext.Provider>
+    ),
+    {
+      breadcrumb: () => 'Ingest Explorer',
+      permissions: {
+        'media-service': ['ADMIN', 'INGESTS_EDIT', 'INGESTS_VIEW'],
+      },
+    },
+  );
 
   app.registerPage('/ingest/upload/', IngestDocumentUpload, {
     breadcrumb: () => 'Upload',
