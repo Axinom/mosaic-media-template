@@ -53,7 +53,7 @@ export function register(app: PiletApi, extensions: Extensions): void {
     ]);
   }
 
-  app.setRouteResolver('tvshow-localizations', (dynamicRouteSegments) => {
+  app.setRouteResolver('tv_show-localizations', (dynamicRouteSegments) => {
     const localizationPath = getLocalizationEntryPoint('tv_show');
     const tvshowId =
       typeof dynamicRouteSegments === 'string'
