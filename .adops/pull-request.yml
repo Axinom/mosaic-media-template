@@ -6,7 +6,7 @@ pr:
       - dev
 
 pool:
-  name: 'Mosaic Auto Tests Cloud'
+  name: 'Mosaic Baremetal'
 
 variables:
   YARN_CACHE_FOLDER: /home/vsts/.yarn/berry/cache
@@ -55,8 +55,8 @@ stages:
                     docker --version
                     docker-compose --version
 
-                    [ -d /home/vsts/ ] || sudo mkdir /home/vsts
-                    sudo chown AzDevOps:AzDevOps -R /home/vsts
+#                    [ -d /home/vsts/ ] || sudo mkdir /home/vsts
+#                    sudo chown AzDevOps:AzDevOps -R /home/vsts
                   displayName: 'Setup Prerequisites'
 
                 - task: Bash@3
