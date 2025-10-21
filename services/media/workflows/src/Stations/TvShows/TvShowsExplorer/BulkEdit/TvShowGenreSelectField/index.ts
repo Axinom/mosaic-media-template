@@ -1,1 +1,1 @@
-export { TvShowGenreSelectField } from './TvShowGenreSelectField';
+export { BulkEditTvShowGenreSelectField } from './TvShowGenreSelectField';
