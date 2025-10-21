@@ -22,10 +22,10 @@ export const CollectionsBulkEdit: React.FC = () => {
   const fields = CollectionsBulkEditConfig.fields;
 
   return BulkEditFormFieldsConfigConverter(
-    Object.keys(fields)
-      .sort()
-      .reduce((acc, key) => {
-        acc[key] = fields[key];
+    Object.entries(fields)
+      .sort(([, a], [, b]) => (a.label || '').localeCompare(b.label || ''))
+      .reduce((acc, [key, value]) => {
+        acc[key] = value;
         return acc;
       }, {}),
     componentMap,
