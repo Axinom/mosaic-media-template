@@ -8,8 +8,7 @@ import { SeasonExplorer } from '../SeasonExplorerBase/SeasonExplorer';
 import { useSeasonsFilters } from '../SeasonExplorerBase/SeasonExplorer.filters';
 import { SeasonImageManagementQuickEdit } from '../SeasonImageManagement/SeasonImageManagementQuickEdit';
 import { SeasonVideoManagementQuickEdit } from '../SeasonVideoManagement/SeasonVideoManagementQuickEdit';
-import { SeasonsBulkEdit } from './BulkEdit/SeasonsBulkEdit';
-import { SeasonsBulkEditConfig } from './BulkEdit/SeasonsBulkEditConfig';
+import { SeasonsBulkEdit, SeasonsBulkEditConfig } from './BulkEdit';
 import { useSeasonsActions } from './Seasons.actions';
 
 export const Seasons: React.FC = () => {

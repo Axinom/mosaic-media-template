@@ -8,8 +8,7 @@ import { useTvShowsFilters } from '../TvShowExplorerBase/TvShowExplorer.filters'
 import { TvShowImageManagementQuickEdit } from '../TvShowImageManagement/TvShowImageManagementQuickEdit';
 import { TvShowSeasonManagementQuickEdit } from '../TvShowSeasonManagement/TvShowSeasonManagementQuickEdit';
 import { TvShowVideoManagementQuickEdit } from '../TvShowVideoManagement/TvShowVideoManagementQuickEdit';
-import { TvShowsBulkEdit } from './BulkEdit/TvShowsBulkEdit';
-import { TvShowsBulkEditConfig } from './BulkEdit/TvShowsBulkEditConfig';
+import { TvShowsBulkEdit, TvShowsBulkEditConfig } from './BulkEdit';
 import { useTvShowsActions } from './TvShows.actions';
 
 export const TvShows: React.FC = () => {
