@@ -11,9 +11,9 @@ type TvShowGenre = NonNullable<
   TvShowGenresQuery['tvshowGenres']
 >['nodes'][number];
 
-export const TvShowGenreSelectField: React.FC<TagsProps<TvShowGenre>> = (
-  props,
-) => {
+export const BulkEditTvShowGenreSelectField: React.FC<
+  TagsProps<TvShowGenre>
+> = (props) => {
   const { data, loading } = useTvShowGenresQuery({
     client,
     fetchPolicy: 'network-only',

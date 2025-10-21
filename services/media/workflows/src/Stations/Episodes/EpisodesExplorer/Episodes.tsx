@@ -7,8 +7,7 @@ import { EpisodeExplorer } from '../EpisodeExplorerBase/EpisodeExplorer';
 import { useEpisodesFilters } from '../EpisodeExplorerBase/EpisodeExplorer.filters';
 import { EpisodeImageManagementQuickEdit } from '../EpisodeImageManagement/EpisodeImageManagementQuickEdit';
 import { EpisodeVideoManagementQuickEdit } from '../EpisodeVideoManagement/EpisodeVideoManagementQuickEdit';
-import { EpisodesBulkEdit } from './BulkEdit/EpisodesBulkEdit';
-import { EpisodesBulkEditConfig } from './BulkEdit/EpisodesBulkEditConfig';
+import { EpisodesBulkEdit, EpisodesBulkEditConfig } from './BulkEdit';
 import { useEpisodesActions } from './Episodes.actions';
 
 export const Episodes: React.FC = () => {

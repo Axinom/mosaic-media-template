@@ -25,6 +25,8 @@ export const EpisodesBulkEditConfig = (() => {
     episodesTrailersAdd: 'VideoSelection',
     episodesTrailersRemove: 'VideoSelection',
     seasonId: 'SeasonSelection',
+    episodesTvshowGenresAdd: 'TvShowGenreSelection',
+    episodesTvshowGenresRemove: 'TvShowGenreSelection',
   });
 
   delete fields['collectionRelationsAdd'];

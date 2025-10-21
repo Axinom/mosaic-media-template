@@ -32,8 +32,7 @@ import { PublishStatusStateMap } from '../../../Util/PublishStatusStateMap/Publi
 import { CollectionDetailsQuickEdit } from '../CollectionDetails/CollectionDetailsQuickEdit';
 import { CollectionEntityManagementQuickEdit } from '../CollectionEntityManagement/CollectionEntityManagementQuickEdit';
 import { CollectionImageManagementQuickEdit } from '../CollectionImageManagement/CollectionImageManagementQuickEdit';
-import { CollectionsBulkEdit } from './BulkEdit/CollectionsBulkEdit';
-import { CollectionsBulkEditConfig } from './BulkEdit/CollectionsBulkEditConfig';
+import { CollectionsBulkEdit, CollectionsBulkEditConfig } from './BulkEdit';
 import { useCollectionsActions } from './Collections.actions';
 import { useCollectionsFilters } from './Collections.filters';
 import { CollectionData } from './Collections.types';
