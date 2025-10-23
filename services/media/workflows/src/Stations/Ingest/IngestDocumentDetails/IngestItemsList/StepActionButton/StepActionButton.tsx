@@ -8,7 +8,7 @@ import {
 
 interface StepActionButtonProps {
   stepType: IngestItemStepType;
-  itemType: IngestItemType;
+  itemType: IngestItemType | 'tv_show';
   stepEntityId: string | undefined;
   itemEntityId: string | number;
 }
@@ -23,8 +23,7 @@ export const StepActionButton: React.FC<StepActionButtonProps> = ({
 
   let path: string | undefined;
 
-  itemType =
-    itemType === IngestItemType.Tvshow ? IngestItemType.Tvshow : itemType;
+  itemType = itemType === IngestItemType.Tvshow ? 'tv_show' : itemType;
 
   switch (stepType) {
     case IngestItemStepType.Entity: {
