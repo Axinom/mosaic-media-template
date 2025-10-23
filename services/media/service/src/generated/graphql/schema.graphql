@@ -6,6 +6,74 @@ type Query {
   """
   query: Query!
 
+  """Reads and enables pagination through a set of `AudioBook`."""
+  audioBooks(
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """The method to use when ordering `AudioBook`."""
+    orderBy: [AudioBooksOrderBy!] = [PRIMARY_KEY_ASC]
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: AudioBookCondition
+
+    """
+    A filter to be used in determining which values should be returned by the collection.
+    """
+    filter: AudioBookFilter
+  ): AudioBooksConnection
+
+  """Reads and enables pagination through a set of `AudioBooksTag`."""
+  audioBooksTags(
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """The method to use when ordering `AudioBooksTag`."""
+    orderBy: [AudioBooksTagsOrderBy!] = [PRIMARY_KEY_ASC]
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: AudioBooksTagCondition
+
+    """
+    A filter to be used in determining which values should be returned by the collection.
+    """
+    filter: AudioBooksTagFilter
+  ): AudioBooksTagsConnection
+
   """Reads and enables pagination through a set of `CollectionRelation`."""
   collectionRelations(
     """Only read the first `n` values of the set."""
@@ -1583,6 +1651,8 @@ type Query {
     """
     filter: TvshowsTvshowGenreFilter
   ): TvshowsTvshowGenresConnection
+  audioBook(id: Int!): AudioBook
+  audioBooksTag(audioBookId: Int!, name: String!): AudioBooksTag
   collectionRelation(id: Int!): CollectionRelation
   collection(id: Int!): Collection
   collectionByExternalId(externalId: String!): Collection
@@ -1629,6 +1699,30 @@ type Query {
   tvshowsTag(tvshowId: Int!, name: String!): TvshowsTag
   tvshowsTrailer(tvshowId: Int!, videoId: UUID!): TvshowsTrailer
   tvshowsTvshowGenre(tvshowId: Int!, tvshowGenresId: Int!): TvshowsTvshowGenre
+  getAudioBooksTagsValues(
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """
+    A filter to be used in determining which values should be returned by the collection.
+    """
+    filter: StringFilter
+  ): GetAudioBooksTagsValuesConnection
   getCollectionsTagsValues(
     """Only read the first `n` values of the set."""
     first: Int
@@ -1944,6 +2038,642 @@ type Query {
 }
 
 """
+A connection to a list of `AudioBook` values.
+@permissions: AUDIO_BOOK_READER,AUDIO_BOOK_EDITOR,ADMIN
+"""
+type AudioBooksConnection {
+  """A list of `AudioBook` objects."""
+  nodes: [AudioBook!]!
+
+  """
+  A list of edges which contains the `AudioBook` and cursor to aid in pagination.
+  """
+  edges: [AudioBooksEdge!]!
+
+  """Information to aid in pagination."""
+  pageInfo: PageInfo!
+
+  """The count of *all* `AudioBook` you could get from the connection."""
+  totalCount: Int!
+}
+
+"""@permissions: AUDIO_BOOK_READER,AUDIO_BOOK_EDITOR,ADMIN"""
+type AudioBook {
+  id: Int!
+  title: String!
+  author: String
+  durationInSeconds: Int
+  isAbridged: Boolean
+  createdDate: Datetime!
+  updatedDate: Datetime!
+  createdUser: String!
+  updatedUser: String!
+  reviewStatus: AudioBookReviewStatus!
+
+  """Reads and enables pagination through a set of `AudioBooksTag`."""
+  audioBooksTags(
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """The method to use when ordering `AudioBooksTag`."""
+    orderBy: [AudioBooksTagsOrderBy!] = [PRIMARY_KEY_ASC]
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: AudioBooksTagCondition
+
+    """
+    A filter to be used in determining which values should be returned by the collection.
+    """
+    filter: AudioBooksTagFilter
+  ): AudioBooksTagsConnection!
+}
+
+"""
+A point in time as described by the [ISO
+8601](https://en.wikipedia.org/wiki/ISO_8601) standard. May or may not include a timezone.
+"""
+scalar Datetime
+
+enum AudioBookReviewStatus {
+  """Pending"""
+  PENDING
+
+  """Approved"""
+  APPROVED
+
+  """Rejected"""
+  REJECTED
+}
+
+"""
+A connection to a list of `AudioBooksTag` values.
+@permissions: AUDIO_BOOK_READER,AUDIO_BOOK_EDITOR,ADMIN
+"""
+type AudioBooksTagsConnection {
+  """A list of `AudioBooksTag` objects."""
+  nodes: [AudioBooksTag!]!
+
+  """
+  A list of edges which contains the `AudioBooksTag` and cursor to aid in pagination.
+  """
+  edges: [AudioBooksTagsEdge!]!
+
+  """Information to aid in pagination."""
+  pageInfo: PageInfo!
+
+  """The count of *all* `AudioBooksTag` you could get from the connection."""
+  totalCount: Int!
+}
+
+"""@permissions: AUDIO_BOOK_READER,AUDIO_BOOK_EDITOR,ADMIN"""
+type AudioBooksTag {
+  audioBookId: Int!
+  name: String!
+
+  """Reads a single `AudioBook` that is related to this `AudioBooksTag`."""
+  audioBook: AudioBook
+}
+
+"""A `AudioBooksTag` edge in the connection."""
+type AudioBooksTagsEdge {
+  """A cursor for use in pagination."""
+  cursor: Cursor
+
+  """The `AudioBooksTag` at the end of the edge."""
+  node: AudioBooksTag!
+}
+
+"""A location in a connection that can be used for resuming pagination."""
+scalar Cursor
+
+"""Information about pagination in a connection."""
+type PageInfo {
+  """When paginating forwards, are there more items?"""
+  hasNextPage: Boolean!
+
+  """When paginating backwards, are there more items?"""
+  hasPreviousPage: Boolean!
+
+  """When paginating backwards, the cursor to continue."""
+  startCursor: Cursor
+
+  """When paginating forwards, the cursor to continue."""
+  endCursor: Cursor
+}
+
+"""Methods to use when ordering `AudioBooksTag`."""
+enum AudioBooksTagsOrderBy {
+  NATURAL
+  AUDIO_BOOK_ID_ASC
+  AUDIO_BOOK_ID_DESC
+  NAME_ASC
+  NAME_DESC
+  PRIMARY_KEY_ASC
+  PRIMARY_KEY_DESC
+}
+
+"""
+A condition to be used against `AudioBooksTag` object types. All fields are
+tested for equality and combined with a logical ‘and.’
+"""
+input AudioBooksTagCondition {
+  """Checks for equality with the object’s `audioBookId` field."""
+  audioBookId: Int
+
+  """
+  Checks for equality with the object’s `name` field.
+  @notEmpty()
+  """
+  name: String
+}
+
+"""
+A filter to be used against `AudioBooksTag` object types. All fields are combined with a logical ‘and.’
+"""
+input AudioBooksTagFilter {
+  """Filter by the object’s `audioBookId` field."""
+  audioBookId: IntFilter
+
+  """Filter by the object’s `name` field."""
+  name: StringFilter
+
+  """Filter by the object’s `audioBook` relation."""
+  audioBook: AudioBookFilter
+
+  """Checks for all expressions in this list."""
+  and: [AudioBooksTagFilter!]
+
+  """Checks for any expressions in this list."""
+  or: [AudioBooksTagFilter!]
+
+  """Negates the expression."""
+  not: AudioBooksTagFilter
+}
+
+"""
+A filter to be used against Int fields. All fields are combined with a logical ‘and.’
+"""
+input IntFilter {
+  """
+  Is null (if `true` is specified) or is not null (if `false` is specified).
+  """
+  isNull: Boolean
+
+  """Equal to the specified value."""
+  equalTo: Int
+
+  """Not equal to the specified value."""
+  notEqualTo: Int
+
+  """
+  Not equal to the specified value, treating null like an ordinary value.
+  """
+  distinctFrom: Int
+
+  """Equal to the specified value, treating null like an ordinary value."""
+  notDistinctFrom: Int
+
+  """Included in the specified list."""
+  in: [Int!]
+
+  """Not included in the specified list."""
+  notIn: [Int!]
+
+  """Less than the specified value."""
+  lessThan: Int
+
+  """Less than or equal to the specified value."""
+  lessThanOrEqualTo: Int
+
+  """Greater than the specified value."""
+  greaterThan: Int
+
+  """Greater than or equal to the specified value."""
+  greaterThanOrEqualTo: Int
+}
+
+"""
+A filter to be used against String fields. All fields are combined with a logical ‘and.’
+"""
+input StringFilter {
+  """
+  Is null (if `true` is specified) or is not null (if `false` is specified).
+  """
+  isNull: Boolean
+
+  """Equal to the specified value."""
+  equalTo: String
+
+  """Not equal to the specified value."""
+  notEqualTo: String
+
+  """
+  Not equal to the specified value, treating null like an ordinary value.
+  """
+  distinctFrom: String
+
+  """Equal to the specified value, treating null like an ordinary value."""
+  notDistinctFrom: String
+
+  """Included in the specified list."""
+  in: [String!]
+
+  """Not included in the specified list."""
+  notIn: [String!]
+
+  """Less than the specified value."""
+  lessThan: String
+
+  """Less than or equal to the specified value."""
+  lessThanOrEqualTo: String
+
+  """Greater than the specified value."""
+  greaterThan: String
+
+  """Greater than or equal to the specified value."""
+  greaterThanOrEqualTo: String
+
+  """Contains the specified string (case-sensitive)."""
+  includes: String
+
+  """Does not contain the specified string (case-sensitive)."""
+  notIncludes: String
+
+  """Contains the specified string (case-insensitive)."""
+  includesInsensitive: String
+
+  """Does not contain the specified string (case-insensitive)."""
+  notIncludesInsensitive: String
+
+  """Starts with the specified string (case-sensitive)."""
+  startsWith: String
+
+  """Does not start with the specified string (case-sensitive)."""
+  notStartsWith: String
+
+  """Starts with the specified string (case-insensitive)."""
+  startsWithInsensitive: String
+
+  """Does not start with the specified string (case-insensitive)."""
+  notStartsWithInsensitive: String
+
+  """Ends with the specified string (case-sensitive)."""
+  endsWith: String
+
+  """Does not end with the specified string (case-sensitive)."""
+  notEndsWith: String
+
+  """Ends with the specified string (case-insensitive)."""
+  endsWithInsensitive: String
+
+  """Does not end with the specified string (case-insensitive)."""
+  notEndsWithInsensitive: String
+
+  """
+  Matches the specified pattern (case-sensitive). An underscore (_) matches any single character; a percent sign (%) matches any sequence of zero or more characters.
+  """
+  like: String
+
+  """
+  Does not match the specified pattern (case-sensitive). An underscore (_) matches any single character; a percent sign (%) matches any sequence of zero or more characters.
+  """
+  notLike: String
+
+  """
+  Matches the specified pattern (case-insensitive). An underscore (_) matches any single character; a percent sign (%) matches any sequence of zero or more characters.
+  """
+  likeInsensitive: String
+
+  """
+  Does not match the specified pattern (case-insensitive). An underscore (_) matches any single character; a percent sign (%) matches any sequence of zero or more characters.
+  """
+  notLikeInsensitive: String
+
+  """Equal to the specified value (case-insensitive)."""
+  equalToInsensitive: String
+
+  """Not equal to the specified value (case-insensitive)."""
+  notEqualToInsensitive: String
+
+  """
+  Not equal to the specified value, treating null like an ordinary value (case-insensitive).
+  """
+  distinctFromInsensitive: String
+
+  """
+  Equal to the specified value, treating null like an ordinary value (case-insensitive).
+  """
+  notDistinctFromInsensitive: String
+
+  """Included in the specified list (case-insensitive)."""
+  inInsensitive: [String!]
+
+  """Not included in the specified list (case-insensitive)."""
+  notInInsensitive: [String!]
+
+  """Less than the specified value (case-insensitive)."""
+  lessThanInsensitive: String
+
+  """Less than or equal to the specified value (case-insensitive)."""
+  lessThanOrEqualToInsensitive: String
+
+  """Greater than the specified value (case-insensitive)."""
+  greaterThanInsensitive: String
+
+  """Greater than or equal to the specified value (case-insensitive)."""
+  greaterThanOrEqualToInsensitive: String
+}
+
+"""
+A filter to be used against `AudioBook` object types. All fields are combined with a logical ‘and.’
+"""
+input AudioBookFilter {
+  """Filter by the object’s `id` field."""
+  id: IntFilter
+
+  """Filter by the object’s `title` field."""
+  title: StringFilter
+
+  """Filter by the object’s `author` field."""
+  author: StringFilter
+
+  """Filter by the object’s `durationInSeconds` field."""
+  durationInSeconds: IntFilter
+
+  """Filter by the object’s `isAbridged` field."""
+  isAbridged: BooleanFilter
+
+  """Filter by the object’s `createdDate` field."""
+  createdDate: DatetimeFilter
+
+  """Filter by the object’s `updatedDate` field."""
+  updatedDate: DatetimeFilter
+
+  """Filter by the object’s `createdUser` field."""
+  createdUser: StringFilter
+
+  """Filter by the object’s `updatedUser` field."""
+  updatedUser: StringFilter
+
+  """Filter by the object’s `reviewStatus` field."""
+  reviewStatus: AudioBookReviewStatusFilter
+
+  """Filter by the object’s `audioBooksTags` relation."""
+  audioBooksTags: AudioBookToManyAudioBooksTagFilter
+
+  """Some related `audioBooksTags` exist."""
+  audioBooksTagsExist: Boolean
+
+  """Checks for all expressions in this list."""
+  and: [AudioBookFilter!]
+
+  """Checks for any expressions in this list."""
+  or: [AudioBookFilter!]
+
+  """Negates the expression."""
+  not: AudioBookFilter
+}
+
+"""
+A filter to be used against Boolean fields. All fields are combined with a logical ‘and.’
+"""
+input BooleanFilter {
+  """
+  Is null (if `true` is specified) or is not null (if `false` is specified).
+  """
+  isNull: Boolean
+
+  """Equal to the specified value."""
+  equalTo: Boolean
+
+  """Not equal to the specified value."""
+  notEqualTo: Boolean
+
+  """
+  Not equal to the specified value, treating null like an ordinary value.
+  """
+  distinctFrom: Boolean
+
+  """Equal to the specified value, treating null like an ordinary value."""
+  notDistinctFrom: Boolean
+
+  """Included in the specified list."""
+  in: [Boolean!]
+
+  """Not included in the specified list."""
+  notIn: [Boolean!]
+
+  """Less than the specified value."""
+  lessThan: Boolean
+
+  """Less than or equal to the specified value."""
+  lessThanOrEqualTo: Boolean
+
+  """Greater than the specified value."""
+  greaterThan: Boolean
+
+  """Greater than or equal to the specified value."""
+  greaterThanOrEqualTo: Boolean
+}
+
+"""
+A filter to be used against Datetime fields. All fields are combined with a logical ‘and.’
+"""
+input DatetimeFilter {
+  """
+  Is null (if `true` is specified) or is not null (if `false` is specified).
+  """
+  isNull: Boolean
+
+  """Equal to the specified value."""
+  equalTo: Datetime
+
+  """Not equal to the specified value."""
+  notEqualTo: Datetime
+
+  """
+  Not equal to the specified value, treating null like an ordinary value.
+  """
+  distinctFrom: Datetime
+
+  """Equal to the specified value, treating null like an ordinary value."""
+  notDistinctFrom: Datetime
+
+  """Included in the specified list."""
+  in: [Datetime!]
+
+  """Not included in the specified list."""
+  notIn: [Datetime!]
+
+  """Less than the specified value."""
+  lessThan: Datetime
+
+  """Less than or equal to the specified value."""
+  lessThanOrEqualTo: Datetime
+
+  """Greater than the specified value."""
+  greaterThan: Datetime
+
+  """Greater than or equal to the specified value."""
+  greaterThanOrEqualTo: Datetime
+}
+
+"""
+A filter to be used against AudioBookReviewStatus fields. All fields are combined with a logical ‘and.’
+"""
+input AudioBookReviewStatusFilter {
+  """
+  Is null (if `true` is specified) or is not null (if `false` is specified).
+  """
+  isNull: Boolean
+
+  """Equal to the specified value."""
+  equalTo: AudioBookReviewStatus
+
+  """Not equal to the specified value."""
+  notEqualTo: AudioBookReviewStatus
+
+  """
+  Not equal to the specified value, treating null like an ordinary value.
+  """
+  distinctFrom: AudioBookReviewStatus
+
+  """Equal to the specified value, treating null like an ordinary value."""
+  notDistinctFrom: AudioBookReviewStatus
+
+  """Included in the specified list."""
+  in: [AudioBookReviewStatus!]
+
+  """Not included in the specified list."""
+  notIn: [AudioBookReviewStatus!]
+
+  """Less than the specified value."""
+  lessThan: AudioBookReviewStatus
+
+  """Less than or equal to the specified value."""
+  lessThanOrEqualTo: AudioBookReviewStatus
+
+  """Greater than the specified value."""
+  greaterThan: AudioBookReviewStatus
+
+  """Greater than or equal to the specified value."""
+  greaterThanOrEqualTo: AudioBookReviewStatus
+}
+
+"""
+A filter to be used against many `AudioBooksTag` object types. All fields are combined with a logical ‘and.’
+"""
+input AudioBookToManyAudioBooksTagFilter {
+  """
+  Every related `AudioBooksTag` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  every: AudioBooksTagFilter
+
+  """
+  Some related `AudioBooksTag` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  some: AudioBooksTagFilter
+
+  """
+  No related `AudioBooksTag` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  none: AudioBooksTagFilter
+}
+
+"""A `AudioBook` edge in the connection."""
+type AudioBooksEdge {
+  """A cursor for use in pagination."""
+  cursor: Cursor
+
+  """The `AudioBook` at the end of the edge."""
+  node: AudioBook!
+}
+
+"""Methods to use when ordering `AudioBook`."""
+enum AudioBooksOrderBy {
+  NATURAL
+  ID_ASC
+  ID_DESC
+  TITLE_ASC
+  TITLE_DESC
+  AUTHOR_ASC
+  AUTHOR_DESC
+  DURATION_IN_SECONDS_ASC
+  DURATION_IN_SECONDS_DESC
+  IS_ABRIDGED_ASC
+  IS_ABRIDGED_DESC
+  CREATED_DATE_ASC
+  CREATED_DATE_DESC
+  UPDATED_DATE_ASC
+  UPDATED_DATE_DESC
+  CREATED_USER_ASC
+  CREATED_USER_DESC
+  UPDATED_USER_ASC
+  UPDATED_USER_DESC
+  REVIEW_STATUS_ASC
+  REVIEW_STATUS_DESC
+  PRIMARY_KEY_ASC
+  PRIMARY_KEY_DESC
+}
+
+"""
+A condition to be used against `AudioBook` object types. All fields are tested
+for equality and combined with a logical ‘and.’
+"""
+input AudioBookCondition {
+  """Checks for equality with the object’s `id` field."""
+  id: Int
+
+  """
+  Checks for equality with the object’s `title` field.
+  @maxLength(100)
+  @notEmpty()
+  """
+  title: String
+
+  """Checks for equality with the object’s `author` field."""
+  author: String
+
+  """Checks for equality with the object’s `durationInSeconds` field."""
+  durationInSeconds: Int
+
+  """Checks for equality with the object’s `isAbridged` field."""
+  isAbridged: Boolean
+
+  """Checks for equality with the object’s `createdDate` field."""
+  createdDate: Datetime
+
+  """Checks for equality with the object’s `updatedDate` field."""
+  updatedDate: Datetime
+
+  """Checks for equality with the object’s `createdUser` field."""
+  createdUser: String
+
+  """Checks for equality with the object’s `updatedUser` field."""
+  updatedUser: String
+
+  """Checks for equality with the object’s `reviewStatus` field."""
+  reviewStatus: AudioBookReviewStatus
+}
+
+"""
 A connection to a list of `CollectionRelation` values.
 @permissions: COLLECTIONS_VIEW,COLLECTIONS_EDIT,ADMIN
 """
@@ -2145,12 +2875,6 @@ type Collection {
   ): CollectionsSnapshotsConnection!
 }
 
-"""
-A point in time as described by the [ISO
-8601](https://en.wikipedia.org/wiki/ISO_8601) standard. May or may not include a timezone.
-"""
-scalar Datetime
-
 enum PublishStatus {
   """Not published"""
   NOT_PUBLISHED
@@ -2161,9 +2885,6 @@ enum PublishStatus {
   """Changed"""
   CHANGED
 }
-
-"""A location in a connection that can be used for resuming pagination."""
-scalar Cursor
 
 """Methods to use when ordering `CollectionRelation`."""
 enum CollectionRelationsOrderBy {
@@ -2276,48 +2997,6 @@ input CollectionRelationFilter {
 }
 
 """
-A filter to be used against Int fields. All fields are combined with a logical ‘and.’
-"""
-input IntFilter {
-  """
-  Is null (if `true` is specified) or is not null (if `false` is specified).
-  """
-  isNull: Boolean
-
-  """Equal to the specified value."""
-  equalTo: Int
-
-  """Not equal to the specified value."""
-  notEqualTo: Int
-
-  """
-  Not equal to the specified value, treating null like an ordinary value.
-  """
-  distinctFrom: Int
-
-  """Equal to the specified value, treating null like an ordinary value."""
-  notDistinctFrom: Int
-
-  """Included in the specified list."""
-  in: [Int!]
-
-  """Not included in the specified list."""
-  notIn: [Int!]
-
-  """Less than the specified value."""
-  lessThan: Int
-
-  """Less than or equal to the specified value."""
-  lessThanOrEqualTo: Int
-
-  """Greater than the specified value."""
-  greaterThan: Int
-
-  """Greater than or equal to the specified value."""
-  greaterThanOrEqualTo: Int
-}
-
-"""
 A filter to be used against `Collection` object types. All fields are combined with a logical ‘and.’
 """
 input CollectionFilter {
@@ -2389,180 +3068,6 @@ input CollectionFilter {
 
   """Negates the expression."""
   not: CollectionFilter
-}
-
-"""
-A filter to be used against String fields. All fields are combined with a logical ‘and.’
-"""
-input StringFilter {
-  """
-  Is null (if `true` is specified) or is not null (if `false` is specified).
-  """
-  isNull: Boolean
-
-  """Equal to the specified value."""
-  equalTo: String
-
-  """Not equal to the specified value."""
-  notEqualTo: String
-
-  """
-  Not equal to the specified value, treating null like an ordinary value.
-  """
-  distinctFrom: String
-
-  """Equal to the specified value, treating null like an ordinary value."""
-  notDistinctFrom: String
-
-  """Included in the specified list."""
-  in: [String!]
-
-  """Not included in the specified list."""
-  notIn: [String!]
-
-  """Less than the specified value."""
-  lessThan: String
-
-  """Less than or equal to the specified value."""
-  lessThanOrEqualTo: String
-
-  """Greater than the specified value."""
-  greaterThan: String
-
-  """Greater than or equal to the specified value."""
-  greaterThanOrEqualTo: String
-
-  """Contains the specified string (case-sensitive)."""
-  includes: String
-
-  """Does not contain the specified string (case-sensitive)."""
-  notIncludes: String
-
-  """Contains the specified string (case-insensitive)."""
-  includesInsensitive: String
-
-  """Does not contain the specified string (case-insensitive)."""
-  notIncludesInsensitive: String
-
-  """Starts with the specified string (case-sensitive)."""
-  startsWith: String
-
-  """Does not start with the specified string (case-sensitive)."""
-  notStartsWith: String
-
-  """Starts with the specified string (case-insensitive)."""
-  startsWithInsensitive: String
-
-  """Does not start with the specified string (case-insensitive)."""
-  notStartsWithInsensitive: String
-
-  """Ends with the specified string (case-sensitive)."""
-  endsWith: String
-
-  """Does not end with the specified string (case-sensitive)."""
-  notEndsWith: String
-
-  """Ends with the specified string (case-insensitive)."""
-  endsWithInsensitive: String
-
-  """Does not end with the specified string (case-insensitive)."""
-  notEndsWithInsensitive: String
-
-  """
-  Matches the specified pattern (case-sensitive). An underscore (_) matches any single character; a percent sign (%) matches any sequence of zero or more characters.
-  """
-  like: String
-
-  """
-  Does not match the specified pattern (case-sensitive). An underscore (_) matches any single character; a percent sign (%) matches any sequence of zero or more characters.
-  """
-  notLike: String
-
-  """
-  Matches the specified pattern (case-insensitive). An underscore (_) matches any single character; a percent sign (%) matches any sequence of zero or more characters.
-  """
-  likeInsensitive: String
-
-  """
-  Does not match the specified pattern (case-insensitive). An underscore (_) matches any single character; a percent sign (%) matches any sequence of zero or more characters.
-  """
-  notLikeInsensitive: String
-
-  """Equal to the specified value (case-insensitive)."""
-  equalToInsensitive: String
-
-  """Not equal to the specified value (case-insensitive)."""
-  notEqualToInsensitive: String
-
-  """
-  Not equal to the specified value, treating null like an ordinary value (case-insensitive).
-  """
-  distinctFromInsensitive: String
-
-  """
-  Equal to the specified value, treating null like an ordinary value (case-insensitive).
-  """
-  notDistinctFromInsensitive: String
-
-  """Included in the specified list (case-insensitive)."""
-  inInsensitive: [String!]
-
-  """Not included in the specified list (case-insensitive)."""
-  notInInsensitive: [String!]
-
-  """Less than the specified value (case-insensitive)."""
-  lessThanInsensitive: String
-
-  """Less than or equal to the specified value (case-insensitive)."""
-  lessThanOrEqualToInsensitive: String
-
-  """Greater than the specified value (case-insensitive)."""
-  greaterThanInsensitive: String
-
-  """Greater than or equal to the specified value (case-insensitive)."""
-  greaterThanOrEqualToInsensitive: String
-}
-
-"""
-A filter to be used against Datetime fields. All fields are combined with a logical ‘and.’
-"""
-input DatetimeFilter {
-  """
-  Is null (if `true` is specified) or is not null (if `false` is specified).
-  """
-  isNull: Boolean
-
-  """Equal to the specified value."""
-  equalTo: Datetime
-
-  """Not equal to the specified value."""
-  notEqualTo: Datetime
-
-  """
-  Not equal to the specified value, treating null like an ordinary value.
-  """
-  distinctFrom: Datetime
-
-  """Equal to the specified value, treating null like an ordinary value."""
-  notDistinctFrom: Datetime
-
-  """Included in the specified list."""
-  in: [Datetime!]
-
-  """Not included in the specified list."""
-  notIn: [Datetime!]
-
-  """Less than the specified value."""
-  lessThan: Datetime
-
-  """Less than or equal to the specified value."""
-  lessThanOrEqualTo: Datetime
-
-  """Greater than the specified value."""
-  greaterThan: Datetime
-
-  """Greater than or equal to the specified value."""
-  greaterThanOrEqualTo: Datetime
 }
 
 """
@@ -3144,48 +3649,6 @@ enum SnapshotState {
 
   """Error"""
   ERROR
-}
-
-"""
-A filter to be used against Boolean fields. All fields are combined with a logical ‘and.’
-"""
-input BooleanFilter {
-  """
-  Is null (if `true` is specified) or is not null (if `false` is specified).
-  """
-  isNull: Boolean
-
-  """Equal to the specified value."""
-  equalTo: Boolean
-
-  """Not equal to the specified value."""
-  notEqualTo: Boolean
-
-  """
-  Not equal to the specified value, treating null like an ordinary value.
-  """
-  distinctFrom: Boolean
-
-  """Equal to the specified value, treating null like an ordinary value."""
-  notDistinctFrom: Boolean
-
-  """Included in the specified list."""
-  in: [Boolean!]
-
-  """Not included in the specified list."""
-  notIn: [Boolean!]
-
-  """Less than the specified value."""
-  lessThan: Boolean
-
-  """Less than or equal to the specified value."""
-  lessThanOrEqualTo: Boolean
-
-  """Greater than the specified value."""
-  greaterThan: Boolean
-
-  """Greater than or equal to the specified value."""
-  greaterThanOrEqualTo: Boolean
 }
 
 """
@@ -6467,21 +6930,6 @@ type CollectionsTagsEdge {
 
   """The `CollectionsTag` at the end of the edge."""
   node: CollectionsTag!
-}
-
-"""Information about pagination in a connection."""
-type PageInfo {
-  """When paginating forwards, are there more items?"""
-  hasNextPage: Boolean!
-
-  """When paginating backwards, are there more items?"""
-  hasPreviousPage: Boolean!
-
-  """When paginating backwards, the cursor to continue."""
-  startCursor: Cursor
-
-  """When paginating forwards, the cursor to continue."""
-  endCursor: Cursor
 }
 
 """Methods to use when ordering `CollectionsTag`."""
@@ -13273,6 +13721,29 @@ input TvshowCondition {
 }
 
 """A connection to a list of `String` values."""
+type GetAudioBooksTagsValuesConnection {
+  """A list of `String` objects."""
+  nodes: [String]!
+
+  """
+  A list of edges which contains the `String` and cursor to aid in pagination.
+  """
+  edges: [GetAudioBooksTagsValueEdge!]!
+
+  """The count of *all* `String` you could get from the connection."""
+  totalCount: Int!
+}
+
+"""A `String` edge in the connection."""
+type GetAudioBooksTagsValueEdge {
+  """A cursor for use in pagination."""
+  cursor: Cursor
+
+  """The `String` at the end of the edge."""
+  node: String
+}
+
+"""A connection to a list of `String` values."""
 type GetCollectionsTagsValuesConnection {
   """A list of `String` objects."""
   nodes: [String]!
@@ -13773,6 +14244,22 @@ enum ErrorCodesEnum {
 The root mutation type which contains root level fields which mutate data.
 """
 type Mutation {
+  """Creates a single `AudioBook`."""
+  createAudioBook(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: CreateAudioBookInput!
+  ): CreateAudioBookPayload
+
+  """Creates a single `AudioBooksTag`."""
+  createAudioBooksTag(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: CreateAudioBooksTagInput!
+  ): CreateAudioBooksTagPayload
+
   """Creates a single `CollectionRelation`."""
   createCollectionRelation(
     """
@@ -14109,6 +14596,22 @@ type Mutation {
     input: CreateTvshowsTvshowGenreInput!
   ): CreateTvshowsTvshowGenrePayload
 
+  """Updates a single `AudioBook` using a unique key and a patch."""
+  updateAudioBook(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateAudioBookInput!
+  ): UpdateAudioBookPayload
+
+  """Updates a single `AudioBooksTag` using a unique key and a patch."""
+  updateAudioBooksTag(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateAudioBooksTagInput!
+  ): UpdateAudioBooksTagPayload
+
   """Updates a single `CollectionRelation` using a unique key and a patch."""
   updateCollectionRelation(
     """
@@ -14444,6 +14947,22 @@ type Mutation {
     """
     input: UpdateTvshowsTagInput!
   ): UpdateTvshowsTagPayload
+
+  """Deletes a single `AudioBook` using a unique key."""
+  deleteAudioBook(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteAudioBookInput!
+  ): DeleteAudioBookPayload
+
+  """Deletes a single `AudioBooksTag` using a unique key."""
+  deleteAudioBooksTag(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteAudioBooksTagInput!
+  ): DeleteAudioBooksTagPayload
 
   """Deletes a single `CollectionRelation` using a unique key."""
   deleteCollectionRelation(
@@ -15058,6 +15577,105 @@ type Mutation {
     """
     input: PopulateInput!
   ): PopulatePayload
+}
+
+"""The output of our create `AudioBook` mutation."""
+type CreateAudioBookPayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The `AudioBook` that was created by this mutation."""
+  audioBook: AudioBook
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our `AudioBook`. May be used by Relay 1."""
+  audioBookEdge(
+    """The method to use when ordering `AudioBook`."""
+    orderBy: [AudioBooksOrderBy!] = [PRIMARY_KEY_ASC]
+  ): AudioBooksEdge
+}
+
+"""
+All input for the create `AudioBook` mutation.
+@permissions: AUDIO_BOOK_EDITOR,ADMIN
+"""
+input CreateAudioBookInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """The `AudioBook` to be created by this mutation."""
+  audioBook: AudioBookInput!
+}
+
+"""An input for mutations affecting `AudioBook`"""
+input AudioBookInput {
+  """
+  @maxLength(100)
+  @notEmpty()
+  """
+  title: String!
+  author: String
+  durationInSeconds: Int
+  isAbridged: Boolean
+}
+
+"""The output of our create `AudioBooksTag` mutation."""
+type CreateAudioBooksTagPayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The `AudioBooksTag` that was created by this mutation."""
+  audioBooksTag: AudioBooksTag
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """Reads a single `AudioBook` that is related to this `AudioBooksTag`."""
+  audioBook: AudioBook
+
+  """An edge for our `AudioBooksTag`. May be used by Relay 1."""
+  audioBooksTagEdge(
+    """The method to use when ordering `AudioBooksTag`."""
+    orderBy: [AudioBooksTagsOrderBy!] = [PRIMARY_KEY_ASC]
+  ): AudioBooksTagsEdge
+}
+
+"""
+All input for the create `AudioBooksTag` mutation.
+@permissions: AUDIO_BOOK_EDITOR,ADMIN
+"""
+input CreateAudioBooksTagInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """The `AudioBooksTag` to be created by this mutation."""
+  audioBooksTag: AudioBooksTagInput!
+}
+
+"""An input for mutations affecting `AudioBooksTag`"""
+input AudioBooksTagInput {
+  audioBookId: Int!
+
+  """@notEmpty()"""
+  name: String!
 }
 
 """The output of our create `CollectionRelation` mutation."""
@@ -17166,6 +17784,119 @@ input TvshowsTvshowGenreInput {
   tvshowGenresId: Int!
 }
 
+"""The output of our update `AudioBook` mutation."""
+type UpdateAudioBookPayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The `AudioBook` that was updated by this mutation."""
+  audioBook: AudioBook
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our `AudioBook`. May be used by Relay 1."""
+  audioBookEdge(
+    """The method to use when ordering `AudioBook`."""
+    orderBy: [AudioBooksOrderBy!] = [PRIMARY_KEY_ASC]
+  ): AudioBooksEdge
+}
+
+"""
+All input for the `updateAudioBook` mutation.
+@permissions: AUDIO_BOOK_EDITOR,ADMIN
+"""
+input UpdateAudioBookInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """
+  An object where the defined keys will be set on the `AudioBook` being updated.
+  """
+  patch: AudioBookPatch!
+  id: Int!
+}
+
+"""
+Represents an update to a `AudioBook`. Fields that are set will be updated.
+"""
+input AudioBookPatch {
+  """
+  @maxLength(100)
+  @notEmpty()
+  """
+  title: String
+  author: String
+  durationInSeconds: Int
+  isAbridged: Boolean
+  reviewStatus: AudioBookReviewStatus
+}
+
+"""The output of our update `AudioBooksTag` mutation."""
+type UpdateAudioBooksTagPayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The `AudioBooksTag` that was updated by this mutation."""
+  audioBooksTag: AudioBooksTag
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """Reads a single `AudioBook` that is related to this `AudioBooksTag`."""
+  audioBook: AudioBook
+
+  """An edge for our `AudioBooksTag`. May be used by Relay 1."""
+  audioBooksTagEdge(
+    """The method to use when ordering `AudioBooksTag`."""
+    orderBy: [AudioBooksTagsOrderBy!] = [PRIMARY_KEY_ASC]
+  ): AudioBooksTagsEdge
+}
+
+"""
+All input for the `updateAudioBooksTag` mutation.
+@permissions: AUDIO_BOOK_EDITOR,ADMIN
+"""
+input UpdateAudioBooksTagInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """
+  An object where the defined keys will be set on the `AudioBooksTag` being updated.
+  """
+  patch: AudioBooksTagPatch!
+  audioBookId: Int!
+
+  """@notEmpty()"""
+  name: String!
+}
+
+"""
+Represents an update to a `AudioBooksTag`. Fields that are set will be updated.
+"""
+input AudioBooksTagPatch {
+  audioBookId: Int
+
+  """@notEmpty()"""
+  name: String
+}
+
 """The output of our update `CollectionRelation` mutation."""
 type UpdateCollectionRelationPayload {
   """
@@ -19201,6 +19932,86 @@ Represents an update to a `TvshowsTag`. Fields that are set will be updated.
 input TvshowsTagPatch {
   """@notEmpty()"""
   name: String
+}
+
+"""The output of our delete `AudioBook` mutation."""
+type DeleteAudioBookPayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The `AudioBook` that was deleted by this mutation."""
+  audioBook: AudioBook
+  deletedAudioBookNodeId: ID
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our `AudioBook`. May be used by Relay 1."""
+  audioBookEdge(
+    """The method to use when ordering `AudioBook`."""
+    orderBy: [AudioBooksOrderBy!] = [PRIMARY_KEY_ASC]
+  ): AudioBooksEdge
+}
+
+"""
+All input for the `deleteAudioBook` mutation.
+@permissions: AUDIO_BOOK_EDITOR,ADMIN
+"""
+input DeleteAudioBookInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  id: Int!
+}
+
+"""The output of our delete `AudioBooksTag` mutation."""
+type DeleteAudioBooksTagPayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The `AudioBooksTag` that was deleted by this mutation."""
+  audioBooksTag: AudioBooksTag
+  deletedAudioBooksTagNodeId: ID
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """Reads a single `AudioBook` that is related to this `AudioBooksTag`."""
+  audioBook: AudioBook
+
+  """An edge for our `AudioBooksTag`. May be used by Relay 1."""
+  audioBooksTagEdge(
+    """The method to use when ordering `AudioBooksTag`."""
+    orderBy: [AudioBooksTagsOrderBy!] = [PRIMARY_KEY_ASC]
+  ): AudioBooksTagsEdge
+}
+
+"""
+All input for the `deleteAudioBooksTag` mutation.
+@permissions: AUDIO_BOOK_EDITOR,ADMIN
+"""
+input DeleteAudioBooksTagInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  audioBookId: Int!
+
+  """@notEmpty()"""
+  name: String!
 }
 
 """The output of our delete `CollectionRelation` mutation."""

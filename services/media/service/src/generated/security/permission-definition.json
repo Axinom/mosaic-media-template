@@ -327,6 +327,17 @@
         "createCollectionSnapshot",
         "createCollectionSnapshots",
         "bulkEditCollectionsAsync",
+        "audioBook",
+        "audioBooks",
+        "audioBooksTag",
+        "audioBooksTags",
+        "getAudioBooksTagsValues",
+        "createAudioBook",
+        "createAudioBooksTag",
+        "updateAudioBook",
+        "updateAudioBooksTag",
+        "deleteAudioBook",
+        "deleteAudioBooksTag",
         "snapshot",
         "snapshots",
         "snapshotValidationResults",
@@ -844,6 +855,34 @@
         "collections",
         "movieGenres",
         "tvshowGenres"
+      ]
+    },
+    {
+      "key": "AUDIO_BOOKS_VIEW",
+      "title": "Audio Books: View",
+      "gqlOperations": [
+        "audioBook",
+        "audioBooks",
+        "audioBooksTag",
+        "audioBooksTags",
+        "getAudioBooksTagsValues"
+      ]
+    },
+    {
+      "key": "AUDIO_BOOKS_EDIT",
+      "title": "Audio Books: Edit",
+      "gqlOperations": [
+        "audioBook",
+        "audioBooks",
+        "audioBooksTag",
+        "audioBooksTags",
+        "getAudioBooksTagsValues",
+        "createAudioBook",
+        "createAudioBooksTag",
+        "updateAudioBook",
+        "updateAudioBooksTag",
+        "deleteAudioBook",
+        "deleteAudioBooksTag"
       ]
     },
     {

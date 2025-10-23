@@ -1,4 +1,6 @@
 export enum Relations {
+  audioBook = 'audioBook',
+  audioBooksTags = 'audioBooksTags',
   collection = 'collection',
   collectionRelations = 'collectionRelations',
   collectionsImages = 'collectionsImages',

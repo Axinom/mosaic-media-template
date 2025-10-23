@@ -1,4 +1,8 @@
 export enum Queries {
+  audioBook = 'audioBook',
+  audioBooks = 'audioBooks',
+  audioBooksTag = 'audioBooksTag',
+  audioBooksTags = 'audioBooksTags',
   collection = 'collection',
   collectionByExternalId = 'collectionByExternalId',
   collectionRelation = 'collectionRelation',
@@ -28,6 +32,7 @@ export enum Queries {
   episodesTrailers = 'episodesTrailers',
   episodesTvshowGenre = 'episodesTvshowGenre',
   episodesTvshowGenres = 'episodesTvshowGenres',
+  getAudioBooksTagsValues = 'getAudioBooksTagsValues',
   getCollectionsTagsValues = 'getCollectionsTagsValues',
   getEpisodesCastsValues = 'getEpisodesCastsValues',
   getEpisodesProductionCountriesValues = 'getEpisodesProductionCountriesValues',

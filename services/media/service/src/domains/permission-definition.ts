@@ -10,6 +10,10 @@ import {
   SnapshotsReadOperations,
 } from '../publishing';
 import {
+  AudioBooksMutateOperations,
+  AudioBooksReadOperations,
+} from './audio-books';
+import {
   CollectionDevOperations,
   CollectionsIgnoreOperations,
   CollectionsMutateOperations,
@@ -69,6 +73,8 @@ const permissions = [
       ...EpisodesMutateOperations,
       ...CollectionsReadOperations,
       ...CollectionsMutateOperations,
+      ...AudioBooksReadOperations,
+      ...AudioBooksMutateOperations,
       ...SnapshotsReadOperations,
       ...SnapshotsMutateOperations,
       ...IngestReadOperations,
@@ -144,6 +150,19 @@ const permissions = [
       ...CollectionsReadOperations,
       ...CollectionsMutateOperations,
       ...SelectEndpoints,
+    ],
+  },
+  {
+    key: 'AUDIO_BOOKS_VIEW',
+    title: 'Audio Books: View',
+    gqlOperations: [...AudioBooksReadOperations],
+  },
+  {
+    key: 'AUDIO_BOOKS_EDIT',
+    title: 'Audio Books: Edit',
+    gqlOperations: [
+      ...AudioBooksReadOperations,
+      ...AudioBooksMutateOperations,
     ],
   },
   {

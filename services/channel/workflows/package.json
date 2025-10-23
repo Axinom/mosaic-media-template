@@ -25,7 +25,7 @@
     "dev:full": "yarn util:load-vars pilet debug --feed '\\$MICRO_FRONTEND_SERVICE_BASE_URL/v1/pilets/\\$TENANT_ID/\\$ENVIRONMENT_ID' --port 10250",
     "codegen": "yarn util:load-vars graphql-codegen --config codegen.yml",
     " -- utilities -- ": "",
-    "util:load-vars": "env-cmd -f .env env-cmd -f ../../../.env cross-env-shell"
+    "util:load-vars": "env-cmd -f .env env-cmd -f ../../../.env"
   },
   "main": "dist/index.js",
   "files": [
@@ -59,6 +59,7 @@
     "@types/react-router": "^5.1.19",
     "@types/react-router-dom": "^5.3.3",
     "autoprefixer": "^10.3.1",
+    "cross-env": "^7.0.3",
     "dotenv-webpack": "^7.1.1",
     "env-cmd": "^10.1.0",
     "fork-ts-checker-webpack-plugin": "^6.5.2",
