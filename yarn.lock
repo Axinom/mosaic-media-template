@@ -472,15 +472,15 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@axinom/mosaic-managed-workflow-integration@npm:0.25.8":
-  version: 0.25.8
-  resolution: "@axinom/mosaic-managed-workflow-integration@npm:0.25.8"
+"@axinom/mosaic-managed-workflow-integration@npm:0.25.9":
+  version: 0.25.9
+  resolution: "@axinom/mosaic-managed-workflow-integration@npm:0.25.9"
   peerDependencies:
     "@axinom/mosaic-portal": "*"
     "@axinom/mosaic-ui": "*"
     react: ">=17.0.1"
     react-dom: ">=17.0.1"
-  checksum: 10c0/147520669f0982d01fba968b75a0ae689035e6ba4506b40552701800420fa234dc412dec89eb7bbe6b7369b3ce7dbcb1d80fecb7429d5e50bef7adc6d9ad6f27
+  checksum: 10c0/dc9395e7b999632fdef1f76f9354345c4ec36290a0b93ed53d0107f61fb1267319ff6c28403e63e9d4c0ef14e07b5b0ab4692e8a72e87191ffe88f93800a2793
   languageName: node
   linkType: hard
 
@@ -8544,7 +8544,7 @@ __metadata:
   resolution: "channel-workflows@workspace:services/channel/workflows"
   dependencies:
     "@apollo/client": "npm:^3.7.10"
-    "@axinom/mosaic-managed-workflow-integration": "npm:0.25.8"
+    "@axinom/mosaic-managed-workflow-integration": "npm:0.25.9"
     "@axinom/mosaic-portal": "npm:0.41.9"
     "@axinom/mosaic-ui": "npm:0.65.3"
     "@axinom/mosaic-video-workflow-integration": "npm:0.2.0-rc.0"
@@ -15259,7 +15259,7 @@ __metadata:
   dependencies:
     "@apollo/client": "npm:^3.7.10"
     "@axinom/mosaic-graphql-codegen-plugins": "npm:0.3.0"
-    "@axinom/mosaic-managed-workflow-integration": "npm:0.25.8"
+    "@axinom/mosaic-managed-workflow-integration": "npm:0.25.9"
     "@axinom/mosaic-portal": "npm:0.41.9"
     "@axinom/mosaic-ui": "npm:0.65.3"
     "@axinom/mosaic-video-workflow-integration": "npm:0.2.0-rc.0"

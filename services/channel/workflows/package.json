@@ -33,7 +33,7 @@
   ],
   "dependencies": {
     "@apollo/client": "^3.7.10",
-    "@axinom/mosaic-managed-workflow-integration": "0.25.8",
+    "@axinom/mosaic-managed-workflow-integration": "0.25.9",
     "@axinom/mosaic-ui": "0.65.3",
     "@axinom/mosaic-video-workflow-integration": "0.2.0-rc.0",
     "clsx": "^1.2.1",
