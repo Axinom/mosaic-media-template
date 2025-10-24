@@ -7,6 +7,7 @@ import {
 import { PiletApi } from '@axinom/mosaic-portal';
 import {
   bindVideoExtensions,
+  initializeVideoIntegrationLib,
   VideoExtensions,
 } from '@axinom/mosaic-video-workflow-integration';
 import React from 'react';
@@ -32,6 +33,7 @@ export const ExtensionsContext = React.createContext<Extensions>({
  */
 export const bindExtensions = (app: PiletApi): Extensions => {
   initializeIntegrationLib(app);
+  initializeVideoIntegrationLib(app);
   return {
     /** Video Extensions */
     ...bindVideoExtensions(app),
