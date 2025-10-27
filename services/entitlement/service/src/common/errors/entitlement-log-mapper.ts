@@ -14,10 +14,8 @@ export const entitlementLogMapper: WriteLogMapper = (
   switch (log?.details?.code) {
     // Logging the following logs as "error", because adjustments in the code are most probably required
     case CommonErrors.CatalogErrors.code:
-    case CommonErrors.BillingErrors.code:
     case CommonErrors.NoMainVideo.code:
     case CommonErrors.LicenseNotFound.code:
-    case CommonErrors.BillingConnectionFailed.code:
     case CommonErrors.CatalogConnectionFailed.code:
     case CommonErrors.MultipleMainVideos.code:
     case CommonErrors.UnableToPlaybackVideo.code:

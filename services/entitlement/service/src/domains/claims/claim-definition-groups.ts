@@ -36,7 +36,7 @@ export const QUALITY_HD = 'QUALITY_HD';
 export const QUALITY_SD = 'QUALITY_SD';
 
 /**
- * An array of all Claim Definition Groups that is synced to monetization service.
+ * A sample array of all Claim Definition Groups.
  */
 export const claimDefinitionGroups = [
   {

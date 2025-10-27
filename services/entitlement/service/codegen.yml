@@ -12,15 +12,3 @@ generates:
       withHOC: false
       withComponent: false
       withMutationFn: false
-  src/generated/graphql/billing.ts:
-    schema: '${BILLING_SERVICE_BASE_URL}/graphql'
-    documents: 'src/graphql/documents/billing-*.graphql'
-    plugins:
-      - 'typescript'
-      - 'typescript-operations'
-      - 'typescript-graphql-request'
-    config:
-      rawRequest: true
-      withHOC: false
-      withComponent: false
-      withMutationFn: false

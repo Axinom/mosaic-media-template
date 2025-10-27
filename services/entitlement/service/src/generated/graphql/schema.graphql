@@ -204,11 +204,6 @@ enum ErrorCodesEnum {
   """
   CATALOG_ERRORS
 
-  """
-  Error(s) occurred while trying to retrieve active subscription from the billing service. Please contact the service support.
-  """
-  BILLING_ERRORS
-
   """The %s does not have a MAIN video. Please contact the service support."""
   NO_MAIN_VIDEO
 
@@ -219,11 +214,6 @@ enum ErrorCodesEnum {
   We were unable to connect to the catalog service. Please contact the service support or try again later.
   """
   CATALOG_CONNECTION_FAILED
-
-  """
-  We were unable to connect to the billing service. Please contact the service support or try again later.
-  """
-  BILLING_CONNECTION_FAILED
 
   """
   The %s has multiple MAIN videos, which should not be possible. Please contact the service support.
