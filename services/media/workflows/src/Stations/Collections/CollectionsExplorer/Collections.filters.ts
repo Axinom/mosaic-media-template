@@ -81,9 +81,9 @@ export function useCollectionsFilters(): {
     _excludeItems?: number[],
   ): CollectionFilter | undefined => {
     return filterToPostGraphileFilter<CollectionFilter>(filters, {
-      title: 'includes',
-      externalId: 'includes',
-      collectionsTags: ['some', 'name', 'includes'],
+      title: 'includesInsensitive',
+      externalId: 'includesInsensitive',
+      collectionsTags: ['some', 'name', 'includesInsensitive'],
       publishStatus: 'in',
       id: 'equalTo',
       createdDate: transformRange,
