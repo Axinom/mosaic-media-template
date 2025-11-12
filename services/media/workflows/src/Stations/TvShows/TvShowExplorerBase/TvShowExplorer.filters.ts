@@ -15,10 +15,10 @@ import {
   TvshowFilter,
   useGetTvShowsFilterOptionsDataQuery,
 } from '../../../generated/graphql';
+import { CountryOptions } from '../../../Util/CountryNames/CountryNames';
 import { transformRange } from '../../../Util/DateRangeTransformer/DateRangeTransformer';
 import { getEnumLabel } from '../../../Util/StringEnumMapper/StringEnumMapper';
 import { TvShowData } from './TvShowExplorer.types';
-import { CountryOptions } from '../../../Util/CountryNames/CountryNames';
 
 interface allOptions {
   allAgeRatings: Option[];
@@ -40,7 +40,7 @@ export function useTvShowsFilters(): {
     allContentOwners: [],
     allGenres: [],
     allCountries: [],
-    countryNames: []
+    countryNames: [],
   });
 
   const { data, error } = useGetTvShowsFilterOptionsDataQuery({
@@ -75,7 +75,7 @@ export function useTvShowsFilters(): {
             value: 'FAILED_TO_LOAD_ERROR',
           },
         ],
-        countryNames: CountryOptions
+        countryNames: CountryOptions,
       });
     } else {
       let ageRating: Option[] = [];
@@ -111,7 +111,7 @@ export function useTvShowsFilters(): {
         allContentOwners: contentOwner,
         allGenres: genres,
         allCountries: countries,
-        countryNames: CountryOptions
+        countryNames: CountryOptions,
       });
     }
   }, [data]);
@@ -258,6 +258,11 @@ export function useTvShowsFilters(): {
       property: 'publishingId',
       type: FilterTypes.FreeText,
     },
+    {
+      label: 'ID',
+      property: 'id',
+      type: FilterTypes.Numeric,
+    },
   ];
 
   const transformFilters = (
@@ -325,6 +330,20 @@ export function useTvShowsFilters(): {
         }
       },
       businessType: 'in',
+      id: (value) => {
+        if (typeof value === 'number') {
+          // User filter
+          return {
+            equalTo: value,
+            notIn: excludeItems,
+          };
+        } else {
+          // Exclude items
+          return {
+            notIn: excludeItems,
+          };
+        }
+      },
       released: transformRange,
       createdDate: transformRange,
       publishedDate: transformRange,

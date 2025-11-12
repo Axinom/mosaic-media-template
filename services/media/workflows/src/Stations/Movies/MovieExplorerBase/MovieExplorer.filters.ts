@@ -15,10 +15,10 @@ import {
   PublishStatus,
   useGetMoviesFilterOptionsDataQuery,
 } from '../../../generated/graphql';
+import { CountryOptions } from '../../../Util/CountryNames/CountryNames';
 import { transformRange } from '../../../Util/DateRangeTransformer/DateRangeTransformer';
 import { getEnumLabel } from '../../../Util/StringEnumMapper/StringEnumMapper';
 import { MovieData } from './MovieExplorer.types';
-import { CountryOptions } from '../../../Util/CountryNames/CountryNames';
 
 interface allOptions {
   allAgeRatings: Option[];
@@ -42,7 +42,7 @@ export function useMoviesFilters(): {
     allGenres: [],
     allCollections: [],
     allCountries: [],
-    countryNames: []
+    countryNames: [],
   });
 
   const { data, error } = useGetMoviesFilterOptionsDataQuery({
@@ -83,7 +83,7 @@ export function useMoviesFilters(): {
             value: 'FAILED_TO_LOAD_ERROR',
           },
         ],
-        countryNames: CountryOptions
+        countryNames: CountryOptions,
       });
     } else {
       let ageRating: Option[] = [];
@@ -128,7 +128,7 @@ export function useMoviesFilters(): {
         allGenres: genres,
         allCollections: collections,
         allCountries: countries,
-        countryNames: CountryOptions
+        countryNames: CountryOptions,
       });
     }
   }, [data, error]);
@@ -299,7 +299,12 @@ export function useMoviesFilters(): {
           value: false,
         },
       ],
-    }
+    },
+    {
+      label: 'ID',
+      property: 'id',
+      type: FilterTypes.Numeric,
+    },
   ];
 
   const transformFilters = (
@@ -379,6 +384,20 @@ export function useMoviesFilters(): {
       mainVideoId: (value) => ({
         isNull: !value,
       }),
+      id: (value) => {
+        if (typeof value === 'number') {
+          // User filter
+          return {
+            equalTo: value,
+            notIn: excludeItems,
+          };
+        } else {
+          // Exclude items
+          return {
+            notIn: excludeItems,
+          };
+        }
+      },
     });
   };
 
