@@ -1,5 +1,7 @@
 trigger: none
+
 pr: none
+
 schedules:
   - cron: '0 1 * * Mon-Fri'
     displayName: 'Nightly builds within working days'
@@ -8,13 +10,18 @@ schedules:
         - dev
     always: true
 
+pool:
+  name: Mosaic Hetzner Cloud Service Builders
+  demands: project_navy
+
 variables:
   YARN_CACHE_FOLDER: $(Pipeline.Workspace)/.yarn
   continueBuild: true
   dockerfilePath: 'Dockerfile'
   tag: '$(Build.BuildNumber)'
-  ${{ if and(eq(variables['Build.SourceBranch'], 'refs/heads/dev'), eq(variables['Build.Reason'], 'Schedule')) }}:
-    additionalBuildNameSuffix: 'cb-'
+  ? ${{ if and(eq(variables['Build.SourceBranch'], 'refs/heads/dev'),
+    eq(variables['Build.Reason'], 'Schedule')) }}
+  : additionalBuildNameSuffix: 'cb-'
   ${{ else }}:
     additionalBuildNameSuffix: ''
 
@@ -28,16 +35,14 @@ stages:
     jobs:
       - job: Build
         displayName: Build
-        pool:
-          vmImage: 'ubuntu-latest'
-          demands: project_navy
         steps:
           # For CB builds, determine if the service directory has any updates/changes and the continuous builds variable is set to `true`.
           # If not, skip the rest of the steps.
           # By default, the value of `continueBuild` will be true, this allowing all the steps in the pipeline to run from
           # non-dev branches.
-          - ${{ if and(eq(variables['Build.SourceBranch'], 'refs/heads/dev'), eq(variables['Build.Reason'], 'Schedule')) }}:
-              - task: AzureCLI@2
+          - ? ${{ if and(eq(variables['Build.SourceBranch'], 'refs/heads/dev'),
+              eq(variables['Build.Reason'], 'Schedule')) }}
+            : - task: AzureCLI@2
                 displayName: Generate Changelist
                 env:
                   AZURE_DEVOPS_EXT_PAT: $(System.AccessToken)
@@ -48,14 +53,14 @@ stages:
                   inlineScript: |
                     echo "Skip Change List Check: $(skipChangeList)"
                     [[ "$(skipChangeList)" == "true" ]] && exit 0
-                    
+
                     echo "Variable cbContinuousDeploymentEnabled is set to $(cbContinuousDeploymentEnabled)"
                     previousSuccessfulCommitId=$(az pipelines build list --definition-ids $(System.DefinitionId) --result succeeded --reason schedule --top 1 --organization $(System.CollectionUri) --project $(System.TeamProject) --query "[0].sourceVersion" --output tsv)
-                    
+
                     echo "Current Commit ID                 : $(Build.SourceVersion)"
                     echo "Previous Scheduled Build Commit ID: $previousSuccessfulCommitId"
                     echo "Generating file delta between $(Build.SourceVersion) and $previousSuccessfulCommitId"
-                    
+
                     DIFFS="$(git diff $(Build.SourceVersion) $previousSuccessfulCommitId --name-only)"
                     echo "Changed File List: $DIFFS"
                     [[ "$(cbContinuousDeploymentEnabled)" == "true" && "${DIFFS[@]}" =~ "$(packageRoot)" ]] || echo "##vso[task.setvariable variable=continueBuild;]false"
@@ -70,7 +75,9 @@ stages:
                   Dockerfile: $(dockerfilePath)
                   buildContext: '.'
                   tags: '$(tag)'
-                  arguments: '--build-arg PACKAGE_ROOT=$(packageRoot) --build-arg PACKAGE_BUILD_COMMAND=$(packageBuildCommand)'
+                  arguments:
+                    '--build-arg PACKAGE_ROOT=$(packageRoot) --build-arg
+                    PACKAGE_BUILD_COMMAND=$(packageBuildCommand)'
 
               - task: Docker@2
                 displayName: Push Docker Image to Axinom Container Registry

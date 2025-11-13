@@ -6,7 +6,7 @@ pr:
       - dev
 
 pool:
-  name: 'Mosaic Hetzner Cloud'
+  name: 'Mosaic Hetzner Cloud Long Running'
 
 variables:
   YARN_CACHE_FOLDER: /home/vsts/.yarn/berry/cache
