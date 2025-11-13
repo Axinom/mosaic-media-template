@@ -5,6 +5,9 @@ pr:
     include:
       - dev
 
+pool:
+  name: Mosaic Hetzner Cloud Chores
+
 variables:
   - group: github-automation
 
