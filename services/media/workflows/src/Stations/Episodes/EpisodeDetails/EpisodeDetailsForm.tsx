@@ -398,14 +398,14 @@ const Form: React.FC<{ genreOptions?: string[] }> = ({ genreOptions }) => {
         className={classes.episodeIndex}
         as={SingleLineTextField}
       />
-      <Field name="synopsis" label="Synopsis" as={TextAreaField} />
-      <Field name="description" label="Description" as={TextAreaField} />
       <Field
         name="season"
         label="Season"
         className={classes.seasonField}
         as={SingleSeasonSelectField}
       />
+      <Field name="synopsis" label="Synopsis" as={TextAreaField} />
+      <Field name="description" label="Description" as={TextAreaField} />
       <Field
         name="externalId"
         label="External ID"
@@ -461,14 +461,20 @@ function createUpdateDto(
     ...rest
   } = getFormDiff(currentValues, initialValues);
   let index: number | undefined;
-  let seasonId: number | undefined;
+  let seasonId: number | null | undefined;
 
   if (idx) {
     index = Number(idx);
   }
 
-  if (season && season.id) {
+  if (season) {
     seasonId = season.id;
+  } else if (
+    initialValues?.season !== null &&
+    !Object.keys(currentValues).includes('season')
+  ) {
+    // Handle the case where season is unassigned
+    seasonId = null;
   }
 
   return { index, seasonId, ...rest };

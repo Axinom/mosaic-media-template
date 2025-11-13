@@ -9,5 +9,5 @@ export type EpisodeDetailsFormData =
     genres?: string[];
     cast?: string[];
     productionCountries?: string[];
-    season?: NonNullable<EpisodeQuery['episode']>['season'];
+    season?: NonNullable<EpisodeQuery['episode']>['season'] | null;
   };

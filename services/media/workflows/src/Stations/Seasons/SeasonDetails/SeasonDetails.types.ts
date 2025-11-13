@@ -11,5 +11,5 @@ export type SeasonDetailsFormData = Nullable<
   genres?: string[];
   cast?: string[];
   productionCountries?: string[];
-  tvshow?: NonNullable<SeasonQuery['season']>['tvshow'];
+  tvshow?: NonNullable<SeasonQuery['season']>['tvshow'] | null;
 };
