@@ -16,11 +16,14 @@ interface TvShowDataListProps {
   maxItems?: number;
   /** Raised when the list has changed */
   onChange: (values: TvShowData[]) => void;
+  /** CSS class to be applied to the component */
+  className?: string;
 }
 
 export const TvShowDataList: React.FC<TvShowDataListProps> = ({
   value,
   maxItems,
+  className,
   onChange,
 }) => {
   const { TvShowDataListDataEntry } = useTvShowDataListDataEntry({
@@ -78,6 +81,7 @@ export const TvShowDataList: React.FC<TvShowDataListProps> = ({
       customDataEntry={TvShowDataListDataEntry}
       stickyHeader={false}
       inlineMenuActions={generateInlineMenuActions}
+      className={className}
     />
   );
 };

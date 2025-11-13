@@ -14,6 +14,8 @@ export type SeasonSelectFieldProps = Pick<
   label: string;
   /** onChange handler to be called when the value changes */
   onChange?: (event: { target: { name: string; value: SeasonData[] } }) => void;
+  /** CSS class to be applied to the component */
+  className?: string;
 };
 
 export const SeasonSelectField: React.FC<SeasonSelectFieldProps> = (props) => {
@@ -34,6 +36,7 @@ export const SeasonSelectField: React.FC<SeasonSelectFieldProps> = (props) => {
               });
             }
           }}
+          className={props.className}
         />
       </GenericField>
     </>

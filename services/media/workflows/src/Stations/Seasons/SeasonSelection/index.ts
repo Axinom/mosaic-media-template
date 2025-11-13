@@ -1,3 +1,9 @@
 export { useSeasonSelectExplorerModal } from './SeasonSelectExplorerModal/SeasonSelectExplorerModal';
-export { SeasonSelectField } from './SeasonSelectField/SeasonSelectField';
-export type { SeasonSelectFieldProps } from './SeasonSelectField/SeasonSelectField';
+export {
+  SeasonSelectField,
+  SingleSeasonSelectField,
+} from './SeasonSelectField';
+export type {
+  SeasonSelectFieldProps,
+  SingleSeasonSelectFieldProps,
+} from './SeasonSelectField';

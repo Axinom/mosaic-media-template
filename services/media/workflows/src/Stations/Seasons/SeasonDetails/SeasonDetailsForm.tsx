@@ -22,7 +22,6 @@ import { ObjectSchemaDefinition } from 'ObjectSchemaDefinition';
 import React, { useCallback, useContext, useMemo } from 'react';
 import * as Yup from 'yup';
 import { client } from '../../../apolloClient';
-import { InfoPanelParent } from '../../../components';
 import { ExtensionsContext } from '../../../externals';
 import {
   Mutation,
@@ -51,6 +50,7 @@ import {
   useSeasonQuery,
 } from '../../../generated/graphql';
 import { getEnumLabel } from '../../../Util/StringEnumMapper/StringEnumMapper';
+import { SingleTvShowSelectField } from '../../TvShows/TvShowSelection';
 import { useSeasonDetailsActions } from './SeasonDetails.actions';
 import classes from './SeasonDetails.module.scss';
 import { SeasonDetailsFormData } from './SeasonDetails.types';
@@ -250,7 +250,7 @@ export const SeasonDetailsForm: React.FC<SeasonDetailsFormProps> = ({
 };
 
 const Panel: React.FC = () => {
-  const { ImageCover, ImagePreview } = useContext(ExtensionsContext);
+  const { ImageCover } = useContext(ExtensionsContext);
   const { values } = useFormikContext<Season>();
 
   return useMemo(() => {
@@ -295,19 +295,6 @@ const Panel: React.FC = () => {
           ) : null}
         </Section>
         <Section title="Assignments">
-          <Paragraph title="Parent Entity">
-            {values?.tvshow ? (
-              <InfoPanelParent
-                Thumbnail={ImagePreview}
-                imageId={values.tvshow?.tvshowsImages?.nodes?.[0]?.imageId}
-                path={`/tvshows/${values.tvshow?.id}`}
-                label="Open Details"
-                title={values.tvshow?.title}
-              />
-            ) : (
-              <div>not assigned</div>
-            )}
-          </Paragraph>
           <Paragraph title="Assigned items">
             <div className={classes.datalist}>
               <div>Episodes</div>
@@ -338,7 +325,6 @@ const Panel: React.FC = () => {
     );
   }, [
     ImageCover,
-    ImagePreview,
     values.createdDate,
     values.createdUser,
     values.episodes?.totalCount,
@@ -348,7 +334,6 @@ const Panel: React.FC = () => {
     values.publishedUser,
     values.seasonsImages?.nodes,
     values.seasonsTrailers?.totalCount,
-    values.tvshow,
     values.updatedDate,
     values.updatedUser,
   ]);
@@ -404,6 +389,12 @@ const Form: React.FC<{ genreOptions?: string[] }> = ({ genreOptions }) => {
       <Field name="synopsis" label="Synopsis" as={TextAreaField} />
       <Field name="description" label="Description" as={TextAreaField} />
       <Field
+        name="tvshow"
+        label="TV Show"
+        className={classes.tvshowField}
+        as={SingleTvShowSelectField}
+      />
+      <Field
         name="externalId"
         label="External ID"
         className={classes.externalId}
@@ -454,13 +445,18 @@ function createUpdateDto(
     cast,
     productionCountries,
     genres,
+    tvshow,
     ...rest
   } = getFormDiff(currentValues, initialValues);
   let index: number | undefined;
+  let tvshowId: number | undefined;
 
+  if (tvshow) {
+    tvshowId = tvshow.id;
+  }
   if (idx) {
     index = Number(idx);
   }
 
-  return { index, ...rest };
+  return { index, tvshowId, ...rest };
 }

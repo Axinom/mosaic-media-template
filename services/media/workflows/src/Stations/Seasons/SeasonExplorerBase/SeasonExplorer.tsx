@@ -66,7 +66,7 @@ export const SeasonExplorer: React.FC<SeasonExplorerProps> = (props) => {
     },
     { label: 'Index', propertyName: 'index', render: SeasonIndexRenderer },
     {
-      label: 'Parent Entity',
+      label: 'TV Show',
       propertyName: 'tvshow',
       render: SeasonParentRenderer,
       sortable: false,

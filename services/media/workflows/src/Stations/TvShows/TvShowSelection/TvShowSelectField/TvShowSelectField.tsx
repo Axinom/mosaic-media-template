@@ -14,6 +14,8 @@ export type TvShowSelectFieldProps = Pick<
   label: string;
   /** onChange handler to be called when the value changes */
   onChange?: (event: { target: { name: string; value: TvShowData[] } }) => void;
+  /** CSS class to be applied to the component */
+  className?: string;
 };
 
 export const TvShowSelectField: React.FC<TvShowSelectFieldProps> = (props) => {
@@ -23,6 +25,7 @@ export const TvShowSelectField: React.FC<TvShowSelectFieldProps> = (props) => {
         <TvShowDataList
           maxItems={props.maxItems}
           value={props.value}
+          className={props.className}
           onChange={(value) => {
             if (props.onChange) {
               // Call the onChange handler passed via props, mimicking Formik's event signature

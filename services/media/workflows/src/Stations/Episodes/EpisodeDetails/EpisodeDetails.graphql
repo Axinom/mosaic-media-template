@@ -59,6 +59,7 @@ query Episode($id: Int!) {
       tvshow {
         title
       }
+      externalId
     }
   }
 

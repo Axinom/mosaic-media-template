@@ -5,8 +5,8 @@ import {
   IconName,
 } from '@axinom/mosaic-ui';
 import React, { ReactNode, useCallback, useMemo } from 'react';
+import { Season } from '../../../../generated/graphql';
 import { SeasonData } from '../../SeasonExplorerBase/SeasonExplorer.types';
-import classes from './SeasonDataList.module.scss';
 import { useSeasonDataListDataEntry } from './SeasonDataListEntry';
 
 interface SeasonDataListProps {
@@ -16,11 +16,14 @@ interface SeasonDataListProps {
   maxItems?: number;
   /** Raised when the list has changed */
   onChange: (values: SeasonData[]) => void;
+  /** CSS class to be applied to the component */
+  className?: string;
 }
 
 export const SeasonDataList: React.FC<SeasonDataListProps> = ({
   maxItems,
   value = [],
+  className,
   onChange,
 }) => {
   const { SeasonDataListDataEntry } = useSeasonDataListDataEntry({
@@ -78,14 +81,21 @@ export const SeasonDataList: React.FC<SeasonDataListProps> = ({
       customDataEntry={SeasonDataListDataEntry}
       stickyHeader={false}
       inlineMenuActions={generateInlineMenuActions}
+      className={className}
     />
   );
 };
 
-const TitleRenderer = (val: unknown): ReactNode => {
-  if (val === null || val === undefined) {
-    return <div className={classes.error}>Season not Found</div>;
+const TitleRenderer = (_, val: unknown): ReactNode => {
+  if (val) {
+    const season = val as Pick<Season, 'id' | 'index' | 'tvshow'>;
+
+    if (season?.tvshow) {
+      return `S${season.index}: ${season.tvshow.title}`;
+    }
+
+    return `S${season.index}`;
   }
 
-  return `Season ${val}`;
+  return '';
 };
