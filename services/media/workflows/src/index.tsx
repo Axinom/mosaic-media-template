@@ -20,6 +20,12 @@ import {
   transformNavigationTree,
 } from './transformNavigation/transformNavigation';
 
+/**
+ * All the exported objects (including `piletConfig`) will be returned via `getRegisteredPilets()` that is used further in the app.
+ * The `piletConfig` object is used to retrieve the configuration for the pilet and display it in the About page.
+ */
+export { piletConfig } from './piletConfig';
+
 export const settingsGroupName = 'Media Management';
 export const mediaManagementParentName = 'media-management';
 
