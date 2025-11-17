@@ -8,7 +8,7 @@ import { UseAddOptionsResult } from './EntityDataListDataEntry.types';
 export const useAddOptions: UseAddOptionsResult = (
   onActionClicked,
   excludes,
-  sortOrder,
+  _sortOrder,
 ) => [
   {
     title: 'Add Movie',
@@ -18,13 +18,13 @@ export const useAddOptions: UseAddOptionsResult = (
         if (selection.mode === 'SINGLE_ITEMS') {
           const items = selection.items;
           if (items && onActionClicked) {
-            items.forEach((item, index) => {
+            items.forEach((item, _index) => {
               onActionClicked({
                 entityType: EntityType.Movie,
                 entityImages: item.moviesImages,
                 publishStatus: item.publishStatus,
                 title: item.title,
-                sortOrder: sortOrder + index,
+                sortOrder: 1,
                 entityId: item.id,
               });
             });
@@ -41,13 +41,13 @@ export const useAddOptions: UseAddOptionsResult = (
         if (selection.mode === 'SINGLE_ITEMS') {
           const items = selection.items;
           if (items && onActionClicked) {
-            items.forEach((item, index) => {
+            items.forEach((item, _index) => {
               onActionClicked({
                 entityType: EntityType.Tvshow,
                 entityImages: item.tvshowsImages,
                 publishStatus: item.publishStatus,
                 title: item.title,
-                sortOrder: sortOrder + index,
+                sortOrder: 1,
                 entityId: item.id,
               });
             });
@@ -64,13 +64,13 @@ export const useAddOptions: UseAddOptionsResult = (
         if (selection.mode === 'SINGLE_ITEMS') {
           const items = selection.items;
           if (items && onActionClicked) {
-            items.forEach((item, index) => {
+            items.forEach((item, _index) => {
               onActionClicked({
                 entityType: EntityType.Episode,
                 entityImages: item.episodesImages,
                 publishStatus: item.publishStatus,
                 title: item.title,
-                sortOrder: sortOrder + index,
+                sortOrder: 1,
                 entityId: item.id,
               });
             });
@@ -93,11 +93,7 @@ export const useAddOptions: UseAddOptionsResult = (
                 entityImages: item.collectionsImages,
                 publishStatus: item.publishStatus,
                 title: item.title,
-                sortOrder:
-                  sortOrder >
-                  (item?.collectionRelations?.nodes[0]?.sortOrder ?? 0) + 1
-                    ? sortOrder
-                    : (item?.collectionRelations?.nodes[0]?.sortOrder ?? 0) + 1,
+                sortOrder: 1,
                 entityId: item.id,
               });
             });
