@@ -154,15 +154,21 @@ const IngestItemSteps: React.FC<IngestItemStepsProps> = ({ item }) => {
   );
 
   return (
-    <div className={classes.rowWrapper}>
+    <div data-test-id="ingestion-item-list" className={classes.rowWrapper}>
       {sorted.map((step) => (
-        <div key={step.id} className={classes.row}>
+        <div
+          data-test-id="ingestion-single-item"
+          key={step.id}
+          className={classes.row}
+        >
           <div></div>
-          <div>{step.type}</div>
-          <div>{step.subType}</div>
-          <div>{step.status}</div>
-          <div>{step.responseMessage}</div>
-          <div>
+          <div data-test-id="ingestion-type">{step.type}</div>
+          <div data-test-id="ingestion-subtype">{step.subType}</div>
+          <div data-test-id="ingestion-status">{step.status}</div>
+          <div data-test-id="ingestion-response-message">
+            {step.responseMessage}
+          </div>
+          <div data-test-id="ingestion-step-action-btn">
             <StepActionButton
               stepType={step.type}
               itemType={item.type}
