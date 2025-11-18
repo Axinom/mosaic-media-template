@@ -12,7 +12,6 @@ schedules:
 
 pool:
   name: Mosaic Hetzner Cloud Service Builders
-  demands: project_navy
 
 variables:
   YARN_CACHE_FOLDER: $(Pipeline.Workspace)/.yarn
