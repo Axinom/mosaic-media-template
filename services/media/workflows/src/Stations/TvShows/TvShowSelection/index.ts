@@ -1,3 +1,9 @@
 export { useTvShowSelectExplorerModal } from './TvShowSelectExplorerModal/TvShowSelectExplorerModal';
-export { TvShowSelectField } from './TvShowSelectField/TvShowSelectField';
-export type { TvShowSelectFieldProps } from './TvShowSelectField/TvShowSelectField';
+export {
+  SingleTvShowSelectField,
+  TvShowSelectField,
+} from './TvShowSelectField';
+export type {
+  SingleTvShowSelectFieldProps,
+  TvShowSelectFieldProps,
+} from './TvShowSelectField';

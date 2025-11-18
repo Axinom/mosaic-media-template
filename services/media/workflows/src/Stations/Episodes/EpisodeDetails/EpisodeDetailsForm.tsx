@@ -22,7 +22,6 @@ import { ObjectSchemaDefinition } from 'ObjectSchemaDefinition';
 import React, { useCallback, useContext, useMemo } from 'react';
 import * as Yup from 'yup';
 import { client } from '../../../apolloClient';
-import { InfoPanelParent } from '../../../components';
 import { ExtensionsContext } from '../../../externals';
 import {
   Episode,
@@ -52,6 +51,7 @@ import {
   useEpisodeQuery,
 } from '../../../generated/graphql';
 import { getEnumLabel } from '../../../Util/StringEnumMapper/StringEnumMapper';
+import { SingleSeasonSelectField } from '../../Seasons/SeasonSelection';
 import { useEpisodeDetailsActions } from './EpisodeDetails.actions';
 import classes from './EpisodeDetails.module.scss';
 import { EpisodeDetailsFormData } from './EpisodeDetails.types';
@@ -256,7 +256,7 @@ export const EpisodeDetailsForm: React.FC<EpisodeDetailsFormProps> = ({
 };
 
 const Panel: React.FC = () => {
-  const { ImageCover, ImagePreview } = useContext(ExtensionsContext);
+  const { ImageCover } = useContext(ExtensionsContext);
   const { values } = useFormikContext<Episode>();
 
   return useMemo(() => {
@@ -301,26 +301,6 @@ const Panel: React.FC = () => {
           ) : null}
         </Section>
         <Section title="Assignments">
-          <Paragraph title="Parent Entity">
-            {values?.season ? (
-              <InfoPanelParent
-                Thumbnail={ImagePreview}
-                imageId={values.season?.seasonsImages?.nodes?.[0]?.imageId}
-                path={`/seasons/${values.season?.id}`}
-                label="Open Details"
-                title={
-                  typeof values.season?.index === 'number'
-                    ? `S${values.season?.index}` +
-                      (values.season?.tvshow?.title
-                        ? `: ${values.season?.tvshow?.title}`
-                        : '')
-                    : ''
-                }
-              />
-            ) : (
-              <div>not assigned</div>
-            )}
-          </Paragraph>
           <Paragraph title="Assigned items">
             <div className={classes.datalist}>
               <div>Main Video</div>
@@ -351,7 +331,6 @@ const Panel: React.FC = () => {
     );
   }, [
     ImageCover,
-    ImagePreview,
     values.createdDate,
     values.createdUser,
     values.episodesImages?.nodes,
@@ -361,7 +340,6 @@ const Panel: React.FC = () => {
     values.publishStatus,
     values.publishedDate,
     values.publishedUser,
-    values.season,
     values.updatedDate,
     values.updatedUser,
   ]);
@@ -420,6 +398,12 @@ const Form: React.FC<{ genreOptions?: string[] }> = ({ genreOptions }) => {
         className={classes.episodeIndex}
         as={SingleLineTextField}
       />
+      <Field
+        name="season"
+        label="Season"
+        className={classes.seasonField}
+        as={SingleSeasonSelectField}
+      />
       <Field name="synopsis" label="Synopsis" as={TextAreaField} />
       <Field name="description" label="Description" as={TextAreaField} />
       <Field
@@ -473,13 +457,25 @@ function createUpdateDto(
     cast,
     productionCountries,
     genres,
+    season,
     ...rest
   } = getFormDiff(currentValues, initialValues);
   let index: number | undefined;
+  let seasonId: number | null | undefined;
 
   if (idx) {
     index = Number(idx);
   }
 
-  return { index, ...rest };
+  if (season) {
+    seasonId = season.id;
+  } else if (
+    initialValues?.season !== null &&
+    !Object.keys(currentValues).includes('season')
+  ) {
+    // Handle the case where season is unassigned
+    seasonId = null;
+  }
+
+  return { index, seasonId, ...rest };
 }

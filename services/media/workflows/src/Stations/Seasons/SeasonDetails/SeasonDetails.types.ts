@@ -1,5 +1,8 @@
 import { Nullable } from '@axinom/mosaic-ui';
-import { MutationUpdateSeasonArgs } from '../../../generated/graphql';
+import {
+  MutationUpdateSeasonArgs,
+  SeasonQuery,
+} from '../../../generated/graphql';
 
 export type SeasonDetailsFormData = Nullable<
   MutationUpdateSeasonArgs['input']['patch']
@@ -8,4 +11,5 @@ export type SeasonDetailsFormData = Nullable<
   genres?: string[];
   cast?: string[];
   productionCountries?: string[];
+  tvshow?: NonNullable<SeasonQuery['season']>['tvshow'] | null;
 };

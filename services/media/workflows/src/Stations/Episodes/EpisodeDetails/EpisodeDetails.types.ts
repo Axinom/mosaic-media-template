@@ -1,4 +1,7 @@
-import { MutationUpdateEpisodeArgs } from '../../../generated/graphql';
+import {
+  EpisodeQuery,
+  MutationUpdateEpisodeArgs,
+} from '../../../generated/graphql';
 
 export type EpisodeDetailsFormData =
   MutationUpdateEpisodeArgs['input']['patch'] & {
@@ -6,4 +9,5 @@ export type EpisodeDetailsFormData =
     genres?: string[];
     cast?: string[];
     productionCountries?: string[];
+    season?: NonNullable<EpisodeQuery['episode']>['season'] | null;
   };
