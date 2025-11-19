@@ -31,6 +31,8 @@ stages:
     displayName: Build and push stage
     jobs:
       - job: Build
+        workspace:
+          clean: all
         displayName: Build
         steps:
           # For CB builds, determine if the service directory has any updates/changes and the continuous builds variable is set to `true`.
