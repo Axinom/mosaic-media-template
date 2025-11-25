@@ -44,14 +44,65 @@ export class BulkEditItemChangeHandler extends MediaGuardedTransactionalInboxMes
   ): Promise<void> {
     this.logger.debug({ details: { ...message.payload } });
 
-    const handled = await this.handleImageTableAddRelated(
+    const imageHandled = await this.handleImageTableAddRelated(
       message.payload,
       envOwnerClient,
     );
 
-    if (!handled) {
+    if (imageHandled) {
+      return;
+    }
+
+    const deferrableHandled = await this.handleDeferrableConstraintTables(
+      message.payload,
+      envOwnerClient,
+    );
+
+    if (!deferrableHandled) {
       await handlePerformItemChangeCommand(message.payload, envOwnerClient);
     }
+  }
+
+  private async handleDeferrableConstraintTables(
+    payload: PerformItemChangeCommand,
+    envOwnerClient: ClientBase,
+  ): Promise<boolean> {
+    // Handle collection_relations which has a DEFERRABLE sort_order constraint
+    // that conflicts with the `ON CONFLICT` clauses in the base `handlePerformItemChangeCommand` handler.
+    if (payload.table_name !== 'collection_relations') {
+      return false;
+    }
+
+    // Only handle ADD_RELATED_ENTITY as `ON CONFLICT` is not applicable for other actions
+    if (payload.action !== 'ADD_RELATED_ENTITY') {
+      return false;
+    }
+
+    const parsedPayload = JSON.parse(payload.stringified_payload);
+
+    // Use an INSERT + SELECT + WHERE NOT EXISTS query
+    // This gives best effort to avoid unique constraint violations for deferrable constraints
+    const columns = Object.keys(parsedPayload)
+      .map((col) => `"${col}"`)
+      .join(', ');
+    const values = Object.values(parsedPayload);
+    const placeholders = values.map((_, i) => `$${i + 1}`).join(', ');
+
+    const whereClause = Object.keys(parsedPayload)
+      .map((field, index) => `"${field}" = $${index + 1}`)
+      .join(' AND ');
+
+    const query = `
+      INSERT INTO "${payload.table_name}" (${columns})
+      SELECT ${placeholders}
+      WHERE NOT EXISTS (
+        SELECT 1 FROM "${payload.table_name}" WHERE ${whereClause}
+      )
+      RETURNING *
+    `;
+
+    await envOwnerClient.query(query, values);
+    return true;
   }
 
   private async handleImageTableAddRelated(

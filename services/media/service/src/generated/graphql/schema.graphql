@@ -15035,11 +15035,11 @@ type Mutation {
 
   """Creates a new Tvshow genres snapshot."""
   createTvshowGenresSnapshot: Snapshot
-  bulkEditMoviesAsync(filter: MovieFilter, set: MoviePatch, relatedEntitiesToRemove: BulkEditAsyncMovieRemoveInput, relatedEntitiesToAdd: BulkEditAsyncMovieAddInput): BulkEditAsyncPayloadType
-  bulkEditTvShowsAsync(filter: TvshowFilter, set: TvshowPatch, relatedEntitiesToRemove: BulkEditAsyncTvshowRemoveInput, relatedEntitiesToAdd: BulkEditAsyncTvshowAddInput): BulkEditAsyncPayloadType
-  bulkEditSeasonsAsync(filter: SeasonFilter, set: SeasonPatch, relatedEntitiesToRemove: BulkEditAsyncSeasonRemoveInput, relatedEntitiesToAdd: BulkEditAsyncSeasonAddInput): BulkEditAsyncPayloadType
-  bulkEditEpisodesAsync(filter: EpisodeFilter, set: EpisodePatch, relatedEntitiesToRemove: BulkEditAsyncEpisodeRemoveInput, relatedEntitiesToAdd: BulkEditAsyncEpisodeAddInput): BulkEditAsyncPayloadType
-  bulkEditCollectionsAsync(filter: CollectionFilter, set: CollectionPatch, relatedEntitiesToRemove: BulkEditAsyncCollectionRemoveInput, relatedEntitiesToAdd: BulkEditAsyncCollectionAddInput): BulkEditAsyncPayloadType
+  bulkEditMoviesAsync(filter: MovieFilter, set: MoviePatch, relatedEntitiesToClear: BulkEditAsyncMovieClearInput, relatedEntitiesToRemove: BulkEditAsyncMovieRemoveInput, relatedEntitiesToAdd: BulkEditAsyncMovieAddInput): BulkEditAsyncPayloadType
+  bulkEditTvShowsAsync(filter: TvshowFilter, set: TvshowPatch, relatedEntitiesToClear: BulkEditAsyncTvshowClearInput, relatedEntitiesToRemove: BulkEditAsyncTvshowRemoveInput, relatedEntitiesToAdd: BulkEditAsyncTvshowAddInput): BulkEditAsyncPayloadType
+  bulkEditSeasonsAsync(filter: SeasonFilter, set: SeasonPatch, relatedEntitiesToClear: BulkEditAsyncSeasonClearInput, relatedEntitiesToRemove: BulkEditAsyncSeasonRemoveInput, relatedEntitiesToAdd: BulkEditAsyncSeasonAddInput): BulkEditAsyncPayloadType
+  bulkEditEpisodesAsync(filter: EpisodeFilter, set: EpisodePatch, relatedEntitiesToClear: BulkEditAsyncEpisodeClearInput, relatedEntitiesToRemove: BulkEditAsyncEpisodeRemoveInput, relatedEntitiesToAdd: BulkEditAsyncEpisodeAddInput): BulkEditAsyncPayloadType
+  bulkEditCollectionsAsync(filter: CollectionFilter, set: CollectionPatch, relatedEntitiesToClear: BulkEditAsyncCollectionClearInput, relatedEntitiesToRemove: BulkEditAsyncCollectionRemoveInput, relatedEntitiesToAdd: BulkEditAsyncCollectionAddInput): BulkEditAsyncPayloadType
   populateCollections(
     """
     The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
@@ -21128,6 +21128,18 @@ type BulkEditAsyncPayloadType {
   filterMatchedIds: [String]
 }
 
+input BulkEditAsyncMovieClearInput {
+  moviesTags: Boolean
+  moviesCasts: Boolean
+  moviesLicenses: Boolean
+  moviesProductionCountries: Boolean
+  moviesMovieGenres: Boolean
+  moviesImages: Boolean
+  moviesTrailers: Boolean
+  collectionRelations: Boolean
+  moviesSnapshots: Boolean
+}
+
 input BulkEditAsyncMovieRemoveInput {
   moviesTags: [BulkEditAsyncMovieRemoveMoviesTagInput]
   moviesCasts: [BulkEditAsyncMovieRemoveMoviesCastInput]
@@ -21242,6 +21254,19 @@ input BulkEditAsyncMovieAddCollectionRelationInput {
 
 input BulkEditAsyncMovieAddMoviesSnapshotInput {
   snapshotId: Int!
+}
+
+input BulkEditAsyncTvshowClearInput {
+  tvshowsTags: Boolean
+  tvshowsCasts: Boolean
+  tvshowsLicenses: Boolean
+  tvshowsProductionCountries: Boolean
+  tvshowsTvshowGenres: Boolean
+  tvshowsImages: Boolean
+  tvshowsTrailers: Boolean
+  seasons: Boolean
+  collectionRelations: Boolean
+  tvshowsSnapshots: Boolean
 }
 
 input BulkEditAsyncTvshowRemoveInput {
@@ -21378,6 +21403,19 @@ input BulkEditAsyncTvshowAddCollectionRelationInput {
 
 input BulkEditAsyncTvshowAddTvshowsSnapshotInput {
   snapshotId: Int!
+}
+
+input BulkEditAsyncSeasonClearInput {
+  seasonsTags: Boolean
+  seasonsCasts: Boolean
+  seasonsLicenses: Boolean
+  seasonsProductionCountries: Boolean
+  seasonsTvshowGenres: Boolean
+  seasonsImages: Boolean
+  seasonsTrailers: Boolean
+  episodes: Boolean
+  collectionRelations: Boolean
+  seasonsSnapshots: Boolean
 }
 
 input BulkEditAsyncSeasonRemoveInput {
@@ -21532,6 +21570,18 @@ input BulkEditAsyncSeasonAddSeasonsSnapshotInput {
   snapshotId: Int!
 }
 
+input BulkEditAsyncEpisodeClearInput {
+  episodesTags: Boolean
+  episodesCasts: Boolean
+  episodesLicenses: Boolean
+  episodesProductionCountries: Boolean
+  episodesTvshowGenres: Boolean
+  episodesImages: Boolean
+  episodesTrailers: Boolean
+  collectionRelations: Boolean
+  episodesSnapshots: Boolean
+}
+
 input BulkEditAsyncEpisodeRemoveInput {
   episodesTags: [BulkEditAsyncEpisodeRemoveEpisodesTagInput]
   episodesCasts: [BulkEditAsyncEpisodeRemoveEpisodesCastInput]
@@ -21646,6 +21696,13 @@ input BulkEditAsyncEpisodeAddCollectionRelationInput {
 
 input BulkEditAsyncEpisodeAddEpisodesSnapshotInput {
   snapshotId: Int!
+}
+
+input BulkEditAsyncCollectionClearInput {
+  collectionRelations: Boolean
+  collectionsTags: Boolean
+  collectionsImages: Boolean
+  collectionsSnapshots: Boolean
 }
 
 input BulkEditAsyncCollectionRemoveInput {
