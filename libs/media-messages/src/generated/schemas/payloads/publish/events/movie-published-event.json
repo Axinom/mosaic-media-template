@@ -251,6 +251,7 @@
                   "enum": [
                     "VIDEO",
                     "AUDIO",
+                    "DESCRIPTIVE_AUDIO",
                     "SUBTITLE",
                     "CLOSED_CAPTION"
                   ],
