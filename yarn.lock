@@ -518,10 +518,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@axinom/mosaic-portal@npm:0.42.0":
-  version: 0.42.0
-  resolution: "@axinom/mosaic-portal@npm:0.42.0"
-  checksum: 10c0/226496c3215598b9de10a685f6cb4e937d4a2c96a2a6b7bbc916e5572e51f59a485d5ad90735334c8f15a0a8dfbd0b5e4ae5d1a57926f23f128e22675bcb9f6a
+"@axinom/mosaic-portal@npm:0.42.1":
+  version: 0.42.1
+  resolution: "@axinom/mosaic-portal@npm:0.42.1"
+  checksum: 10c0/babf2211476d4c95e628c9c075affff6e33712fccaf1a70a474651542fb1eea3cc8b9a0565c7222eb453c4cb49e54e822bec1b5ab868832ed1fc470e04713cb8
   languageName: node
   linkType: hard
 
@@ -8568,7 +8568,7 @@ __metadata:
   dependencies:
     "@apollo/client": "npm:^3.7.10"
     "@axinom/mosaic-managed-workflow-integration": "npm:0.26.0"
-    "@axinom/mosaic-portal": "npm:0.42.0"
+    "@axinom/mosaic-portal": "npm:0.42.1"
     "@axinom/mosaic-ui": "npm:0.66.2"
     "@axinom/mosaic-video-workflow-integration": "npm:0.2.1"
     "@graphql-codegen/cli": "npm:^4.0.1"
@@ -15276,7 +15276,7 @@ __metadata:
     "@apollo/client": "npm:^3.7.10"
     "@axinom/mosaic-graphql-codegen-plugins": "npm:0.4.0"
     "@axinom/mosaic-managed-workflow-integration": "npm:0.26.0"
-    "@axinom/mosaic-portal": "npm:0.42.0"
+    "@axinom/mosaic-portal": "npm:0.42.1"
     "@axinom/mosaic-ui": "npm:0.66.2"
     "@axinom/mosaic-video-workflow-integration": "npm:0.2.1"
     "@graphql-codegen/cli": "npm:^4.0.1"
