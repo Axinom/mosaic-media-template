@@ -151,7 +151,7 @@
         "type": {
           "type": "string",
           "title": "video_stream_type",
-          "enum": ["VIDEO", "AUDIO", "SUBTITLE", "CLOSED_CAPTION"],
+          "enum": ["VIDEO", "AUDIO", "DESCRIPTIVE_AUDIO", "SUBTITLE", "CLOSED_CAPTION"],
           "description": "Stream type"
         },
         "file": {
