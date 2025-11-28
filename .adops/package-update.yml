@@ -53,6 +53,19 @@ steps:
       path: $(YARN_CACHE_FOLDER)
     displayName: Cache Yarn packages
 
+  - script: |
+      npm install -g @aikidosec/safe-chain
+      safe-chain setup
+      
+      result=$(yarn install safe-chain-test)
+      if [[ "$result" == *"Malicious changes
+        echo "safe-chain is present and is w
+      else 
+        echo "safe chain is not present, fai
+        exit 1
+      fi
+    displayName: Enable safe-chain
+
   - script: yarn install --immutable
     displayName: Install dependencies
 

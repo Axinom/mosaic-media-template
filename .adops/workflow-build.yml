@@ -70,6 +70,19 @@ stages:
                 displayName: 'Install Node.js'
 
               - script: |
+                  npm install -g @aikidosec/safe-chain
+                  safe-chain setup
+                  
+                  result=$(yarn install safe-chain-test)
+                  if [[ "$result" == *"Malicious changes
+                    echo "safe-chain is present and is w
+                  else 
+                    echo "safe chain is not present, fai
+                    exit 1
+                  fi
+                displayName: Enable safe-chain
+
+              - script: |
                   ORIGINAL_PKG_VER=`npx -q json -f "$(packageRoot)/package.json" version`
                   NEW_PKG_VER="${ORIGINAL_PKG_VER}-$(tag)"
                   

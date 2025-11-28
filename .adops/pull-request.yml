@@ -64,6 +64,19 @@ stages:
 #                    sudo chown AzDevOps:AzDevOps -R /home/vsts
                   displayName: 'Setup Prerequisites'
 
+                - script: |
+                    npm install -g @aikidosec/safe-chain
+                    safe-chain setup
+                    
+                    result=$(yarn install safe-chain-test)
+                    if [[ "$result" == *"Malicious changes
+                      echo "safe-chain is present and is w
+                    else 
+                      echo "safe chain is not present, fai
+                      exit 1
+                    fi
+                  displayName: Enable safe-chain
+
                 - task: Bash@3
                   inputs:
                     targetType: 'inline'

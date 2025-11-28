@@ -9,6 +9,9 @@ ARG PACKAGE_BUILD_COMMAND
 FROM node:22-bookworm-slim AS base
 WORKDIR /checkout
 
+RUN npm install -g @aikidosec/safe-chain && \
+    safe-chain setup
+
 ARG PACKAGE_ROOT
 RUN test -n "$PACKAGE_ROOT" || (echo "PACKAGE_ROOT not set" && false)
 
@@ -17,6 +20,9 @@ RUN test -n "$PACKAGE_BUILD_COMMAND" || (echo "PACKAGE_BUILD_COMMAND not set" &&
 
 # BUILD
 FROM base AS build
+
+RUN npm install -g @aikidosec/safe-chain && \
+    safe-chain setup
 
 ARG PACKAGE_ROOT
 ARG PACKAGE_BUILD_COMMAND
@@ -31,6 +37,9 @@ RUN if [ ! -d /checkout/$PACKAGE_ROOT/migrations ]; then mkdir -p /checkout/$PAC
 
 # RELEASE
 FROM node:22-bookworm-slim
+
+RUN npm install -g @aikidosec/safe-chain && \
+    safe-chain setup
 
 ARG PACKAGE_ROOT
 ARG PACKAGE_BUILD_COMMAND
