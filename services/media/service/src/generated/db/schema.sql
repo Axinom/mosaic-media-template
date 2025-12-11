@@ -2020,6 +2020,22 @@ $$;
 
 
 --
+-- Name: set_sort_order(); Type: FUNCTION; Schema: app_public; Owner: -
+--
+
+CREATE FUNCTION app_public.set_sort_order() RETURNS trigger
+    LANGUAGE plpgsql
+    AS $$
+BEGIN
+    IF NEW.sort_order IS NULL THEN
+        NEW.sort_order := COALESCE((SELECT MAX(sort_order) FROM app_public.collection_relations WHERE collection_id = NEW.collection_id), 0) + 1;
+    END IF;
+    RETURN NEW;
+END;
+$$;
+
+
+--
 -- Name: tg_collection_relations__collections_ts_propagation(); Type: FUNCTION; Schema: app_public; Owner: -
 --
 
@@ -10602,6 +10618,13 @@ CREATE TRIGGER _900_localizable_tvshow_update AFTER UPDATE ON app_public.tvshows
 
 
 --
+-- Name: collection_relations set_sort_order_trigger; Type: TRIGGER; Schema: app_public; Owner: -
+--
+
+CREATE TRIGGER set_sort_order_trigger BEFORE INSERT ON app_public.collection_relations FOR EACH ROW EXECUTE FUNCTION app_public.set_sort_order();
+
+
+--
 -- Name: collections_snapshots tg_cleanup_orphaned_collection_snapshots; Type: TRIGGER; Schema: app_public; Owner: -
 --
 
@@ -13407,6 +13430,14 @@ GRANT ALL ON FUNCTION app_public.get_tvshows_tags_values() TO media_service_gql_
 
 REVOKE ALL ON FUNCTION app_public.remove_orphaned_snapshot() FROM PUBLIC;
 GRANT ALL ON FUNCTION app_public.remove_orphaned_snapshot() TO media_service_gql_role;
+
+
+--
+-- Name: FUNCTION set_sort_order(); Type: ACL; Schema: app_public; Owner: -
+--
+
+REVOKE ALL ON FUNCTION app_public.set_sort_order() FROM PUBLIC;
+GRANT ALL ON FUNCTION app_public.set_sort_order() TO media_service_gql_role;
 
 
 --

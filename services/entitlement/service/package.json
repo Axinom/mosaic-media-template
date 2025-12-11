@@ -87,6 +87,7 @@
     "zapatos": "^3.6.0"
   },
   "devDependencies": {
+    "@axinom/mosaic-cli": "0.51.0",
     "@graphql-codegen/cli": "^4.0.1",
     "@graphql-codegen/typescript": "^2.7.3",
     "@graphql-codegen/typescript-graphql-request": "^4.5.5",
