@@ -46,6 +46,7 @@
     "util:define-func-migration": "yarn mosaic generate-define-func-migration"
   },
   "dependencies": {
+    "@axinom/mosaic-cli": "0.51.0",
     "@axinom/mosaic-db-common": "0.52.0",
     "@axinom/mosaic-graphql-common": "0.28.0",
     "@axinom/mosaic-id-guard": "0.43.0",

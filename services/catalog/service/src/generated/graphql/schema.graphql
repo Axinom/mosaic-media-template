@@ -1591,6 +1591,9 @@ enum VideoStreamType {
 
   """Closed caption"""
   CLOSED_CAPTION
+
+  """Descriptive Audio"""
+  DESCRIPTIVE_AUDIO
 }
 
 """A `MovieVideoStream` edge in the connection."""
