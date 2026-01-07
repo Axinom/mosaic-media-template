@@ -54,6 +54,7 @@ import {
   useMovieQuery,
 } from '../../../generated/graphql';
 import { CountryNames } from '../../../Util/CountryNames/CountryNames';
+import { getLicenseWarningMessage } from '../../../Util/LicenseDateSchema/LicenseDateSchema';
 import { getEnumLabel } from '../../../Util/StringEnumMapper/StringEnumMapper';
 import { useMovieDetailsActions } from './MovieDetails.actions';
 import classes from './MovieDetails.module.scss';
@@ -136,6 +137,11 @@ export const MovieDetailsForm: React.FC<MovieDetailsFormProps> = ({
     [data],
   );
   const { actions } = useMovieDetailsActions(movieId);
+
+  const licenseWarningMessage = useMemo(
+    () => getLicenseWarningMessage(data?.movie?.moviesLicenses?.nodes || []),
+    [data?.movie?.moviesLicenses?.nodes],
+  );
 
   const onSubmit = useCallback(
     async (
@@ -299,6 +305,11 @@ export const MovieDetailsForm: React.FC<MovieDetailsFormProps> = ({
       }}
       saveData={onSubmit}
       infoPanel={<Panel />}
+      stationMessage={
+        licenseWarningMessage
+          ? { type: 'warning', title: licenseWarningMessage }
+          : undefined
+      }
     >
       <Form
         genreOptions={Object.keys(allGenres)}
@@ -324,9 +335,8 @@ const Panel: React.FC = () => {
     let cleanCover1x1ImageCount = 0;
     let cleanCover16x9ImageCount = 0;
     let listImageCount = 0;
-    let list1x1ImageCount = 0;
+    const list1x1ImageCount = 0;
     let list9x13ImageCount = 0;
-    
 
     values.moviesImages?.nodes.forEach(({ imageId, imageType }) => {
       switch (imageType) {
@@ -341,7 +351,7 @@ const Panel: React.FC = () => {
         case MovieImageType.MovieCover:
           coverImageCount++;
           coverImageId = imageId;
-          break;                
+          break;
         case MovieImageType.MovieCleanCover:
           cleanCoverImageCount++;
           break;
@@ -368,7 +378,9 @@ const Panel: React.FC = () => {
     return (
       <InfoPanel>
         <Section>
-          <ImageCover id={cover1x1ImageId ?? cover16x9ImageId ?? coverImageId} />
+          <ImageCover
+            id={cover1x1ImageId ?? cover16x9ImageId ?? coverImageId}
+          />
         </Section>
         <Section title="Additional Information">
           <Paragraph title="Subtype">
@@ -383,7 +395,9 @@ const Panel: React.FC = () => {
           <Paragraph title="Publishing Status">
             {getEnumLabel(values.publishStatus)}
           </Paragraph>
-          {values.publishStatus !== PublishStatus.NotPublished ? (<Paragraph title="Publishing ID">{values.publishingId}</Paragraph>) : null}          
+          {values.publishStatus !== PublishStatus.NotPublished ? (
+            <Paragraph title="Publishing ID">{values.publishingId}</Paragraph>
+          ) : null}
           {values.publishedDate ? (
             <Paragraph title="Published">
               {formatDateTime(values.publishedDate)} by {values.publishedUser}
@@ -442,9 +456,7 @@ const Panel: React.FC = () => {
             </div>
             <div className={classes.datalist}>
               <div>List</div>
-              <div className={classes.rightAlignment}>
-                {listImageCount} / 1
-              </div>
+              <div className={classes.rightAlignment}>{listImageCount} / 1</div>
             </div>
             <div className={classes.datalist}>
               <div>List 1x1</div>

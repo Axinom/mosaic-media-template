@@ -756,7 +756,7 @@ export type CollectionPatch = {
   title?: InputMaybe<Scalars['String']['input']>;
 };
 
-/** @permissions: COLLECTION_READER,COLLECTION_EDITOR,ADMIN */
+/** @permissions: COLLECTIONS_VIEW,COLLECTIONS_EDIT,ADMIN */
 export type CollectionRelation = {
   __typename?: 'CollectionRelation';
   /** Reads a single `Collection` that is related to this `CollectionRelation`. */
@@ -877,7 +877,7 @@ export type CollectionRelationPatch = {
 
 /**
  * A connection to a list of `CollectionRelation` values.
- * @permissions: COLLECTION_READER,COLLECTION_EDITOR,ADMIN
+ * @permissions: COLLECTIONS_VIEW,COLLECTIONS_EDIT,ADMIN
  */
 export type CollectionRelationsConnection = {
   __typename?: 'CollectionRelationsConnection';
@@ -1931,7 +1931,7 @@ export type CreateCollectionPayloadCollectionEdgeArgs = {
 
 /**
  * All input for the create `CollectionRelation` mutation.
- * @permissions: COLLECTION_EDITOR,ADMIN
+ * @permissions: COLLECTIONS_EDIT,ADMIN
  */
 export type CreateCollectionRelationInput = {
   /**
@@ -2208,7 +2208,7 @@ export type CreateEpisodesCastPayloadEpisodesCastEdgeArgs = {
 
 /**
  * All input for the create `EpisodesDirector` mutation.
- * @permissions: TVSHOW_EDITOR,ADMIN
+ * @permissions: TVSHOWS_EDIT,ADMIN
  */
 export type CreateEpisodesDirectorInput = {
   /**
@@ -2322,7 +2322,7 @@ export type CreateEpisodesLicensePayloadEpisodesLicenseEdgeArgs = {
 
 /**
  * All input for the create `EpisodesLicensesCountry` mutation.
- * @permissions: TVSHOW_EDITOR,ADMIN
+ * @permissions: TVSHOWS_EDIT,ADMIN
  */
 export type CreateEpisodesLicensesCountryInput = {
   /**
@@ -2662,7 +2662,7 @@ export type CreateMoviesCastPayloadMoviesCastEdgeArgs = {
 
 /**
  * All input for the create `MoviesDirector` mutation.
- * @permissions: MOVIE_EDITOR,ADMIN
+ * @permissions: MOVIES_EDIT,ADMIN
  */
 export type CreateMoviesDirectorInput = {
   /**
@@ -2776,7 +2776,7 @@ export type CreateMoviesLicensePayloadMoviesLicenseEdgeArgs = {
 
 /**
  * All input for the create `MoviesLicensesCountry` mutation.
- * @permissions: MOVIE_EDITOR,ADMIN
+ * @permissions: MOVIES_EDIT,ADMIN
  */
 export type CreateMoviesLicensesCountryInput = {
   /**
@@ -3046,7 +3046,7 @@ export type CreateSeasonsCastPayloadSeasonsCastEdgeArgs = {
 
 /**
  * All input for the create `SeasonsDirector` mutation.
- * @permissions: TVSHOW_EDITOR,ADMIN
+ * @permissions: TVSHOWS_EDIT,ADMIN
  */
 export type CreateSeasonsDirectorInput = {
   /**
@@ -3160,7 +3160,7 @@ export type CreateSeasonsLicensePayloadSeasonsLicenseEdgeArgs = {
 
 /**
  * All input for the create `SeasonsLicensesCountry` mutation.
- * @permissions: TVSHOW_EDITOR,ADMIN
+ * @permissions: TVSHOWS_EDIT,ADMIN
  */
 export type CreateSeasonsLicensesCountryInput = {
   /**
@@ -3464,7 +3464,7 @@ export type CreateTvshowsCastPayloadTvshowsCastEdgeArgs = {
 
 /**
  * All input for the create `TvshowsDirector` mutation.
- * @permissions: TVSHOW_EDITOR,ADMIN
+ * @permissions: TVSHOWS_EDIT,ADMIN
  */
 export type CreateTvshowsDirectorInput = {
   /**
@@ -3578,7 +3578,7 @@ export type CreateTvshowsLicensePayloadTvshowsLicenseEdgeArgs = {
 
 /**
  * All input for the create `TvshowsLicensesCountry` mutation.
- * @permissions: TVSHOW_EDITOR,ADMIN
+ * @permissions: TVSHOWS_EDIT,ADMIN
  */
 export type CreateTvshowsLicensesCountryInput = {
   /**
@@ -3943,7 +3943,7 @@ export type DeleteCollectionPayloadCollectionEdgeArgs = {
 
 /**
  * All input for the `deleteCollectionRelation` mutation.
- * @permissions: COLLECTION_EDITOR,ADMIN
+ * @permissions: COLLECTIONS_EDIT,ADMIN
  */
 export type DeleteCollectionRelationInput = {
   /**
@@ -4263,7 +4263,7 @@ export type DeleteEpisodesCastPayloadEpisodesCastEdgeArgs = {
 
 /**
  * All input for the `deleteEpisodesDirector` mutation.
- * @permissions: TVSHOW_EDITOR,ADMIN
+ * @permissions: TVSHOWS_EDIT,ADMIN
  */
 export type DeleteEpisodesDirectorInput = {
   /**
@@ -4380,7 +4380,7 @@ export type DeleteEpisodesLicensePayloadEpisodesLicenseEdgeArgs = {
 
 /**
  * All input for the `deleteEpisodesLicensesCountry` mutation.
- * @permissions: TVSHOW_EDITOR,ADMIN
+ * @permissions: TVSHOWS_EDIT,ADMIN
  */
 export type DeleteEpisodesLicensesCountryInput = {
   /**
@@ -4741,7 +4741,7 @@ export type DeleteMoviesCastPayloadMoviesCastEdgeArgs = {
 
 /**
  * All input for the `deleteMoviesDirector` mutation.
- * @permissions: MOVIE_EDITOR,ADMIN
+ * @permissions: MOVIES_EDIT,ADMIN
  */
 export type DeleteMoviesDirectorInput = {
   /**
@@ -4858,7 +4858,7 @@ export type DeleteMoviesLicensePayloadMoviesLicenseEdgeArgs = {
 
 /**
  * All input for the `deleteMoviesLicensesCountry` mutation.
- * @permissions: MOVIE_EDITOR,ADMIN
+ * @permissions: MOVIES_EDIT,ADMIN
  */
 export type DeleteMoviesLicensesCountryInput = {
   /**
@@ -5149,7 +5149,7 @@ export type DeleteSeasonsCastPayloadSeasonsCastEdgeArgs = {
 
 /**
  * All input for the `deleteSeasonsDirector` mutation.
- * @permissions: TVSHOW_EDITOR,ADMIN
+ * @permissions: TVSHOWS_EDIT,ADMIN
  */
 export type DeleteSeasonsDirectorInput = {
   /**
@@ -5266,7 +5266,7 @@ export type DeleteSeasonsLicensePayloadSeasonsLicenseEdgeArgs = {
 
 /**
  * All input for the `deleteSeasonsLicensesCountry` mutation.
- * @permissions: TVSHOW_EDITOR,ADMIN
+ * @permissions: TVSHOWS_EDIT,ADMIN
  */
 export type DeleteSeasonsLicensesCountryInput = {
   /**
@@ -5630,7 +5630,7 @@ export type DeleteTvshowsCastPayloadTvshowsCastEdgeArgs = {
 
 /**
  * All input for the `deleteTvshowsDirector` mutation.
- * @permissions: TVSHOW_EDITOR,ADMIN
+ * @permissions: TVSHOWS_EDIT,ADMIN
  */
 export type DeleteTvshowsDirectorInput = {
   /**
@@ -5747,7 +5747,7 @@ export type DeleteTvshowsLicensePayloadTvshowsLicenseEdgeArgs = {
 
 /**
  * All input for the `deleteTvshowsLicensesCountry` mutation.
- * @permissions: TVSHOW_EDITOR,ADMIN
+ * @permissions: TVSHOWS_EDIT,ADMIN
  */
 export type DeleteTvshowsLicensesCountryInput = {
   /**
@@ -6526,7 +6526,7 @@ export type EpisodesConnection = {
   totalCount: Scalars['Int']['output'];
 };
 
-/** @permissions: TVSHOW_READER,TVSHOW_EDITOR,ADMIN */
+/** @permissions: TVSHOWS_VIEW,TVSHOWS_EDIT,ADMIN */
 export type EpisodesDirector = {
   __typename?: 'EpisodesDirector';
   /** Reads a single `Episode` that is related to this `EpisodesDirector`. */
@@ -6581,7 +6581,7 @@ export type EpisodesDirectorPatch = {
 
 /**
  * A connection to a list of `EpisodesDirector` values.
- * @permissions: TVSHOW_READER,TVSHOW_EDITOR,ADMIN
+ * @permissions: TVSHOWS_VIEW,TVSHOWS_EDIT,ADMIN
  */
 export type EpisodesDirectorsConnection = {
   __typename?: 'EpisodesDirectorsConnection';
@@ -6848,7 +6848,7 @@ export type EpisodesLicensesConnection = {
 
 /**
  * A connection to a list of `EpisodesLicensesCountry` values.
- * @permissions: TVSHOW_READER,TVSHOW_EDITOR,ADMIN
+ * @permissions: TVSHOWS_VIEW,TVSHOWS_EDIT,ADMIN
  */
 export type EpisodesLicensesCountriesConnection = {
   __typename?: 'EpisodesLicensesCountriesConnection';
@@ -6886,7 +6886,7 @@ export enum EpisodesLicensesCountriesOrderBy {
   PrimaryKeyDesc = 'PRIMARY_KEY_DESC'
 }
 
-/** @permissions: TVSHOW_READER,TVSHOW_EDITOR,ADMIN */
+/** @permissions: TVSHOWS_VIEW,TVSHOWS_EDIT,ADMIN */
 export type EpisodesLicensesCountry = {
   __typename?: 'EpisodesLicensesCountry';
   countryCode?: Maybe<IsoAlphaTwoCountryCodes>;
@@ -8327,6 +8327,24 @@ export type IngestDocumentToManyIngestItemFilter = {
   none?: InputMaybe<IngestItemFilter>;
   /** Some related `IngestItem` matches the filter criteria. All fields are combined with a logical ‘and.’ */
   some?: InputMaybe<IngestItemFilter>;
+};
+
+export type IngestedAssetPayload = {
+  __typename?: 'IngestedAssetPayload';
+  assetType: Scalars['String']['output'];
+  externalId: Scalars['String']['output'];
+  id: Scalars['Int']['output'];
+  ingestStatus: Scalars['String']['output'];
+  publishingId?: Maybe<Scalars['String']['output']>;
+};
+
+export type IngestedAssetsInput = {
+  ingestDocumentId: Scalars['Int']['input'];
+};
+
+export type IngestedAssetsPayload = {
+  __typename?: 'IngestedAssetsPayload';
+  nodes: Array<IngestedAssetPayload>;
 };
 
 export enum IngestEntityExistsStatus {
@@ -10357,7 +10375,7 @@ export type MoviesConnection = {
   totalCount: Scalars['Int']['output'];
 };
 
-/** @permissions: MOVIE_READER,MOVIE_EDITOR,ADMIN */
+/** @permissions: MOVIES_VIEW,MOVIES_EDIT,ADMIN */
 export type MoviesDirector = {
   __typename?: 'MoviesDirector';
   /** Reads a single `Movie` that is related to this `MoviesDirector`. */
@@ -10412,7 +10430,7 @@ export type MoviesDirectorPatch = {
 
 /**
  * A connection to a list of `MoviesDirector` values.
- * @permissions: MOVIE_READER,MOVIE_EDITOR,ADMIN
+ * @permissions: MOVIES_VIEW,MOVIES_EDIT,ADMIN
  */
 export type MoviesDirectorsConnection = {
   __typename?: 'MoviesDirectorsConnection';
@@ -10679,7 +10697,7 @@ export type MoviesLicensesConnection = {
 
 /**
  * A connection to a list of `MoviesLicensesCountry` values.
- * @permissions: MOVIE_READER,MOVIE_EDITOR,ADMIN
+ * @permissions: MOVIES_VIEW,MOVIES_EDIT,ADMIN
  */
 export type MoviesLicensesCountriesConnection = {
   __typename?: 'MoviesLicensesCountriesConnection';
@@ -10717,7 +10735,7 @@ export enum MoviesLicensesCountriesOrderBy {
   PrimaryKeyDesc = 'PRIMARY_KEY_DESC'
 }
 
-/** @permissions: MOVIE_READER,MOVIE_EDITOR,ADMIN */
+/** @permissions: MOVIES_VIEW,MOVIES_EDIT,ADMIN */
 export type MoviesLicensesCountry = {
   __typename?: 'MoviesLicensesCountry';
   countryCode?: Maybe<IsoAlphaTwoCountryCodes>;
@@ -13240,6 +13258,7 @@ export type Query = {
   ingestDocument?: Maybe<IngestDocument>;
   /** Reads and enables pagination through a set of `IngestDocument`. */
   ingestDocuments?: Maybe<IngestDocumentsConnection>;
+  ingestedAssets?: Maybe<IngestedAssetsPayload>;
   ingestItem?: Maybe<IngestItem>;
   /** Reads and enables pagination through a set of `IngestItem`. */
   ingestItems?: Maybe<IngestItemsConnection>;
@@ -13934,6 +13953,12 @@ export type QueryIngestDocumentsArgs = {
   last?: InputMaybe<Scalars['Int']['input']>;
   offset?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Array<IngestDocumentsOrderBy>>;
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryIngestedAssetsArgs = {
+  input: IngestedAssetsInput;
 };
 
 
@@ -15169,7 +15194,7 @@ export type SeasonsConnection = {
   totalCount: Scalars['Int']['output'];
 };
 
-/** @permissions: TVSHOW_READER,TVSHOW_EDITOR,ADMIN */
+/** @permissions: TVSHOWS_VIEW,TVSHOWS_EDIT,ADMIN */
 export type SeasonsDirector = {
   __typename?: 'SeasonsDirector';
   name: Scalars['String']['output'];
@@ -15224,7 +15249,7 @@ export type SeasonsDirectorPatch = {
 
 /**
  * A connection to a list of `SeasonsDirector` values.
- * @permissions: TVSHOW_READER,TVSHOW_EDITOR,ADMIN
+ * @permissions: TVSHOWS_VIEW,TVSHOWS_EDIT,ADMIN
  */
 export type SeasonsDirectorsConnection = {
   __typename?: 'SeasonsDirectorsConnection';
@@ -15491,7 +15516,7 @@ export type SeasonsLicensesConnection = {
 
 /**
  * A connection to a list of `SeasonsLicensesCountry` values.
- * @permissions: TVSHOW_READER,TVSHOW_EDITOR,ADMIN
+ * @permissions: TVSHOWS_VIEW,TVSHOWS_EDIT,ADMIN
  */
 export type SeasonsLicensesCountriesConnection = {
   __typename?: 'SeasonsLicensesCountriesConnection';
@@ -15529,7 +15554,7 @@ export enum SeasonsLicensesCountriesOrderBy {
   SeasonsLicenseIdDesc = 'SEASONS_LICENSE_ID_DESC'
 }
 
-/** @permissions: TVSHOW_READER,TVSHOW_EDITOR,ADMIN */
+/** @permissions: TVSHOWS_VIEW,TVSHOWS_EDIT,ADMIN */
 export type SeasonsLicensesCountry = {
   __typename?: 'SeasonsLicensesCountry';
   countryCode?: Maybe<IsoAlphaTwoCountryCodes>;
@@ -17824,7 +17849,7 @@ export type TvshowsConnection = {
   totalCount: Scalars['Int']['output'];
 };
 
-/** @permissions: TVSHOW_READER,TVSHOW_EDITOR,ADMIN */
+/** @permissions: TVSHOWS_VIEW,TVSHOWS_EDIT,ADMIN */
 export type TvshowsDirector = {
   __typename?: 'TvshowsDirector';
   name: Scalars['String']['output'];
@@ -17879,7 +17904,7 @@ export type TvshowsDirectorPatch = {
 
 /**
  * A connection to a list of `TvshowsDirector` values.
- * @permissions: TVSHOW_READER,TVSHOW_EDITOR,ADMIN
+ * @permissions: TVSHOWS_VIEW,TVSHOWS_EDIT,ADMIN
  */
 export type TvshowsDirectorsConnection = {
   __typename?: 'TvshowsDirectorsConnection';
@@ -18146,7 +18171,7 @@ export type TvshowsLicensesConnection = {
 
 /**
  * A connection to a list of `TvshowsLicensesCountry` values.
- * @permissions: TVSHOW_READER,TVSHOW_EDITOR,ADMIN
+ * @permissions: TVSHOWS_VIEW,TVSHOWS_EDIT,ADMIN
  */
 export type TvshowsLicensesCountriesConnection = {
   __typename?: 'TvshowsLicensesCountriesConnection';
@@ -18184,7 +18209,7 @@ export enum TvshowsLicensesCountriesOrderBy {
   TvshowsLicenseIdDesc = 'TVSHOWS_LICENSE_ID_DESC'
 }
 
-/** @permissions: TVSHOW_READER,TVSHOW_EDITOR,ADMIN */
+/** @permissions: TVSHOWS_VIEW,TVSHOWS_EDIT,ADMIN */
 export type TvshowsLicensesCountry = {
   __typename?: 'TvshowsLicensesCountry';
   countryCode?: Maybe<IsoAlphaTwoCountryCodes>;
@@ -18995,7 +19020,7 @@ export type UpdateCollectionPayloadCollectionEdgeArgs = {
 
 /**
  * All input for the `updateCollectionRelation` mutation.
- * @permissions: COLLECTION_EDITOR,ADMIN
+ * @permissions: COLLECTIONS_EDIT,ADMIN
  */
 export type UpdateCollectionRelationInput = {
   /**
@@ -19325,7 +19350,7 @@ export type UpdateEpisodesCastPayloadEpisodesCastEdgeArgs = {
 
 /**
  * All input for the `updateEpisodesDirector` mutation.
- * @permissions: TVSHOW_EDITOR,ADMIN
+ * @permissions: TVSHOWS_EDIT,ADMIN
  */
 export type UpdateEpisodesDirectorInput = {
   /**
@@ -19445,7 +19470,7 @@ export type UpdateEpisodesLicensePayloadEpisodesLicenseEdgeArgs = {
 
 /**
  * All input for the `updateEpisodesLicensesCountry` mutation.
- * @permissions: TVSHOW_EDITOR,ADMIN
+ * @permissions: TVSHOWS_EDIT,ADMIN
  */
 export type UpdateEpisodesLicensesCountryInput = {
   /**
@@ -19772,7 +19797,7 @@ export type UpdateMoviesCastPayloadMoviesCastEdgeArgs = {
 
 /**
  * All input for the `updateMoviesDirector` mutation.
- * @permissions: MOVIE_EDITOR,ADMIN
+ * @permissions: MOVIES_EDIT,ADMIN
  */
 export type UpdateMoviesDirectorInput = {
   /**
@@ -19892,7 +19917,7 @@ export type UpdateMoviesLicensePayloadMoviesLicenseEdgeArgs = {
 
 /**
  * All input for the `updateMoviesLicensesCountry` mutation.
- * @permissions: MOVIE_EDITOR,ADMIN
+ * @permissions: MOVIES_EDIT,ADMIN
  */
 export type UpdateMoviesLicensesCountryInput = {
   /**
@@ -20110,7 +20135,7 @@ export type UpdateSeasonsCastPayloadSeasonsCastEdgeArgs = {
 
 /**
  * All input for the `updateSeasonsDirector` mutation.
- * @permissions: TVSHOW_EDITOR,ADMIN
+ * @permissions: TVSHOWS_EDIT,ADMIN
  */
 export type UpdateSeasonsDirectorInput = {
   /**
@@ -20230,7 +20255,7 @@ export type UpdateSeasonsLicensePayloadSeasonsLicenseEdgeArgs = {
 
 /**
  * All input for the `updateSeasonsLicensesCountry` mutation.
- * @permissions: TVSHOW_EDITOR,ADMIN
+ * @permissions: TVSHOWS_EDIT,ADMIN
  */
 export type UpdateSeasonsLicensesCountryInput = {
   /**
@@ -20483,7 +20508,7 @@ export type UpdateTvshowsCastPayloadTvshowsCastEdgeArgs = {
 
 /**
  * All input for the `updateTvshowsDirector` mutation.
- * @permissions: TVSHOW_EDITOR,ADMIN
+ * @permissions: TVSHOWS_EDIT,ADMIN
  */
 export type UpdateTvshowsDirectorInput = {
   /**
@@ -20603,7 +20628,7 @@ export type UpdateTvshowsLicensePayloadTvshowsLicenseEdgeArgs = {
 
 /**
  * All input for the `updateTvshowsLicensesCountry` mutation.
- * @permissions: TVSHOW_EDITOR,ADMIN
+ * @permissions: TVSHOWS_EDIT,ADMIN
  */
 export type UpdateTvshowsLicensesCountryInput = {
   /**
@@ -20845,7 +20870,7 @@ export type CollectionRelatedEntitiesQueryVariables = Exact<{
 }>;
 
 
-export type CollectionRelatedEntitiesQuery = { __typename?: 'Query', collection?: { __typename?: 'Collection', collectionRelations: { __typename?: 'CollectionRelationsConnection', nodes: Array<{ __typename?: 'CollectionRelation', id: number, sortOrder: number, movie?: { __typename?: 'Movie', title: string, publishStatus: PublishStatus, entityId: number, entityImages: { __typename?: 'MoviesImagesConnection', nodes: Array<{ __typename?: 'MoviesImage', imageId: any }> } } | null, tvshow?: { __typename?: 'Tvshow', title: string, publishStatus: PublishStatus, entityId: number, entityImages: { __typename?: 'TvshowsImagesConnection', nodes: Array<{ __typename?: 'TvshowsImage', imageId: any }> } } | null, episode?: { __typename?: 'Episode', title: string, publishStatus: PublishStatus, entityId: number, entityImages: { __typename?: 'EpisodesImagesConnection', nodes: Array<{ __typename?: 'EpisodesImage', imageId: any }> } } | null, childCollection?: { __typename?: 'Collection', title: string, publishStatus: PublishStatus, entityId: number, entityImages: { __typename?: 'CollectionsImagesConnection', nodes: Array<{ __typename?: 'CollectionsImage', imageId: any }> } } | null }> } } | null };
+export type CollectionRelatedEntitiesQuery = { __typename?: 'Query', collection?: { __typename?: 'Collection', collectionRelations: { __typename?: 'CollectionRelationsConnection', nodes: Array<{ __typename?: 'CollectionRelation', id: number, sortOrder: number, movie?: { __typename?: 'Movie', title: string, publishStatus: PublishStatus, entityId: number, entityImages: { __typename?: 'MoviesImagesConnection', nodes: Array<{ __typename?: 'MoviesImage', imageId: any }> }, entityLicenses: { __typename?: 'MoviesLicensesConnection', nodes: Array<{ __typename?: 'MoviesLicense', licenseEnd?: any | null }> } } | null, tvshow?: { __typename?: 'Tvshow', title: string, publishStatus: PublishStatus, entityId: number, entityImages: { __typename?: 'TvshowsImagesConnection', nodes: Array<{ __typename?: 'TvshowsImage', imageId: any }> }, entityLicenses: { __typename?: 'TvshowsLicensesConnection', nodes: Array<{ __typename?: 'TvshowsLicense', licenseEnd?: any | null }> } } | null, episode?: { __typename?: 'Episode', title: string, publishStatus: PublishStatus, entityId: number, entityImages: { __typename?: 'EpisodesImagesConnection', nodes: Array<{ __typename?: 'EpisodesImage', imageId: any }> }, entityLicenses: { __typename?: 'EpisodesLicensesConnection', nodes: Array<{ __typename?: 'EpisodesLicense', licenseEnd?: any | null }> } } | null, childCollection?: { __typename?: 'Collection', title: string, publishStatus: PublishStatus, entityId: number, entityImages: { __typename?: 'CollectionsImagesConnection', nodes: Array<{ __typename?: 'CollectionsImage', imageId: any }> } } | null }> } } | null };
 
 export type CollectionImagesQueryVariables = Exact<{
   id: Scalars['Int']['input'];
@@ -20967,7 +20992,7 @@ export type EpisodeQueryVariables = Exact<{
 }>;
 
 
-export type EpisodeQuery = { __typename?: 'Query', episode?: { __typename?: 'Episode', title: string, originalTitle?: string | null, index: number, synopsis?: string | null, description?: string | null, externalId?: string | null, publishingId?: string | null, ageRating?: string | null, contentOwner?: string | null, rating?: any | null, extendedField?: string | null, assetSubtype: AssetSubtype, studio?: string | null, released?: any | null, id: number, createdDate: any, createdUser: string, updatedDate: any, updatedUser: string, mainVideoId?: any | null, publishStatus: PublishStatus, publishedDate?: any | null, publishedUser?: string | null, episodesTags: { __typename?: 'EpisodesTagsConnection', nodes: Array<{ __typename?: 'EpisodesTag', name: string }> }, episodesDirectors: { __typename?: 'EpisodesDirectorsConnection', nodes: Array<{ __typename?: 'EpisodesDirector', name: string }> }, episodesTvshowGenres: { __typename?: 'EpisodesTvshowGenresConnection', nodes: Array<{ __typename?: 'EpisodesTvshowGenre', tvshowGenres?: { __typename?: 'TvshowGenre', title: string } | null }> }, episodesCasts: { __typename?: 'EpisodesCastsConnection', nodes: Array<{ __typename?: 'EpisodesCast', name: string }> }, episodesProductionCountries: { __typename?: 'EpisodesProductionCountriesConnection', nodes: Array<{ __typename?: 'EpisodesProductionCountry', name: string }> }, episodesTrailers: { __typename?: 'EpisodesTrailersConnection', totalCount: number }, episodesImages: { __typename?: 'EpisodesImagesConnection', nodes: Array<{ __typename?: 'EpisodesImage', imageType: EpisodeImageType, imageId: any }> }, season?: { __typename?: 'Season', id: number, index: number, seasonsImages: { __typename?: 'SeasonsImagesConnection', nodes: Array<{ __typename?: 'SeasonsImage', imageId: any }> }, tvshow?: { __typename?: 'Tvshow', title: string } | null } | null } | null, tvshowGenres?: { __typename?: 'TvshowGenresConnection', nodes: Array<{ __typename?: 'TvshowGenre', title: string, id: number }> } | null, ageRatings?: { __typename?: 'AgeRatingsConnection', nodes: Array<{ __typename?: 'AgeRating', name: string, id: any }> } | null, contentOwners?: { __typename?: 'ContentOwnersConnection', nodes: Array<{ __typename?: 'ContentOwner', name: string, id: any }> } | null };
+export type EpisodeQuery = { __typename?: 'Query', episode?: { __typename?: 'Episode', title: string, originalTitle?: string | null, index: number, synopsis?: string | null, description?: string | null, externalId?: string | null, publishingId?: string | null, ageRating?: string | null, contentOwner?: string | null, rating?: any | null, extendedField?: string | null, assetSubtype: AssetSubtype, studio?: string | null, released?: any | null, id: number, createdDate: any, createdUser: string, updatedDate: any, updatedUser: string, mainVideoId?: any | null, publishStatus: PublishStatus, publishedDate?: any | null, publishedUser?: string | null, episodesLicenses: { __typename?: 'EpisodesLicensesConnection', nodes: Array<{ __typename?: 'EpisodesLicense', licenseEnd?: any | null }> }, episodesTags: { __typename?: 'EpisodesTagsConnection', nodes: Array<{ __typename?: 'EpisodesTag', name: string }> }, episodesDirectors: { __typename?: 'EpisodesDirectorsConnection', nodes: Array<{ __typename?: 'EpisodesDirector', name: string }> }, episodesTvshowGenres: { __typename?: 'EpisodesTvshowGenresConnection', nodes: Array<{ __typename?: 'EpisodesTvshowGenre', tvshowGenres?: { __typename?: 'TvshowGenre', title: string } | null }> }, episodesCasts: { __typename?: 'EpisodesCastsConnection', nodes: Array<{ __typename?: 'EpisodesCast', name: string }> }, episodesProductionCountries: { __typename?: 'EpisodesProductionCountriesConnection', nodes: Array<{ __typename?: 'EpisodesProductionCountry', name: string }> }, episodesTrailers: { __typename?: 'EpisodesTrailersConnection', totalCount: number }, episodesImages: { __typename?: 'EpisodesImagesConnection', nodes: Array<{ __typename?: 'EpisodesImage', imageType: EpisodeImageType, imageId: any }> }, season?: { __typename?: 'Season', id: number, index: number, seasonsImages: { __typename?: 'SeasonsImagesConnection', nodes: Array<{ __typename?: 'SeasonsImage', imageId: any }> }, tvshow?: { __typename?: 'Tvshow', title: string } | null } | null } | null, tvshowGenres?: { __typename?: 'TvshowGenresConnection', nodes: Array<{ __typename?: 'TvshowGenre', title: string, id: number }> } | null, ageRatings?: { __typename?: 'AgeRatingsConnection', nodes: Array<{ __typename?: 'AgeRating', name: string, id: any }> } | null, contentOwners?: { __typename?: 'ContentOwnersConnection', nodes: Array<{ __typename?: 'ContentOwner', name: string, id: any }> } | null };
 
 export type UpdateEpisodeMutationVariables = Exact<{
   input: UpdateEpisodeInput;
@@ -21254,7 +21279,7 @@ export type MovieQueryVariables = Exact<{
 }>;
 
 
-export type MovieQuery = { __typename?: 'Query', movie?: { __typename?: 'Movie', title: string, originalTitle?: string | null, synopsis?: string | null, description?: string | null, externalId?: string | null, publishingId?: string | null, ageRating?: string | null, businessType: BusinessType, contentOwner?: string | null, rating?: any | null, extendedField?: string | null, assetSubtype: AssetSubtype, released?: any | null, studio?: string | null, mainVideoId?: any | null, id: number, createdDate: any, createdUser: string, updatedDate: any, updatedUser: string, publishStatus: PublishStatus, publishedDate?: any | null, publishedUser?: string | null, moviesTags: { __typename?: 'MoviesTagsConnection', nodes: Array<{ __typename?: 'MoviesTag', name: string }> }, moviesMovieGenres: { __typename?: 'MoviesMovieGenresConnection', nodes: Array<{ __typename?: 'MoviesMovieGenre', movieGenres?: { __typename?: 'MovieGenre', title: string } | null }> }, moviesCasts: { __typename?: 'MoviesCastsConnection', nodes: Array<{ __typename?: 'MoviesCast', name: string }> }, moviesDirectors: { __typename?: 'MoviesDirectorsConnection', nodes: Array<{ __typename?: 'MoviesDirector', name: string }> }, moviesProductionCountries: { __typename?: 'MoviesProductionCountriesConnection', nodes: Array<{ __typename?: 'MoviesProductionCountry', name: string }> }, moviesTrailers: { __typename?: 'MoviesTrailersConnection', totalCount: number }, moviesImages: { __typename?: 'MoviesImagesConnection', nodes: Array<{ __typename?: 'MoviesImage', imageType: MovieImageType, imageId: any }> } } | null, movieGenres?: { __typename?: 'MovieGenresConnection', nodes: Array<{ __typename?: 'MovieGenre', title: string, id: number }> } | null, ageRatings?: { __typename?: 'AgeRatingsConnection', nodes: Array<{ __typename?: 'AgeRating', name: string, id: any }> } | null, contentOwners?: { __typename?: 'ContentOwnersConnection', nodes: Array<{ __typename?: 'ContentOwner', name: string, id: any }> } | null };
+export type MovieQuery = { __typename?: 'Query', movie?: { __typename?: 'Movie', title: string, originalTitle?: string | null, synopsis?: string | null, description?: string | null, externalId?: string | null, publishingId?: string | null, ageRating?: string | null, businessType: BusinessType, contentOwner?: string | null, rating?: any | null, extendedField?: string | null, assetSubtype: AssetSubtype, released?: any | null, studio?: string | null, mainVideoId?: any | null, id: number, createdDate: any, createdUser: string, updatedDate: any, updatedUser: string, publishStatus: PublishStatus, publishedDate?: any | null, publishedUser?: string | null, moviesLicenses: { __typename?: 'MoviesLicensesConnection', nodes: Array<{ __typename?: 'MoviesLicense', licenseEnd?: any | null }> }, moviesTags: { __typename?: 'MoviesTagsConnection', nodes: Array<{ __typename?: 'MoviesTag', name: string }> }, moviesMovieGenres: { __typename?: 'MoviesMovieGenresConnection', nodes: Array<{ __typename?: 'MoviesMovieGenre', movieGenres?: { __typename?: 'MovieGenre', title: string } | null }> }, moviesCasts: { __typename?: 'MoviesCastsConnection', nodes: Array<{ __typename?: 'MoviesCast', name: string }> }, moviesDirectors: { __typename?: 'MoviesDirectorsConnection', nodes: Array<{ __typename?: 'MoviesDirector', name: string }> }, moviesProductionCountries: { __typename?: 'MoviesProductionCountriesConnection', nodes: Array<{ __typename?: 'MoviesProductionCountry', name: string }> }, moviesTrailers: { __typename?: 'MoviesTrailersConnection', totalCount: number }, moviesImages: { __typename?: 'MoviesImagesConnection', nodes: Array<{ __typename?: 'MoviesImage', imageType: MovieImageType, imageId: any }> } } | null, movieGenres?: { __typename?: 'MovieGenresConnection', nodes: Array<{ __typename?: 'MovieGenre', title: string, id: number }> } | null, ageRatings?: { __typename?: 'AgeRatingsConnection', nodes: Array<{ __typename?: 'AgeRating', name: string, id: any }> } | null, contentOwners?: { __typename?: 'ContentOwnersConnection', nodes: Array<{ __typename?: 'ContentOwner', name: string, id: any }> } | null };
 
 export type DeleteMovieMutationVariables = Exact<{
   input: DeleteMovieInput;
@@ -21544,7 +21569,7 @@ export type SeasonQueryVariables = Exact<{
 }>;
 
 
-export type SeasonQuery = { __typename?: 'Query', season?: { __typename?: 'Season', index: number, title: string, synopsis?: string | null, description?: string | null, externalId?: string | null, publishingId?: string | null, rating?: any | null, ageRating?: string | null, contentOwner?: string | null, extendedField?: string | null, assetSubtype: AssetSubtype, studio?: string | null, released?: any | null, id: number, createdDate: any, createdUser: string, updatedDate: any, updatedUser: string, publishStatus: PublishStatus, publishedDate?: any | null, publishedUser?: string | null, seasonsTags: { __typename?: 'SeasonsTagsConnection', nodes: Array<{ __typename?: 'SeasonsTag', name: string }> }, seasonsDirectors: { __typename?: 'SeasonsDirectorsConnection', nodes: Array<{ __typename?: 'SeasonsDirector', name: string }> }, seasonsTvshowGenres: { __typename?: 'SeasonsTvshowGenresConnection', nodes: Array<{ __typename?: 'SeasonsTvshowGenre', tvshowGenres?: { __typename?: 'TvshowGenre', title: string } | null }> }, seasonsCasts: { __typename?: 'SeasonsCastsConnection', nodes: Array<{ __typename?: 'SeasonsCast', name: string }> }, seasonsProductionCountries: { __typename?: 'SeasonsProductionCountriesConnection', nodes: Array<{ __typename?: 'SeasonsProductionCountry', name: string }> }, episodes: { __typename?: 'EpisodesConnection', totalCount: number }, seasonsTrailers: { __typename?: 'SeasonsTrailersConnection', totalCount: number }, seasonsImages: { __typename?: 'SeasonsImagesConnection', nodes: Array<{ __typename?: 'SeasonsImage', imageType: SeasonImageType, imageId: any }> }, tvshow?: { __typename?: 'Tvshow', id: number, title: string, tvshowsImages: { __typename?: 'TvshowsImagesConnection', nodes: Array<{ __typename?: 'TvshowsImage', imageId: any }> } } | null } | null, tvshowGenres?: { __typename?: 'TvshowGenresConnection', nodes: Array<{ __typename?: 'TvshowGenre', title: string, id: number }> } | null, ageRatings?: { __typename?: 'AgeRatingsConnection', nodes: Array<{ __typename?: 'AgeRating', name: string, id: any }> } | null, contentOwners?: { __typename?: 'ContentOwnersConnection', nodes: Array<{ __typename?: 'ContentOwner', name: string, id: any }> } | null };
+export type SeasonQuery = { __typename?: 'Query', season?: { __typename?: 'Season', index: number, title: string, synopsis?: string | null, description?: string | null, externalId?: string | null, publishingId?: string | null, rating?: any | null, ageRating?: string | null, contentOwner?: string | null, extendedField?: string | null, assetSubtype: AssetSubtype, studio?: string | null, released?: any | null, id: number, createdDate: any, createdUser: string, updatedDate: any, updatedUser: string, publishStatus: PublishStatus, publishedDate?: any | null, publishedUser?: string | null, seasonsLicenses: { __typename?: 'SeasonsLicensesConnection', nodes: Array<{ __typename?: 'SeasonsLicense', licenseEnd?: any | null }> }, seasonsTags: { __typename?: 'SeasonsTagsConnection', nodes: Array<{ __typename?: 'SeasonsTag', name: string }> }, seasonsDirectors: { __typename?: 'SeasonsDirectorsConnection', nodes: Array<{ __typename?: 'SeasonsDirector', name: string }> }, seasonsTvshowGenres: { __typename?: 'SeasonsTvshowGenresConnection', nodes: Array<{ __typename?: 'SeasonsTvshowGenre', tvshowGenres?: { __typename?: 'TvshowGenre', title: string } | null }> }, seasonsCasts: { __typename?: 'SeasonsCastsConnection', nodes: Array<{ __typename?: 'SeasonsCast', name: string }> }, seasonsProductionCountries: { __typename?: 'SeasonsProductionCountriesConnection', nodes: Array<{ __typename?: 'SeasonsProductionCountry', name: string }> }, episodes: { __typename?: 'EpisodesConnection', totalCount: number }, seasonsTrailers: { __typename?: 'SeasonsTrailersConnection', totalCount: number }, seasonsImages: { __typename?: 'SeasonsImagesConnection', nodes: Array<{ __typename?: 'SeasonsImage', imageType: SeasonImageType, imageId: any }> }, tvshow?: { __typename?: 'Tvshow', id: number, title: string, tvshowsImages: { __typename?: 'TvshowsImagesConnection', nodes: Array<{ __typename?: 'TvshowsImage', imageId: any }> } } | null } | null, tvshowGenres?: { __typename?: 'TvshowGenresConnection', nodes: Array<{ __typename?: 'TvshowGenre', title: string, id: number }> } | null, ageRatings?: { __typename?: 'AgeRatingsConnection', nodes: Array<{ __typename?: 'AgeRating', name: string, id: any }> } | null, contentOwners?: { __typename?: 'ContentOwnersConnection', nodes: Array<{ __typename?: 'ContentOwner', name: string, id: any }> } | null };
 
 export type DeleteSeasonMutationVariables = Exact<{
   input: DeleteSeasonInput;
@@ -21731,7 +21756,7 @@ export type TvShowQueryVariables = Exact<{
 }>;
 
 
-export type TvShowQuery = { __typename?: 'Query', tvshow?: { __typename?: 'Tvshow', title: string, originalTitle?: string | null, synopsis?: string | null, description?: string | null, externalId?: string | null, publishingId?: string | null, ageRating?: string | null, businessType: BusinessType, contentOwner?: string | null, rating?: any | null, extendedField?: string | null, assetSubtype: AssetSubtype, studio?: string | null, released?: any | null, id: number, createdDate: any, createdUser: string, updatedDate: any, updatedUser: string, publishStatus: PublishStatus, publishedDate?: any | null, publishedUser?: string | null, tvshowsTags: { __typename?: 'TvshowsTagsConnection', nodes: Array<{ __typename?: 'TvshowsTag', name: string }> }, tvshowsTvshowGenres: { __typename?: 'TvshowsTvshowGenresConnection', nodes: Array<{ __typename?: 'TvshowsTvshowGenre', tvshowGenres?: { __typename?: 'TvshowGenre', title: string } | null }> }, tvshowsCasts: { __typename?: 'TvshowsCastsConnection', nodes: Array<{ __typename?: 'TvshowsCast', name: string }> }, tvshowsProductionCountries: { __typename?: 'TvshowsProductionCountriesConnection', nodes: Array<{ __typename?: 'TvshowsProductionCountry', name: string }> }, tvshowsDirectors: { __typename?: 'TvshowsDirectorsConnection', nodes: Array<{ __typename?: 'TvshowsDirector', name: string }> }, seasons: { __typename?: 'SeasonsConnection', totalCount: number }, tvshowsImages: { __typename?: 'TvshowsImagesConnection', nodes: Array<{ __typename?: 'TvshowsImage', imageType: TvshowImageType, imageId: any }> }, tvshowsTrailers: { __typename?: 'TvshowsTrailersConnection', totalCount: number } } | null, tvshowGenres?: { __typename?: 'TvshowGenresConnection', nodes: Array<{ __typename?: 'TvshowGenre', title: string, id: number }> } | null, ageRatings?: { __typename?: 'AgeRatingsConnection', nodes: Array<{ __typename?: 'AgeRating', name: string, id: any }> } | null, contentOwners?: { __typename?: 'ContentOwnersConnection', nodes: Array<{ __typename?: 'ContentOwner', name: string, id: any }> } | null, languages?: { __typename?: 'LanguagesConnection', nodes: Array<{ __typename?: 'Language', code: string, title: string }> } | null };
+export type TvShowQuery = { __typename?: 'Query', tvshow?: { __typename?: 'Tvshow', title: string, originalTitle?: string | null, synopsis?: string | null, description?: string | null, externalId?: string | null, publishingId?: string | null, ageRating?: string | null, businessType: BusinessType, contentOwner?: string | null, rating?: any | null, extendedField?: string | null, assetSubtype: AssetSubtype, studio?: string | null, released?: any | null, id: number, createdDate: any, createdUser: string, updatedDate: any, updatedUser: string, publishStatus: PublishStatus, publishedDate?: any | null, publishedUser?: string | null, tvshowsLicenses: { __typename?: 'TvshowsLicensesConnection', nodes: Array<{ __typename?: 'TvshowsLicense', licenseEnd?: any | null }> }, tvshowsTags: { __typename?: 'TvshowsTagsConnection', nodes: Array<{ __typename?: 'TvshowsTag', name: string }> }, tvshowsTvshowGenres: { __typename?: 'TvshowsTvshowGenresConnection', nodes: Array<{ __typename?: 'TvshowsTvshowGenre', tvshowGenres?: { __typename?: 'TvshowGenre', title: string } | null }> }, tvshowsCasts: { __typename?: 'TvshowsCastsConnection', nodes: Array<{ __typename?: 'TvshowsCast', name: string }> }, tvshowsProductionCountries: { __typename?: 'TvshowsProductionCountriesConnection', nodes: Array<{ __typename?: 'TvshowsProductionCountry', name: string }> }, tvshowsDirectors: { __typename?: 'TvshowsDirectorsConnection', nodes: Array<{ __typename?: 'TvshowsDirector', name: string }> }, seasons: { __typename?: 'SeasonsConnection', totalCount: number }, tvshowsImages: { __typename?: 'TvshowsImagesConnection', nodes: Array<{ __typename?: 'TvshowsImage', imageType: TvshowImageType, imageId: any }> }, tvshowsTrailers: { __typename?: 'TvshowsTrailersConnection', totalCount: number } } | null, tvshowGenres?: { __typename?: 'TvshowGenresConnection', nodes: Array<{ __typename?: 'TvshowGenre', title: string, id: number }> } | null, ageRatings?: { __typename?: 'AgeRatingsConnection', nodes: Array<{ __typename?: 'AgeRating', name: string, id: any }> } | null, contentOwners?: { __typename?: 'ContentOwnersConnection', nodes: Array<{ __typename?: 'ContentOwner', name: string, id: any }> } | null, languages?: { __typename?: 'LanguagesConnection', nodes: Array<{ __typename?: 'Language', code: string, title: string }> } | null };
 
 export type DeleteTvShowMutationVariables = Exact<{
   input: DeleteTvshowInput;
@@ -22624,6 +22649,11 @@ export const CollectionRelatedEntitiesDocument = gql`
               imageId
             }
           }
+          entityLicenses: moviesLicenses {
+            nodes {
+              licenseEnd
+            }
+          }
         }
         tvshow {
           entityId: id
@@ -22634,6 +22664,11 @@ export const CollectionRelatedEntitiesDocument = gql`
               imageId
             }
           }
+          entityLicenses: tvshowsLicenses {
+            nodes {
+              licenseEnd
+            }
+          }
         }
         episode {
           entityId: id
@@ -22642,6 +22677,11 @@ export const CollectionRelatedEntitiesDocument = gql`
           entityImages: episodesImages {
             nodes {
               imageId
+            }
+          }
+          entityLicenses: episodesLicenses {
+            nodes {
+              licenseEnd
             }
           }
         }
@@ -23305,6 +23345,11 @@ export const EpisodeDocument = gql`
     rating
     extendedField
     assetSubtype
+    episodesLicenses {
+      nodes {
+        licenseEnd
+      }
+    }
     episodesTags {
       nodes {
         name
@@ -24976,6 +25021,11 @@ export const MovieDocument = gql`
     rating
     extendedField
     assetSubtype
+    moviesLicenses {
+      nodes {
+        licenseEnd
+      }
+    }
     moviesTags {
       nodes {
         name
@@ -26603,6 +26653,11 @@ export const SeasonDocument = gql`
     contentOwner
     extendedField
     assetSubtype
+    seasonsLicenses {
+      nodes {
+        licenseEnd
+      }
+    }
     seasonsTags {
       nodes {
         name
@@ -27690,6 +27745,11 @@ export const TvShowDocument = gql`
     rating
     extendedField
     assetSubtype
+    tvshowsLicenses {
+      nodes {
+        licenseEnd
+      }
+    }
     tvshowsTags {
       nodes {
         name

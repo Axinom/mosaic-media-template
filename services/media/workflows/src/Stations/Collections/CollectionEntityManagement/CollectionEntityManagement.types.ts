@@ -8,7 +8,11 @@ export type CollectionRelatedEntity = (
   | CollectionRelatedTvShow
   | CollectionRelatedEpisode
   | CollectionRelatedCollection
-) & { sortOrder: number; id?: number };
+) & {
+  sortOrder: number;
+  id?: number;
+  entityLicenses?: { nodes: { licenseEnd?: string | null }[] };
+};
 
 export type CollectionRelatedMovie = CollectionRelation['movie'] & {
   entityType: EntityType.Movie;

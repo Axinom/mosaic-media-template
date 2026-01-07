@@ -11,6 +11,11 @@ query Season($id: Int!) {
     contentOwner
     extendedField
     assetSubtype
+    seasonsLicenses {
+      nodes {
+        licenseEnd
+      }
+    }
     seasonsTags {
       nodes {
         name

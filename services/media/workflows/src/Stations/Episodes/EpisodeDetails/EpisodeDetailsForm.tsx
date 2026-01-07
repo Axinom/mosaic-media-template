@@ -55,6 +55,7 @@ import {
   useEpisodeQuery,
 } from '../../../generated/graphql';
 import { CountryNames } from '../../../Util/CountryNames/CountryNames';
+import { getLicenseWarningMessage } from '../../../Util/LicenseDateSchema/LicenseDateSchema';
 import { getEnumLabel } from '../../../Util/StringEnumMapper/StringEnumMapper';
 import { useEpisodeDetailsActions } from './EpisodeDetails.actions';
 import classes from './EpisodeDetails.module.scss';
@@ -140,6 +141,12 @@ export const EpisodeDetailsForm: React.FC<EpisodeDetailsFormProps> = ({
   );
 
   const { actions } = useEpisodeDetailsActions(episodeId);
+
+  const licenseWarningMessage = useMemo(
+    () =>
+      getLicenseWarningMessage(data?.episode?.episodesLicenses?.nodes || []),
+    [data?.episode?.episodesLicenses?.nodes],
+  );
 
   const onSubmit = useCallback(
     async (
@@ -306,6 +313,11 @@ export const EpisodeDetailsForm: React.FC<EpisodeDetailsFormProps> = ({
       }}
       saveData={onSubmit}
       infoPanel={<Panel />}
+      stationMessage={
+        licenseWarningMessage
+          ? { type: 'warning', title: licenseWarningMessage }
+          : undefined
+      }
     >
       <Form
         genreOptions={Object.keys(allGenres)}
@@ -374,7 +386,9 @@ const Panel: React.FC = () => {
     return (
       <InfoPanel>
         <Section>
-          <ImageCover id={cover1x1ImageId ??  cover16x9ImageId ?? coverImageId} />
+          <ImageCover
+            id={cover1x1ImageId ?? cover16x9ImageId ?? coverImageId}
+          />
         </Section>
         <Section title="Additional Information">
           <Paragraph title="Subtype">
@@ -389,7 +403,9 @@ const Panel: React.FC = () => {
           <Paragraph title="Publishing Status">
             {getEnumLabel(values.publishStatus)}
           </Paragraph>
-          {values.publishStatus !== PublishStatus.NotPublished ? (<Paragraph title="Publishing ID">{values.publishingId}</Paragraph>) : null}
+          {values.publishStatus !== PublishStatus.NotPublished ? (
+            <Paragraph title="Publishing ID">{values.publishingId}</Paragraph>
+          ) : null}
           {values.publishedDate ? (
             <Paragraph title="Last Published">
               {formatDateTime(values.publishedDate)} by {values.publishedUser}
@@ -515,7 +531,7 @@ const Form: React.FC<{
   contentOwnerOptions?: selectOption[];
 }> = ({ genreOptions, ageRatingOptions, contentOwnerOptions }) => {
   const { initialValues } = useFormikContext<EpisodeDetailsFormData>();
-  
+
   const tagsResolver = async (value: string): Promise<(string | null)[]> => {
     const { data } = await client.query<
       SearchEpisodeTagsQuery,
@@ -556,12 +572,12 @@ const Form: React.FC<{
   return (
     <>
       <Field name="title" label="Title" as={SingleLineTextField} />
-      <Field name="originalTitle" label="Original Title" as={SingleLineTextField} />
       <Field
-        name="synopsis"
-        label="Synopsis"
+        name="originalTitle"
+        label="Original Title"
         as={SingleLineTextField}
       />
+      <Field name="synopsis" label="Synopsis" as={SingleLineTextField} />
       <Field name="description" label="Description" as={TextAreaField} />
       <Field
         name="externalId"

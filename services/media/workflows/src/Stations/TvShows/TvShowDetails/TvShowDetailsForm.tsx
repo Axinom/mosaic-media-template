@@ -54,6 +54,7 @@ import {
   useTvShowQuery,
 } from '../../../generated/graphql';
 import { CountryNames } from '../../../Util/CountryNames/CountryNames';
+import { getLicenseWarningMessage } from '../../../Util/LicenseDateSchema/LicenseDateSchema';
 import { getEnumLabel } from '../../../Util/StringEnumMapper/StringEnumMapper';
 import { useTvShowDetailsActions } from './TvShowDetails.actions';
 import classes from './TvShowDetails.module.scss';
@@ -136,6 +137,11 @@ export const TvShowDetailsForm: React.FC<TvShowDetailsProps> = ({
   );
 
   const { actions } = useTvShowDetailsActions(tvshowId);
+
+  const licenseWarningMessage = useMemo(
+    () => getLicenseWarningMessage(data?.tvshow?.tvshowsLicenses?.nodes || []),
+    [data?.tvshow?.tvshowsLicenses?.nodes],
+  );
 
   const onSubmit = useCallback(
     async (
@@ -299,6 +305,11 @@ export const TvShowDetailsForm: React.FC<TvShowDetailsProps> = ({
       }}
       saveData={onSubmit}
       infoPanel={<Panel />}
+      stationMessage={
+        licenseWarningMessage
+          ? { type: 'warning', title: licenseWarningMessage }
+          : undefined
+      }
     >
       <Form
         genreOptions={Object.keys(allGenres)}
@@ -315,7 +326,7 @@ const Panel: React.FC = () => {
 
   return useMemo(() => {
     let coverImageId: ID;
-    let cover1x1ImageId: ID;    
+    let cover1x1ImageId: ID;
     let cover16x9ImageId: ID;
     let coverImageCount = 0;
     let cover1x1ImageCount = 0;
@@ -341,18 +352,18 @@ const Panel: React.FC = () => {
           cover16x9ImageCount++;
           cover16x9ImageId = imageId;
           break;
-          case TvshowImageType.TvshowCleanCover:
-            cleanCoverImageCount++;
-            break;
+        case TvshowImageType.TvshowCleanCover:
+          cleanCoverImageCount++;
+          break;
         case TvshowImageType.TvshowCleanCover_1X1:
           cleanCover1x1ImageCount++;
           break;
         case TvshowImageType.TvshowCleanCover_16X9:
           cleanCover16x9ImageCount++;
           break;
-          case TvshowImageType.TvshowList:
-            listImageCount++;
-            break;
+        case TvshowImageType.TvshowList:
+          listImageCount++;
+          break;
         case TvshowImageType.TvshowList_1X1:
           list1x1ImageCount++;
           break;
@@ -367,7 +378,9 @@ const Panel: React.FC = () => {
     return (
       <InfoPanel>
         <Section>
-          <ImageCover id={cover1x1ImageId ?? cover16x9ImageId ?? coverImageId} />
+          <ImageCover
+            id={cover1x1ImageId ?? cover16x9ImageId ?? coverImageId}
+          />
         </Section>
         <Section title="Additional Information">
           <Paragraph title="Subtype">
@@ -382,12 +395,14 @@ const Panel: React.FC = () => {
           <Paragraph title="Publishing Status">
             {getEnumLabel(values.publishStatus)}
           </Paragraph>
-          {values.publishStatus !== PublishStatus.NotPublished ? (<Paragraph title="Publishing ID">{values.publishingId}</Paragraph>) : null}
+          {values.publishStatus !== PublishStatus.NotPublished ? (
+            <Paragraph title="Publishing ID">{values.publishingId}</Paragraph>
+          ) : null}
           {values.publishedDate ? (
             <Paragraph title="Last Published">
               {formatDateTime(values.publishedDate)} by {values.publishedUser}
             </Paragraph>
-          ) : null}          
+          ) : null}
         </Section>
         <Section title="Assignments">
           <Paragraph title="Assigned items">
@@ -468,10 +483,10 @@ const Panel: React.FC = () => {
     values.assetSubtype,
     values.createdDate,
     values.createdUser,
-    values.id,
     values.publishStatus,
     values.publishedDate,
     values.publishedUser,
+    values.publishingId,
     values.seasons?.totalCount,
     values.tvshowsImages?.nodes,
     values.tvshowsTrailers?.totalCount,

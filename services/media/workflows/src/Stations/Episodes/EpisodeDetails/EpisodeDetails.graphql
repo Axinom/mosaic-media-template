@@ -12,6 +12,11 @@ query Episode($id: Int!) {
     rating
     extendedField
     assetSubtype
+    episodesLicenses {
+      nodes {
+        licenseEnd
+      }
+    }
     episodesTags {
       nodes {
         name

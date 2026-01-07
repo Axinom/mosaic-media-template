@@ -11,6 +11,11 @@ query CollectionRelatedEntities($id: Int!) {
               imageId
             }
           }
+          entityLicenses: moviesLicenses {
+            nodes {
+              licenseEnd
+            }
+          }
         }
 
         tvshow {
@@ -22,6 +27,11 @@ query CollectionRelatedEntities($id: Int!) {
               imageId
             }
           }
+          entityLicenses: tvshowsLicenses {
+            nodes {
+              licenseEnd
+            }
+          }
         }
 
         episode {
@@ -31,6 +41,11 @@ query CollectionRelatedEntities($id: Int!) {
           entityImages: episodesImages {
             nodes {
               imageId
+            }
+          }
+          entityLicenses: episodesLicenses {
+            nodes {
+              licenseEnd
             }
           }
         }

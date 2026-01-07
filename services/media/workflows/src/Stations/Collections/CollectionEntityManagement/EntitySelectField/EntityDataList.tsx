@@ -53,6 +53,11 @@ export const EntityDataList: React.FC<EntityDataListProps> = ({
         propertyName: 'entityType',
         render: StringEnumRenderer,
       },
+      {
+        label: 'Has Expired License',
+        propertyName: 'entityLicenses',
+        render: HasExpiredLicenseRenderer,
+      },
     ],
     [],
   );
@@ -123,4 +128,25 @@ const TitleRenderer = (val: unknown): ReactNode => {
   }
 
   return String(val);
+};
+
+const HasExpiredLicenseRenderer = (val: unknown): ReactNode => {
+  if (!val) {
+    return <div>No</div>;
+  }
+  const currentDate = new Date();
+  let licenses: { licenseEnd?: string | null }[] = [];
+
+  licenses = (val as { nodes: { licenseEnd?: string | null }[] }).nodes || [];
+
+  // Check if any license is expired
+  const hasExpiredLicense = licenses.some((license) => {
+    if (!license.licenseEnd) {
+      return false;
+    }
+    const licenseEndDate = new Date(license.licenseEnd);
+    return licenseEndDate < currentDate;
+  });
+
+  return <div>{hasExpiredLicense ? 'Yes' : 'No'}</div>;
 };

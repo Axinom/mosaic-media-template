@@ -22,6 +22,7 @@ export const useAddOptions: UseAddOptionsResult = (
               onActionClicked({
                 entityType: EntityType.Movie,
                 entityImages: item.moviesImages,
+                entityLicenses: item.moviesLicenses,
                 publishStatus: item.publishStatus,
                 title: item.title,
                 sortOrder: 1,
@@ -45,6 +46,7 @@ export const useAddOptions: UseAddOptionsResult = (
               onActionClicked({
                 entityType: EntityType.Tvshow,
                 entityImages: item.tvshowsImages,
+                entityLicenses: item.tvshowsLicenses,
                 publishStatus: item.publishStatus,
                 title: item.title,
                 sortOrder: 1,
@@ -68,6 +70,7 @@ export const useAddOptions: UseAddOptionsResult = (
               onActionClicked({
                 entityType: EntityType.Episode,
                 entityImages: item.episodesImages,
+                entityLicenses: item.episodesLicenses,
                 publishStatus: item.publishStatus,
                 title: item.title,
                 sortOrder: 1,

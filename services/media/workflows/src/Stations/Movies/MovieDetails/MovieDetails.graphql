@@ -12,6 +12,11 @@ query Movie($id: Int!) {
     rating
     extendedField
     assetSubtype
+    moviesLicenses {
+      nodes {
+        licenseEnd
+      }
+    }
     moviesTags {
       nodes {
         name
