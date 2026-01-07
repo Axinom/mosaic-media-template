@@ -7,7 +7,6 @@ import {
   IconName,
   NavigationExplorer,
   SelectionExplorer,
-  sortToPostGraphileOrderBy,
 } from '@axinom/mosaic-ui';
 import React from 'react';
 import { useHistory } from 'react-router-dom';
@@ -61,10 +60,7 @@ export const MovieExplorer: React.FC<MovieExplorerProps> = (props) => {
     },
     { label: 'Title', propertyName: 'title', size: '2fr' },
     { label: 'Subtype', propertyName: '__typename', size: '1fr' },
-    { label: 'Published',
-      propertyName: 'publishedDate',
-      render: DateRenderer 
-    },
+    { label: 'Published', propertyName: 'publishedDate', render: DateRenderer },
     {
       label: 'Last Modified',
       propertyName: 'updatedDate',
@@ -76,7 +72,7 @@ export const MovieExplorer: React.FC<MovieExplorerProps> = (props) => {
 
   // Data provider
   const dataProvider: ExplorerDataProvider<MovieData> = {
-    loadData: async ({ pagingInformation, sorting, filters }) => {
+    loadData: async ({ pagingInformation, filters }) => {
       let filterWithExclusions = filters;
 
       if (props.excludeItems) {
@@ -87,7 +83,7 @@ export const MovieExplorer: React.FC<MovieExplorerProps> = (props) => {
         query: MoviesDocument,
         variables: {
           filter: transformFilters(filterWithExclusions, props.excludeItems),
-          orderBy: sortToPostGraphileOrderBy(sorting, MoviesOrderBy),
+          orderBy: MoviesOrderBy.PublishedDateAsc,
           after: pagingInformation,
         },
         fetchPolicy: 'network-only',

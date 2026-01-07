@@ -1,4 +1,7 @@
-import { createThumbnailAndStateRenderer, ThumbnailResolver } from '@axinom/mosaic-managed-workflow-integration';
+import {
+  createThumbnailAndStateRenderer,
+  ThumbnailResolver,
+} from '@axinom/mosaic-managed-workflow-integration';
 import {
   ActionData,
   Column,
@@ -7,7 +10,6 @@ import {
   IconName,
   NavigationExplorer,
   SelectionExplorer,
-  sortToPostGraphileOrderBy,
 } from '@axinom/mosaic-ui';
 import React from 'react';
 import { useHistory } from 'react-router-dom';
@@ -59,7 +61,9 @@ export const CollectionsExplorer: React.FC<CollectionExplorerProps> = (
 
   const thumbnailResolver: ThumbnailResolver<CollectionData> = (data) => {
     if (data.collectionsImages?.nodes.length) {
-      let coverImageId: string | undefined, cover1x1ImageId: string | undefined, cover4x1ImageId: string | undefined;
+      let coverImageId: string | undefined,
+        cover1x1ImageId: string | undefined,
+        cover4x1ImageId: string | undefined;
       data.collectionsImages.nodes.forEach((image) => {
         if (image.imageType === 'COLLECTION_COVER') {
           coverImageId = image.imageId;
@@ -82,7 +86,7 @@ export const CollectionsExplorer: React.FC<CollectionExplorerProps> = (
       render: createThumbnailAndStateRenderer(
         thumbnailResolver,
         PublishStatusStateMap,
-        'uuid'
+        'uuid',
       ),
       size: '80px',
     },
@@ -99,7 +103,7 @@ export const CollectionsExplorer: React.FC<CollectionExplorerProps> = (
 
   // Data provider
   const dataProvider: ExplorerDataProvider<CollectionData> = {
-    loadData: async ({ pagingInformation, sorting, filters }) => {
+    loadData: async ({ pagingInformation, filters }) => {
       let filterWithExclusions = filters;
 
       if (props.excludeItems) {
@@ -113,7 +117,7 @@ export const CollectionsExplorer: React.FC<CollectionExplorerProps> = (
         query: CollectionsDocument,
         variables: {
           filter: transformFilters(filterWithExclusions, props.excludeItems),
-          orderBy: sortToPostGraphileOrderBy(sorting, CollectionsOrderBy),
+          orderBy: CollectionsOrderBy.PublishedDateAsc,
           after: pagingInformation,
         },
         fetchPolicy: 'network-only',

@@ -8,7 +8,6 @@ import {
   IconName,
   NavigationExplorer,
   SelectionExplorer,
-  sortToPostGraphileOrderBy,
 } from '@axinom/mosaic-ui';
 import React from 'react';
 import { useHistory } from 'react-router-dom';
@@ -83,10 +82,7 @@ export const EpisodeExplorer: React.FC<EpisodeExplorerProps> = (props) => {
         },
       ),
     },
-    { label: 'Published',
-      propertyName: 'publishedDate',
-      render: DateRenderer 
-    },
+    { label: 'Published', propertyName: 'publishedDate', render: DateRenderer },
     { label: 'Created At', propertyName: 'createdDate', render: DateRenderer },
     {
       label: 'Last Modified At',
@@ -97,7 +93,7 @@ export const EpisodeExplorer: React.FC<EpisodeExplorerProps> = (props) => {
 
   // Data provider
   const dataProvider: ExplorerDataProvider<EpisodeData> = {
-    loadData: async ({ pagingInformation, sorting, filters }) => {
+    loadData: async ({ pagingInformation, filters }) => {
       let filterWithExclusions = filters;
 
       if (props.excludeItems) {
@@ -108,7 +104,7 @@ export const EpisodeExplorer: React.FC<EpisodeExplorerProps> = (props) => {
         query: EpisodesDocument,
         variables: {
           filter: transformFilters(filterWithExclusions, props.excludeItems),
-          orderBy: sortToPostGraphileOrderBy(sorting, EpisodesOrderBy),
+          orderBy: EpisodesOrderBy.PublishedDateAsc,
           after: pagingInformation,
         },
         fetchPolicy: 'network-only',

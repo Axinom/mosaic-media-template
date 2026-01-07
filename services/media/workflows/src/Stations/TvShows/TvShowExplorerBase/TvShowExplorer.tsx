@@ -7,7 +7,6 @@ import {
   IconName,
   NavigationExplorer,
   SelectionExplorer,
-  sortToPostGraphileOrderBy,
 } from '@axinom/mosaic-ui';
 import React from 'react';
 import { useHistory } from 'react-router-dom';
@@ -67,10 +66,7 @@ export const TvShowExplorer: React.FC<TvShowExplorerProps> = (props) => {
       size: '1fr',
       render: SubTypeRenderer,
     },
-    { label: 'Published',
-      propertyName: 'publishedDate',
-      render: DateRenderer 
-    },
+    { label: 'Published', propertyName: 'publishedDate', render: DateRenderer },
     {
       label: 'Last Modified',
       propertyName: 'updatedDate',
@@ -82,7 +78,7 @@ export const TvShowExplorer: React.FC<TvShowExplorerProps> = (props) => {
 
   // Data provider
   const dataProvider: ExplorerDataProvider<TvShowData> = {
-    loadData: async ({ pagingInformation, sorting, filters }) => {
+    loadData: async ({ pagingInformation, filters }) => {
       let filterWithExclusions = filters;
 
       if (props.excludeItems) {
@@ -93,7 +89,7 @@ export const TvShowExplorer: React.FC<TvShowExplorerProps> = (props) => {
         query: TvShowsDocument,
         variables: {
           filter: transformFilters(filterWithExclusions, props.excludeItems),
-          orderBy: sortToPostGraphileOrderBy(sorting, TvshowsOrderBy),
+          orderBy: TvshowsOrderBy.PublishedDateAsc,
           after: pagingInformation,
         },
         fetchPolicy: 'network-only',
