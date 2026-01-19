@@ -267,12 +267,14 @@ const Panel: React.FC = () => {
           <Paragraph title="Publishing Status">
             {getEnumLabel(values.publishStatus)}
           </Paragraph>
-          {values.publishStatus !== PublishStatus.NotPublished ? (<Paragraph title="Publishing ID">{values.publishingId}</Paragraph>) : null}
+          {values.publishStatus !== PublishStatus.NotPublished ? (
+            <Paragraph title="Publishing ID">{values.publishingId}</Paragraph>
+          ) : null}
           {values.publishedDate ? (
             <Paragraph title="Published">
               {formatDateTime(values.publishedDate)} by {values.publishedUser}
             </Paragraph>
-          ) : null}         
+          ) : null}
         </Section>
         <Section title="Assigned Items">
           <Paragraph title="Entities">
@@ -334,9 +336,7 @@ const Panel: React.FC = () => {
             </div>
             <div className={classes.datalist}>
               <div>List</div>
-              <div className={classes.rightAlignment}>
-                {listImageCount} / 1
-              </div>
+              <div className={classes.rightAlignment}>{listImageCount} / 1</div>
             </div>
             <div className={classes.datalist}>
               <div>List 1x1</div>
@@ -409,7 +409,12 @@ const Form: React.FC<{
       <Field
         name="countries"
         label="Country"
-        tagsOptions={countryOptions}
+        tagsOptions={countryOptions?.map((country) => {
+          return {
+            display: country,
+            value: country,
+          };
+        })}
         as={TagsField}
         displayKey="display"
         valueKey="value"

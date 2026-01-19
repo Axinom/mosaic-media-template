@@ -4,13 +4,10 @@ import {
   setupLoginPgPool,
   setupOwnerPgPool,
 } from '@axinom/mosaic-db-common';
-import { IdGuardErrors } from '@axinom/mosaic-id-guard';
 import {
   closeHttpServer,
   handleGlobalErrors,
-  isServiceAvailable,
   Logger,
-  MosaicError,
   MosaicErrors,
   setupGlobalConsoleOverride,
   setupGlobalLogMiddleware,
@@ -42,11 +39,6 @@ async function bootstrap(): Promise<void> {
   setupGlobalLogMiddleware([tenantEnvironmentIdsLogMiddleware(config)]);
 
   const { readiness } = setupLivenessAndReadiness(config);
-
-  // Check ID service is available
-  if (!(await isServiceAvailable(config.idServiceAuthBaseUrl))) {
-    throw new MosaicError(IdGuardErrors.IdentityServiceNotAccessible);
-  }
 
   // Register service health endpoint
   setupServiceHealthEndpoint(app);

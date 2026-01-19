@@ -1,6 +1,5 @@
 import { Logger } from '@axinom/mosaic-service-common';
 import { TypedTransactionalMessage } from '@axinom/mosaic-transactional-inbox-outbox';
-import EdgeGrid from 'akamai-edgegrid';
 import {
   CatalogServiceMessagingSettings,
   EntityPublishSuccessEvent,
@@ -22,42 +21,11 @@ export class EntityPublishSuccessHandler extends MediaGuardedTransactionalInboxM
     );
   }
 
-  purgeCdn = async (contentId: string): Promise<void> => {
-    const purgeObject = {
-      Objects: [`${this.config.akamaiCacheTagPrefix.trim()}${contentId}`],
-    };
-    const eg = new EdgeGrid(
-      this.config.akamaiClientToken,
-      this.config.akamaiClientSecret,
-      this.config.akamaiAccessToken,
-      this.config.akamaiCacheBaseUrl,
-    );
-
-    eg.auth({
-      path: '/ccu/v3/delete/tag/production',
-      method: 'POST',
-      headers: {
-        Accept: 'application/json',
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(purgeObject),
-    });
-
-    eg.send((error) => {
-      if (error) {
-        this.logger.debug({
-          message: `Akamai CDN purge failed with error ${JSON.stringify(
-            error,
-            Object.getOwnPropertyNames(error),
-          )}, {}`,
-        });
-      }
-    });
-  };
-
   override async handleMessage({
     payload,
   }: TypedTransactionalMessage<EntityPublishSuccessEvent>): Promise<void> {
-    await this.purgeCdn(payload.content_id);
+    this.logger.debug({
+      message: `Catalog service successfully processed published asset with ID ${payload.content_id}`,
+    });
   }
 }

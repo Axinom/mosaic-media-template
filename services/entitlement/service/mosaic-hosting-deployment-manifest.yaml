@@ -64,12 +64,6 @@ regularVariables:
   FAIRPLAY_STREAMING_CERTIFICATE_URL: 'https://vtb.axinom.com/FPScert/fairplay.cer'
 
 secureVariables:
-  # Use this section to store any custom environment variables which contain sensitive data.
-
-  # Service Account Variables
-  SERVICE_ACCOUNT_CLIENT_ID: '${__ax_hosted__.sa.client_id.primary}'
-  SERVICE_ACCOUNT_CLIENT_SECRET: '${__ax_hosted__.sa.client_secret.primary}'
-
   # DRM License Communication Key and ID
   DRM_LICENSE_COMMUNICATION_KEY: '#{MOSAIC-DRM-LICENSE-COMMUNICATION-KEY}#'
   DRM_LICENSE_COMMUNICATION_KEY_ID: '#{MOSAIC-DRM-LICENSE-COMMUNICATION-KEY-ID}#'
@@ -90,12 +84,7 @@ secureVariables:
   GEOIP2_BLOB_STORAGE_ACCOUNT: 'fc92815cac35ea297008806d'
   GEOIP2_BLOB_CONTAINER: 'maxmindgeodb'
 
-serviceAccounts:
-  - name: 'primary'
-    permissionStructure:
-      - serviceId: 'ax-monetization-grants-service'
-        permissions:
-          - 'CLAIM_DEFINITIONS_SYNCHRONIZE'
+serviceAccounts: []
 
 pilets:
   # Defines the pilets (i.e. micro-frontends) associated with the service, and the required key-value pairs to run the pilet.

@@ -68,6 +68,9 @@ regularVariables:
   GEOIP2_DATABASE_FILE: 'GeoIP2-City.mmdb'
   GEOIP2_UPDATE_SCHEDULE: '0 0 * * *'
 
+  SERVICE_ACCOUNT_CLIENT_ID: ${__ax_hosted__.sa.client_id.catalog}
+  SERVICE_ACCOUNT_CLIENT_SECRET: ${__ax_hosted__.sa.client_secret.catalog}
+
 secureVariables:
   # GeoIP2 Secure Variables
   GEOIP2_BLOB_SAS_TOKEN: '#{GEOIP2-BLOB-SAS-TOKEN}#'
@@ -82,11 +85,9 @@ serviceAccounts:
   # Defines the service accounts that will be provisioned for this service.
   - name: 'primary'
     permissionStructure:
-      - serviceId: 'media-service'
+      - serviceId: 'ax-id-service'
         permissions:
-          - 'MOVIES_EDIT'
-          - 'TVSHOWS_EDIT'
-          - 'COLLECTIONS_EDIT'
+          - 'ACCESS_TOKENS_GENERATE_LONG_LIVED_TOKEN'
 
 pilets:
   # Defines the pilets (i.e. micro-frontends) associated with the service, and the required key-value pairs to run the pilet.

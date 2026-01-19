@@ -72,14 +72,12 @@ regularVariables:
   LOCALIZATION_SERVICE_BASE_URL: '${__ax_hosted__.svc.ax-localization-service.management_base_url}'
 
   IS_LOCALIZATION_ENABLED: true
-
 secureVariables:
   # Use this section to store any custom environment variables which contain sensitive data.
 
   # Service Account Variables
   SERVICE_ACCOUNT_CLIENT_ID: '${__ax_hosted__.sa.client_id.primary}'
   SERVICE_ACCOUNT_CLIENT_SECRET: '${__ax_hosted__.sa.client_secret.primary}'
-
 serviceAccounts:
   # Defines the service accounts that will be provisioned for this service.
   - name: 'primary'

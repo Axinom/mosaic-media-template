@@ -9,6 +9,10 @@ ARG PACKAGE_BUILD_COMMAND
 FROM node:22.19-alpine AS base
 WORKDIR /checkout
 
+# Setup safe-chain for supply chain security
+RUN npm install -g @aikidosec/safe-chain \
+    && safe-chain setup-ci
+
 ARG PACKAGE_ROOT
 RUN test -n "$PACKAGE_ROOT" || (echo "PACKAGE_ROOT not set" && false)
 

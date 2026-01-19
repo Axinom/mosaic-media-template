@@ -2,7 +2,6 @@
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
 import {
   getBasicConfigDefinitions,
-  getBasicCustomizableConfigDefinitions,
   getBasicDbConfigDefinitions,
   getBasicMetricsEndpointDefinitions,
   getConfigType,
@@ -24,7 +23,9 @@ export const getConfigDefinitions = (
     ...getBasicConfigDefinitions(variables),
     ...getBasicMetricsEndpointDefinitions(variables),
     ...getBasicDbConfigDefinitions(variables),
-    ...getBasicCustomizableConfigDefinitions(variables),
+
+    tenantId: () => env.get('TENANT_ID').required().asString(),
+    environmentId: () => env.get('ENVIRONMENT_ID').required().asString(),
 
     port: () => env.get('PORT').default(10200).asPortNumber(),
 

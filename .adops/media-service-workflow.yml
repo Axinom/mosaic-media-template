@@ -20,11 +20,16 @@ stages:
         steps:
           - task: NodeTool@0
             inputs:
-              versionSpec: '18.x'
+              versionSpec: '20.x'
             displayName: 'Install Node.js'
 
           - script: |
-              ORIGINAL_PKG_VER=`npx -q json -f "$(packageRoot)/package.json" version`
+              npm i -g @aikidosec/safe-chain
+              safe-chain setup-ci
+            displayName: "Install safe chain"
+
+          - script: |
+              ORIGINAL_PKG_VER=$(npx -q json -f "$(packageRoot)/package.json" version | head -n 1)
               NEW_PKG_VER="${ORIGINAL_PKG_VER}-$(tag)"
               echo "##vso[task.setvariable variable=pkgVer]${NEW_PKG_VER}"
 
@@ -53,39 +58,6 @@ stages:
               ArtifactName: 'drop'
               publishLocation: 'Container'
             displayName: Publishing build artifact
-          
-          - task: Bash@3
-            displayName:
-              'Upload pilet to INT environment'
-            inputs:
-              targetType: 'inline'
-              script: |
-                yarn mosaic hosting pilet register -i "$(serviceId)" -p "$(Build.ArtifactStagingDirectory)/media-workflows-$(pkgVer).tgz" -m "https://frontends.service.eu.axinom.net"
-            env:
-              MOSAIC_HOSTING_CLIENT_ID: $(mosaicHostingClientIdInt)
-              MOSAIC_HOSTING_CLIENT_SECRET: $(mosaicHostingClientSecretInt)
-
-          - task: Bash@3
-            displayName:
-              'Upload pilet to PERF environment'
-            inputs:
-              targetType: 'inline'
-              script: |
-                yarn mosaic hosting pilet register -i "$(serviceId)" -p "$(Build.ArtifactStagingDirectory)/media-workflows-$(pkgVer).tgz" -m "https://frontends.service.eu.axinom.net"
-            env:
-              MOSAIC_HOSTING_CLIENT_ID: $(mosaicHostingClientIdPerf)
-              MOSAIC_HOSTING_CLIENT_SECRET: $(mosaicHostingClientSecretPerf)
-
-          - task: Bash@3
-            displayName:
-              'Upload pilet to NFN acceptance environment'
-            inputs:
-              targetType: 'inline'
-              script: |
-                yarn mosaic hosting pilet register -i "$(serviceId)" -p "$(Build.ArtifactStagingDirectory)/media-workflows-$(pkgVer).tgz" -m "https://frontends.service.eu.axinom.net"
-            env:
-              MOSAIC_HOSTING_CLIENT_ID: $(mosaicHostingClientIdNfnAcc)
-              MOSAIC_HOSTING_CLIENT_SECRET: $(mosaicHostingClientSecretNfnAcc)
 
           - task: Bash@3
             displayName:
@@ -108,17 +80,6 @@ stages:
             env:
               MOSAIC_HOSTING_CLIENT_ID: $(mosaicHostingClientIdNfnProd)
               MOSAIC_HOSTING_CLIENT_SECRET: $(mosaicHostingClientSecretNfnProd)
-
-          - task: Bash@3
-            displayName:
-              'Upload pilet to LOV acceptance environment'
-            inputs:
-              targetType: 'inline'
-              script: |
-                yarn mosaic hosting pilet register -i "$(serviceId)" -p "$(Build.ArtifactStagingDirectory)/media-workflows-$(pkgVer).tgz" -m "https://frontends.service.eu.axinom.net"
-            env:
-              MOSAIC_HOSTING_CLIENT_ID: $(mosaicHostingClientIdLovAcc)
-              MOSAIC_HOSTING_CLIENT_SECRET: $(mosaicHostingClientSecretLovAcc)
             
           - task: Bash@3
             displayName:
