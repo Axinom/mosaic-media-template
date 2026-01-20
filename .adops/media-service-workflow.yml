@@ -124,3 +124,18 @@ stages:
             env:
               MOSAIC_HOSTING_CLIENT_ID: $(mosaicHostingClientIdFlxProd)
               MOSAIC_HOSTING_CLIENT_SECRET: $(mosaicHostingClientSecretFlxProd)
+
+          - task: Bash@3
+            displayName: Post build failure
+            name: replyBuildFailureToSlack
+            condition: failed()
+            inputs:
+              targetType: 'inline'
+              workingDirectory: '$(System.DefaultWorkingDirectory)/.adops/scripts'
+              script: |
+                python3 -m pip install xmltodict
+                python3 slack.py \
+                  --token "$(slackApiToken)" --channel-id "$(slackApiChannelId)" --action "build-failed" \
+                  --deployment-name "$(serviceName)" \
+                  --deployment-pipeline-run-id "$(Build.BuildId)" \
+                  --deployment-commit-id "$(Build.SourceVersion)"

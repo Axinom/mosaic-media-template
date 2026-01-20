@@ -50,3 +50,73 @@ stages:
               targetPath: buildNumber.txt
               artifact: drop
             displayName: Publish BuildNumber value as an artifact
+
+          - task: PowerShell@2
+            condition: succeededOrFailed()
+            displayName: Tag build
+            inputs:
+              targetType: 'inline'
+              script: |
+                Write-Host "##vso[build.addbuildtag]scanned"
+
+          - bash: |
+              cp /home/vsts/work/_temp/trivy/trivy-results-*.json .
+              for file in trivy-results-*.json; do
+                mv "$file" $(Build.BuildNumber).json
+              done
+            displayName: Rename files
+            condition: succeededOrFailed()
+            workingDirectory: $(Build.ArtifactStagingDirectory)
+
+          - task: DownloadPipelineArtifact@2
+            continueOnError: true
+            inputs:
+              buildType: 'specific'
+              project: $(System.TeamProject)
+              definition: $(System.DefinitionId)
+              buildVersionToDownload: 'latestFromBranch'
+              branchName: 'refs/heads/master'
+              tags: scanned
+              targetPath: '$(Pipeline.Workspace)/trivy_drop'
+              allowPartiallySucceededBuilds: true
+
+          - task: Bash@3
+            displayName: Reply to Slack Thread
+            name: replySlack
+            condition: succeeded()
+            inputs:
+              targetType: 'inline'
+              workingDirectory: '$(System.DefaultWorkingDirectory)/.adops/scripts'
+              script: |
+                result=""
+                prev_scan_result=$(ls $(Pipeline.Workspace)/trivy_drop/trivy_drop)
+                echo "Previous scan file: $prev_scan_result"
+                python3 -m pip install xmltodict
+                result=$(python3 parse_scan_results.py --scan-result-file "$(Build.ArtifactStagingDirectory)/$(Build.BuildNumber).json" --previous-scan-result-file="$(Pipeline.Workspace)/trivy_drop/trivy_drop/$prev_scan_result")
+                echo "$result"
+                python3 slack.py \
+                  --token "$(slackApiToken)" --channel-id "$(slackApiChannelId)" --action "create" \
+                  --deployment-name "$(serviceName)" \
+                  --deployment-pipeline-run-id "$(Build.BuildId)" \
+                  --deployment-commit-id "$(Build.SourceVersion)" \
+                  --additional-message "$result"
+
+          - publish: '$(Build.ArtifactStagingDirectory)/$(Build.BuildNumber).json'
+            displayName: 'Publish Scan results'
+            artifact: trivy_drop
+            condition: succeededOrFailed()
+
+          - task: Bash@3
+            displayName: Post build failure
+            name: replyBuildFailureToSlack
+            condition: failed()
+            inputs:
+              targetType: 'inline'
+              workingDirectory: '$(System.DefaultWorkingDirectory)/.adops/scripts'
+              script: |
+                python3 -m pip install xmltodict
+                python3 slack.py \
+                  --token "$(slackApiToken)" --channel-id "$(slackApiChannelId)" --action "build-failed" \
+                  --deployment-name "$(serviceName)" \
+                  --deployment-pipeline-run-id "$(Build.BuildId)" \
+                  --deployment-commit-id "$(Build.SourceVersion)"
