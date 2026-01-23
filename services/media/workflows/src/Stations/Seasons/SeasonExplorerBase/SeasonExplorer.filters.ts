@@ -12,16 +12,16 @@ import {
   SeasonFilter,
   SeasonsCastsFilterOptionsQuery,
   SeasonsCastsOrderBy,
-  SeasonsGenresFilterOptionsQuery,
   SeasonsProductionCountriesFilterOptionsQuery,
   SeasonsProductionCountriesOrderBy,
   SeasonsTagsFilterOptionsQuery,
   SeasonsTagsOrderBy,
-  SeasonsTvshowGenresOrderBy,
+  TvShowGenresFilterOptionsQuery,
+  TvshowGenresOrderBy,
   useSeasonsCastsFilterOptionsQuery,
-  useSeasonsGenresFilterOptionsQuery,
   useSeasonsProductionCountriesFilterOptionsQuery,
   useSeasonsTagsFilterOptionsQuery,
+  useTvShowGenresFilterOptionsQuery,
 } from '../../../generated/graphql';
 import {
   createDateRangeFilters,
@@ -166,18 +166,16 @@ export function useSeasonsFilters(): {
 const fetchPolicy = 'network-only';
 
 function useSeasonFilterData(): {
-  genres: NonNullable<
-    SeasonsGenresFilterOptionsQuery['seasonsTvshowGenres']
-  >['nodes'][number]['tvshowGenres'][];
+  genres: NonNullable<TvShowGenresFilterOptionsQuery['tvshowGenres']>['nodes'];
   tags: NonNullable<SeasonsTagsFilterOptionsQuery['seasonsTags']>['nodes'];
   casts: NonNullable<SeasonsCastsFilterOptionsQuery['seasonsCasts']>['nodes'];
   countries: NonNullable<
     SeasonsProductionCountriesFilterOptionsQuery['seasonsProductionCountries']
   >['nodes'];
 } {
-  const genres = useSeasonsGenresFilterOptionsQuery({
+  const genres = useTvShowGenresFilterOptionsQuery({
     client,
-    variables: { orderBy: [SeasonsTvshowGenresOrderBy.Natural] },
+    variables: { orderBy: [TvshowGenresOrderBy.SortOrderAsc] },
     fetchPolicy,
   });
 
@@ -200,10 +198,7 @@ function useSeasonFilterData(): {
   });
 
   return {
-    genres:
-      genres.data?.seasonsTvshowGenres?.nodes
-        ?.map((node) => node.tvshowGenres)
-        .filter(Boolean) ?? [],
+    genres: genres.data?.tvshowGenres?.nodes ?? [],
     tags: tags.data?.seasonsTags?.nodes ?? [],
     casts: casts.data?.seasonsCasts?.nodes ?? [],
     countries: countries.data?.seasonsProductionCountries?.nodes ?? [],

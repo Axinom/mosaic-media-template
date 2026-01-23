@@ -177,7 +177,7 @@ function useMovieFilterData(): {
 } {
   const genres = useMovieGenresFilterOptionsQuery({
     client,
-    variables: { orderBy: [MovieGenresOrderBy.TitleAsc] },
+    variables: { orderBy: [MovieGenresOrderBy.SortOrderAsc] },
     fetchPolicy,
   });
 

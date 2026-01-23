@@ -131,7 +131,8 @@ export function useTvShowsFilters(): {
       studio: 'includesInsensitive',
       publishStatus: 'in',
       id: (value) => {
-        if (typeof value === 'number') {          return {
+        if (typeof value === 'number') {
+          return {
             equalTo: value,
             notIn: excludeItems,
           };
@@ -162,7 +163,7 @@ function useTvShowFilterData(): {
 } {
   const genres = useTvShowGenresFilterOptionsQuery({
     client,
-    variables: { orderBy: [TvshowGenresOrderBy.TitleAsc] },
+    variables: { orderBy: [TvshowGenresOrderBy.SortOrderAsc] },
     fetchPolicy,
   });
 
