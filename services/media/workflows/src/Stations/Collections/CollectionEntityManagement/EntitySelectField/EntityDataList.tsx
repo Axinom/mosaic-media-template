@@ -56,7 +56,8 @@ export const EntityDataList: React.FC<EntityDataListProps> = ({
       {
         label: 'Has Expired License',
         propertyName: 'entityLicenses',
-        render: HasExpiredLicenseRenderer,
+        render: (val: unknown, entity: CollectionRelatedEntity) =>
+          HasExpiredLicenseRenderer(val, entity.entityType),
       },
     ],
     [],
@@ -130,7 +131,15 @@ const TitleRenderer = (val: unknown): ReactNode => {
   return String(val);
 };
 
-const HasExpiredLicenseRenderer = (val: unknown): ReactNode => {
+const HasExpiredLicenseRenderer = (
+  val: unknown,
+  entityType: EntityType,
+): ReactNode => {
+  // Collections don't have licenses
+  if (entityType === EntityType.Collection) {
+    return <div>N/A</div>;
+  }
+
   if (!val) {
     return <div>No</div>;
   }

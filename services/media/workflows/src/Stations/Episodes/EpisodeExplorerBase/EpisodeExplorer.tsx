@@ -8,6 +8,7 @@ import {
   IconName,
   NavigationExplorer,
   SelectionExplorer,
+  sortToPostGraphileOrderBy,
 } from '@axinom/mosaic-ui';
 import React from 'react';
 import { useHistory } from 'react-router-dom';
@@ -93,7 +94,7 @@ export const EpisodeExplorer: React.FC<EpisodeExplorerProps> = (props) => {
 
   // Data provider
   const dataProvider: ExplorerDataProvider<EpisodeData> = {
-    loadData: async ({ pagingInformation, filters }) => {
+    loadData: async ({ pagingInformation, sorting, filters }) => {
       let filterWithExclusions = filters;
 
       if (props.excludeItems) {
@@ -104,7 +105,7 @@ export const EpisodeExplorer: React.FC<EpisodeExplorerProps> = (props) => {
         query: EpisodesDocument,
         variables: {
           filter: transformFilters(filterWithExclusions, props.excludeItems),
-          orderBy: EpisodesOrderBy.PublishedDateAsc,
+          orderBy: sortToPostGraphileOrderBy(sorting, EpisodesOrderBy),
           after: pagingInformation,
         },
         fetchPolicy: 'network-only',

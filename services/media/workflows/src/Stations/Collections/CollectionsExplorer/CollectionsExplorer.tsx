@@ -10,6 +10,7 @@ import {
   IconName,
   NavigationExplorer,
   SelectionExplorer,
+  sortToPostGraphileOrderBy,
 } from '@axinom/mosaic-ui';
 import React from 'react';
 import { useHistory } from 'react-router-dom';
@@ -103,7 +104,7 @@ export const CollectionsExplorer: React.FC<CollectionExplorerProps> = (
 
   // Data provider
   const dataProvider: ExplorerDataProvider<CollectionData> = {
-    loadData: async ({ pagingInformation, filters }) => {
+    loadData: async ({ pagingInformation, sorting, filters }) => {
       let filterWithExclusions = filters;
 
       if (props.excludeItems) {
@@ -117,7 +118,7 @@ export const CollectionsExplorer: React.FC<CollectionExplorerProps> = (
         query: CollectionsDocument,
         variables: {
           filter: transformFilters(filterWithExclusions, props.excludeItems),
-          orderBy: CollectionsOrderBy.PublishedDateAsc,
+          orderBy: sortToPostGraphileOrderBy(sorting, CollectionsOrderBy),
           after: pagingInformation,
         },
         fetchPolicy: 'network-only',
