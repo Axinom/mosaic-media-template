@@ -1,8 +1,6 @@
 import { MessagingSettings } from '@axinom/mosaic-message-bus-abstractions';
 
-export class LocalizableChannelDbMessagingSettings
-  implements MessagingSettings
-{
+export class LocalizableChannelDbMessagingSettings implements MessagingSettings {
   public static LocalizableChannelCreated =
     new LocalizableChannelDbMessagingSettings(
       'LocalizableChannelCreated',

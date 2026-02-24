@@ -131,10 +131,10 @@ describe('Check Finish Ingest Document Handler', () => {
 
       assertNotFalsy(doc);
 
-      expect(doc.in_progress_count).toEqual(2);
-      expect(doc.error_count).toEqual(0);
-      expect(doc.success_count).toEqual(0);
-      expect(doc.status).toEqual('IN_PROGRESS');
+      expect(doc.in_progress_count).toBe(2);
+      expect(doc.error_count).toBe(0);
+      expect(doc.success_count).toBe(0);
+      expect(doc.status).toBe('IN_PROGRESS');
       expect(doc.errors).toEqual([]);
       expect(messages).toIncludeSameMembers([
         {
@@ -170,10 +170,10 @@ describe('Check Finish Ingest Document Handler', () => {
 
         assertNotFalsy(doc);
 
-        expect(doc.in_progress_count).toEqual(2);
-        expect(doc.error_count).toEqual(0);
-        expect(doc.success_count).toEqual(0);
-        expect(doc.status).toEqual('IN_PROGRESS');
+        expect(doc.in_progress_count).toBe(2);
+        expect(doc.error_count).toBe(0);
+        expect(doc.success_count).toBe(0);
+        expect(doc.status).toBe('IN_PROGRESS');
         expect(doc.errors).toEqual([]);
         expect(messages).toIncludeSameMembers([
           {
@@ -209,10 +209,10 @@ describe('Check Finish Ingest Document Handler', () => {
 
       assertNotFalsy(doc);
 
-      expect(doc.in_progress_count).toEqual(2);
-      expect(doc.error_count).toEqual(0);
-      expect(doc.success_count).toEqual(0);
-      expect(doc.status).toEqual('ERROR');
+      expect(doc.in_progress_count).toBe(2);
+      expect(doc.error_count).toBe(0);
+      expect(doc.success_count).toBe(0);
+      expect(doc.status).toBe('ERROR');
       expect(doc.errors).toEqual([
         {
           message:
@@ -255,10 +255,10 @@ describe('Check Finish Ingest Document Handler', () => {
 
         assertNotFalsy(doc);
 
-        expect(doc.in_progress_count).toEqual(1);
+        expect(doc.in_progress_count).toBe(1);
         expect(doc.error_count).toEqual(errorCount);
         expect(doc.success_count).toEqual(successCount);
-        expect(doc.status).toEqual('IN_PROGRESS');
+        expect(doc.status).toBe('IN_PROGRESS');
         expect(doc.errors).toEqual([]);
         expect(messages).toIncludeSameMembers([
           {
@@ -316,7 +316,7 @@ describe('Check Finish Ingest Document Handler', () => {
 
         assertNotFalsy(doc);
 
-        expect(doc.in_progress_count).toEqual(0);
+        expect(doc.in_progress_count).toBe(0);
         expect(doc.error_count).toEqual(errorCount);
         expect(doc.success_count).toEqual(successCount);
         expect(doc.status).toEqual(documentResultingStatus);
@@ -381,7 +381,7 @@ describe('Check Finish Ingest Document Handler', () => {
           source: 'CheckFinishIngestDocumentHandler',
         },
       ]);
-      expect(doc?.status).toEqual('ERROR');
+      expect(doc?.status).toBe('ERROR');
     });
   });
 });

@@ -19,15 +19,14 @@ export const getVideoSelectField: (
           const value = (
             event as { currentTarget: { value: string[] } }
           ).currentTarget.value.map((id) => ({ videoId: id }));
-          onChange &&
-            onChange({
-              ...(event as React.ChangeEvent<HTMLInputElement>),
-              currentTarget: {
-                ...(event as React.ChangeEvent<HTMLInputElement>).currentTarget,
-                name: name,
-                value: value,
-              },
-            });
+          onChange?.({
+            ...(event as React.ChangeEvent<HTMLInputElement>),
+            currentTarget: {
+              ...(event as React.ChangeEvent<HTMLInputElement>).currentTarget,
+              name: name,
+              value: value,
+            },
+          });
         }}
         maxItems={maxItems}
       />

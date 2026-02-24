@@ -84,12 +84,10 @@ describe('PlaylistPublishEventHandler', () => {
       const playlist = await selectOne('playlist', {
         id: payload.content_id,
       }).run(ctx.ownerPool);
-      expect(playlist?.start_date_time).toEqual(
+      expect(playlist?.start_date_time).toBe(
         '2024-04-25T08:26:34.018247+00:00',
       );
-      expect(playlist?.end_date_time).toEqual(
-        '2024-04-25T19:34:32.010241+00:00',
-      );
+      expect(playlist?.end_date_time).toBe('2024-04-25T19:34:32.010241+00:00');
     });
   });
 });

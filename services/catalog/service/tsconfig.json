@@ -16,6 +16,7 @@
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
     "sourceMap": true,
+    "skipLibCheck": true,
     "baseUrl": "./",
     "preserveWatchOutput": true
   },

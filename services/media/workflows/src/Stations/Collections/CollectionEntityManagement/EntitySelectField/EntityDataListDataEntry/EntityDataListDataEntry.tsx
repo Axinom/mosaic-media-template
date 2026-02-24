@@ -24,14 +24,13 @@ export const useEntityDataListDataEntry = (
 
     const excludes = useMemo(() => {
       const excludes = {} as Record<string, number[]>;
-      options.excludeItems &&
-        options.excludeItems.forEach((value) => {
-          if (excludes[value.entityType] === undefined) {
-            excludes[value.entityType] = [];
-          }
+      options.excludeItems?.forEach((value) => {
+        if (excludes[value.entityType] === undefined) {
+          excludes[value.entityType] = [];
+        }
 
-          excludes[value.entityType].push(value.entityId);
-        });
+        excludes[value.entityType].push(value.entityId);
+      });
 
       return excludes;
     }, []);

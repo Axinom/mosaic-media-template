@@ -4,7 +4,8 @@ import {
   Subscriptions as S,
 } from '../../generated/graphql/operations';
 
-export enum Sub { // Required to allow requesting these endpoints as child properties. Endpoints are excluded from the root Query via smart tags.
+export enum Sub {
+  // Required to allow requesting these endpoints as child properties. Endpoints are excluded from the root Query via smart tags.
   collectionsSnapshots = 'collectionsSnapshots',
   snapshotValidationResults = 'snapshotValidationResults',
 }

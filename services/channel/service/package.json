@@ -94,7 +94,6 @@
     "@types/pg": "^8.6.5",
     "@types/rascal": "^10.0.6",
     "concurrently": "^6.5.1",
-    "eslint": "^8.35.0",
     "jest": "^29.5.0",
     "jest-auto-stub": "^1.0.8",
     "jest-extended": "^3.1.0",

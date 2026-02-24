@@ -85,7 +85,7 @@ describe('TvshowGenrePublishEventHandler', () => {
         id: contentId,
       }).run(ctx.ownerPool);
 
-      expect(tvshowGenre?.order_no).toEqual(0);
+      expect(tvshowGenre?.order_no).toBe(0);
       const localizations = await select(
         'tvshow_genre_localizations',
         { tvshow_genre_id: message.payload.genres[0].content_id },
@@ -123,7 +123,7 @@ describe('TvshowGenrePublishEventHandler', () => {
       const tvshowGenres = await select('tvshow_genre', all).run(ctx.ownerPool);
 
       expect(tvshowGenres).toHaveLength(1);
-      expect(tvshowGenres[0].order_no).toEqual(0);
+      expect(tvshowGenres[0].order_no).toBe(0);
 
       const localizations = await select('tvshow_genre_localizations', all, {
         columns: ['title', 'locale', 'is_default_locale'],

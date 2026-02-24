@@ -107,17 +107,17 @@ describe('ChannelPublishEventHandler', () => {
           },
         },
       ).run(ctx.ownerPool);
-      expect(channel?.dash_stream_url).toEqual(
+      expect(channel?.dash_stream_url).toBe(
         'https://axinom-test-origin.com/channel-1.isml/.mpd',
       );
-      expect(channel?.hls_stream_url).toEqual(
+      expect(channel?.hls_stream_url).toBe(
         'https://axinom-test-origin.com/channel-1.isml/.m3u8',
       );
       expect(channel?.localizations).toHaveLength(2);
       const germanLocalization = channel?.localizations.find(
         (l) => l.locale === 'de-DE',
       );
-      expect(germanLocalization?.title).toEqual('New German title');
+      expect(germanLocalization?.title).toBe('New German title');
     });
   });
 });

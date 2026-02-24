@@ -154,7 +154,7 @@ describe('MoviePublishEventHandler', () => {
         id: payload.content_id,
       }).run(ctx.ownerPool);
 
-      expect(movie?.original_title).toEqual('Movie title');
+      expect(movie?.original_title).toBe('Movie title');
       const localizations = await select(
         'movie_localizations',
         { movie_id: 'movie-1' },

@@ -42,15 +42,14 @@ export const MovieGenreSelectField: React.FC<
           }),
         );
 
-        onChange &&
-          onChange({
-            ...event,
-            target: {
-              ...event.target,
-              // Typecast to string to satisfy the type system. Actual type is string[]
-              value: value as unknown as string,
-            },
-          });
+        onChange?.({
+          ...event,
+          target: {
+            ...event.target,
+            // Typecast to string to satisfy the type system. Actual type is string[]
+            value: value as unknown as string,
+          },
+        });
       }}
     />
   );

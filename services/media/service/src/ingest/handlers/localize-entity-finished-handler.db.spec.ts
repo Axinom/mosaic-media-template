@@ -113,7 +113,7 @@ describe('LocalizeEntityFinishedHandler', () => {
       const step = await selectOne('ingest_item_steps', {
         id: step1.id,
       }).run(ctx.ownerPool);
-      expect(step?.status).toEqual('SUCCESS');
+      expect(step?.status).toBe('SUCCESS');
     });
   });
 
@@ -178,7 +178,7 @@ describe('LocalizeEntityFinishedHandler', () => {
         id: step1.id,
       }).run(ctx.ownerPool);
       expect(step?.response_message).toEqual(error.message);
-      expect(step?.status).toEqual('ERROR');
+      expect(step?.status).toBe('ERROR');
     });
   });
 });

@@ -1,6 +1,6 @@
 export const PublishValidationSeverity = ['WARNING', 'ERROR'] as const;
 export type PublishValidationSeverityEnum =
-  typeof PublishValidationSeverity[number];
+  (typeof PublishValidationSeverity)[number];
 
 export const PublishValidationContext = [
   'METADATA',
@@ -10,7 +10,7 @@ export const PublishValidationContext = [
 ] as const;
 
 export type PublishValidationContextEnum =
-  typeof PublishValidationContext[number];
+  (typeof PublishValidationContext)[number];
 
 export interface PublishValidationMessage {
   severity: PublishValidationSeverityEnum;

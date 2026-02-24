@@ -153,7 +153,7 @@ describe('unpublishPlaylist', () => {
     expect(message.messageType).toEqual(
       ChannelServiceMessagingSettings.PlaylistUnpublished.messageType,
     );
-    expect(message.message.content_id).toEqual(`playlist-${playlist.id}`);
+    expect(message.message.content_id).toBe(`playlist-${playlist.id}`);
 
     const dbEntry = await testContext.executeOwnerSql(testUser, async (txn) => {
       return selectOne('playlists', { id: playlist.id }).run(txn);

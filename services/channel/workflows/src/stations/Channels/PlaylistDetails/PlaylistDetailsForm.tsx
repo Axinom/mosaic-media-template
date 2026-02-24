@@ -55,7 +55,7 @@ export const PlaylistDetailsForm: React.FC<PlaylistDetailsFormProps> = ({
       formData: PlaylistDetailsFormData,
       initialData: DetailsProps<PlaylistDetailsFormData>['initialData'],
     ): Promise<void> => {
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+       
       const { ...updateDto } = getFormDiff(formData, initialData.data);
       const patch: PlaylistPatch = {
         ...updateDto,

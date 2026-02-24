@@ -80,7 +80,7 @@ describe('inMemoryLocales', () => {
       // Assert
       const locales = exportedForTesting.getInMemoryLocales();
       expect(locales).toEqual([]);
-      expect(localesChanged).toEqual(false);
+      expect(localesChanged).toBe(false);
     });
 
     it('Sync with empty array and filled in-memory locales array -> unchanged in-memory locales array', async () => {
@@ -94,7 +94,7 @@ describe('inMemoryLocales', () => {
       // Assert
       const locales = exportedForTesting.getInMemoryLocales();
       expect(locales).toIncludeSameMembers(expectedLocales);
-      expect(localesChanged).toEqual(false);
+      expect(localesChanged).toBe(false);
     });
 
     it('Sync with single default element and filled in-memory locales array -> updated in-memory locales array and locales rows', async () => {
@@ -114,7 +114,7 @@ describe('inMemoryLocales', () => {
       expect(locales).toEqual(expectedLocales);
       const dbEntries = await select('locales', all).run(ctx.ownerPool);
       expect(dbEntries).toEqual(expectedLocales);
-      expect(localesChanged).toEqual(true);
+      expect(localesChanged).toBe(true);
     });
 
     it('Sync with two locales and filled in-memory locales array -> updated in-memory locales array and locales rows', async () => {
@@ -142,7 +142,7 @@ describe('inMemoryLocales', () => {
       expect(locales).toIncludeSameMembers(expectedLocales);
       const dbEntries = await select('locales', all).run(ctx.ownerPool);
       expect(dbEntries).toIncludeSameMembers(expectedLocales);
-      expect(localesChanged).toEqual(true);
+      expect(localesChanged).toBe(true);
     });
 
     it('Sync with same locales as before, but default locale is switched -> updated in-memory locales array and locales rows', async () => {
@@ -171,7 +171,7 @@ describe('inMemoryLocales', () => {
       expect(locales).toIncludeSameMembers(expectedLocales);
       const dbEntries = await select('locales', all).run(ctx.ownerPool);
       expect(dbEntries).toIncludeSameMembers(expectedLocales);
-      expect(localesChanged).toEqual(true);
+      expect(localesChanged).toBe(true);
     });
 
     it('Sync multiple times in parallel -> update only single time', async () => {

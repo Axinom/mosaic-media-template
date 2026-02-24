@@ -32,7 +32,7 @@ export function register(app: PiletApi): void {
         ]}
         onSelection={(selection) => {
           const items =
-            selection.mode === 'SINGLE_ITEMS' ? selection.items ?? [] : [];
+            selection.mode === 'SINGLE_ITEMS' ? (selection.items ?? []) : [];
           onSelected(
             items.map((e) => ({
               title: e.title,
@@ -74,7 +74,7 @@ export function register(app: PiletApi): void {
         ]}
         onSelection={(selection) => {
           const items =
-            selection.mode === 'SINGLE_ITEMS' ? selection.items ?? [] : [];
+            selection.mode === 'SINGLE_ITEMS' ? (selection.items ?? []) : [];
           onSelected(
             items.map((e) => ({
               title: e.title,

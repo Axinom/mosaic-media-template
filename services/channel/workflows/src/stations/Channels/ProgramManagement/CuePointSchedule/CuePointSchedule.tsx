@@ -1,6 +1,6 @@
 // TODO: Remove these disables
-/* eslint-disable @typescript-eslint/no-unused-vars */
-/* eslint-disable no-console */
+ 
+ 
 import {
   ActionData,
   formatSecondsToTimestamp,
@@ -31,6 +31,7 @@ const typeMap: Record<CuePointScheduleType, { type: string; title: string }> = {
 
 export const CuePointSchedule: React.FC<CuePointScheduleProps> = ({
   id,
+  // eslint-disable-next-line unused-imports/no-unused-vars
   sortIndex,
   type,
   durationInSeconds,
@@ -86,17 +87,19 @@ export const CuePointSchedule: React.FC<CuePointScheduleProps> = ({
     setValue(e.target.value as Timestamp);
 
     // check if input value is a valid Timestamp, if not, change value to null for error handling
-    timestampValidator(e.target.value)
-      ? onChange({
-          type: 'SCHEDULE',
-          action: 'DURATION_UPDATE',
-          data: { duration: timestampToSeconds(e.target.value as Timestamp) },
-        } as ScheduleAction)
-      : onChange({
-          type: 'SCHEDULE',
-          action: 'DURATION_UPDATE',
-          data: { duration: null },
-        } as ScheduleAction);
+    if (timestampValidator(e.target.value)) {
+      onChange({
+        type: 'SCHEDULE',
+        action: 'DURATION_UPDATE',
+        data: { duration: timestampToSeconds(e.target.value as Timestamp) },
+      } as ScheduleAction);
+    } else {
+      onChange({
+        type: 'SCHEDULE',
+        action: 'DURATION_UPDATE',
+        data: { duration: null },
+      } as ScheduleAction);
+    }
   };
 
   return (

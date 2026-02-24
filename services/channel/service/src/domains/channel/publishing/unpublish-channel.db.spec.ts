@@ -127,7 +127,7 @@ describe('unpublishChannel', () => {
       expect(message.messageType).toEqual(
         ChannelServiceMessagingSettings.ChannelUnpublished.messageType,
       );
-      expect(message.message.content_id).toEqual(`channel-${channel.id}`);
+      expect(message.message.content_id).toBe(`channel-${channel.id}`);
 
       return selectOne('channels', { id: channel.id }).run(txn);
     });

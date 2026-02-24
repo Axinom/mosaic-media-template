@@ -55,9 +55,11 @@ export const addCuePointIdsToCuePointsSchedules = (
         // TODO: cue point schedules being dragged to another cue point should update their programCuePointId
         // Just add schedules that already have a programCuePointId assigned
         if (cpsNode.programCuePointId) {
-          cpsNode.type === CuePointScheduleType.AdPod
-            ? adSchedules.push(cpsNode)
-            : videoSchedules.push(cpsNode);
+          if (cpsNode.type === CuePointScheduleType.AdPod) {
+            adSchedules.push(cpsNode);
+          } else {
+            videoSchedules.push(cpsNode);
+          }
         } else {
           for (const { __typename, programCuePoint } of cpResults as CPData[]) {
             // Only map cue point ids if the current program sortIndex matches the returned program sortIndex on the cue point
@@ -124,7 +126,9 @@ const pushScheduleToType = (
     ...cps,
     programCuePointId: programId,
   };
-  cps.type === CuePointScheduleType.AdPod
-    ? adSchedules.push(schedule)
-    : videoSchedules.push(schedule);
+  if (cps.type === CuePointScheduleType.AdPod) {
+    adSchedules.push(schedule);
+  } else {
+    videoSchedules.push(schedule);
+  }
 };

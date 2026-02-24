@@ -52,7 +52,7 @@ export const ChannelDetailsForm: React.FC<ChannelDetailsFormProps> = ({
       formData: ChannelDetailsFormData,
       initialData: DetailsProps<ChannelDetailsFormData>['initialData'],
     ): Promise<void> => {
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+       
       const { ...updateDto } = getFormDiff(formData, initialData.data);
       const patch: ChannelPatch = {
         ...updateDto,

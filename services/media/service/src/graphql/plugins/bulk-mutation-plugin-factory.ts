@@ -257,10 +257,13 @@ export const BulkMutationPluginFactory = (
         // Only keep the "all" queries that have filters and match the tables we specified
         const matchingQueries = Object.keys(fields)
           .filter((k) => queriesWithFilters.includes(k))
-          .reduce((obj, key) => {
-            obj[key] = fields[key];
-            return obj;
-          }, {} as GraphQLFieldConfigMap<never, never>);
+          .reduce(
+            (obj, key) => {
+              obj[key] = fields[key];
+              return obj;
+            },
+            {} as GraphQLFieldConfigMap<never, never>,
+          );
 
         for (const queryName in matchingQueries) {
           const queryField = fields[queryName];

@@ -217,9 +217,7 @@ describe('IngestMovieProcessor', () => {
       );
 
       // Assert
-      expect(error.message).toEqual(
-        'The title can only be 100 characters long.',
-      );
+      expect(error.message).toBe('The title can only be 100 characters long.');
 
       const movies = await select('movies', all, {
         columns: ['id', 'title', 'external_id'],

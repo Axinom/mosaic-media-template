@@ -263,7 +263,7 @@ describe('UpsertLocalizationSourceEntityFinishedHandler', () => {
         id: step1.id,
       }).run(ctx.ownerPool);
       expect(step?.response_message).toEqual(error.message);
-      expect(step?.status).toEqual('ERROR');
+      expect(step?.status).toBe('ERROR');
     });
   });
 });
