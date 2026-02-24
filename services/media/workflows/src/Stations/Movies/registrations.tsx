@@ -4,7 +4,7 @@ import {
 } from '@axinom/mosaic-managed-workflow-integration';
 import { PiletApi } from '@axinom/mosaic-portal';
 import React from 'react';
-import { Extensions, ExtensionsContext } from '../../externals';
+import { Extensions, ExtensionsProvider } from '../../externals';
 import {
   mediaManagementParentName as parentName,
   settingsGroupName,
@@ -99,9 +99,9 @@ export function register(app: PiletApi, extensions: Extensions): void {
   app.registerPage(
     '/movies',
     () => (
-      <ExtensionsContext.Provider value={extensions}>
+      <ExtensionsProvider value={extensions}>
         <Movies />
-      </ExtensionsContext.Provider>
+      </ExtensionsProvider>
     ),
     {
       breadcrumb: () => 'Movies',
@@ -116,9 +116,9 @@ export function register(app: PiletApi, extensions: Extensions): void {
   app.registerPage(
     '/movies/:movieId',
     () => (
-      <ExtensionsContext.Provider value={extensions}>
+      <ExtensionsProvider value={extensions}>
         <MovieDetails />
-      </ExtensionsContext.Provider>
+      </ExtensionsProvider>
     ),
     {
       breadcrumb: MovieDetailsCrumb,
@@ -148,9 +148,9 @@ export function register(app: PiletApi, extensions: Extensions): void {
   app.registerPage(
     '/movies/:movieId/videos',
     () => (
-      <ExtensionsContext.Provider value={extensions}>
+      <ExtensionsProvider value={extensions}>
         <MovieVideoManagement />
-      </ExtensionsContext.Provider>
+      </ExtensionsProvider>
     ),
     {
       breadcrumb: () => 'Video Management',
@@ -161,9 +161,9 @@ export function register(app: PiletApi, extensions: Extensions): void {
   app.registerPage(
     '/movies/:movieId/images',
     () => (
-      <ExtensionsContext.Provider value={extensions}>
+      <ExtensionsProvider value={extensions}>
         <MovieImageManagement />
-      </ExtensionsContext.Provider>
+      </ExtensionsProvider>
     ),
     {
       breadcrumb: () => 'Image Management',

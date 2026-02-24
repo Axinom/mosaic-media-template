@@ -39,15 +39,10 @@ import { CollectionsBulkEdit, CollectionsBulkEditConfig } from './BulkEdit';
 import { useCollectionsActions } from './Collections.actions';
 import { useCollectionsFilters } from './Collections.filters';
 import { CollectionData } from './Collections.types';
-import { PiletApi } from '@axinom/mosaic-portal';
+import { useNotification } from '../../../Util/Notifications/NotificationContext';
 
-interface CollectionProps {
-  showNotification: PiletApi['showNotification'];
-}
-
-export const Collections: React.FC<CollectionProps> = ({
-  showNotification,
-}) => {
+export const Collections: React.FC = () => {
+  const showNotification = useNotification();
   const history = useHistory();
   const { transformFilters, filterOptions } = useCollectionsFilters();
   const { bulkActions } = useCollectionsActions();
@@ -200,7 +195,12 @@ export const Collections: React.FC<CollectionProps> = ({
       {
         label: 'Unpublish',
         onActionSelected: async () => {
-          await unpublishCollectionMutation({ variables: { id } });
+          const response = await unpublishCollectionMutation({
+            variables: { id },
+          });
+          if (!response.data) {
+            return response.errors;
+          }
           showNotification(unpublishNotification());
           history.push('/collections');
         },

@@ -23,12 +23,14 @@ export const ExtensionsContext = React.createContext<Extensions>({
   VideoSelectExplorer: extensionDefaultValue,
 });
 
+export const ExtensionsProvider = ExtensionsContext.Provider;
+
 /**
  * This method is binding all externally shared items (Extensions, Data,...) that the workflows of this Pilet need.
  * The need extensions are directly returned. Other shared functions are initialized and provided through module exports.
  *
  * @param app The PiletApi object.
- * @returns An object containing all external extensions that can be used as value as `ExtensionsContext.Provider` value.
+ * @returns An object containing all external extensions that can be used as value as `ExtensionsProvider` value.
  */
 export const bindExtensions = (app: PiletApi): Extensions => {
   initializeIntegrationLib(app);

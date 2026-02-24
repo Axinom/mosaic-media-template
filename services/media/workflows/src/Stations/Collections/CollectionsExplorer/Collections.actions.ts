@@ -11,12 +11,17 @@ import {
   useBulkPublishCollectionsMutation,
   useBulkUnpublishCollectionsMutation,
 } from '../../../generated/graphql';
+import { bulkPublishNowNotification } from '../../../Util/Notifications/BulkPublishNowNotification';
+import { bulkSnapshotCreateNotification } from '../../../Util/Notifications/BulkSnapshotCreateNotification';
+import { bulkUnpublishNotification } from '../../../Util/Notifications/BulkUnpublishNotification';
+import { useNotification } from '../../../Util/Notifications/NotificationContext';
 import { useCollectionsFilters } from './Collections.filters';
 import { CollectionData } from './Collections.types';
 
 export function useCollectionsActions(): {
   readonly bulkActions: ExplorerBulkAction<CollectionData>[];
 } {
+  const showNotification = useNotification();
   const { transformFilters } = useCollectionsFilters();
 
   const [bulkDeleteCollections] = useBulkDeleteCollectionsMutation({
@@ -43,14 +48,15 @@ export function useCollectionsActions(): {
   const createSnapshotsBulkAction: ExplorerBulkAction<CollectionData> = {
     label: 'Create Snapshot(s)',
     onClick: async (arg?: ItemSelection<CollectionData>) => {
+      let response;
       switch (arg?.mode) {
         case 'SELECT_ALL':
-          await bulkCreateCollectionSnapshots({
+          response = await bulkCreateCollectionSnapshots({
             variables: { filter: transformFilters(arg.filters) },
           });
           break;
         case 'SINGLE_ITEMS':
-          await bulkCreateCollectionSnapshots({
+          response = await bulkCreateCollectionSnapshots({
             variables: {
               filter: {
                 id: { in: arg.items?.map((item) => item.id) },
@@ -59,23 +65,30 @@ export function useCollectionsActions(): {
           });
           break;
       }
+      if (response?.data) {
+        const count =
+          response.data.createCollectionSnapshots?.affectedIds?.length ?? 0;
+        showNotification(bulkSnapshotCreateNotification(count));
+      }
     },
     actionType: PageHeaderActionType.Context,
     icon: IconName.Snapshot,
     reloadData: true,
+    showStartedNotification: false
   };
 
   const publishNowBulkAction: ExplorerBulkAction<CollectionData> = {
     label: 'Publish Now',
     onClick: async (arg?: ItemSelection<CollectionData>) => {
+      let response;
       switch (arg?.mode) {
         case 'SELECT_ALL':
-          await bulkPublishCollections({
+          response = await bulkPublishCollections({
             variables: { filter: transformFilters(arg.filters) },
           });
           break;
         case 'SINGLE_ITEMS':
-          await bulkPublishCollections({
+          response = await bulkPublishCollections({
             variables: {
               filter: {
                 id: { in: arg.items?.map((item) => item.id) },
@@ -83,25 +96,32 @@ export function useCollectionsActions(): {
             },
           });
           break;
+      }
+      if (response?.data) {
+        const count =
+          response.data.publishCollections?.affectedIds?.length ?? 0;
+        showNotification(bulkPublishNowNotification(count));
       }
     },
     actionType: PageHeaderActionType.Context,
     confirmationMode: 'Simple',
     icon: IconName.Publish,
     reloadData: true,
+    showStartedNotification: false
   };
 
   const unpublishNowBulkAction: ExplorerBulkAction<CollectionData> = {
     label: 'Unpublish',
     onClick: async (arg?: ItemSelection<CollectionData>) => {
+      let response;
       switch (arg?.mode) {
         case 'SELECT_ALL':
-          await bulkUnpublishCollections({
+          response = await bulkUnpublishCollections({
             variables: { filter: transformFilters(arg.filters) },
           });
           break;
         case 'SINGLE_ITEMS':
-          await bulkUnpublishCollections({
+          response = await bulkUnpublishCollections({
             variables: {
               filter: {
                 id: { in: arg.items?.map((item) => item.id) },
@@ -110,11 +130,17 @@ export function useCollectionsActions(): {
           });
           break;
       }
+      if (response?.data) {
+        const count =
+          response.data.unpublishCollections?.affectedIds?.length ?? 0;
+        showNotification(bulkUnpublishNotification(count));
+      }
     },
     actionType: PageHeaderActionType.Context,
     confirmationMode: 'Simple',
     icon: IconName.Unpublish,
     reloadData: true,
+    showStartedNotification: false
   };
 
   const deleteBulkAction: ExplorerBulkAction<CollectionData> = {

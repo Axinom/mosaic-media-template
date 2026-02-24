@@ -11,3 +11,5 @@ export const PortalContext = React.createContext<PortalProps>({
     _dynamicRouteSegments?: Record<string, string> | string,
   ): string | undefined => undefined,
 });
+
+export const PortalProvider = PortalContext.Provider;

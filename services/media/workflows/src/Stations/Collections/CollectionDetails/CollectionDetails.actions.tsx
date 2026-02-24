@@ -1,5 +1,4 @@
 import { getLocalizationEntryPoint } from '@axinom/mosaic-managed-workflow-integration';
-import { PiletApi } from '@axinom/mosaic-portal';
 import { ActionData } from '@axinom/mosaic-ui';
 import { useMemo } from 'react';
 import { useHistory } from 'react-router';
@@ -9,16 +8,17 @@ import {
   usePublishCollectionMutation,
   useUnpublishCollectionMutation,
 } from '../../../generated/graphql';
+import { useNotification } from '../../../Util/Notifications/NotificationContext';
 import { publishNowNotification } from '../../../Util/Notifications/PublishNowNotification';
 import { unpublishNotification } from '../../../Util/Notifications/UnpublishNotification';
 
 export function useCollectionDetailsActions(
   id: number,
-  showNotification: PiletApi['showNotification'],
 ): {
   readonly actions: ActionData[];
 } {
   const history = useHistory();
+  const showNotification = useNotification();
   const localizationPath = getLocalizationEntryPoint('collection');
 
   const [deleteCollectionMutation] = useDeleteCollectionMutation({
@@ -85,7 +85,12 @@ export function useCollectionDetailsActions(
         label: 'Unpublish',
         confirmationMode: 'Simple',
         onActionSelected: async () => {
-          await unpublishCollectionMutation({ variables: { id } });
+          const response = await unpublishCollectionMutation({
+            variables: { id },
+          });
+          if (!response.data) {
+            return response.errors;
+          }
           showNotification(unpublishNotification());
         },
       },

@@ -1,6 +1,6 @@
 import { VideoSelectFieldProps } from '@axinom/mosaic-video-workflow-integration';
 import React, { useContext } from 'react';
-import { ExtensionsContext } from '../../externals';
+import { ExtensionsContext } from '../../externals/piralExtensions';
 import { useFormikError } from '@axinom/mosaic-ui';
 
 export const getVideoSelectField: (

@@ -1,7 +1,8 @@
 import { registerLocalizationEntryPoints } from '@axinom/mosaic-managed-workflow-integration';
 import { PiletApi } from '@axinom/mosaic-portal';
 import React from 'react';
-import { Extensions, ExtensionsContext } from '../../externals';
+import { Extensions, ExtensionsProvider } from '../../externals';
+import { NotificationProvider } from '../../Util/Notifications/NotificationContext';
 import { MediaIconName } from '../../MediaIcons';
 import { MediaIcons } from '../../MediaIcons/MediaIcons';
 import { piletConfig } from '../../piletConfig';
@@ -65,9 +66,11 @@ export function register(app: PiletApi, extensions: Extensions): void {
   app.registerPage(
     '/collections',
     () => (
-      <ExtensionsContext.Provider value={extensions}>
-         <Collections showNotification={app.showNotification} />
-      </ExtensionsContext.Provider>
+      <ExtensionsProvider value={extensions}>
+        <NotificationProvider value={app.showNotification}>
+          <Collections />
+        </NotificationProvider>
+      </ExtensionsProvider>
     ),
     {
       breadcrumb: () => 'Collections',
@@ -87,9 +90,11 @@ export function register(app: PiletApi, extensions: Extensions): void {
   app.registerPage(
     '/collections/:collectionId',
     () => (
-      <ExtensionsContext.Provider value={extensions}>
-        <CollectionDetails showNotification={app.showNotification} />
-      </ExtensionsContext.Provider>
+      <ExtensionsProvider value={extensions}>
+        <NotificationProvider value={app.showNotification}>
+          <CollectionDetails />
+        </NotificationProvider>
+      </ExtensionsProvider>
     ),
     {
       breadcrumb: CollectionDetailsCrumb,
@@ -102,9 +107,9 @@ export function register(app: PiletApi, extensions: Extensions): void {
   app.registerPage(
     '/collections/:collectionId/images',
     () => (
-      <ExtensionsContext.Provider value={extensions}>
+      <ExtensionsProvider value={extensions}>
         <CollectionImageManagement />
-      </ExtensionsContext.Provider>
+      </ExtensionsProvider>
     ),
     {
       breadcrumb: () => 'Image Management',
@@ -117,9 +122,9 @@ export function register(app: PiletApi, extensions: Extensions): void {
   app.registerPage(
     '/collections/:collectionId/entities',
     () => (
-      <ExtensionsContext.Provider value={extensions}>
+      <ExtensionsProvider value={extensions}>
         <CollectionEntityManagement />
-      </ExtensionsContext.Provider>
+      </ExtensionsProvider>
     ),
     {
       breadcrumb: () => 'Entity Management',
