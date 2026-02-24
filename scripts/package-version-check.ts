@@ -31,11 +31,7 @@ async function checkPackageVersion(): Promise<void> {
     console.error(error);
   }
 
-  const packageJsonPaths = await new Promise<string[]>((resolve, reject) => {
-    glob(path.join(baseFolder, packageJsonGlob), (error, files) =>
-      error ? reject(error) : resolve(files),
-    );
-  });
+  const packageJsonPaths = await glob(path.join(baseFolder, packageJsonGlob));
 
   for (const packageJsonPath of packageJsonPaths) {
     const packageJson = JSON.parse(fs.readFileSync(packageJsonPath, 'utf-8'));
