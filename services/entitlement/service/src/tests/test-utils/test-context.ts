@@ -57,7 +57,8 @@ const createMockRequest = (overrides: Dict<any>): Request =>
 const createMockResponse = (): Response =>
   ({
     locals: {},
-  } as Response);
+    setHeader: jest.fn(),
+  } as unknown as Response);
 
 const runGqlQuery = async function (
   this: ITestContext,
