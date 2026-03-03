@@ -1,4 +1,4 @@
-import { mockRequest } from 'mock-req-res';
+import { Request } from 'express';
 import {
   DEFAULT_LOCALE_TAG,
   MOSAIC_LOCALE_HEADER_KEY,
@@ -7,13 +7,16 @@ import {
 import { getMosaicLocaleSetting } from './get-mosaic-locale-setting';
 import * as m from './in-memory-locales';
 
+const createMockRequest = (headers: Record<string, unknown>): Request =>
+  ({ headers } as Request);
+
 describe('getMosaicLocaleSetting', () => {
   afterEach(() => {
     jest.clearAllMocks();
   });
   it('No supported locales and no header specified -> setting with selected default returned', async () => {
     // Arrange
-    const req = mockRequest({ headers: {} });
+    const req = createMockRequest({});
 
     // Act
     const setting = getMosaicLocaleSetting(req);
@@ -28,10 +31,8 @@ describe('getMosaicLocaleSetting', () => {
     'No supported locales and any header %p specified --> setting with default locale returned',
     async (value) => {
       // Arrange
-      const req = mockRequest({
-        headers: {
-          [MOSAIC_LOCALE_HEADER_KEY]: value,
-        },
+      const req = createMockRequest({
+        [MOSAIC_LOCALE_HEADER_KEY]: value,
       });
 
       // Act
@@ -52,10 +53,8 @@ describe('getMosaicLocaleSetting', () => {
       m.exportedForTesting.populateInMemoryLocales([
         { locale, is_default: false },
       ]);
-      const req = mockRequest({
-        headers: {
-          [MOSAIC_LOCALE_HEADER_KEY]: header,
-        },
+      const req = createMockRequest({
+        [MOSAIC_LOCALE_HEADER_KEY]: header,
       });
 
       // Act
@@ -76,10 +75,8 @@ describe('getMosaicLocaleSetting', () => {
       { locale: 'bg-BG', is_default: false },
       { locale: selectedLocale, is_default: false },
     ]);
-    const req = mockRequest({
-      headers: {
-        [MOSAIC_LOCALE_HEADER_KEY]: selectedLocale,
-      },
+    const req = createMockRequest({
+      [MOSAIC_LOCALE_HEADER_KEY]: selectedLocale,
     });
 
     // Act
@@ -98,10 +95,8 @@ describe('getMosaicLocaleSetting', () => {
       { locale: 'bg-BG', is_default: false },
       { locale: 'zh-CN', is_default: false },
     ]);
-    const req = mockRequest({
-      headers: {
-        [MOSAIC_LOCALE_HEADER_KEY]: 'zh-TW',
-      },
+    const req = createMockRequest({
+      [MOSAIC_LOCALE_HEADER_KEY]: 'zh-TW',
     });
 
     // Act
@@ -121,10 +116,8 @@ describe('getMosaicLocaleSetting', () => {
       { locale: 'zh-CN', is_default: false },
       { locale: 'en-US', is_default: true },
     ]);
-    const req = mockRequest({
-      headers: {
-        [MOSAIC_LOCALE_HEADER_KEY]: 'zh-TW',
-      },
+    const req = createMockRequest({
+      [MOSAIC_LOCALE_HEADER_KEY]: 'zh-TW',
     });
 
     // Act
