@@ -1,6 +1,7 @@
 import {
   buildPgSettings,
   compareMigrationHashes,
+  Dict,
   LoginPgPool,
   MigrationRecord,
   OwnerPgPool,
@@ -9,9 +10,12 @@ import {
 } from '@axinom/mosaic-db-common';
 import { enhanceGraphqlErrors } from '@axinom/mosaic-graphql-common';
 import {
+  AuthenticatedManagementSubject,
+  ManagementAuthenticationContext,
+} from '@axinom/mosaic-id-guard';
+import {
   customizeGraphQlErrorFields,
-  defaultPgErrorMapper,
-  Dict,
+  defaultWriteLogMapper,
   ensureError,
   GraphQLErrorEnhanced,
   Logger,
@@ -19,11 +23,11 @@ import {
   MosaicError,
   MosaicErrors,
 } from '@axinom/mosaic-service-common';
+import { StoreOutboxMessage } from '@axinom/mosaic-transactional-inbox-outbox';
 import { Request, Response } from 'express';
 import { migrate } from 'graphile-migrate';
 import { DocumentNode, graphql, GraphQLSchema } from 'graphql';
 import { print } from 'graphql/language/printer';
-import { resolve } from 'path';
 import { Pool } from 'pg';
 import {
   createPostGraphileSchema,
@@ -32,12 +36,16 @@ import {
 } from 'postgraphile';
 import { IsolationLevel, truncate, TxnClient } from 'zapatos/db';
 import { Table } from 'zapatos/schema';
-import { catalogLogMapper, Config, getMigrationSettings } from '../../common';
-import { buildPostgraphileOptions } from '../../graphql/postgraphile-options';
+import {
+  Config,
+  customPgErrorMapper,
+  getMigrationSettings,
+} from '../../common';
+import { buildPostgraphileOptions } from '../../graphql';
 import { createTestConfig } from './test-config';
 import { createTestUser } from './test-user';
 
-interface IExecutionResult {
+interface ExecutionResult {
   errors?: readonly GraphQLErrorEnhanced[];
   data?: Dict<any>;
 }
@@ -46,7 +54,7 @@ const createMockRequest = (overrides: Dict<any>): Request =>
   ({
     body: {},
     headers: {},
-    ip: '',
+    socket: {},
     ...overrides,
   } as Request);
 
@@ -56,17 +64,17 @@ const createMockResponse = (): Response =>
   } as Response);
 
 const runGqlQuery = async function (
-  this: ITestContext,
+  this: TestContext,
   query: string | DocumentNode,
   variables: Dict<any> = {},
   requestContext: Dict<any> = {},
-): Promise<IExecutionResult> {
+  operationName = '',
+): Promise<ExecutionResult> {
   const queryString = typeof query === 'string' ? query : print(query);
   const req = createMockRequest({
-    body: { query: queryString },
+    body: { query: queryString, operationName },
     authContext: {},
-    headers: {},
-    ip: '',
+    socket: {},
     ...requestContext,
   });
   const res = createMockResponse();
@@ -99,20 +107,16 @@ const runGqlQuery = async function (
         result.errors = enhanceGraphqlErrors(
           result.errors,
           req.body?.operationName,
-          customizeGraphQlErrorFields(defaultPgErrorMapper),
-          logGraphQlError(catalogLogMapper, undefined, this.logger),
+          customizeGraphQlErrorFields(customPgErrorMapper),
+          logGraphQlError(defaultWriteLogMapper, this.config, this.logger),
         );
       }
       return result;
     },
-  ) as IExecutionResult;
+  ) as ExecutionResult;
 };
-export interface TestRequestContext {
-  headers?: Dict<string>;
-  ip?: string;
-}
 
-export interface ITestContext {
+export interface TestContext {
   ownerPool: OwnerPgPool;
   loginPool: LoginPgPool;
   config: Config;
@@ -125,23 +129,45 @@ export interface ITestContext {
     query: string | DocumentNode,
     variables?: Dict<any>,
     requestContext?: TestRequestContext,
-  ): Promise<IExecutionResult>;
+    operationName?: string,
+  ): Promise<ExecutionResult>;
+  executeGqlSql<T>(
+    user: AuthenticatedManagementSubject,
+    callback: (client: TxnClient<IsolationLevel>) => Promise<T>,
+  ): Promise<T>;
   executeOwnerSql<T>(
+    user: AuthenticatedManagementSubject,
     callback: (client: TxnClient<IsolationLevel>) => Promise<T>,
   ): Promise<T>;
 }
 
+export interface TestRequestContext {
+  authContext: ManagementAuthenticationContext;
+  token?: string;
+}
+
+export const createTestRequestContext = (
+  serviceId: string,
+  subject?: AuthenticatedManagementSubject,
+): TestRequestContext => {
+  return {
+    authContext: {
+      subject: subject ?? createTestUser(serviceId),
+    },
+    token: 'mock_token',
+  };
+};
+
 export const createTestContext = async (
   configOverrides: Dict<string> = {},
-): Promise<ITestContext> => {
-  //This is needed if tests are running from monorepo context instead of project context, e.g. using Jest Runner extension
-  process.chdir(resolve(__dirname, '../../../'));
-
-  //TODO: Check expect.getState().testPath filename for .db.spec. convention, throw an error if it does not match. https://github.com/facebook/jest/issues/9901
+  storeOutboxMsg?: StoreOutboxMessage,
+): Promise<TestContext> => {
+  // TODO: Check expect.getState().testPath filename for .db.spec. convention, throw an error if it does not match. https://github.com/facebook/jest/issues/9901
   const config = createTestConfig(configOverrides, expect.getState().testPath);
 
-  const settings = await getMigrationSettings(config);
   const logger = new Logger({ config, context: 'TestContext' });
+
+  const settings = await getMigrationSettings(config);
   await compareMigrationHashes(
     settings,
     (message: string, mismatchedRecords?: MigrationRecord[]): void => {
@@ -171,7 +197,13 @@ export const createTestContext = async (
   }) as LoginPgPool;
   loginPool.label = 'Login';
 
-  const options = buildPostgraphileOptions(config);
+  const storeOutboxMessage = storeOutboxMsg ?? jest.fn();
+
+  const options = buildPostgraphileOptions(
+    config,
+    ownerPool,
+    storeOutboxMessage,
+  );
 
   const schema = await createPostGraphileSchema(
     loginPool,
@@ -179,14 +211,27 @@ export const createTestContext = async (
     options,
   );
 
-  const executeOwnerSql = async <T>(
+  const executeGqlSql = async <T>(
+    user: AuthenticatedManagementSubject,
     callback: (client: TxnClient<IsolationLevel>) => Promise<T>,
   ): Promise<T> => {
     const pgSettings = buildPgSettings(
-      createTestUser(config.serviceId),
-      config.dbOwner,
+      user,
+      config.dbGqlRole,
       config.serviceId,
     );
+    return transactionWithContext(
+      loginPool,
+      IsolationLevel.Serializable,
+      pgSettings,
+      async (dbContext) => callback(dbContext),
+    );
+  };
+  const executeOwnerSql = async <T>(
+    user: AuthenticatedManagementSubject,
+    callback: (client: TxnClient<IsolationLevel>) => Promise<T>,
+  ): Promise<T> => {
+    const pgSettings = buildPgSettings(user, config.dbOwner, config.serviceId);
     return transactionWithContext(
       ownerPool,
       IsolationLevel.Serializable,
@@ -203,7 +248,6 @@ export const createTestContext = async (
     options,
     schema,
     runGqlQuery,
-    executeOwnerSql,
     truncate: async function (tableName: Table): Promise<void> {
       try {
         await truncate(tableName, 'CASCADE').run(this.ownerPool);
@@ -227,5 +271,8 @@ export const createTestContext = async (
         );
       }
     },
-  } as ITestContext;
+    executeGqlSql,
+    executeOwnerSql,
+    storeOutboxMessage,
+  } as TestContext;
 };
