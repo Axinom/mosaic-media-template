@@ -5,6 +5,7 @@ import {
 import { PiletApi } from '@axinom/mosaic-portal';
 import React from 'react';
 import { Extensions, ExtensionsProvider } from '../../externals';
+import { NotificationProvider } from '../../Util/Notifications/NotificationContext';
 import { MediaIconName, MediaIcons } from '../../MediaIcons';
 import { piletConfig } from '../../piletConfig';
 import { EpisodeCreate } from './EpisodeCreate/EpisodeCreate';
@@ -83,7 +84,9 @@ export function register(app: PiletApi, extensions: Extensions): void {
     '/episodes',
     () => (
       <ExtensionsProvider value={extensions}>
-        <Episodes />
+        <NotificationProvider value={app.showNotification}>
+          <Episodes />
+        </NotificationProvider>
       </ExtensionsProvider>
     ),
     {
@@ -103,7 +106,9 @@ export function register(app: PiletApi, extensions: Extensions): void {
     '/episodes/:episodeId',
     () => (
       <ExtensionsProvider value={extensions}>
-        <EpisodeDetails />
+        <NotificationProvider value={app.showNotification}>
+          <EpisodeDetails />
+        </NotificationProvider>
       </ExtensionsProvider>
     ),
     {

@@ -11,12 +11,17 @@ import {
   useBulkPublishEpisodesMutation,
   useBulkUnpublishEpisodesMutation,
 } from '../../../generated/graphql';
+import { bulkPublishNowNotification } from '../../../Util/Notifications/BulkPublishNowNotification';
+import { bulkSnapshotCreateNotification } from '../../../Util/Notifications/BulkSnapshotCreateNotification';
+import { bulkUnpublishNotification } from '../../../Util/Notifications/BulkUnpublishNotification';
+import { useNotification } from '../../../Util/Notifications/NotificationContext';
 import { useEpisodesFilters } from '../EpisodeExplorerBase/EpisodeExplorer.filters';
 import { EpisodeData } from '../EpisodeExplorerBase/EpisodeExplorer.types';
 
 export function useEpisodesActions(): {
   readonly bulkActions: ExplorerBulkAction<EpisodeData>[];
 } {
+  const showNotification = useNotification();
   const { transformFilters } = useEpisodesFilters();
 
   const [bulkDeleteEpisodes] = useBulkDeleteEpisodesMutation({
@@ -42,14 +47,15 @@ export function useEpisodesActions(): {
   const createSnapshotsBulkAction: ExplorerBulkAction<EpisodeData> = {
     label: 'Create Snapshot(s)',
     onClick: async (arg?: ItemSelection<EpisodeData>) => {
+      let response;
       switch (arg?.mode) {
         case 'SELECT_ALL':
-          await bulkCreateEpisodeSnapshots({
+          response = await bulkCreateEpisodeSnapshots({
             variables: { filter: transformFilters(arg.filters) },
           });
           break;
         case 'SINGLE_ITEMS':
-          await bulkCreateEpisodeSnapshots({
+          response = await bulkCreateEpisodeSnapshots({
             variables: {
               filter: {
                 id: { in: arg.items?.map((item) => item.id) },
@@ -58,23 +64,29 @@ export function useEpisodesActions(): {
           });
           break;
       }
+      if (response?.data) {
+        const count = response.data.createEpisodeSnapshots?.affectedIds?.length ?? 0;
+        showNotification(bulkSnapshotCreateNotification(count));
+      }
     },
     actionType: PageHeaderActionType.Context,
     icon: IconName.Snapshot,
     reloadData: true,
+    showStartedNotification: false,
   };
 
   const publishNowBulkAction: ExplorerBulkAction<EpisodeData> = {
     label: 'Publish Now',
     onClick: async (arg?: ItemSelection<EpisodeData>) => {
+      let response;
       switch (arg?.mode) {
         case 'SELECT_ALL':
-          await bulkPublishEpisodes({
+          response = await bulkPublishEpisodes({
             variables: { filter: transformFilters(arg.filters) },
           });
           break;
         case 'SINGLE_ITEMS':
-          await bulkPublishEpisodes({
+          response = await bulkPublishEpisodes({
             variables: {
               filter: {
                 id: { in: arg.items?.map((item) => item.id) },
@@ -82,25 +94,31 @@ export function useEpisodesActions(): {
             },
           });
           break;
+      }
+      if (response?.data) {
+        const count = response.data.publishEpisodes?.affectedIds?.length ?? 0;
+        showNotification(bulkPublishNowNotification(count));
       }
     },
     actionType: PageHeaderActionType.Context,
     confirmationMode: 'Simple',
     icon: IconName.Publish,
     reloadData: true,
+    showStartedNotification: false,
   };
 
   const unpublishNowBulkAction: ExplorerBulkAction<EpisodeData> = {
     label: 'Unpublish',
     onClick: async (arg?: ItemSelection<EpisodeData>) => {
+      let response;
       switch (arg?.mode) {
         case 'SELECT_ALL':
-          await bulkUnpublishEpisodes({
+          response = await bulkUnpublishEpisodes({
             variables: { filter: transformFilters(arg.filters) },
           });
           break;
         case 'SINGLE_ITEMS':
-          await bulkUnpublishEpisodes({
+          response = await bulkUnpublishEpisodes({
             variables: {
               filter: {
                 id: { in: arg.items?.map((item) => item.id) },
@@ -109,11 +127,16 @@ export function useEpisodesActions(): {
           });
           break;
       }
+      if (response?.data) {
+        const count = response.data.unpublishEpisodes?.affectedIds?.length ?? 0;
+        showNotification(bulkUnpublishNotification(count));
+      }
     },
     actionType: PageHeaderActionType.Context,
     confirmationMode: 'Simple',
     icon: IconName.Unpublish,
     reloadData: true,
+    showStartedNotification: false,
   };
 
   const deleteBulkAction: ExplorerBulkAction<EpisodeData> = {

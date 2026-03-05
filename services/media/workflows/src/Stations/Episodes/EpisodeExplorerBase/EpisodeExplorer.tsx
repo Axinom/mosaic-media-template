@@ -27,6 +27,10 @@ import {
   usePublishEpisodeMutation,
   useUnpublishEpisodeMutation,
 } from '../../../generated/graphql';
+import { useNotification } from '../../../Util/Notifications/NotificationContext';
+import { publishNowNotification } from '../../../Util/Notifications/PublishNowNotification';
+import { snapshotCreateNotification } from '../../../Util/Notifications/SnapshotCreateNotification';
+import { unpublishNotification } from '../../../Util/Notifications/UnpublishNotification';
 import { PublishStatusStateMap } from '../../../Util/PublishStatusStateMap/PublishStatusStateMap';
 import { useEpisodesFilters } from './EpisodeExplorer.filters';
 import { EpisodeData, EpisodeExplorerProps } from './EpisodeExplorer.types';
@@ -34,6 +38,7 @@ import { ExplorerIndexRenderer } from './renderers/ExplorerIndexRenderer';
 import { ExplorerParentRenderer } from './renderers/ExplorerParentRenderer';
 
 export const EpisodeExplorer: React.FC<EpisodeExplorerProps> = (props) => {
+  const showNotification = useNotification();
   const { filterOptions, transformFilters } = useEpisodesFilters();
   const [createEpisodeSnapshotMutation] = useCreateEpisodeSnapshotMutation({
     client,
@@ -157,9 +162,16 @@ export const EpisodeExplorer: React.FC<EpisodeExplorerProps> = (props) => {
       {
         label: 'Create Snapshot',
         onActionSelected: async () => {
-          await createEpisodeSnapshotMutation({
+          const response = await createEpisodeSnapshotMutation({
             variables: { episodeId: id },
           });
+          if (!response.data) return response.errors;
+          showNotification(
+            snapshotCreateNotification({
+              link: `/episodes/${id}/snapshots/${response.data.createEpisodeSnapshot.id}`,
+              snapshotNo: response.data.createEpisodeSnapshot?.snapshotNo,
+            }),
+          );
           history.push('/episodes');
         },
         icon: IconName.Snapshot,
@@ -167,7 +179,14 @@ export const EpisodeExplorer: React.FC<EpisodeExplorerProps> = (props) => {
       {
         label: 'Publish Now',
         onActionSelected: async () => {
-          await publishEpisodeMutation({ variables: { id } });
+          const response = await publishEpisodeMutation({ variables: { id } });
+          if (!response.data) return response.errors;
+          showNotification(
+            publishNowNotification({
+              link: `/episodes/${id}/snapshots/${response.data.publishEpisode.id}`,
+              snapshotNo: response.data.publishEpisode?.snapshotNo,
+            }),
+          );
           history.push('/episodes');
         },
         icon: IconName.Publish,
@@ -176,7 +195,9 @@ export const EpisodeExplorer: React.FC<EpisodeExplorerProps> = (props) => {
       {
         label: 'Unpublish',
         onActionSelected: async () => {
-          await unpublishEpisodeMutation({ variables: { id } });
+          const response = await unpublishEpisodeMutation({ variables: { id } });
+          if (!response.data) return response.errors;
+          showNotification(unpublishNotification());
           history.push('/episodes');
         },
         icon: IconName.Unpublish,

@@ -11,12 +11,17 @@ import {
   useBulkPublishSeasonsMutation,
   useBulkUnpublishSeasonsMutation,
 } from '../../../generated/graphql';
+import { bulkPublishNowNotification } from '../../../Util/Notifications/BulkPublishNowNotification';
+import { bulkSnapshotCreateNotification } from '../../../Util/Notifications/BulkSnapshotCreateNotification';
+import { bulkUnpublishNotification } from '../../../Util/Notifications/BulkUnpublishNotification';
+import { useNotification } from '../../../Util/Notifications/NotificationContext';
 import { useSeasonsFilters } from '../SeasonExplorerBase/SeasonExplorer.filters';
 import { SeasonData } from '../SeasonExplorerBase/SeasonExplorer.types';
 
 export function useSeasonsActions(): {
   readonly bulkActions: ExplorerBulkAction<SeasonData>[];
 } {
+  const showNotification = useNotification();
   const { transformFilters } = useSeasonsFilters();
 
   const [bulkDeleteSeasons] = useBulkDeleteSeasonsMutation({
@@ -42,14 +47,15 @@ export function useSeasonsActions(): {
   const createSnapshotsBulkAction: ExplorerBulkAction<SeasonData> = {
     label: 'Create Snapshot(s)',
     onClick: async (arg?: ItemSelection<SeasonData>) => {
+      let response;
       switch (arg?.mode) {
         case 'SELECT_ALL':
-          await bulkCreateSeasonSnapshots({
+          response = await bulkCreateSeasonSnapshots({
             variables: { filter: transformFilters(arg.filters) },
           });
           break;
         case 'SINGLE_ITEMS':
-          await bulkCreateSeasonSnapshots({
+          response = await bulkCreateSeasonSnapshots({
             variables: {
               filter: {
                 id: { in: arg.items?.map((item) => item.id) },
@@ -58,23 +64,29 @@ export function useSeasonsActions(): {
           });
           break;
       }
+      if (response?.data) {
+        const count = response.data.createSeasonSnapshots?.affectedIds?.length ?? 0;
+        showNotification(bulkSnapshotCreateNotification(count));
+      }
     },
     actionType: PageHeaderActionType.Context,
     icon: IconName.Snapshot,
     reloadData: true,
+    showStartedNotification: false,
   };
 
   const publishNowBulkAction: ExplorerBulkAction<SeasonData> = {
     label: 'Publish Now',
     onClick: async (arg?: ItemSelection<SeasonData>) => {
+      let response;
       switch (arg?.mode) {
         case 'SELECT_ALL':
-          await bulkPublishSeasons({
+          response = await bulkPublishSeasons({
             variables: { filter: transformFilters(arg.filters) },
           });
           break;
         case 'SINGLE_ITEMS':
-          await bulkPublishSeasons({
+          response = await bulkPublishSeasons({
             variables: {
               filter: {
                 id: { in: arg.items?.map((item) => item.id) },
@@ -82,25 +94,31 @@ export function useSeasonsActions(): {
             },
           });
           break;
+      }
+      if (response?.data) {
+        const count = response.data.publishSeasons?.affectedIds?.length ?? 0;
+        showNotification(bulkPublishNowNotification(count));
       }
     },
     actionType: PageHeaderActionType.Context,
     confirmationMode: 'Simple',
     icon: IconName.Publish,
     reloadData: true,
+    showStartedNotification: false,
   };
 
   const unpublishNowBulkAction: ExplorerBulkAction<SeasonData> = {
     label: 'Unpublish',
     onClick: async (arg?: ItemSelection<SeasonData>) => {
+      let response;
       switch (arg?.mode) {
         case 'SELECT_ALL':
-          await bulkUnpublishSeasons({
+          response = await bulkUnpublishSeasons({
             variables: { filter: transformFilters(arg.filters) },
           });
           break;
         case 'SINGLE_ITEMS':
-          await bulkUnpublishSeasons({
+          response = await bulkUnpublishSeasons({
             variables: {
               filter: {
                 id: { in: arg.items?.map((item) => item.id) },
@@ -109,11 +127,16 @@ export function useSeasonsActions(): {
           });
           break;
       }
+      if (response?.data) {
+        const count = response.data.unpublishSeasons?.affectedIds?.length ?? 0;
+        showNotification(bulkUnpublishNotification(count));
+      }
     },
     actionType: PageHeaderActionType.Context,
     confirmationMode: 'Simple',
     icon: IconName.Unpublish,
     reloadData: true,
+    showStartedNotification: false,
   };
 
   const deleteBulkAction: ExplorerBulkAction<SeasonData> = {

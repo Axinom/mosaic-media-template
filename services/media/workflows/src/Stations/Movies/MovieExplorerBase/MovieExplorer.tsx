@@ -28,11 +28,16 @@ import {
   usePublishMovieMutation,
   useUnpublishMovieMutation,
 } from '../../../generated/graphql';
+import { useNotification } from '../../../Util/Notifications/NotificationContext';
+import { publishNowNotification } from '../../../Util/Notifications/PublishNowNotification';
+import { snapshotCreateNotification } from '../../../Util/Notifications/SnapshotCreateNotification';
+import { unpublishNotification } from '../../../Util/Notifications/UnpublishNotification';
 import { PublishStatusStateMap } from '../../../Util/PublishStatusStateMap/PublishStatusStateMap';
 import { useMoviesFilters } from './MovieExplorer.filters';
 import { MovieData, MovieExplorerProps } from './MovieExplorer.types';
 
 export const MovieExplorer: React.FC<MovieExplorerProps> = (props) => {
+  const showNotification = useNotification();
   const { transformFilters, filterOptions } = useMoviesFilters();
   const [createMovieSnapshotMutation] = useCreateMovieSnapshotMutation({
     client,
@@ -152,9 +157,16 @@ export const MovieExplorer: React.FC<MovieExplorerProps> = (props) => {
       {
         label: 'Create Snapshot',
         onActionSelected: async () => {
-          await createMovieSnapshotMutation({
+          const response = await createMovieSnapshotMutation({
             variables: { movieId: id },
           });
+          if (!response.data) return response.errors;
+          showNotification(
+            snapshotCreateNotification({
+              link: `/movies/${id}/snapshots/${response.data.createMovieSnapshot.id}`,
+              snapshotNo: response.data.createMovieSnapshot?.snapshotNo,
+            }),
+          );
           history.push('/movies');
         },
         icon: IconName.Snapshot,
@@ -162,7 +174,14 @@ export const MovieExplorer: React.FC<MovieExplorerProps> = (props) => {
       {
         label: 'Publish Now',
         onActionSelected: async () => {
-          await publishMovieMutation({ variables: { id } });
+          const response = await publishMovieMutation({ variables: { id } });
+          if (!response.data) return response.errors;
+          showNotification(
+            publishNowNotification({
+              link: `/movies/${id}/snapshots/${response.data.publishMovie.id}`,
+              snapshotNo: response.data.publishMovie?.snapshotNo,
+            }),
+          );
           history.push('/movies');
         },
         icon: IconName.Publish,
@@ -171,7 +190,9 @@ export const MovieExplorer: React.FC<MovieExplorerProps> = (props) => {
       {
         label: 'Unpublish',
         onActionSelected: async () => {
-          await unpublishMovieMutation({ variables: { id } });
+          const response = await unpublishMovieMutation({ variables: { id } });
+          if (!response.data) return response.errors;
+          showNotification(unpublishNotification());
           history.push('/movies');
         },
         icon: IconName.Unpublish,

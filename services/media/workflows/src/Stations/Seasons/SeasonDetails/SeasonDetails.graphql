@@ -78,12 +78,14 @@ mutation DeleteSeason($input: DeleteSeasonInput!) {
 mutation PublishSeason($id: Int!) {
   publishSeason(seasonId: $id) {
     id
+    snapshotNo
   }
 }
 
 mutation UnpublishSeason($id: Int!) {
   unpublishSeason(seasonId: $id) {
     id
+    snapshotNo
   }
 }
 

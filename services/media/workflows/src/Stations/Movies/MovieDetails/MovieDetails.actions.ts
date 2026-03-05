@@ -7,12 +7,16 @@ import {
   usePublishMovieMutation,
   useUnpublishMovieMutation,
 } from '../../../generated/graphql';
+import { useNotification } from '../../../Util/Notifications/NotificationContext';
+import { publishNowNotification } from '../../../Util/Notifications/PublishNowNotification';
+import { unpublishNotification } from '../../../Util/Notifications/UnpublishNotification';
 import { MovieDetailsFormData } from './MovieDetails.types';
 
 export function useMovieDetailsActions(id: number): {
   readonly actions: FormActionData<MovieDetailsFormData>[];
 } {
   const history = useHistory();
+  const showNotification = useNotification();
   const localizationPath = getLocalizationEntryPoint('movie');
 
   const [deleteMovieMutation] = useDeleteMovieMutation({
@@ -60,7 +64,14 @@ export function useMovieDetailsActions(id: number): {
       label: 'Publish Now',
       confirmationMode: 'Simple',
       onActionSelected: async () => {
-        await publishMovieMutation({ variables: { id } });
+        const response = await publishMovieMutation({ variables: { id } });
+        if (!response.data) return response.errors;
+        showNotification(
+          publishNowNotification({
+            link: `/movies/${id}/snapshots/${response.data.publishMovie.id}`,
+            snapshotNo: response.data.publishMovie?.snapshotNo,
+          }),
+        );
       },
     },
     {
@@ -71,7 +82,9 @@ export function useMovieDetailsActions(id: number): {
       label: 'Unpublish',
       confirmationMode: 'Simple',
       onActionSelected: async () => {
-        await unpublishMovieMutation({ variables: { id } });
+        const response = await unpublishMovieMutation({ variables: { id } });
+        if (!response.data) return response.errors;
+        showNotification(unpublishNotification());
       },
     },
     {

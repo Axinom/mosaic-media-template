@@ -27,11 +27,16 @@ import {
   usePublishTvShowMutation,
   useUnpublishTvShowMutation,
 } from '../../../generated/graphql';
+import { useNotification } from '../../../Util/Notifications/NotificationContext';
+import { publishNowNotification } from '../../../Util/Notifications/PublishNowNotification';
+import { snapshotCreateNotification } from '../../../Util/Notifications/SnapshotCreateNotification';
+import { unpublishNotification } from '../../../Util/Notifications/UnpublishNotification';
 import { PublishStatusStateMap } from '../../../Util/PublishStatusStateMap/PublishStatusStateMap';
 import { useTvShowsFilters } from './TvShowExplorer.filters';
 import { TvShowData, TvShowExplorerProps } from './TvShowExplorer.types';
 
 export const TvShowExplorer: React.FC<TvShowExplorerProps> = (props) => {
+  const showNotification = useNotification();
   const { transformFilters, filterOptions } = useTvShowsFilters();
   const [createTvShowSnapshotMutation] = useCreateTvShowSnapshotMutation({
     client,
@@ -144,9 +149,16 @@ export const TvShowExplorer: React.FC<TvShowExplorerProps> = (props) => {
       {
         label: 'Create Snapshot',
         onActionSelected: async () => {
-          await createTvShowSnapshotMutation({
+          const response = await createTvShowSnapshotMutation({
             variables: { tvshowId: id },
           });
+          if (!response.data) return response.errors;
+          showNotification(
+            snapshotCreateNotification({
+              link: `/tvshows/${id}/snapshots/${response.data.createTvshowSnapshot.id}`,
+              snapshotNo: response.data.createTvshowSnapshot?.snapshotNo,
+            }),
+          );
           history.push('/tvshows');
         },
         icon: IconName.Snapshot,
@@ -154,7 +166,14 @@ export const TvShowExplorer: React.FC<TvShowExplorerProps> = (props) => {
       {
         label: 'Publish Now',
         onActionSelected: async () => {
-          await publishTvShowMutation({ variables: { id } });
+          const response = await publishTvShowMutation({ variables: { id } });
+          if (!response.data) return response.errors;
+          showNotification(
+            publishNowNotification({
+              link: `/tvshows/${id}/snapshots/${response.data.publishTvshow.id}`,
+              snapshotNo: response.data.publishTvshow?.snapshotNo,
+            }),
+          );
           history.push('/tvshows');
         },
         icon: IconName.Publish,
@@ -163,7 +182,9 @@ export const TvShowExplorer: React.FC<TvShowExplorerProps> = (props) => {
       {
         label: 'Unpublish',
         onActionSelected: async () => {
-          await unpublishTvShowMutation({ variables: { id } });
+          const response = await unpublishTvShowMutation({ variables: { id } });
+          if (!response.data) return response.errors;
+          showNotification(unpublishNotification());
           history.push('/tvshows');
         },
         icon: IconName.Unpublish,

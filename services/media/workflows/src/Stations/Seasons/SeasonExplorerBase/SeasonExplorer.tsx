@@ -27,6 +27,10 @@ import {
   usePublishSeasonMutation,
   useUnpublishSeasonMutation,
 } from '../../../generated/graphql';
+import { useNotification } from '../../../Util/Notifications/NotificationContext';
+import { publishNowNotification } from '../../../Util/Notifications/PublishNowNotification';
+import { snapshotCreateNotification } from '../../../Util/Notifications/SnapshotCreateNotification';
+import { unpublishNotification } from '../../../Util/Notifications/UnpublishNotification';
 import { PublishStatusStateMap } from '../../../Util/PublishStatusStateMap/PublishStatusStateMap';
 import { SeasonIndexRenderer } from './renderers/SeasonIndexRenderer';
 import { SeasonParentRenderer } from './renderers/SeasonParentRenderer';
@@ -34,6 +38,7 @@ import { useSeasonsFilters } from './SeasonExplorer.filters';
 import { SeasonData, SeasonExplorerProps } from './SeasonExplorer.types';
 
 export const SeasonExplorer: React.FC<SeasonExplorerProps> = (props) => {
+  const showNotification = useNotification();
   const { filterOptions, transformFilters } = useSeasonsFilters();
   const [createSeasonSnapshotMutation] = useCreateSeasonSnapshotMutation({
     client,
@@ -154,9 +159,16 @@ export const SeasonExplorer: React.FC<SeasonExplorerProps> = (props) => {
       {
         label: 'Create Snapshot',
         onActionSelected: async () => {
-          await createSeasonSnapshotMutation({
+          const response = await createSeasonSnapshotMutation({
             variables: { seasonId: id },
           });
+          if (!response.data) return response.errors;
+          showNotification(
+            snapshotCreateNotification({
+              link: `/seasons/${id}/snapshots/${response.data.createSeasonSnapshot.id}`,
+              snapshotNo: response.data.createSeasonSnapshot?.snapshotNo,
+            }),
+          );
           history.push('/seasons');
         },
         icon: IconName.Snapshot,
@@ -164,7 +176,14 @@ export const SeasonExplorer: React.FC<SeasonExplorerProps> = (props) => {
       {
         label: 'Publish Now',
         onActionSelected: async () => {
-          await publishSeasonMutation({ variables: { id } });
+          const response = await publishSeasonMutation({ variables: { id } });
+          if (!response.data) return response.errors;
+          showNotification(
+            publishNowNotification({
+              link: `/seasons/${id}/snapshots/${response.data.publishSeason.id}`,
+              snapshotNo: response.data.publishSeason?.snapshotNo,
+            }),
+          );
           history.push('/seasons');
         },
         icon: IconName.Publish,
@@ -173,7 +192,9 @@ export const SeasonExplorer: React.FC<SeasonExplorerProps> = (props) => {
       {
         label: 'Unpublish',
         onActionSelected: async () => {
-          await unpublishSeasonMutation({ variables: { id } });
+          const response = await unpublishSeasonMutation({ variables: { id } });
+          if (!response.data) return response.errors;
+          showNotification(unpublishNotification());
           history.push('/seasons');
         },
         icon: IconName.Unpublish,

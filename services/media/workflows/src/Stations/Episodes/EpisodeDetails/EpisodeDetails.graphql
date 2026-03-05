@@ -90,6 +90,7 @@ mutation DeleteEpisode($input: DeleteEpisodeInput!) {
 mutation PublishEpisode($id: Int!) {
   publishEpisode(episodeId: $id) {
     id
+    snapshotNo
   }
 }
 

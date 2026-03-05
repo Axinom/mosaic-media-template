@@ -11,12 +11,17 @@ import {
   useBulkPublishTvShowsMutation,
   useBulkUnpublishTvShowsMutation,
 } from '../../../generated/graphql';
+import { bulkPublishNowNotification } from '../../../Util/Notifications/BulkPublishNowNotification';
+import { bulkSnapshotCreateNotification } from '../../../Util/Notifications/BulkSnapshotCreateNotification';
+import { bulkUnpublishNotification } from '../../../Util/Notifications/BulkUnpublishNotification';
+import { useNotification } from '../../../Util/Notifications/NotificationContext';
 import { useTvShowsFilters } from '../TvShowExplorerBase/TvShowExplorer.filters';
 import { TvShowData } from '../TvShowExplorerBase/TvShowExplorer.types';
 
 export function useTvShowsActions(): {
   readonly bulkActions: ExplorerBulkAction<TvShowData>[];
 } {
+  const showNotification = useNotification();
   const { transformFilters } = useTvShowsFilters();
 
   const [bulkDeleteTvShows] = useBulkDeleteTvShowsMutation({
@@ -42,14 +47,15 @@ export function useTvShowsActions(): {
   const createSnapshotsBulkAction: ExplorerBulkAction<TvShowData> = {
     label: 'Create Snapshot(s)',
     onClick: async (arg?: ItemSelection<TvShowData>) => {
+      let response;
       switch (arg?.mode) {
         case 'SELECT_ALL':
-          await bulkCreateTvShowSnapshots({
+          response = await bulkCreateTvShowSnapshots({
             variables: { filter: transformFilters(arg.filters) },
           });
           break;
         case 'SINGLE_ITEMS':
-          await bulkCreateTvShowSnapshots({
+          response = await bulkCreateTvShowSnapshots({
             variables: {
               filter: {
                 id: { in: arg.items?.map((item) => item.id) },
@@ -58,23 +64,29 @@ export function useTvShowsActions(): {
           });
           break;
       }
+      if (response?.data) {
+        const count = response.data.createTvShowSnapshots?.affectedIds?.length ?? 0;
+        showNotification(bulkSnapshotCreateNotification(count));
+      }
     },
     actionType: PageHeaderActionType.Context,
     icon: IconName.Snapshot,
     reloadData: true,
+    showStartedNotification: false,
   };
 
   const publishNowBulkAction: ExplorerBulkAction<TvShowData> = {
     label: 'Publish Now',
     onClick: async (arg?: ItemSelection<TvShowData>) => {
+      let response;
       switch (arg?.mode) {
         case 'SELECT_ALL':
-          await bulkPublishTvShows({
+          response = await bulkPublishTvShows({
             variables: { filter: transformFilters(arg.filters) },
           });
           break;
         case 'SINGLE_ITEMS':
-          await bulkPublishTvShows({
+          response = await bulkPublishTvShows({
             variables: {
               filter: {
                 id: { in: arg.items?.map((item) => item.id) },
@@ -82,25 +94,31 @@ export function useTvShowsActions(): {
             },
           });
           break;
+      }
+      if (response?.data) {
+        const count = response.data.publishTvShows?.affectedIds?.length ?? 0;
+        showNotification(bulkPublishNowNotification(count));
       }
     },
     actionType: PageHeaderActionType.Context,
     confirmationMode: 'Simple',
     icon: IconName.Publish,
     reloadData: true,
+    showStartedNotification: false,
   };
 
   const unpublishNowBulkAction: ExplorerBulkAction<TvShowData> = {
     label: 'Unpublish',
     onClick: async (arg?: ItemSelection<TvShowData>) => {
+      let response;
       switch (arg?.mode) {
         case 'SELECT_ALL':
-          await bulkUnpublishTvShows({
+          response = await bulkUnpublishTvShows({
             variables: { filter: transformFilters(arg.filters) },
           });
           break;
         case 'SINGLE_ITEMS':
-          await bulkUnpublishTvShows({
+          response = await bulkUnpublishTvShows({
             variables: {
               filter: {
                 id: { in: arg.items?.map((item) => item.id) },
@@ -109,11 +127,16 @@ export function useTvShowsActions(): {
           });
           break;
       }
+      if (response?.data) {
+        const count = response.data.unpublishTvShows?.affectedIds?.length ?? 0;
+        showNotification(bulkUnpublishNotification(count));
+      }
     },
     actionType: PageHeaderActionType.Context,
     confirmationMode: 'Simple',
     icon: IconName.Unpublish,
     reloadData: true,
+    showStartedNotification: false,
   };
 
   const deleteBulkAction: ExplorerBulkAction<TvShowData> = {
