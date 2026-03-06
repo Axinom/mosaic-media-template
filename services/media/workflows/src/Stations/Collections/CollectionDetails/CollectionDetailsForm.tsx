@@ -265,7 +265,7 @@ function createUpdateDto(
   currentValues: CollectionDetailsFormData,
   initialValues?: CollectionDetailsFormData | null,
 ): CollectionDetailsFormData {
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+   
   const { tags, ...rest } = getFormDiff(currentValues, initialValues);
   return rest;
 }

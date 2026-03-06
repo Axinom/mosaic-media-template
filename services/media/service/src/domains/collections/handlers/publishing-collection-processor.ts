@@ -73,10 +73,10 @@ const collectionDataAggregator: SnapshotDataAggregator = async (
       relation_type: r.movie_id
         ? 'MOVIE'
         : r.tvshow_id
-        ? 'TVSHOW'
-        : r.season_id
-        ? 'SEASON'
-        : 'EPISODE',
+          ? 'TVSHOW'
+          : r.season_id
+            ? 'SEASON'
+            : 'EPISODE',
     })),
     localizations: localizations ?? [
       {

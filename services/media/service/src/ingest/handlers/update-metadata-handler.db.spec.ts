@@ -119,7 +119,7 @@ describe('UpdateMetadataHandler', () => {
       const step = await selectOne('ingest_item_steps', {
         id: step1.id,
       }).run(ctx.ownerPool);
-      expect(step?.status).toEqual('SUCCESS');
+      expect(step?.status).toBe('SUCCESS');
     });
 
     it('message with existing LOCALIZATIONS step succeeded without errors -> step updated and context passed to processor', async () => {
@@ -158,7 +158,7 @@ describe('UpdateMetadataHandler', () => {
       const updatedStep = await selectOne('ingest_item_steps', {
         id: step1.id,
       }).run(ctx.ownerPool);
-      expect(updatedStep?.status).toEqual('SUCCESS');
+      expect(updatedStep?.status).toBe('SUCCESS');
     });
   });
 
@@ -218,7 +218,7 @@ describe('UpdateMetadataHandler', () => {
         id: step1.id,
       }).run(ctx.ownerPool);
       expect(step?.response_message).toEqual(error.message);
-      expect(step?.status).toEqual('ERROR');
+      expect(step?.status).toBe('ERROR');
     });
     it('message for metadata with localizations failed on all retries -> both Localizations and Metadata steps updated', async () => {
       // Arrange
@@ -253,16 +253,16 @@ describe('UpdateMetadataHandler', () => {
         id: step1.id,
       }).run(ctx.ownerPool);
       expect(step?.response_message).toEqual(error.message);
-      expect(step?.status).toEqual('ERROR');
+      expect(step?.status).toBe('ERROR');
 
       const localizationStep = await selectOne('ingest_item_steps', {
         type: 'LOCALIZATIONS',
         ingest_item_id: item1.id,
       }).run(ctx.ownerPool);
-      expect(localizationStep?.response_message).toEqual(
+      expect(localizationStep?.response_message).toBe(
         'Unable to start the localization step because the metadata update has failed.',
       );
-      expect(localizationStep?.status).toEqual('ERROR');
+      expect(localizationStep?.status).toBe('ERROR');
     });
   });
 });

@@ -37,9 +37,10 @@ declare module '@axinom/mosaic-portal' {
   }
 
   interface ResolverFunction {
-    (station: string, dynamicRouteSegments?: Record<string, string> | string):
-      | string
-      | undefined;
+    (
+      station: string,
+      dynamicRouteSegments?: Record<string, string> | string,
+    ): string | undefined;
   }
 
   interface ProviderRegistration {

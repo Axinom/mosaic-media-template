@@ -7,11 +7,13 @@ import {
 } from '../types';
 
 // TODO: create a library for shared types.
+// eslint-disable-next-line unused-imports/no-unused-vars
 interface ChannelDetailsResolverData {
   station: ChannelStationNames.ChannelDetails;
   resolver: (dynamicSegments: ChannelDetailsStationDynamicSegments) => void;
 }
 
+// eslint-disable-next-line unused-imports/no-unused-vars
 interface ProgramDetailsResolverData {
   station: ChannelStationNames.ProgramDetails;
   resolver: (dynamicSegments: ProgramDetailsStationDynamicSegments) => void;

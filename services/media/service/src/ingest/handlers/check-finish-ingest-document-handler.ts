@@ -91,10 +91,10 @@ export class CheckFinishIngestDocumentHandler extends MediaGuardedTransactionalI
       in_progress_count > 0
         ? 'IN_PROGRESS'
         : error_count === 0
-        ? 'SUCCESS'
-        : success_count === 0
-        ? 'ERROR'
-        : 'PARTIAL_SUCCESS';
+          ? 'SUCCESS'
+          : success_count === 0
+            ? 'ERROR'
+            : 'PARTIAL_SUCCESS';
 
     const [updatedDoc] = await update(
       'ingest_documents',

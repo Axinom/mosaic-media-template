@@ -10,7 +10,10 @@ import {
 } from './cpix-request';
 
 export class DRMKey {
-  constructor(public keyId: string, public keyType: 'VIDEO' | 'AUDIO') {}
+  constructor(
+    public keyId: string,
+    public keyType: 'VIDEO' | 'AUDIO',
+  ) {}
 }
 
 export const createDashCpixRequest = (

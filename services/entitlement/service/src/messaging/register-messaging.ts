@@ -91,6 +91,7 @@ export const registerMessaging = async (
   return { broker, storeOutboxMessage };
 };
 
+// eslint-disable-next-line unused-imports/no-unused-vars
 const registerTransactionalInboxHandlers = (
   config: Config,
   inboxConfig: PollingListenerConfig,
@@ -117,6 +118,7 @@ const registerRabbitMqMessaging = async (
 ): Promise<Broker> => {
   const storeInboxMessage = setupInboxStorage(inboxConfig, inboxLogger, config);
 
+  // eslint-disable-next-line unused-imports/no-unused-vars
   const inboxWriter = new RabbitMqInboxWriter(
     storeInboxMessage,
     ownerPool,

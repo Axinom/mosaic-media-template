@@ -17,15 +17,14 @@ export const MainVideoSelectionField: React.FC<SingleLineTextProps> = (
       onChange={(event) => {
         const value = (event as React.ChangeEvent<HTMLInputElement>)
           .currentTarget.value[0];
-        onChange &&
-          onChange({
-            ...(event as React.ChangeEvent<HTMLInputElement>),
-            currentTarget: {
-              ...(event as React.ChangeEvent<HTMLInputElement>).currentTarget,
-              name: name,
-              value: value,
-            },
-          });
+        onChange?.({
+          ...(event as React.ChangeEvent<HTMLInputElement>),
+          currentTarget: {
+            ...(event as React.ChangeEvent<HTMLInputElement>).currentTarget,
+            name: name,
+            value: value,
+          },
+        });
       }}
       maxItems={1}
     />

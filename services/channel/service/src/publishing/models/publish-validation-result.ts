@@ -2,7 +2,7 @@ import { PublishValidationMessage } from './publish-validation-message';
 
 export const PublishValidationStatus = ['OK', 'WARNINGS', 'ERRORS'] as const;
 export type PublishValidationStatusEnum =
-  typeof PublishValidationStatus[number];
+  (typeof PublishValidationStatus)[number];
 
 export interface PublishValidationResult<TPayload> {
   publishPayload: TPayload;

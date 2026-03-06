@@ -116,7 +116,7 @@ export const EpisodeImageManagementForm: React.FC<
 
       Object.entries(formData ?? {}).forEach(([imageType, imageId], idx) => {
         const [imgId] = imageId;
-        const [initialValue] = initialData?.data?.[imageType];
+        const [initialValue] = initialData?.data?.[imageType] ?? [];
         const [currentValue] = formData[imageType];
 
         switch (true) {

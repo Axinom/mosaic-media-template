@@ -13,7 +13,8 @@ interface Props {
 }
 
 export interface EpisodeSelectionExplorerProps
-  extends Omit<
+  extends
+    Omit<
       SelectionExplorerProps<EpisodeData>,
       'columns' | 'dataProvider' | 'filterOptions'
     >,
@@ -23,7 +24,8 @@ export interface EpisodeSelectionExplorerProps
 }
 
 export interface EpisodeNavigationExplorerProps
-  extends Omit<
+  extends
+    Omit<
       NavigationExplorerProps<EpisodeData>,
       'columns' | 'dataProvider' | 'filterOptions'
     >,

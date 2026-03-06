@@ -111,8 +111,8 @@ describe('ImageFailedHandler', () => {
       const step = await selectOne('ingest_item_steps', {
         id: step1.id,
       }).run(ctx.ownerPool);
-      expect(step?.response_message).toEqual('Test error message');
-      expect(step?.status).toEqual('ERROR');
+      expect(step?.response_message).toBe('Test error message');
+      expect(step?.status).toBe('ERROR');
     });
   });
 
@@ -175,7 +175,7 @@ describe('ImageFailedHandler', () => {
         id: step1.id,
       }).run(ctx.ownerPool);
       expect(step?.response_message).toEqual(error.message);
-      expect(step?.status).toEqual('ERROR');
+      expect(step?.status).toBe('ERROR');
     });
   });
 });

@@ -25,13 +25,12 @@ export const SingleSeasonSelectField: React.FC<
     maxItems={1}
     value={value ? [value] : []}
     onChange={(e) => {
-      onChange &&
-        onChange({
-          target: {
-            name: props.name,
-            value: e.target.value[0],
-          },
-        });
+      onChange?.({
+        target: {
+          name: props.name,
+          value: e.target.value[0],
+        },
+      });
     }}
   />
 );

@@ -8,7 +8,10 @@ import { prepareTransitionLiveStream, VirtualChannelApi } from '../../domains';
 import { AuthenticatedMessageHandler } from './authenticated-message-handler';
 
 export class PrepareTransitionLiveStreamHandler extends AuthenticatedMessageHandler<PrepareTransitionLiveStreamCommand> {
-  constructor(config: Config, private virtualChannelApi: VirtualChannelApi) {
+  constructor(
+    config: Config,
+    private virtualChannelApi: VirtualChannelApi,
+  ) {
     super(
       VodToLiveServiceMessagingSettings.PrepareTransitionLiveStream.messageType,
       config,

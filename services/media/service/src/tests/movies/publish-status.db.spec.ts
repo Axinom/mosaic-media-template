@@ -58,7 +58,7 @@ describe('Movies publish status', () => {
       const movie = await getMovie();
       expect(movie.publish_status).toBe('CHANGED');
       expect(new Date(movie.published_date!)).toEqual(publishedDate);
-      expect(movie.published_user).toEqual('Unknown');
+      expect(movie.published_user).toBe('Unknown');
     });
 
     it('not_published entity updated -> not_published', async () => {
@@ -92,7 +92,7 @@ describe('Movies publish status', () => {
       const movie = await getMovie();
       expect(movie.publish_status).toBe('PUBLISHED');
       expect(new Date(movie.published_date!)).toEqual(publishedDate);
-      expect(movie.published_user).toEqual('Unknown');
+      expect(movie.published_user).toBe('Unknown');
     });
 
     it('publish old -> changed', async () => {
@@ -116,7 +116,7 @@ describe('Movies publish status', () => {
       const movie = await getMovie();
       expect(movie.publish_status).toBe('CHANGED');
       expect(new Date(movie.published_date!)).toEqual(publishedDate);
-      expect(movie.published_user).toEqual('Unknown');
+      expect(movie.published_user).toBe('Unknown');
     });
   });
 

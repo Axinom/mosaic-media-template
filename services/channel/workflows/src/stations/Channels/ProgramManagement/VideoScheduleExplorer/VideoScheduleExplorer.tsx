@@ -13,11 +13,10 @@ import {
 import React from 'react';
 import { CuePointSelect } from '../ProgramManagement.types';
 
-interface ScheduleVideoExplorerProps
-  extends Omit<
-    SelectionExplorerProps<Video>,
-    'columns' | 'dataProvider' | 'filterOptions'
-  > {
+interface ScheduleVideoExplorerProps extends Omit<
+  SelectionExplorerProps<Video>,
+  'columns' | 'dataProvider' | 'filterOptions'
+> {
   isVideoSelectionShown: boolean;
   setVideoSelect: React.Dispatch<React.SetStateAction<CuePointSelect>>;
   VideoSelectExplorer: React.FC<VideoSelectExplorerProps>;

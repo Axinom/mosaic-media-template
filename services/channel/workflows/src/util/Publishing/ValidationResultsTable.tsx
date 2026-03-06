@@ -13,8 +13,10 @@ type ValidationValidationContext =
   | 'LOCALIZATION'
   | 'ALL';
 
-interface ExtendedPublishValidationMessage
-  extends Omit<PublishValidationMessage, 'severity' | 'context'> {
+interface ExtendedPublishValidationMessage extends Omit<
+  PublishValidationMessage,
+  'severity' | 'context'
+> {
   severity: ValidationValidationSeverity;
   context: ValidationValidationContext;
 }
@@ -31,14 +33,14 @@ const mapValidationValidations = (
         },
       ]
     : originalValidations.length === 0
-    ? [
-        {
-          context: 'ALL',
-          severity: 'SUCCESS',
-          message: 'Validation Success for all categories',
-        },
-      ]
-    : originalValidations;
+      ? [
+          {
+            context: 'ALL',
+            severity: 'SUCCESS',
+            message: 'Validation Success for all categories',
+          },
+        ]
+      : originalValidations;
 };
 
 export const ValidationResultsTable: React.FC = () => {

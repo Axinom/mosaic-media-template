@@ -50,7 +50,10 @@ export class AzureStorage {
   protected blobServiceClient: BlobServiceClient;
   protected logger: Logger;
 
-  constructor(connection: string, private containerName: string) {
+  constructor(
+    connection: string,
+    private containerName: string,
+  ) {
     try {
       this.blobServiceClient =
         BlobServiceClient.fromConnectionString(connection);

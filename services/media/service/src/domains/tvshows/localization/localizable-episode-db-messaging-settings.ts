@@ -1,8 +1,6 @@
 import { MessagingSettings } from '@axinom/mosaic-message-bus-abstractions';
 
-export class LocalizableEpisodeDbMessagingSettings
-  implements MessagingSettings
-{
+export class LocalizableEpisodeDbMessagingSettings implements MessagingSettings {
   public static LocalizableEpisodeCreated =
     new LocalizableEpisodeDbMessagingSettings(
       'LocalizableEpisodeCreated',

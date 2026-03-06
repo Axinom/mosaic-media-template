@@ -43,7 +43,7 @@ export const EntitlementEndpointPlugin = makeExtendSchemaPlugin(() => {
       Query: {
         entitlement: async (_query, args, context) => {
           try {
-            const { config, clientIpAddress, ownerPool, jwtToken } =
+            const { config, clientIpAddress } =
               getValidatedExtendedContext(context);
 
             const geoLookup = await getGeoLookup();

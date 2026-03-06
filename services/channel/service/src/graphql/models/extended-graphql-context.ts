@@ -11,8 +11,7 @@ import {
 import { Config } from '../../common';
 
 export interface ExtendedGraphQLContext
-  extends ManagementAuthenticationContext,
-    Partial<AtomicMutationRequest> {
+  extends ManagementAuthenticationContext, Partial<AtomicMutationRequest> {
   config: Config;
   mutationAtomicityContext?: MutationAtomicityContext;
   storeOutboxMessage: StoreOutboxMessage;

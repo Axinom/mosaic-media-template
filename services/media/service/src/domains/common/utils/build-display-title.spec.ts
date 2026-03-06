@@ -10,7 +10,7 @@ describe('buildDisplayTitle', () => {
         const result = buildDisplayTitle('MOVIE', media as any);
 
         // Assert
-        expect(result).toEqual('');
+        expect(result).toBe('');
       },
     );
 
@@ -42,7 +42,7 @@ describe('buildDisplayTitle', () => {
         const result = buildDisplayTitle('TVSHOW', media as any);
 
         // Assert
-        expect(result).toEqual('');
+        expect(result).toBe('');
       },
     );
 
@@ -74,7 +74,7 @@ describe('buildDisplayTitle', () => {
         const result = buildDisplayTitle('SEASON', media as any);
 
         // Assert
-        expect(result).toEqual('');
+        expect(result).toBe('');
       },
     );
 
@@ -87,7 +87,7 @@ describe('buildDisplayTitle', () => {
         });
 
         // Assert
-        expect(result).toEqual('');
+        expect(result).toBe('');
       },
     );
 
@@ -145,7 +145,7 @@ describe('buildDisplayTitle', () => {
         const result = buildDisplayTitle('EPISODE', media as any);
 
         // Assert
-        expect(result).toEqual('');
+        expect(result).toBe('');
       },
     );
 
@@ -167,7 +167,7 @@ describe('buildDisplayTitle', () => {
         const result = buildDisplayTitle('EPISODE', media as any, { index: 1 });
 
         // Assert
-        expect(result).toEqual('');
+        expect(result).toBe('');
       },
     );
 
@@ -194,7 +194,7 @@ describe('buildDisplayTitle', () => {
         );
 
         // Assert
-        expect(result).toEqual('');
+        expect(result).toBe('');
       },
     );
 

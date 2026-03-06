@@ -11,7 +11,8 @@ interface Props {
 }
 
 export interface SeasonSelectionExplorerProps
-  extends Omit<
+  extends
+    Omit<
       SelectionExplorerProps<SeasonData>,
       'columns' | 'dataProvider' | 'filterOptions'
     >,
@@ -21,7 +22,8 @@ export interface SeasonSelectionExplorerProps
 }
 
 export interface SeasonNavigationExplorerProps
-  extends Omit<
+  extends
+    Omit<
       NavigationExplorerProps<SeasonData>,
       'columns' | 'dataProvider' | 'filterOptions'
     >,

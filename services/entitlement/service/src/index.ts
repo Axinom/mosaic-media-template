@@ -82,6 +82,7 @@ async function bootstrap(): Promise<void> {
   );
 
   // Configure messaging: subscribe to topics, create queues, register handlers, start transactional outbox/inbox listeners
+  // eslint-disable-next-line unused-imports/no-unused-vars
   const { broker, storeOutboxMessage } = await registerMessaging(
     app,
     ownerPgPool,

@@ -139,7 +139,7 @@ describe('EpisodePublishEventHandler', () => {
         id: message.payload.content_id,
       }).run(ctx.ownerPool);
 
-      expect(episode?.original_title).toEqual('Episode title');
+      expect(episode?.original_title).toBe('Episode title');
       const localizations = await select(
         'episode_localizations',
         { episode_id: 'episode-1' },

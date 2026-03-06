@@ -38,12 +38,9 @@ export class MockIngestProcessor implements IngestEntityProcessor {
     ];
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-empty-function
   public async updateMetadata(): Promise<void> {}
-
-  // eslint-disable-next-line @typescript-eslint/no-empty-function
+   
   public async processImage(): Promise<void> {}
-
-  // eslint-disable-next-line @typescript-eslint/no-empty-function
+   
   public async processVideo(): Promise<void> {}
 }

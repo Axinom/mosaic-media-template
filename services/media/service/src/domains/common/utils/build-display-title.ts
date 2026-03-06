@@ -57,10 +57,10 @@ export function buildDisplayTitle(...args: any[]): string {
         !isNullOrWhitespace(args[1]?.title)
           ? `Episode ${args[1]?.index}: ${args[1]?.title?.trim()}`
           : args[1]?.index !== null && args[1]?.index !== undefined
-          ? `Episode ${args[1]?.index}`
-          : !isNullOrWhitespace(args[1]?.title)
-          ? args[1]?.title?.trim()
-          : '';
+            ? `Episode ${args[1]?.index}`
+            : !isNullOrWhitespace(args[1]?.title)
+              ? args[1]?.title?.trim()
+              : '';
       return episodeTitle !== ''
         ? `${episodeTitle}${seasonAndTvshowTitle}`
         : '';

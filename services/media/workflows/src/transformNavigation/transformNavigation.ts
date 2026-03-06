@@ -92,9 +92,9 @@ const predefinedOrderSorter = <T>(
     return aIndex === -1 && bIndex === -1
       ? 0 // neither a nor b are in the predefined order, sort alphabetically
       : aIndex === -1
-      ? 1 // a is not in the predefined order, b is, b comes first
-      : bIndex === -1
-      ? -1 // b is not in the predefined order, a is, a comes first
-      : aIndex - bIndex; // both a and b are in the predefined order, sort by index
+        ? 1 // a is not in the predefined order, b is, b comes first
+        : bIndex === -1
+          ? -1 // b is not in the predefined order, a is, a comes first
+          : aIndex - bIndex; // both a and b are in the predefined order, sort by index
   });
 };

@@ -99,7 +99,7 @@ describe('utils', () => {
       const cpixRequest = createDashCpixRequest(contentId, drmKeys);
 
       // Assert
-      expect(cpixRequest).not.toBeUndefined();
+      expect(cpixRequest).toBeDefined();
       expect(convertObjectToXml(cpixRequest!)).toStrictEqual(singleKeyRequest);
     });
 
@@ -114,7 +114,7 @@ describe('utils', () => {
       const cpixRequest = createDashCpixRequest(contentId, drmKeys);
 
       // Assert
-      expect(cpixRequest).not.toBeUndefined();
+      expect(cpixRequest).toBeDefined();
       expect(convertObjectToXml(cpixRequest!)).toStrictEqual(
         multipleKeysRequest,
       );
@@ -261,7 +261,7 @@ describe('utils', () => {
       const cpixRequest = createDecryptionCpixRequest(contentId, drmKeys);
 
       // Assert
-      expect(cpixRequest).not.toBeUndefined();
+      expect(cpixRequest).toBeDefined();
       expect(convertObjectToXml(cpixRequest!)).toStrictEqual(singleKeyRequest);
     });
 
@@ -291,7 +291,7 @@ describe('utils', () => {
       const cpixRequest = createDecryptionCpixRequest(contentId, drmKeys);
 
       // Assert
-      expect(cpixRequest).not.toBeUndefined();
+      expect(cpixRequest).toBeDefined();
       expect(convertObjectToXml(cpixRequest!)).toStrictEqual(
         multipleKeysRequest,
       );
@@ -372,7 +372,7 @@ describe('utils', () => {
       const cpixRequest = createHlsCpixRequest(contentId, drmKeys);
 
       // Assert
-      expect(cpixRequest).not.toBeUndefined();
+      expect(cpixRequest).toBeDefined();
       expect(convertObjectToXml(cpixRequest!)).toStrictEqual(singleKeyRequest);
     });
 
@@ -387,7 +387,7 @@ describe('utils', () => {
       const cpixRequest = createHlsCpixRequest(contentId, drmKeys);
 
       // Assert
-      expect(cpixRequest).not.toBeUndefined();
+      expect(cpixRequest).toBeDefined();
       expect(convertObjectToXml(cpixRequest!)).toStrictEqual(
         multipleKeysRequest,
       );

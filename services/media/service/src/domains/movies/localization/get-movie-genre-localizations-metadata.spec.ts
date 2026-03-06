@@ -40,11 +40,11 @@ describe('getMovieGenreLocalizationsMetadata', () => {
             hash && messages.length === 0
               ? EntityLocalizationValidationStatus.Ok
               : messages.some(
-                  (x) =>
-                    x.severity === EntityLocalizationValidationSeverity.Error,
-                )
-              ? EntityLocalizationValidationStatus.Errors
-              : EntityLocalizationValidationStatus.Warnings,
+                    (x) =>
+                      x.severity === EntityLocalizationValidationSeverity.Error,
+                  )
+                ? EntityLocalizationValidationStatus.Errors
+                : EntityLocalizationValidationStatus.Warnings,
         },
       },
     };

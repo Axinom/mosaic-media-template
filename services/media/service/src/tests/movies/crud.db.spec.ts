@@ -338,7 +338,7 @@ describe('Movies GraphQL endpoints', () => {
       expect(movie.title).toBe('Movie1');
       expect(movie.synopsis).toBeNull();
       expect(movie.description).toBeNull();
-      expect(query.movies.totalCount).toEqual(0);
+      expect(query.movies.totalCount).toBe(0);
     });
 
     it('delete while active snapshot exists -> error thrown', async () => {
@@ -410,7 +410,7 @@ describe('Movies GraphQL endpoints', () => {
       assertNotFalsy(resp.data, 'resp.data');
       const { movie, query } = resp.data.deleteMovie;
       expect(movie.id).toBe(movie1.id);
-      expect(query.movies.totalCount).toEqual(0);
+      expect(query.movies.totalCount).toBe(0);
 
       const relations = await select('movies_snapshots', all).run(
         ctx.ownerPool,
