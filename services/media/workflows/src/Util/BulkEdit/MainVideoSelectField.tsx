@@ -1,4 +1,4 @@
-import { SingleLineTextProps } from '@axinom/mosaic-ui';
+import { SingleLineTextProps, useFormikError } from '@axinom/mosaic-ui';
 import React, { useContext } from 'react';
 import { ExtensionsContext } from '../../externals';
 
@@ -7,6 +7,7 @@ export const MainVideoSelectionField: React.FC<SingleLineTextProps> = (
 ) => {
   const { VideoSelectField } = useContext(ExtensionsContext);
   const { value, onChange, name, label = '' } = props;
+  const error = useFormikError(props.name);
 
   return (
     <VideoSelectField
@@ -28,6 +29,7 @@ export const MainVideoSelectionField: React.FC<SingleLineTextProps> = (
           });
       }}
       maxItems={1}
+      error={error}
     />
   );
 };

@@ -1,6 +1,7 @@
 import { VideoSelectFieldProps } from '@axinom/mosaic-video-workflow-integration';
 import React, { useContext } from 'react';
 import { ExtensionsContext } from '../../externals';
+import { useFormikError } from '@axinom/mosaic-ui';
 
 export const getVideoSelectField: (
   type: string,
@@ -8,6 +9,7 @@ export const getVideoSelectField: (
 ) => React.FC<VideoSelectFieldProps> = (type, maxItems) => {
   const Component: React.FC<VideoSelectFieldProps> = (props) => {
     const { VideoSelectField } = useContext(ExtensionsContext);
+    const error = useFormikError(props.name);
     const { value, onChange, name } = props;
 
     return (
@@ -30,6 +32,7 @@ export const getVideoSelectField: (
             });
         }}
         maxItems={maxItems}
+        error={error}
       />
     );
   };
