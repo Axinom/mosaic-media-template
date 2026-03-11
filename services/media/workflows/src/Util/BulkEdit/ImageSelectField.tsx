@@ -1,5 +1,5 @@
 import { ImageSelectFieldProps } from '@axinom/mosaic-managed-workflow-integration';
-import { BulkEditEnumType } from '@axinom/mosaic-ui';
+import { BulkEditEnumType, useFormikError } from '@axinom/mosaic-ui';
 import React, { useContext } from 'react';
 import { ExtensionsContext } from '../../externals';
 
@@ -10,6 +10,7 @@ export const getBulkEditImageSelectField: (
 ) => React.FC<ImageSelectFieldProps> = (type, scope, maxItems) => {
   const Component: React.FC<ImageSelectFieldProps> = (props) => {
     const { ImageSelectField } = useContext(ExtensionsContext);
+    const error = useFormikError(props.name);
     return (
       <ImageSelectField
         {...props}
@@ -31,6 +32,7 @@ export const getBulkEditImageSelectField: (
         }}
         imageType={`${scope}_${type.toLowerCase()}`}
         maxItems={maxItems}
+        error={error}
       />
     );
   };
