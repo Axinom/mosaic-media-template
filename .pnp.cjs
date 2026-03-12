@@ -19584,7 +19584,7 @@ const RAW_RUNTIME_STATE =
           ["html-webpack-plugin", "virtual:3cd4a2b702647fbf48058db852fac7c60f3bb190f204e564a99a73769891b057c0c5263a7e36b276f4ccfbf128e3bf9b0013d49c32177a591d9c95cd72c400b0#npm:5.6.6"],\
           ["lodash", "npm:4.17.21"],\
           ["pretty-error", "npm:4.0.0"],\
-          ["tapable", "npm:2.3.2"],\
+          ["tapable", "npm:2.2.0"],\
           ["webpack", "virtual:3cd4a2b702647fbf48058db852fac7c60f3bb190f204e564a99a73769891b057c0c5263a7e36b276f4ccfbf128e3bf9b0013d49c32177a591d9c95cd72c400b0#npm:5.105.4"]\
         ],\
         "packagePeers": [\
@@ -29516,6 +29516,13 @@ const RAW_RUNTIME_STATE =
         ],\
         "linkType": "HARD"\
       }],\
+      ["npm:2.2.0", {\
+        "packageLocation": "../../../.yarn/berry/cache/tapable-npm-2.2.0-516ee6aa5b-10c0.zip/node_modules/tapable/",\
+        "packageDependencies": [\
+          ["tapable", "npm:2.2.0"]\
+        ],\
+        "linkType": "HARD"\
+      }],\
       ["npm:2.2.1", {\
         "packageLocation": "../../../.yarn/berry/cache/tapable-npm-2.2.1-8cf5ff3039-10c0.zip/node_modules/tapable/",\
         "packageDependencies": [\
@@ -29527,13 +29534,6 @@ const RAW_RUNTIME_STATE =
         "packageLocation": "../../../.yarn/berry/cache/tapable-npm-2.3.0-905b9634e0-10c0.zip/node_modules/tapable/",\
         "packageDependencies": [\
           ["tapable", "npm:2.3.0"]\
-        ],\
-        "linkType": "HARD"\
-      }],\
-      ["npm:2.3.2", {\
-        "packageLocation": "../../../.yarn/berry/cache/tapable-npm-2.3.2-3be5643ab4-10c0.zip/node_modules/tapable/",\
-        "packageDependencies": [\
-          ["tapable", "npm:2.3.2"]\
         ],\
         "linkType": "HARD"\
       }]\

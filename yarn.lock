@@ -21370,9 +21370,9 @@ __metadata:
   linkType: hard
 
 "tapable@npm:^2.0.0":
-  version: 2.3.2
-  resolution: "tapable@npm:2.3.2"
-  checksum: 10c0/45ec8bd8963907f35bba875f9b3e9a5afa5ba11a9a4e4a2d7b2313d983cb2741386fd7dd3e54b13055b2be942971aac369d197e02263ec9216c59c0a8069ed7f
+  version: 2.2.0
+  resolution: "tapable@npm:2.2.0"
+  checksum: 10c0/3d404f474bbea65fe9ea2d00d48b332bc9ed7e841b683fa9d202edef5f2a18028e3ef5a65b96b164ef1b29ce16d5e4b1a5c165b3fa20ae80183c351892cea974
   languageName: node
   linkType: hard
 

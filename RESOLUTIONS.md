@@ -42,6 +42,17 @@ The goal is to minimize resolutions and remove them when no longer needed.
 - **Commit**: `197ee4eb` — *"[AB#47252] fix: bumping several packages to address CVEs (#443)"*
 - **Can be removed when**: `@axinom/mosaic-cli` updates `@asyncapi/parser` to `^3.x` (which uses `jsonpath-plus@^10.0.7` natively)
 
+## Blocked by Age Gate
+
+### tar (Dependabot #232)
+
+- **Vulnerability**: Symlink Path Traversal via Drive-Relative Linkpath (high severity)
+- **Current version**: 7.5.10
+- **Patched in**: 7.5.11
+- **Blocked by**: `npmMinimalAgeGate: 7d` in `.yarnrc.yml` — tar@7.5.11 was published on 2026-03-09 and won't be usable until 2026-03-16
+- **Date**: 2026-03-12
+- **Fix**: Delete the tar lockfile entry and run `yarn install --no-immutable` on or after 2026-03-16
+
 ## Waiting for Upstream Fix
 
 ### ajv@7.x (Dependabot #209, #208)
@@ -91,9 +102,36 @@ The goal is to minimize resolutions and remove them when no longer needed.
 
 ### tmp (Dependabot #168)
 
-- **Vulnerability**: Arbitrary temporary file/directory write via symbolic link dir parameter (low severity)
+- **Vulnerability**: RCE via RegExp.flags and Date.prototype.toISOString() (high severity)
+- **Current version**: 6.0.2
+- **Patched in**: 7.0.3 (major version jump)
+- **Blocked by**: `terser-webpack-plugin` and `css-minimizer-webpack-plugin` require `^6.0.1`/`^6.0.2`. Latest versions still use `^6.x`.
+- **Date**: 2026-03-03
+- **Check again when**: `terser-webpack-plugin` updates to `serialize-javascript@^7`
+
+### rollup (Dependabot #214)
+
+- **Vulnerability**: Arbitrary File Write via Path Traversal (high severity)
+- **Current version**: 2.79.2
+- **Patched in**: 2.80.0
+- **Blocked by**: `@stoplight/spectral-ruleset-bundler@latest` pins `rollup@~2.79.2` (tilde range only allows 2.79.x)
+- **Date**: 2026-03-03
+- **Check again when**: `@stoplight/spectral-ruleset-bundler` updates its rollup dependency
+
+### immutable@~3.7.6 (Dependabot #229)
+
+- **Vulnerability**: Prototype Pollution in `_.unset` and `_.omit` (high severity)
+- **Current version**: 3.7.6
+- **Patched in**: 3.8.3
+- **Blocked by**: `@ardatan/relay-compiler@12.0.0` tilde-pins `immutable@~3.7.6` (allows only 3.7.x). Fix requires `@graphql-tools/relay-operation-optimizer` to update from `^6.5.0` to `^7.x` (which uses `@ardatan/relay-compiler@13.x` with `immutable@^5.1.5`).
+- **Date**: 2026-03-12
+- **Check again when**: `@graphql-tools/relay-operation-optimizer` releases a v7 that the graphql-codegen plugins accept
+
+### tmp@^0.0.33 (Dependabot #168)
+
+- **Vulnerability**: Arbitrary temp file/dir write via symlink (low severity)
 - **Current version**: 0.0.33
 - **Patched in**: 0.2.4
-- **Blocked by**: `@axinom/mosaic-cli` → `@inquirer/prompts@^4.3.0` → `@inquirer/editor@^2.1.3` → `external-editor@^3.1.0` → `tmp@^0.0.33`. Fixed in `@inquirer/editor@5.x` but `@inquirer/prompts@4.x` only allows `^2.x`
-- **Date**: 2026-02-23
-- **Check again when**: `@axinom/mosaic-cli` updates `@inquirer/prompts` to v5+
+- **Blocked by**: `external-editor@3.1.0` (latest) pins `tmp@^0.0.33`; `^0.0.33` resolves only `0.0.33` in strict semver. `external-editor` has not released a new version since 3.1.0.
+- **Date**: 2026-03-12
+- **Check again when**: `external-editor` releases a new version with an updated `tmp` dep, or `@graphql-codegen/cli` stops depending on `inquirer@8`
