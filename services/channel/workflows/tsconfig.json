@@ -4,13 +4,14 @@
     "noImplicitAny": false,
     "removeComments": false,
     "noLib": false,
-    "emitDecoratorMetadata": true,
-    "experimentalDecorators": true,
     "target": "es6",
     "sourceMap": true,
     "outDir": "./dist",
     "skipLibCheck": true,
-    "lib": ["dom", "es2018"],
+    "lib": [
+      "dom",
+      "es2018"
+    ],
     "moduleResolution": "node",
     "module": "esnext",
     "jsx": "react",
@@ -19,6 +20,10 @@
     "allowSyntheticDefaultImports": true,
     "resolveJsonModule": true
   },
-  "include": ["./src"],
-  "exclude": ["node_modules"]
+  "include": [
+    "./src"
+  ],
+  "exclude": [
+    "node_modules"
+  ]
 }
