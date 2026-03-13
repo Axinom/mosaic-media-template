@@ -31,7 +31,7 @@ const parseHeaders = (rawHeaders: string): Headers => {
 };
 
 export const uploadFetch = (
-  url: string,
+  url: string | URL | Request,
   options: CustomFetchOptions,
 ): Promise<Response> =>
   new Promise((resolve, reject) => {
@@ -55,11 +55,12 @@ export const uploadFetch = (
     xhr.ontimeout = () => {
       reject(new TypeError('Network request failed'));
     };
-    xhr.open(options.method, url, true);
+    xhr.open(options.method, url instanceof Request ? url.url : url, true);
 
     if (options.headers) {
-      Object.keys(options.headers).forEach((key) => {
-        xhr.setRequestHeader(key, options.headers[key]);
+      const headers = options.headers as Record<string, string>;
+      Object.keys(headers).forEach((key) => {
+        xhr.setRequestHeader(key, headers[key]);
       });
     }
 
@@ -77,11 +78,12 @@ export const uploadFetch = (
   });
 
 export const customFetch = (
-  uri: string,
-  options: CustomFetchOptions,
+  uri: string | URL | Request,
+  options?: RequestInit,
 ): Promise<Response> => {
-  if (options.useUpload) {
-    return uploadFetch(uri, options);
+  const customOptions = options as CustomFetchOptions | undefined;
+  if (customOptions?.useUpload) {
+    return uploadFetch(uri, customOptions);
   }
   return fetch(uri, options);
 };

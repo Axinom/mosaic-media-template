@@ -3,7 +3,6 @@
     "declaration": true,
     "noImplicitAny": false,
     "removeComments": false,
-    "noLib": false,
     "target": "es6",
     "sourceMap": true,
     "outDir": "./dist",
@@ -12,12 +11,12 @@
       "dom",
       "es2018"
     ],
-    "moduleResolution": "node",
+    "moduleResolution": "bundler",
     "module": "esnext",
     "jsx": "react",
     "importHelpers": true,
     "strict": true,
-    "allowSyntheticDefaultImports": true,
+    "esModuleInterop": true,
     "resolveJsonModule": true
   },
   "include": [

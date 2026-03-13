@@ -92,43 +92,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@apollo/client@npm:^3.2.5, @apollo/client@npm:^3.7.9":
-  version: 3.7.10
-  resolution: "@apollo/client@npm:3.7.10"
-  dependencies:
-    "@graphql-typed-document-node/core": "npm:^3.1.1"
-    "@wry/context": "npm:^0.7.0"
-    "@wry/equality": "npm:^0.5.0"
-    "@wry/trie": "npm:^0.3.0"
-    graphql-tag: "npm:^2.12.6"
-    hoist-non-react-statics: "npm:^3.3.2"
-    optimism: "npm:^0.16.1"
-    prop-types: "npm:^15.7.2"
-    response-iterator: "npm:^0.2.6"
-    symbol-observable: "npm:^4.0.0"
-    ts-invariant: "npm:^0.10.3"
-    tslib: "npm:^2.3.0"
-    zen-observable-ts: "npm:^1.2.5"
-  peerDependencies:
-    graphql: ^14.0.0 || ^15.0.0 || ^16.0.0
-    graphql-ws: ^5.5.5
-    react: ^16.8.0 || ^17.0.0 || ^18.0.0
-    react-dom: ^16.8.0 || ^17.0.0 || ^18.0.0
-    subscriptions-transport-ws: ^0.9.0 || ^0.11.0
-  peerDependenciesMeta:
-    graphql-ws:
-      optional: true
-    react:
-      optional: true
-    react-dom:
-      optional: true
-    subscriptions-transport-ws:
-      optional: true
-  checksum: 10c0/0320c2ca606d8d391739cb97b308f6d05fffad1d48a18ef71255040ff34a3d48e568961b5c425eb9027ecd7dbd9a5e95bd9a06e0b7c84211608950d878e3cafa
-  languageName: node
-  linkType: hard
-
-"@apollo/client@npm:^3.7.10":
+"@apollo/client@npm:^3.1.3, @apollo/client@npm:^3.2.5, @apollo/client@npm:^3.7.10, @apollo/client@npm:^3.7.9":
   version: 3.9.5
   resolution: "@apollo/client@npm:3.9.5"
   dependencies:
@@ -5663,6 +5627,17 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@types/apollo-upload-client@npm:^14.1.0":
+  version: 14.1.0
+  resolution: "@types/apollo-upload-client@npm:14.1.0"
+  dependencies:
+    "@apollo/client": "npm:^3.1.3"
+    "@types/extract-files": "npm:*"
+    graphql: "npm:^15.3.0"
+  checksum: 10c0/fc9858e0d2b3fabc0ca708b2e062d681b48d82008b524066056ca28df901ef41084649df02893a80cb39d9a8d95af5384cc41bcad543e02eb579e8027c44eef5
+  languageName: node
+  linkType: hard
+
 "@types/babel__core@npm:^7.1.14":
   version: 7.1.19
   resolution: "@types/babel__core@npm:7.1.19"
@@ -5866,6 +5841,13 @@ __metadata:
     "@types/qs": "npm:*"
     "@types/serve-static": "npm:*"
   checksum: 10c0/12e562c4571da50c7d239e117e688dc434db1bac8be55613294762f84fd77fbd0658ccd553c7d3ab02408f385bc93980992369dd30e2ecd2c68c358e6af8fabf
+  languageName: node
+  linkType: hard
+
+"@types/extract-files@npm:*":
+  version: 13.0.2
+  resolution: "@types/extract-files@npm:13.0.2"
+  checksum: 10c0/f05a296095684c15c4b7710b87c1280c4cef59eb4822b595c460150b672d37a073183ece4d51c2f612c870ca07c5b1ddd681f1f88348915970547af644705340
   languageName: node
   linkType: hard
 
@@ -6932,30 +6914,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@wry/equality@npm:^0.5.0":
-  version: 0.5.3
-  resolution: "@wry/equality@npm:0.5.3"
-  dependencies:
-    tslib: "npm:^2.3.0"
-  checksum: 10c0/79c5a05a6be5e38227e1147b24f0d8bfc37612bbd28bdbac8625353e6f4ca3873a1c0ee3ffbae5d6cbce0df6421099e464825cc1a3ae10bb89a1578e6e90f93c
-  languageName: node
-  linkType: hard
-
 "@wry/equality@npm:^0.5.6":
   version: 0.5.7
   resolution: "@wry/equality@npm:0.5.7"
   dependencies:
     tslib: "npm:^2.3.0"
   checksum: 10c0/8503ff6d4eb80f303d1387e71e51da59ccfc2160fa6d464618be80946fe43a654ea73f0c5b90d659fc4dfc3e38cbbdd6650d595fe5865be476636e444470853e
-  languageName: node
-  linkType: hard
-
-"@wry/trie@npm:^0.3.0":
-  version: 0.3.2
-  resolution: "@wry/trie@npm:0.3.2"
-  dependencies:
-    tslib: "npm:^2.3.0"
-  checksum: 10c0/c27a46592c4c418ad9de596b4f53bcac748585db8b4deab262bf5ab71ec15b9ea09d522e765c4fa05e831176cea1b94220151315b4c542abee40541a26aaf7c0
   languageName: node
   linkType: hard
 
@@ -12311,6 +12275,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"graphql@npm:^15.3.0":
+  version: 15.10.1
+  resolution: "graphql@npm:15.10.1"
+  checksum: 10c0/8bbf6c1acda84dcff532f2ec492ffb2859d2ffd0c8e0143447c727388c5c3d7cab338143ecbdf61acc1f04227f2e0a8180f26ce9ea280b63a65079c58f6cfa25
+  languageName: node
+  linkType: hard
+
 "handlebars@npm:^4.7.7":
   version: 4.7.8
   resolution: "handlebars@npm:4.7.8"
@@ -15682,6 +15653,7 @@ __metadata:
     "@graphql-codegen/typescript": "npm:^2.7.3"
     "@graphql-codegen/typescript-operations": "npm:^2.5.3"
     "@graphql-codegen/typescript-react-apollo": "npm:^3.3.7"
+    "@types/apollo-upload-client": "npm:^14.1.0"
     "@types/node": "npm:^18.11.19"
     "@types/react": "npm:^17.0.50"
     "@types/react-dom": "npm:^17.0.17"
@@ -16609,16 +16581,6 @@ __metadata:
   version: 9.3.0
   resolution: "openapi-types@npm:9.3.0"
   checksum: 10c0/f124d697fe80d5af33ff8be1e598d4c377320055da5301726fd5066f037343851ee6d99046e92175a9e020c294cbe5e1894265bc9ae762edf2f866180801658d
-  languageName: node
-  linkType: hard
-
-"optimism@npm:^0.16.1":
-  version: 0.16.2
-  resolution: "optimism@npm:0.16.2"
-  dependencies:
-    "@wry/context": "npm:^0.7.0"
-    "@wry/trie": "npm:^0.3.0"
-  checksum: 10c0/06c1e6ab5e7b0c19f69fd7d7959a33122647ae49355233259e4cca505661f36c52a57eca2fc798be56d74eded2a952f50873d9a330064e1e65c19d4d6c8e3f41
   languageName: node
   linkType: hard
 
