@@ -466,7 +466,7 @@ describe('SnapshotWrapper', () => {
         expect(published_date).not.toEqual(originalDate);
         dateToBeInRange(published_date as string, timestampBeforeTest);
         expect(snapshot_state).not.toEqual(originalState);
-        expect(snapshot_state).toEqual('PUBLISHED');
+        expect(snapshot_state).toBe('PUBLISHED');
         expect(unchanged).toMatchObject(original);
 
         expect(messages).toEqual([
@@ -542,7 +542,7 @@ describe('SnapshotWrapper', () => {
         id: snapshot1.id,
       }).run(ctx.ownerPool);
 
-      expect(errorSnapshot.snapshot_state).toEqual('ERROR');
+      expect(errorSnapshot.snapshot_state).toBe('ERROR');
       expect(errorSnapshot.snapshot_state).not.toEqual(
         snapshot[0].snapshot_state,
       );
@@ -599,7 +599,7 @@ describe('SnapshotWrapper', () => {
       expect(published_date).not.toEqual(originalDate);
       dateToBeInRange(published_date as string, timestampBeforeTest);
       expect(snapshot_state).not.toEqual(originalState);
-      expect(snapshot_state).toEqual('PUBLISHED');
+      expect(snapshot_state).toBe('PUBLISHED');
       expect(unchanged).toMatchObject(original);
 
       expect(messages).toEqual([
@@ -629,7 +629,7 @@ describe('SnapshotWrapper', () => {
       expect(unpublished_date).not.toEqual(originalUnpublishedDate);
       dateToBeInRange(unpublished_date as string, timestampBeforeTest);
       expect(unpublishedState).not.toEqual(originalPublishState);
-      expect(unpublishedState).toEqual('UNPUBLISHED');
+      expect(unpublishedState).toBe('UNPUBLISHED');
       expect(unchangedPublished).toMatchObject(originalPublishedSnapshot);
     });
 
@@ -696,7 +696,7 @@ describe('SnapshotWrapper', () => {
 
         expect(unpublished_date).not.toEqual(originalDate);
         dateToBeInRange(unpublished_date as string, timestampBeforeTest);
-        expect(snapshot_state).toEqual('UNPUBLISHED');
+        expect(snapshot_state).toBe('UNPUBLISHED');
         expect(unchanged).toMatchObject(original);
 
         expect(messages).toEqual([

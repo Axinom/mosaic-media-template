@@ -324,7 +324,7 @@ describe('Start Ingest Handler', () => {
       expect(docs).toHaveLength(1);
       expect(items).toHaveLength(0);
 
-      expect(docs[0].status).toEqual('ERROR');
+      expect(docs[0].status).toBe('ERROR');
       expect(docs[0].updated_date).not.toBe(doc.updated_date);
       expect(docs[0].updated_user).toBe(DEFAULT_SYSTEM_USERNAME);
       expect(docs[0].errors).toEqual([

@@ -11,7 +11,8 @@ interface Props {
 }
 
 export interface TvShowSelectionExplorerProps
-  extends Omit<
+  extends
+    Omit<
       SelectionExplorerProps<TvShowData>,
       'columns' | 'dataProvider' | 'filterOptions'
     >,
@@ -21,7 +22,8 @@ export interface TvShowSelectionExplorerProps
 }
 
 export interface TvShowNavigationExplorerProps
-  extends Omit<
+  extends
+    Omit<
       NavigationExplorerProps<TvShowData>,
       'columns' | 'dataProvider' | 'filterOptions'
     >,

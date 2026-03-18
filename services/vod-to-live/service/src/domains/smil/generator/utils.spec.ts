@@ -30,7 +30,7 @@ describe('smil-utils', () => {
         previousSpliceId,
       );
       // Assert
-      expect(result.eventStream).not.toBeUndefined();
+      expect(result.eventStream).toBeDefined();
       expect(result.eventStream).toMatchObject(
         createEventStream(newOutOfNetworkIndicator, `${previousSpliceId + 1}`),
       );
@@ -49,7 +49,7 @@ describe('smil-utils', () => {
         previousSpliceId,
       );
       // Assert
-      expect(result.eventStream).not.toBeUndefined();
+      expect(result.eventStream).toBeDefined();
       expect(result.eventStream).toMatchObject(
         createEventStream(newOutOfNetworkIndicator, `${previousSpliceId}`),
       );
@@ -116,7 +116,7 @@ describe('smil-utils', () => {
       expect(result).toHaveLength(1);
       const parallel = result[0];
       expect(parallel['@clipEnd']).toEqual(transformSecondsToWallClock(3));
-      expect(parallel.EventStream).not.toBeUndefined();
+      expect(parallel.EventStream).toBeDefined();
     });
 
     it.each([
@@ -160,7 +160,7 @@ describe('smil-utils', () => {
         // Assert
         expect(result).toHaveLength(expectedParallels);
 
-        expect(result[0]?.EventStream).not.toBeUndefined();
+        expect(result[0]?.EventStream).toBeDefined();
         for (let i = 0; i < result.length; i++) {
           let expectedClipEnd = transformSecondsToWallClock(10);
           if (i + 1 === result.length) {

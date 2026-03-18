@@ -25,7 +25,7 @@ export const addProgramIdsToCuePoints = (
   const cuePoints: ProgramCuePointPayLoad[] = [];
 
   // extract relevent program results
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+   
   const { updatePlaylist, ...rest } =
     programResults.data as UpdatePlaylistMutation;
   const programData: ProgramData[] = Object.values(

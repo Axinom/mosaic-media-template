@@ -5,7 +5,8 @@ import { MainVideoIngestElement } from './main-video-ingest-element';
 import { TrailersIngestElement } from './trailers-ingest-element';
 
 export interface EpisodeIngestData
-  extends MainVideoIngestElement,
+  extends
+    MainVideoIngestElement,
     TrailersIngestElement,
     ImagesIngestElement,
     LocalizationsIngestElement {

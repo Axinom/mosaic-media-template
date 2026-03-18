@@ -2,7 +2,7 @@
 // Based on https://gist.github.com/bartvanandel/0418571bad30a3199afdaa1d5e3dbe25
 
 import * as fs from 'fs';
-import glob from 'glob';
+import { glob } from 'glob';
 import path from 'path';
 
 /**
@@ -142,32 +142,30 @@ const updatePackageJson = (
   return changeCount;
 };
 
-const main = (): void => {
+const main = async (): Promise<void> => {
   console.log('Reading yarn.lock ...');
   const yarnLockFile = fs.readFileSync('yarn.lock', 'utf8');
   const yarnLock = parseYarnLockFile(yarnLockFile);
 
-  glob(
-    '**/package.json',
-    { ignore: ['**/node_modules/**'] },
-    (_err, matches) => {
-      matches.forEach((file) => {
-        console.log(`Reading ${file} ...`);
-        const packageJsonFile = fs.readFileSync(file, 'utf8');
-        const packageJson = JSON.parse(packageJsonFile);
+  const matches = await glob('**/package.json', {
+    ignore: ['**/node_modules/**'],
+  });
 
-        const changeCount = updatePackageJson(packageJson, yarnLock);
+  matches.forEach((file) => {
+    console.log(`Reading ${file} ...`);
+    const packageJsonFile = fs.readFileSync(file, 'utf8');
+    const packageJson = JSON.parse(packageJsonFile);
 
-        if (changeCount > 0) {
-          const outFilename = `${path.dirname(file)}/package.json`;
-          console.log('Writing changes to:', outFilename);
-          fs.writeFileSync(outFilename, JSON.stringify(packageJson, null, 2));
-        } else {
-          console.log('No changes');
-        }
-      });
-    },
-  );
+    const changeCount = updatePackageJson(packageJson, yarnLock);
+
+    if (changeCount > 0) {
+      const outFilename = `${path.dirname(file)}/package.json`;
+      console.log('Writing changes to:', outFilename);
+      fs.writeFileSync(outFilename, JSON.stringify(packageJson, null, 2));
+    } else {
+      console.log('No changes');
+    }
+  });
 };
 
 main();

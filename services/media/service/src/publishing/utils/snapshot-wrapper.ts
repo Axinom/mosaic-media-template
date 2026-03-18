@@ -84,8 +84,8 @@ export class SnapshotWrapper {
           validation_status: hasErrors
             ? 'ERRORS'
             : hasWarnings
-            ? 'WARNINGS'
-            : 'OK',
+              ? 'WARNINGS'
+              : 'OK',
         },
         { id: this.snapshotId },
       )

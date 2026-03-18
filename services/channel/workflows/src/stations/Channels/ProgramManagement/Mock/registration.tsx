@@ -12,7 +12,7 @@ export function registerMockExtensions(app: PiletApi): void {
         onClose={onClose}
         onSelection={(selection) => {
           const items =
-            selection.mode === 'SINGLE_ITEMS' ? selection.items ?? [] : [];
+            selection.mode === 'SINGLE_ITEMS' ? (selection.items ?? []) : [];
           onSelected(
             items.map((e) => ({
               title: e.title,

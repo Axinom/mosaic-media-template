@@ -114,7 +114,7 @@ describe('ImageSucceededHandler', () => {
       }).run(ctx.ownerPool);
 
       expect(step?.entity_id).toEqual(payload.image_id);
-      expect(step?.status).toEqual('SUCCESS');
+      expect(step?.status).toBe('SUCCESS');
     });
   });
 
@@ -177,7 +177,7 @@ describe('ImageSucceededHandler', () => {
         id: step1.id,
       }).run(ctx.ownerPool);
       expect(step?.response_message).toEqual(error.message);
-      expect(step?.status).toEqual('ERROR');
+      expect(step?.status).toBe('ERROR');
     });
   });
 });

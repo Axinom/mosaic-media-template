@@ -13,8 +13,10 @@ type SnapshotValidationResult = NonNullable<
   PublishingSnapshotQuery['snapshot']
 >['snapshotValidationResults']['nodes'][number];
 
-export interface ValidationData
-  extends Omit<SnapshotValidationResult, 'severity' | 'context'> {
+export interface ValidationData extends Omit<
+  SnapshotValidationResult,
+  'severity' | 'context'
+> {
   severity:
     | SnapshotValidationResult['severity']
     | SnapshotValidationResultSeverity;
@@ -28,21 +30,21 @@ export const mapValidationData = (
   return originalData.length > 0
     ? originalData
     : snapshotState === SnapshotState.Error
-    ? [
-        {
-          id: 0,
-          context: 'All',
-          severity: SnapshotValidationResultSeverity.Error,
-          message:
-            'An unhandled error has occurred while processing the snapshot. Please contact the service support.',
-        },
-      ]
-    : [
-        {
-          id: 0,
-          context: 'All',
-          severity: SnapshotValidationResultSeverity.Success,
-          message: 'Validation Success for all categories',
-        },
-      ];
+      ? [
+          {
+            id: 0,
+            context: 'All',
+            severity: SnapshotValidationResultSeverity.Error,
+            message:
+              'An unhandled error has occurred while processing the snapshot. Please contact the service support.',
+          },
+        ]
+      : [
+          {
+            id: 0,
+            context: 'All',
+            severity: SnapshotValidationResultSeverity.Success,
+            message: 'Validation Success for all categories',
+          },
+        ];
 };

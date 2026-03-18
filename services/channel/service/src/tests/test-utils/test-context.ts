@@ -28,7 +28,6 @@ import { Request, Response } from 'express';
 import { migrate } from 'graphile-migrate';
 import { DocumentNode, graphql, GraphQLSchema } from 'graphql';
 import { print } from 'graphql/language/printer';
-import { mockRequest, mockResponse } from 'mock-req-res';
 import { Pool } from 'pg';
 import {
   createPostGraphileSchema,
@@ -51,6 +50,19 @@ interface ExecutionResult {
   data?: Dict<any>;
 }
 
+const createMockRequest = (overrides: Dict<any>): Request =>
+  ({
+    body: {},
+    headers: {},
+    socket: {},
+    ...overrides,
+  } as Request);
+
+const createMockResponse = (): Response =>
+  ({
+    locals: {},
+  } as Response);
+
 const runGqlQuery = async function (
   this: TestContext,
   query: string | DocumentNode,
@@ -59,13 +71,13 @@ const runGqlQuery = async function (
   operationName = '',
 ): Promise<ExecutionResult> {
   const queryString = typeof query === 'string' ? query : print(query);
-  const req = mockRequest({
+  const req = createMockRequest({
     body: { query: queryString, operationName },
     authContext: {},
     socket: {},
     ...requestContext,
   });
-  const res = mockResponse();
+  const res = createMockResponse();
   const pgSettings =
     (typeof this.options.pgSettings === 'function'
       ? await this.options.pgSettings(req)

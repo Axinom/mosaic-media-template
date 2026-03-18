@@ -170,7 +170,7 @@ export const permissionDefinition: PermissionDefinition = {
 
   permissions,
 };
-export type PermissionKey = typeof permissions[number]['key'];
+export type PermissionKey = (typeof permissions)[number]['key'];
 
 export const ingestPermissionMappings: {
   type: IngestItemTypeEnum;

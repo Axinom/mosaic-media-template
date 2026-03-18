@@ -54,7 +54,7 @@ export const ProgramDetails: React.FC = () => {
       formData: ProgramDetailsFormData,
       initialData: DetailsProps<ProgramDetailsFormData>['initialData'],
     ): Promise<void> => {
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+       
       const { ...updateDto } = getFormDiff(formData, initialData.data);
       const patch: ProgramPatch = {
         ...updateDto,

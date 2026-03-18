@@ -32,9 +32,8 @@ export class CheckChannelJobStatusHandler extends AuthenticatedMessageHandler<Ch
     message: MessageInfo,
   ): Promise<void> {
     // request status
-    const channelStatus = await this.virtualChannelApi.getChannelStatus(
-      channel_id,
-    );
+    const channelStatus =
+      await this.virtualChannelApi.getChannelStatus(channel_id);
 
     if (channelStatus.status === 'Success') {
       const dashUrl = urljoin(

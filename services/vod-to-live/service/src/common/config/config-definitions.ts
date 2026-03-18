@@ -7,9 +7,9 @@ import {
   getBasicGraphQlConfigDefinitions,
   getBasicMetricsEndpointDefinitions,
   getBasicRabbitMqConfigDefinitions,
-  getConfigType,
   getValidatedConfig,
   pick,
+  ValueObject,
 } from '@axinom/mosaic-service-common';
 import { from } from 'env-var';
 
@@ -101,8 +101,7 @@ export const getFullConfig = (
   return getValidatedConfig(getConfigDefinitions(variables));
 };
 
-const config = getConfigType(getConfigDefinitions());
 /**
  * The full Configuration type
  */
-export type Config = typeof config;
+export type Config = ValueObject<ReturnType<typeof getConfigDefinitions>>;

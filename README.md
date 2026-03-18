@@ -136,6 +136,19 @@ Start the following commands in parallel (in separate terminals):
 Alternatively, use the "...:all" scripts to include also the `channel-service`
 and the `vod-to-live-service`.
 
+## Agentic Development
+
+Axinom Mosaic distributes agent skills for more efficient development in Mosaic-based solutions via npm packages. Check out the 
+[AI-Assisted Development guide](https://docs.axinom.com/getting-started/ai-assisted-development/mosaic-agent-skills),
+which describes the skills and how to use them.
+
+This solution comes with a `CLAUDE.md` file for seeding context for Claude
+Agents. It also defines an `/fix-vulnerabilities` agent skill that contains instructions for agents to run the process of identifying and updating vulnerable
+dependencies. It requires a GitHub repository and uses GitHub security scanning
+out of the box.
+
+More agent skills are planned to be added to this solution over time.
+
 ## Run tests
 
 Note that these steps take several minutes to complete.

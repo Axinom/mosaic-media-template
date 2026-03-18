@@ -83,7 +83,7 @@ export const ProgramManagementFormContent: React.FC<{
   }));
 
   const onHeaderToggleHandler = useCallback((): void => {
-    isAnyOpen ? toggleAll(false) : toggleAll(true);
+    toggleAll(!isAnyOpen);
   }, [isAnyOpen, toggleAll]);
 
   const onToggleHandler = useCallback(

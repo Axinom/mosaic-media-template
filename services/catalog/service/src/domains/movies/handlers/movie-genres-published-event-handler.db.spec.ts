@@ -85,7 +85,7 @@ describe('MovieGenrePublishEventHandler', () => {
         id: contentId,
       }).run(ctx.ownerPool);
 
-      expect(movieGenre?.order_no).toEqual(0);
+      expect(movieGenre?.order_no).toBe(0);
       const localizations = await select(
         'movie_genre_localizations',
         { movie_genre_id: message.payload.genres[0].content_id },
@@ -123,7 +123,7 @@ describe('MovieGenrePublishEventHandler', () => {
       // Assert
       const movieGenres = await select('movie_genre', all).run(ctx.ownerPool);
       expect(movieGenres).toHaveLength(1);
-      expect(movieGenres[0].order_no).toEqual(0);
+      expect(movieGenres[0].order_no).toBe(0);
 
       const localizations = await select('movie_genre_localizations', all, {
         columns: ['title', 'locale', 'is_default_locale'],

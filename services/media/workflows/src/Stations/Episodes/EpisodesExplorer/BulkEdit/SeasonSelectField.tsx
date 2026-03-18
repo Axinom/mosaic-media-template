@@ -25,16 +25,14 @@ export const BulkEditSeasonSelectionField: React.FC<SingleLineTextProps> = (
       onChange={(event) => {
         setLocalValue(event.target.value);
         const value = event.target.value[0].id;
-        onChange &&
-          onChange({
-            ...(event as unknown as React.ChangeEvent<HTMLInputElement>),
-            target: {
-              ...(event as unknown as React.ChangeEvent<HTMLInputElement>)
-                .target,
-              name: name,
-              value: value as unknown as string,
-            },
-          });
+        onChange?.({
+          ...(event as unknown as React.ChangeEvent<HTMLInputElement>),
+          target: {
+            ...(event as unknown as React.ChangeEvent<HTMLInputElement>).target,
+            name: name,
+            value: value as unknown as string,
+          },
+        });
       }}
       maxItems={1}
     />

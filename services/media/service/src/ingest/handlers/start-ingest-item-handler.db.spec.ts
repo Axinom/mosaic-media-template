@@ -430,14 +430,14 @@ describe('Start Ingest Item Handler', () => {
       expect(docs).toHaveLength(1);
 
       // Calculation done in separate handler
-      expect(docs[0].status).toEqual('IN_PROGRESS');
-      expect(docs[0].error_count).toEqual(0);
-      expect(docs[0].in_progress_count).toEqual(1);
-      expect(docs[0].success_count).toEqual(0);
-      expect(docs[0].items_count).toEqual(1);
+      expect(docs[0].status).toBe('IN_PROGRESS');
+      expect(docs[0].error_count).toBe(0);
+      expect(docs[0].in_progress_count).toBe(1);
+      expect(docs[0].success_count).toBe(0);
+      expect(docs[0].items_count).toBe(1);
 
       expect(items).toHaveLength(1);
-      expect(items[0].status).toEqual('ERROR');
+      expect(items[0].status).toBe('ERROR');
       expect(items[0].errors).toEqual([
         {
           message: error.message,

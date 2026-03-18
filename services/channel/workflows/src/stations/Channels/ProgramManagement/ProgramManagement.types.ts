@@ -199,8 +199,7 @@ export interface ProgramManagementContextProps {
   updateMetadata: (value: ProgramManagementContextMetadata) => void;
 }
 
-export interface ProgramManagementProviderProps
-  extends ProgramManagementContextMetadata {
+export interface ProgramManagementProviderProps extends ProgramManagementContextMetadata {
   channelId: string;
   playlistId: string;
 }

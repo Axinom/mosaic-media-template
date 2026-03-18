@@ -11,7 +11,8 @@ interface Props {
 }
 
 export interface MovieSelectionExplorerProps
-  extends Omit<
+  extends
+    Omit<
       SelectionExplorerProps<MovieData>,
       'columns' | 'dataProvider' | 'filterOptions'
     >,
@@ -21,7 +22,8 @@ export interface MovieSelectionExplorerProps
 }
 
 export interface MovieNavigationExplorerProps
-  extends Omit<
+  extends
+    Omit<
       NavigationExplorerProps<MovieData>,
       'columns' | 'dataProvider' | 'filterOptions'
     >,

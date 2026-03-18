@@ -4,7 +4,8 @@ import { LocalizationsIngestElement } from './localizations-ingest-element';
 import { TrailersIngestElement } from './trailers-ingest-element';
 
 export interface SeasonIngestData
-  extends TrailersIngestElement,
+  extends
+    TrailersIngestElement,
     ImagesIngestElement,
     LocalizationsIngestElement {
   index?: number;

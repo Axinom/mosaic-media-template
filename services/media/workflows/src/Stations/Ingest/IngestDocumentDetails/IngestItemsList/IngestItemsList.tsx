@@ -74,6 +74,7 @@ export const IngestItemsList: React.FC<IngestItemsListProps> = ({ items }) => {
           tagsOptions={filterOptions}
           value={filter}
           onChange={(value) => {
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
             setFilter(value.currentTarget.value as any);
             filterTouched.current = true;
           }}

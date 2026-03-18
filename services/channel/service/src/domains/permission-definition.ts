@@ -45,7 +45,7 @@ export const permissionDefinition: PermissionDefinition = {
 
   permissions,
 };
-export type PermissionKey = typeof permissions[number]['key'];
+export type PermissionKey = (typeof permissions)[number]['key'];
 
 /**
  * Synchronize service permissions with ID service

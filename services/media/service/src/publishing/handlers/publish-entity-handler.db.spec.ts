@@ -312,9 +312,7 @@ describe('PublishEntityCommandHandler', () => {
       );
 
       // Assert
-      expect(error.message).toEqual(
-        `MOVIE with ID '${invalidId}' was not found.`,
-      );
+      expect(error.message).toBe(`MOVIE with ID '${invalidId}' was not found.`);
 
       const snapshots = await select('snapshots', all).run(ctx.ownerPool);
       const movieSnapshots = await select('movies_snapshots', all).run(
@@ -461,7 +459,7 @@ describe('PublishEntityCommandHandler', () => {
       ).run(ctx.ownerPool);
       expect(updatedSnapshot).toMatchObject(snapshot);
       expect(updatedState).not.toEqual(originalState);
-      expect(updatedState).toEqual('ERROR');
+      expect(updatedState).toBe('ERROR');
       expect(movieSnapshots).toEqual([
         { snapshot_id: snapshot.id, movie_id: movie1.id },
       ]);

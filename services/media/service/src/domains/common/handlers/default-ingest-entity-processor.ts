@@ -74,9 +74,7 @@ import {
   TrailerRelationTable,
 } from '../models';
 
-export abstract class DefaultIngestEntityProcessor
-  implements IngestEntityProcessor
-{
+export abstract class DefaultIngestEntityProcessor implements IngestEntityProcessor {
   public abstract type: IngestItemTypeEnum;
   constructor(private config: Config) {}
 
