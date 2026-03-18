@@ -42,17 +42,6 @@ The goal is to minimize resolutions and remove them when no longer needed.
 - **Commit**: `197ee4eb` — *"[AB#47252] fix: bumping several packages to address CVEs (#443)"*
 - **Can be removed when**: `@axinom/mosaic-cli` updates `@asyncapi/parser` to `^3.x` (which uses `jsonpath-plus@^10.0.7` natively)
 
-## Blocked by Age Gate
-
-### tar (Dependabot #232)
-
-- **Vulnerability**: Symlink Path Traversal via Drive-Relative Linkpath (high severity)
-- **Current version**: 7.5.10
-- **Patched in**: 7.5.11
-- **Blocked by**: `npmMinimalAgeGate: 7d` in `.yarnrc.yml` — tar@7.5.11 was published on 2026-03-09 and won't be usable until 2026-03-16
-- **Date**: 2026-03-12
-- **Fix**: Delete the tar lockfile entry and run `yarn install --no-immutable` on or after 2026-03-16
-
 ## Waiting for Upstream Fix
 
 ### ajv@7.x (Dependabot #209, #208)
