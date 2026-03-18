@@ -97,3 +97,21 @@ The goal is to minimize resolutions and remove them when no longer needed.
 - **Blocked by**: `@stoplight/spectral-ruleset-bundler@latest` pins `rollup@~2.79.2` (tilde range only allows 2.79.x)
 - **Date**: 2026-03-03
 - **Check again when**: `@stoplight/spectral-ruleset-bundler` updates its rollup dependency
+
+### immutable@~3.7.6 (Dependabot #229)
+
+- **Vulnerability**: Prototype Pollution in `_.unset` and `_.omit` (high severity)
+- **Current version**: 3.7.6
+- **Patched in**: 3.8.3
+- **Blocked by**: `@ardatan/relay-compiler@12.0.0` tilde-pins `immutable@~3.7.6` (allows only 3.7.x). Fix requires `@graphql-tools/relay-operation-optimizer` to update from `^6.5.0` to `^7.x` (which uses `@ardatan/relay-compiler@13.x` with `immutable@^5.1.5`).
+- **Date**: 2026-03-12
+- **Check again when**: `@graphql-tools/relay-operation-optimizer` releases a v7 that the graphql-codegen plugins accept
+
+### tmp@^0.0.33 (Dependabot #168)
+
+- **Vulnerability**: Arbitrary temp file/dir write via symlink (low severity)
+- **Current version**: 0.0.33
+- **Patched in**: 0.2.4
+- **Blocked by**: `external-editor@3.1.0` (latest) pins `tmp@^0.0.33`; `^0.0.33` resolves only `0.0.33` in strict semver. `external-editor` has not released a new version since 3.1.0.
+- **Date**: 2026-03-12
+- **Check again when**: `external-editor` releases a new version with an updated `tmp` dep, or `@graphql-codegen/cli` stops depending on `inquirer@8`
