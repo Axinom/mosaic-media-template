@@ -40,7 +40,7 @@ The goal is to minimize resolutions and remove them when no longer needed.
 - **Original selector**: `^5.0.7` / `^7.2.0` (various parents)
 - **Date added**: 2025-05-06
 - **Commit**: `197ee4eb` — *"[AB#47252] fix: bumping several packages to address CVEs (#443)"*
-- **Can be removed when**: `@axinom/mosaic-cli` updates its dependency chain to use `jsonpath-plus@>=10.2.0` naturally
+- **Can be removed when**: `@axinom/mosaic-cli` updates `@asyncapi/parser` to `^3.x` (which uses `jsonpath-plus@^10.0.7` natively)
 
 ## Waiting for Upstream Fix
 
