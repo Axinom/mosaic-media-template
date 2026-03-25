@@ -48,6 +48,7 @@ mutation DeleteCollection($input: DeleteCollectionInput!) {
 mutation PublishCollection($id: Int!) {
   publishCollection(collectionId: $id) {
     id
+    snapshotNo
   }
 }
 

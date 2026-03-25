@@ -24,6 +24,8 @@ export const ExtensionsContext = React.createContext<Extensions>({
   VideoSelectField: extensionDefaultValue,
 });
 
+export const ExtensionsProvider = ExtensionsContext.Provider;
+
 /**
  * This method is binding all externally shared items (Extensions, Data,...) that the workflows of this Pilet need.
  * The need extensions are directly returned. Other shared functions are initialized and provided through module exports.

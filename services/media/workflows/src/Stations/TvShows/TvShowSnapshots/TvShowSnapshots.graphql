@@ -1,5 +1,6 @@
 mutation CreateTvShowSnapshot($tvshowId: Int!) {
   createTvshowSnapshot(tvshowId: $tvshowId) {
     id
+    snapshotNo
   }
 }

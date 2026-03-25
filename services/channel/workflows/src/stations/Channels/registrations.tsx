@@ -2,13 +2,13 @@ import { registerLocalizationEntryPoints } from '@axinom/mosaic-managed-workflow
 import { PiletApi } from '@axinom/mosaic-portal';
 import * as React from 'react';
 import { setGetProviders } from '../../externals/getProviders';
-import { Extensions, ExtensionsContext } from '../../externals/piralExtensions';
+import { Extensions, ExtensionsProvider } from '../../externals/piralExtensions';
 import {
   channelDetailsStationResolverRegistration,
   programDetailsStationResolverRegistration,
 } from '../../externals/routeResolvers';
 import { ChannelIconName, ChannelIcons } from '../../icons/ChannelIcons';
-import { PortalContext } from '../../store/portal-contex';
+import { PortalContext, PortalProvider } from '../../store/portal-contex';
 import { ChannelStationNames } from '../../types';
 import { ChannelCreate } from './ChannelCreate/ChannelCreate';
 import { ChannelDetails } from './ChannelDetails/ChannelDetails';
@@ -87,9 +87,9 @@ export function register(app: PiletApi, extensions: Extensions): void {
   app.registerPage(
     routes.channels,
     () => (
-      <ExtensionsContext.Provider value={extensions}>
+      <ExtensionsProvider value={extensions}>
         <Channels />
-      </ExtensionsContext.Provider>
+      </ExtensionsProvider>
     ),
     {
       breadcrumb: () => 'Channels',
@@ -105,9 +105,9 @@ export function register(app: PiletApi, extensions: Extensions): void {
   app.registerPage(
     routes.channelDetails,
     () => (
-      <ExtensionsContext.Provider value={extensions}>
+      <ExtensionsProvider value={extensions}>
         <ChannelDetails />
-      </ExtensionsContext.Provider>
+      </ExtensionsProvider>
     ),
     {
       breadcrumb: ChannelDetailsCrumb,
@@ -118,9 +118,9 @@ export function register(app: PiletApi, extensions: Extensions): void {
   app.registerPage(
     routes.playlists,
     () => (
-      <ExtensionsContext.Provider value={extensions}>
+      <ExtensionsProvider value={extensions}>
         <Playlists />
-      </ExtensionsContext.Provider>
+      </ExtensionsProvider>
     ),
     {
       breadcrumb: () => 'Playlists',
@@ -150,15 +150,15 @@ export function register(app: PiletApi, extensions: Extensions): void {
   app.registerPage(
     routes.programs,
     () => (
-      <ExtensionsContext.Provider value={extensions}>
-        <PortalContext.Provider
+      <ExtensionsProvider value={extensions}>
+        <PortalProvider
           value={{
             resolveRoute: app.resolveRoute,
           }}
         >
           <ProgramManagement />
-        </PortalContext.Provider>
-      </ExtensionsContext.Provider>
+        </PortalProvider>
+      </ExtensionsProvider>
     ),
     {
       breadcrumb: () => 'Programs',
@@ -169,9 +169,9 @@ export function register(app: PiletApi, extensions: Extensions): void {
   app.registerPage(
     routes.programDetails,
     () => (
-      <ExtensionsContext.Provider value={extensions}>
+      <ExtensionsProvider value={extensions}>
         <ProgramDetails />
-      </ExtensionsContext.Provider>
+      </ExtensionsProvider>
     ),
     {
       breadcrumb: ProgramDetailsCrumb,
@@ -191,9 +191,9 @@ export function register(app: PiletApi, extensions: Extensions): void {
   app.registerPage(
     routes.channelLogo,
     () => (
-      <ExtensionsContext.Provider value={extensions}>
+      <ExtensionsProvider value={extensions}>
         <ChannelImageManagement />
-      </ExtensionsContext.Provider>
+      </ExtensionsProvider>
     ),
     {
       breadcrumb: () => 'Manage Logo Image',
@@ -204,9 +204,9 @@ export function register(app: PiletApi, extensions: Extensions): void {
   app.registerPage(
     routes.channelVideos,
     () => (
-      <ExtensionsContext.Provider value={extensions}>
+      <ExtensionsProvider value={extensions}>
         <ChannelVideoManagement />
-      </ExtensionsContext.Provider>
+      </ExtensionsProvider>
     ),
     {
       breadcrumb: () => 'Manage Placeholder Video',

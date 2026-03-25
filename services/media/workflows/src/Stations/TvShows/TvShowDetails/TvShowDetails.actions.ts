@@ -7,12 +7,16 @@ import {
   usePublishTvShowMutation,
   useUnpublishTvShowMutation,
 } from '../../../generated/graphql';
+import { useNotification } from '../../../Util/Notifications/NotificationContext';
+import { publishNowNotification } from '../../../Util/Notifications/PublishNowNotification';
+import { unpublishNotification } from '../../../Util/Notifications/UnpublishNotification';
 import { TvShowDetailsFormData } from './TvShowDetails.types';
 
 export function useTvShowDetailsActions(id: number): {
   readonly actions: FormActionData<TvShowDetailsFormData>[];
 } {
   const history = useHistory();
+  const showNotification = useNotification();
   const localizationPath = getLocalizationEntryPoint('tv_show');
 
   const [deleteTvShowMutation] = useDeleteTvShowMutation({
@@ -64,7 +68,14 @@ export function useTvShowDetailsActions(id: number): {
       label: 'Publish Now',
       confirmationMode: 'Simple',
       onActionSelected: async () => {
-        await publishTvShowMutation({ variables: { id } });
+        const response = await publishTvShowMutation({ variables: { id } });
+        if (!response.data) return response.errors;
+        showNotification(
+          publishNowNotification({
+            link: `/tvshows/${id}/snapshots/${response.data.publishTvshow.id}`,
+            snapshotNo: response.data.publishTvshow?.snapshotNo,
+          }),
+        );
       },
     },
     {
@@ -75,7 +86,9 @@ export function useTvShowDetailsActions(id: number): {
       label: 'Unpublish',
       confirmationMode: 'Simple',
       onActionSelected: async () => {
-        await unpublishTvShowMutation({ variables: { id } });
+        const response = await unpublishTvShowMutation({ variables: { id } });
+        if (!response.data) return response.errors;
+        showNotification(unpublishNotification());
       },
     },
     {

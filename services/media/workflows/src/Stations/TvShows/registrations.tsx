@@ -4,7 +4,8 @@ import {
 } from '@axinom/mosaic-managed-workflow-integration';
 import { PiletApi } from '@axinom/mosaic-portal';
 import React from 'react';
-import { Extensions, ExtensionsContext } from '../../externals';
+import { Extensions, ExtensionsProvider } from '../../externals';
+import { NotificationProvider } from '../../Util/Notifications/NotificationContext';
 import {
   mediaManagementParentName as parentName,
   settingsGroupName,
@@ -100,9 +101,11 @@ export function register(app: PiletApi, extensions: Extensions): void {
   app.registerPage(
     '/tvshows',
     () => (
-      <ExtensionsContext.Provider value={extensions}>
-        <TvShows />
-      </ExtensionsContext.Provider>
+      <ExtensionsProvider value={extensions}>
+        <NotificationProvider value={app.showNotification}>
+          <TvShows />
+        </NotificationProvider>
+      </ExtensionsProvider>
     ),
     {
       breadcrumb: () => 'TV Shows',
@@ -120,9 +123,11 @@ export function register(app: PiletApi, extensions: Extensions): void {
   app.registerPage(
     '/tvshows/:tvshowId',
     () => (
-      <ExtensionsContext.Provider value={extensions}>
-        <TvShowDetails />
-      </ExtensionsContext.Provider>
+      <ExtensionsProvider value={extensions}>
+        <NotificationProvider value={app.showNotification}>
+          <TvShowDetails />
+        </NotificationProvider>
+      </ExtensionsProvider>
     ),
     {
       breadcrumb: TvShowDetailsCrumb,
@@ -162,9 +167,9 @@ export function register(app: PiletApi, extensions: Extensions): void {
   app.registerPage(
     '/tvshows/:tvshowId/videos',
     () => (
-      <ExtensionsContext.Provider value={extensions}>
+      <ExtensionsProvider value={extensions}>
         <TvShowVideoManagement />
-      </ExtensionsContext.Provider>
+      </ExtensionsProvider>
     ),
     {
       breadcrumb: () => 'Video Management',
@@ -177,9 +182,9 @@ export function register(app: PiletApi, extensions: Extensions): void {
   app.registerPage(
     '/tvshows/:tvshowId/images',
     () => (
-      <ExtensionsContext.Provider value={extensions}>
+      <ExtensionsProvider value={extensions}>
         <TvShowImageManagement />
-      </ExtensionsContext.Provider>
+      </ExtensionsProvider>
     ),
     {
       breadcrumb: () => 'Image Management',

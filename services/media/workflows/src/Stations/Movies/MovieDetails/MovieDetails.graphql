@@ -66,12 +66,14 @@ mutation DeleteMovie($input: DeleteMovieInput!) {
 mutation PublishMovie($id: Int!) {
   publishMovie(movieId: $id) {
     id
+    snapshotNo
   }
 }
 
 mutation UnpublishMovie($id: Int!) {
   unpublishMovie(movieId: $id) {
     id
+    snapshotNo
   }
 }
 

@@ -1,6 +1,6 @@
 import { SingleLineTextProps, useFormikError } from '@axinom/mosaic-ui';
 import React, { useContext } from 'react';
-import { ExtensionsContext } from '../../externals';
+import { ExtensionsContext } from '../../externals/piralExtensions';
 
 export const MainVideoSelectionField: React.FC<SingleLineTextProps> = (
   props,

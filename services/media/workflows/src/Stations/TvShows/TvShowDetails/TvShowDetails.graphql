@@ -68,12 +68,14 @@ mutation DeleteTvShow($input: DeleteTvshowInput!) {
 mutation PublishTvShow($id: Int!) {
   publishTvshow(tvshowId: $id) {
     id
+    snapshotNo
   }
 }
 
 mutation UnpublishTvShow($id: Int!) {
   unpublishTvshow(tvshowId: $id) {
     id
+    snapshotNo
   }
 }
 

@@ -7,12 +7,16 @@ import {
   usePublishSeasonMutation,
   useUnpublishSeasonMutation,
 } from '../../../generated/graphql';
+import { useNotification } from '../../../Util/Notifications/NotificationContext';
+import { publishNowNotification } from '../../../Util/Notifications/PublishNowNotification';
+import { unpublishNotification } from '../../../Util/Notifications/UnpublishNotification';
 import { SeasonDetailsFormData } from './SeasonDetails.types';
 
 export function useSeasonDetailsActions(id: number): {
   readonly actions: FormActionData<SeasonDetailsFormData>[];
 } {
   const history = useHistory();
+  const showNotification = useNotification();
   const localizationPath = getLocalizationEntryPoint('season');
 
   const [deleteSeasonMutation] = useDeleteSeasonMutation({
@@ -64,7 +68,14 @@ export function useSeasonDetailsActions(id: number): {
       label: 'Publish Now',
       confirmationMode: 'Simple',
       onActionSelected: async () => {
-        await publishSeasonMutation({ variables: { id } });
+        const response = await publishSeasonMutation({ variables: { id } });
+        if (!response.data) return response.errors;
+        showNotification(
+          publishNowNotification({
+            link: `/seasons/${id}/snapshots/${response.data.publishSeason.id}`,
+            snapshotNo: response.data.publishSeason?.snapshotNo,
+          }),
+        );
       },
     },
     {
@@ -75,7 +86,9 @@ export function useSeasonDetailsActions(id: number): {
       label: 'Unpublish',
       confirmationMode: 'Simple',
       onActionSelected: async () => {
-        await unpublishSeasonMutation({ variables: { id } });
+        const response = await unpublishSeasonMutation({ variables: { id } });
+        if (!response.data) return response.errors;
+        showNotification(unpublishNotification());
       },
     },
     {

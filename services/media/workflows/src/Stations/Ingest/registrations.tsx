@@ -1,6 +1,6 @@
 import { PiletApi } from '@axinom/mosaic-portal';
 import React from 'react';
-import { PortalContext } from '../../context/portalContext';
+import { PortalProvider } from '../../context/portalContext';
 import { Extensions } from '../../externals';
 import { MediaIconName } from '../../MediaIcons';
 import { MediaIcons } from '../../MediaIcons/MediaIcons';
@@ -33,9 +33,9 @@ export function register(app: PiletApi, _extensions: Extensions): void {
   app.registerPage(
     '/ingest',
     () => (
-      <PortalContext.Provider value={{ resolveRoute: app.resolveRoute }}>
+      <PortalProvider value={{ resolveRoute: app.resolveRoute }}>
         <IngestDocuments />
-      </PortalContext.Provider>
+      </PortalProvider>
     ),
     {
       breadcrumb: () => 'Ingest Explorer',
@@ -53,9 +53,9 @@ export function register(app: PiletApi, _extensions: Extensions): void {
   app.registerPage(
     '/ingest/:ingestId',
     () => (
-      <PortalContext.Provider value={{ resolveRoute: app.resolveRoute }}>
+      <PortalProvider value={{ resolveRoute: app.resolveRoute }}>
         <IngestDocumentDetails />
-      </PortalContext.Provider>
+      </PortalProvider>
     ),
     {
       breadcrumb: IngestDocumentDetailsCrumb,

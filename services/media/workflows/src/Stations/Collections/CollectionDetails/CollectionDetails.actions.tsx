@@ -8,11 +8,17 @@ import {
   usePublishCollectionMutation,
   useUnpublishCollectionMutation,
 } from '../../../generated/graphql';
+import { useNotification } from '../../../Util/Notifications/NotificationContext';
+import { publishNowNotification } from '../../../Util/Notifications/PublishNowNotification';
+import { unpublishNotification } from '../../../Util/Notifications/UnpublishNotification';
 
-export function useCollectionDetailsActions(id: number): {
+export function useCollectionDetailsActions(
+  id: number,
+): {
   readonly actions: ActionData[];
 } {
   const history = useHistory();
+  const showNotification = useNotification();
   const localizationPath = getLocalizationEntryPoint('collection');
 
   const [deleteCollectionMutation] = useDeleteCollectionMutation({
@@ -57,7 +63,18 @@ export function useCollectionDetailsActions(id: number): {
         label: 'Publish Now',
         confirmationMode: 'Simple',
         onActionSelected: async () => {
-          await publishCollectionMutation({ variables: { id } });
+          const response = await publishCollectionMutation({
+            variables: { id },
+          });
+          if (!response.data) {
+            return response.errors;
+          }
+          showNotification(
+            publishNowNotification({
+              link: `/collections/${id}/snapshots/${response.data.publishCollection.id}`,
+              snapshotNo: response.data.publishCollection?.snapshotNo,
+            }),
+          );
         },
       },
       {
@@ -68,7 +85,13 @@ export function useCollectionDetailsActions(id: number): {
         label: 'Unpublish',
         confirmationMode: 'Simple',
         onActionSelected: async () => {
-          await unpublishCollectionMutation({ variables: { id } });
+          const response = await unpublishCollectionMutation({
+            variables: { id },
+          });
+          if (!response.data) {
+            return response.errors;
+          }
+          showNotification(unpublishNotification());
         },
       },
       {
@@ -80,11 +103,12 @@ export function useCollectionDetailsActions(id: number): {
 
     return { actions } as const;
   }, [
+    id,
+    localizationPath,
     deleteCollectionMutation,
     history,
-    id,
     publishCollectionMutation,
+    showNotification,
     unpublishCollectionMutation,
-    localizationPath,
   ]);
 }

@@ -16,7 +16,7 @@ import gql from 'graphql-tag';
 import React, { useCallback, useContext } from 'react';
 import * as Yup from 'yup';
 import { client } from '../../../apolloClient';
-import { ExtensionsContext } from '../../../externals';
+import { ExtensionsContext } from '../../../externals/piralExtensions';
 import {
   Mutation,
   MutationUpdateChannelArgs,

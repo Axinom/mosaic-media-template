@@ -11,12 +11,17 @@ import {
   useBulkPublishMoviesMutation,
   useBulkUnpublishMoviesMutation,
 } from '../../../generated/graphql';
+import { bulkPublishNowNotification } from '../../../Util/Notifications/BulkPublishNowNotification';
+import { bulkSnapshotCreateNotification } from '../../../Util/Notifications/BulkSnapshotCreateNotification';
+import { bulkUnpublishNotification } from '../../../Util/Notifications/BulkUnpublishNotification';
+import { useNotification } from '../../../Util/Notifications/NotificationContext';
 import { useMoviesFilters } from '../MovieExplorerBase/MovieExplorer.filters';
 import { MovieData } from '../MovieExplorerBase/MovieExplorer.types';
 
 export function useMoviesActions(): {
   readonly bulkActions: ExplorerBulkAction<MovieData>[];
 } {
+  const showNotification = useNotification();
   const { transformFilters } = useMoviesFilters();
 
   const [bulkDeleteMovies] = useBulkDeleteMoviesMutation({
@@ -42,14 +47,15 @@ export function useMoviesActions(): {
   const createSnapshotsBulkAction: ExplorerBulkAction<MovieData> = {
     label: 'Create Snapshot(s)',
     onClick: async (arg?: ItemSelection<MovieData>) => {
+      let response;
       switch (arg?.mode) {
         case 'SELECT_ALL':
-          await bulkCreateMovieSnapshots({
+          response = await bulkCreateMovieSnapshots({
             variables: { filter: transformFilters(arg.filters) },
           });
           break;
         case 'SINGLE_ITEMS':
-          await bulkCreateMovieSnapshots({
+          response = await bulkCreateMovieSnapshots({
             variables: {
               filter: {
                 id: { in: arg.items?.map((item) => item.id) },
@@ -58,23 +64,29 @@ export function useMoviesActions(): {
           });
           break;
       }
+      if (response?.data) {
+        const count = response.data.createMovieSnapshots?.affectedIds?.length ?? 0;
+        showNotification(bulkSnapshotCreateNotification(count));
+      }
     },
     actionType: PageHeaderActionType.Context,
     icon: IconName.Snapshot,
     reloadData: true,
+    showStartedNotification: false,
   };
 
   const publishNowBulkAction: ExplorerBulkAction<MovieData> = {
     label: 'Publish Now',
     onClick: async (arg?: ItemSelection<MovieData>) => {
+      let response;
       switch (arg?.mode) {
         case 'SELECT_ALL':
-          await bulkPublishMovies({
+          response = await bulkPublishMovies({
             variables: { filter: transformFilters(arg.filters) },
           });
           break;
         case 'SINGLE_ITEMS':
-          await bulkPublishMovies({
+          response = await bulkPublishMovies({
             variables: {
               filter: {
                 id: { in: arg.items?.map((item) => item.id) },
@@ -82,25 +94,31 @@ export function useMoviesActions(): {
             },
           });
           break;
+      }
+      if (response?.data) {
+        const count = response.data.publishMovies?.affectedIds?.length ?? 0;
+        showNotification(bulkPublishNowNotification(count));
       }
     },
     actionType: PageHeaderActionType.Context,
     confirmationMode: 'Simple',
     icon: IconName.Publish,
     reloadData: true,
+    showStartedNotification: false,
   };
 
   const unpublishNowBulkAction: ExplorerBulkAction<MovieData> = {
     label: 'Unpublish',
     onClick: async (arg?: ItemSelection<MovieData>) => {
+      let response;
       switch (arg?.mode) {
         case 'SELECT_ALL':
-          await bulkUnpublishMovies({
+          response = await bulkUnpublishMovies({
             variables: { filter: transformFilters(arg.filters) },
           });
           break;
         case 'SINGLE_ITEMS':
-          await bulkUnpublishMovies({
+          response = await bulkUnpublishMovies({
             variables: {
               filter: {
                 id: { in: arg.items?.map((item) => item.id) },
@@ -109,11 +127,16 @@ export function useMoviesActions(): {
           });
           break;
       }
+      if (response?.data) {
+        const count = response.data.unpublishMovies?.affectedIds?.length ?? 0;
+        showNotification(bulkUnpublishNotification(count));
+      }
     },
     actionType: PageHeaderActionType.Context,
     confirmationMode: 'Simple',
     icon: IconName.Unpublish,
     reloadData: true,
+    showStartedNotification: false,
   };
 
   const deleteBulkAction: ExplorerBulkAction<MovieData> = {

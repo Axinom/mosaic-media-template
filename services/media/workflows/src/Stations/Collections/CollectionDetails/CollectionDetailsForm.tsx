@@ -19,7 +19,7 @@ import gql from 'graphql-tag';
 import React, { useCallback, useContext, useMemo } from 'react';
 import * as Yup from 'yup';
 import { client } from '../../../apolloClient';
-import { ExtensionsContext } from '../../../externals';
+import { ExtensionsContext } from '../../../externals/piralExtensions';
 import {
   CollectionDocument,
   CollectionImageType,
@@ -38,7 +38,7 @@ import { useCollectionDetailsActions } from './CollectionDetails.actions';
 import classes from './CollectionDetails.module.scss';
 import { CollectionDetailsFormData } from './CollectionDetails.types';
 
-interface CollectionDetailsFormProps {
+export interface CollectionDetailsFormProps {
   collectionId: number;
 }
 

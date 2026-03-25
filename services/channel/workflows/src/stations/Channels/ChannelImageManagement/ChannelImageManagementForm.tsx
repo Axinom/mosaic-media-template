@@ -8,7 +8,7 @@ import { Field } from 'formik';
 import gql from 'graphql-tag';
 import React, { useCallback, useContext, useEffect, useState } from 'react';
 import { client } from '../../../apolloClient';
-import { ExtensionsContext } from '../../../externals';
+import { ExtensionsContext } from '../../../externals/piralExtensions';
 import {
   ChannelImage,
   ChannelImageType,

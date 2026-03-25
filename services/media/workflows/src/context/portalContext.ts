@@ -12,6 +12,8 @@ export const PortalContext = React.createContext<PortalProps>({
   ): string | undefined => undefined,
 });
 
+export const PortalProvider = PortalContext.Provider;
+
 export const usePortal = (): PortalProps => {
   const context = React.useContext(PortalContext);
   if (!context) {

@@ -79,6 +79,13 @@ export type BulkEditAsyncCollectionAddInput = {
   collectionsTags?: InputMaybe<Array<InputMaybe<BulkEditAsyncCollectionAddCollectionsTagInput>>>;
 };
 
+export type BulkEditAsyncCollectionClearInput = {
+  collectionRelations?: InputMaybe<Scalars['Boolean']>;
+  collectionsImages?: InputMaybe<Scalars['Boolean']>;
+  collectionsSnapshots?: InputMaybe<Scalars['Boolean']>;
+  collectionsTags?: InputMaybe<Scalars['Boolean']>;
+};
+
 export type BulkEditAsyncCollectionRemoveCollectionRelationInput = {
   episodeId?: InputMaybe<Scalars['Int']>;
   id?: InputMaybe<Scalars['Int']>;
@@ -165,6 +172,18 @@ export type BulkEditAsyncEpisodeAddInput = {
   episodesTags?: InputMaybe<Array<InputMaybe<BulkEditAsyncEpisodeAddEpisodesTagInput>>>;
   episodesTrailers?: InputMaybe<Array<InputMaybe<BulkEditAsyncEpisodeAddEpisodesTrailerInput>>>;
   episodesTvshowGenres?: InputMaybe<Array<InputMaybe<BulkEditAsyncEpisodeAddEpisodesTvshowGenreInput>>>;
+};
+
+export type BulkEditAsyncEpisodeClearInput = {
+  collectionRelations?: InputMaybe<Scalars['Boolean']>;
+  episodesCasts?: InputMaybe<Scalars['Boolean']>;
+  episodesImages?: InputMaybe<Scalars['Boolean']>;
+  episodesLicenses?: InputMaybe<Scalars['Boolean']>;
+  episodesProductionCountries?: InputMaybe<Scalars['Boolean']>;
+  episodesSnapshots?: InputMaybe<Scalars['Boolean']>;
+  episodesTags?: InputMaybe<Scalars['Boolean']>;
+  episodesTrailers?: InputMaybe<Scalars['Boolean']>;
+  episodesTvshowGenres?: InputMaybe<Scalars['Boolean']>;
 };
 
 export type BulkEditAsyncEpisodeRemoveCollectionRelationInput = {
@@ -281,6 +300,18 @@ export type BulkEditAsyncMovieAddMoviesTagInput = {
 
 export type BulkEditAsyncMovieAddMoviesTrailerInput = {
   videoId: Scalars['UUID'];
+};
+
+export type BulkEditAsyncMovieClearInput = {
+  collectionRelations?: InputMaybe<Scalars['Boolean']>;
+  moviesCasts?: InputMaybe<Scalars['Boolean']>;
+  moviesImages?: InputMaybe<Scalars['Boolean']>;
+  moviesLicenses?: InputMaybe<Scalars['Boolean']>;
+  moviesMovieGenres?: InputMaybe<Scalars['Boolean']>;
+  moviesProductionCountries?: InputMaybe<Scalars['Boolean']>;
+  moviesSnapshots?: InputMaybe<Scalars['Boolean']>;
+  moviesTags?: InputMaybe<Scalars['Boolean']>;
+  moviesTrailers?: InputMaybe<Scalars['Boolean']>;
 };
 
 export type BulkEditAsyncMovieRemoveCollectionRelationInput = {
@@ -419,6 +450,19 @@ export type BulkEditAsyncSeasonAddSeasonsTrailerInput = {
 
 export type BulkEditAsyncSeasonAddSeasonsTvshowGenreInput = {
   tvshowGenresId: Scalars['Int'];
+};
+
+export type BulkEditAsyncSeasonClearInput = {
+  collectionRelations?: InputMaybe<Scalars['Boolean']>;
+  episodes?: InputMaybe<Scalars['Boolean']>;
+  seasonsCasts?: InputMaybe<Scalars['Boolean']>;
+  seasonsImages?: InputMaybe<Scalars['Boolean']>;
+  seasonsLicenses?: InputMaybe<Scalars['Boolean']>;
+  seasonsProductionCountries?: InputMaybe<Scalars['Boolean']>;
+  seasonsSnapshots?: InputMaybe<Scalars['Boolean']>;
+  seasonsTags?: InputMaybe<Scalars['Boolean']>;
+  seasonsTrailers?: InputMaybe<Scalars['Boolean']>;
+  seasonsTvshowGenres?: InputMaybe<Scalars['Boolean']>;
 };
 
 export type BulkEditAsyncSeasonRemoveCollectionRelationInput = {
@@ -562,6 +606,19 @@ export type BulkEditAsyncTvshowAddTvshowsTrailerInput = {
 
 export type BulkEditAsyncTvshowAddTvshowsTvshowGenreInput = {
   tvshowGenresId: Scalars['Int'];
+};
+
+export type BulkEditAsyncTvshowClearInput = {
+  collectionRelations?: InputMaybe<Scalars['Boolean']>;
+  seasons?: InputMaybe<Scalars['Boolean']>;
+  tvshowsCasts?: InputMaybe<Scalars['Boolean']>;
+  tvshowsImages?: InputMaybe<Scalars['Boolean']>;
+  tvshowsLicenses?: InputMaybe<Scalars['Boolean']>;
+  tvshowsProductionCountries?: InputMaybe<Scalars['Boolean']>;
+  tvshowsSnapshots?: InputMaybe<Scalars['Boolean']>;
+  tvshowsTags?: InputMaybe<Scalars['Boolean']>;
+  tvshowsTrailers?: InputMaybe<Scalars['Boolean']>;
+  tvshowsTvshowGenres?: InputMaybe<Scalars['Boolean']>;
 };
 
 export type BulkEditAsyncTvshowRemoveCollectionRelationInput = {
@@ -9315,7 +9372,7 @@ export type Mutation = {
   /** Creates a single `CollectionsImage`. */
   createCollectionsImage?: Maybe<CreateCollectionsImagePayload>;
   /** Creates a new Collection snapshot. */
-  createCollectionSnapshot?: Maybe<Snapshot>;
+  createCollectionSnapshot: Snapshot;
   createCollectionSnapshots?: Maybe<BulkPublishingPayload>;
   /** Creates a single `CollectionsTag`. */
   createCollectionsTag?: Maybe<CreateCollectionsTagPayload>;
@@ -9330,7 +9387,7 @@ export type Mutation = {
   /** Creates a single `EpisodesLicensesCountry`. */
   createEpisodesLicensesCountry?: Maybe<CreateEpisodesLicensesCountryPayload>;
   /** Creates a new Episode snapshot. */
-  createEpisodeSnapshot?: Maybe<Snapshot>;
+  createEpisodeSnapshot: Snapshot;
   createEpisodeSnapshots?: Maybe<BulkPublishingPayload>;
   /** Creates a single `EpisodesProductionCountry`. */
   createEpisodesProductionCountry?: Maybe<CreateEpisodesProductionCountryPayload>;
@@ -9345,7 +9402,7 @@ export type Mutation = {
   /** Creates a single `MovieGenre`. */
   createMovieGenre?: Maybe<CreateMovieGenrePayload>;
   /** Creates a new Movie genres snapshot. */
-  createMovieGenresSnapshot?: Maybe<Snapshot>;
+  createMovieGenresSnapshot: Snapshot;
   /** Creates a single `MoviesCast`. */
   createMoviesCast?: Maybe<CreateMoviesCastPayload>;
   /** Creates a single `MoviesImage`. */
@@ -9357,7 +9414,7 @@ export type Mutation = {
   /** Creates a single `MoviesMovieGenre`. */
   createMoviesMovieGenre?: Maybe<CreateMoviesMovieGenrePayload>;
   /** Creates a new Movie snapshot. */
-  createMovieSnapshot?: Maybe<Snapshot>;
+  createMovieSnapshot: Snapshot;
   createMovieSnapshots?: Maybe<BulkPublishingPayload>;
   /** Creates a single `MoviesProductionCountry`. */
   createMoviesProductionCountry?: Maybe<CreateMoviesProductionCountryPayload>;
@@ -9376,7 +9433,7 @@ export type Mutation = {
   /** Creates a single `SeasonsLicensesCountry`. */
   createSeasonsLicensesCountry?: Maybe<CreateSeasonsLicensesCountryPayload>;
   /** Creates a new Season snapshot. */
-  createSeasonSnapshot?: Maybe<Snapshot>;
+  createSeasonSnapshot: Snapshot;
   createSeasonSnapshots?: Maybe<BulkPublishingPayload>;
   /** Creates a single `SeasonsProductionCountry`. */
   createSeasonsProductionCountry?: Maybe<CreateSeasonsProductionCountryPayload>;
@@ -9391,7 +9448,7 @@ export type Mutation = {
   /** Creates a single `TvshowGenre`. */
   createTvshowGenre?: Maybe<CreateTvshowGenrePayload>;
   /** Creates a new Tvshow genres snapshot. */
-  createTvshowGenresSnapshot?: Maybe<Snapshot>;
+  createTvshowGenresSnapshot: Snapshot;
   /** Creates a single `TvshowsCast`. */
   createTvshowsCast?: Maybe<CreateTvshowsCastPayload>;
   /** Creates a single `TvshowsImage`. */
@@ -9401,7 +9458,7 @@ export type Mutation = {
   /** Creates a single `TvshowsLicensesCountry`. */
   createTvshowsLicensesCountry?: Maybe<CreateTvshowsLicensesCountryPayload>;
   /** Creates a new Tvshow snapshot. */
-  createTvshowSnapshot?: Maybe<Snapshot>;
+  createTvshowSnapshot: Snapshot;
   createTvshowSnapshots?: Maybe<BulkPublishingPayload>;
   /** Creates a single `TvshowsProductionCountry`. */
   createTvshowsProductionCountry?: Maybe<CreateTvshowsProductionCountryPayload>;
@@ -9524,48 +9581,48 @@ export type Mutation = {
   populateMovies?: Maybe<PopulatePayload>;
   populateTvshows?: Maybe<PopulatePayload>;
   /** Creates a Collection snapshot and immediately publishes it if it's valid. */
-  publishCollection?: Maybe<Snapshot>;
+  publishCollection: Snapshot;
   publishCollections?: Maybe<BulkPublishingPayload>;
   /** Creates a Episode snapshot and immediately publishes it if it's valid. */
-  publishEpisode?: Maybe<Snapshot>;
+  publishEpisode: Snapshot;
   publishEpisodes?: Maybe<BulkPublishingPayload>;
   /** Creates a Movie snapshot and immediately publishes it if it's valid. */
-  publishMovie?: Maybe<Snapshot>;
+  publishMovie: Snapshot;
   /** Creates a Movie genres snapshot and immediately publishes it if it's valid. */
-  publishMovieGenres?: Maybe<Snapshot>;
+  publishMovieGenres: Snapshot;
   publishMovies?: Maybe<BulkPublishingPayload>;
   /** Creates a Season snapshot and immediately publishes it if it's valid. */
-  publishSeason?: Maybe<Snapshot>;
+  publishSeason: Snapshot;
   publishSeasons?: Maybe<BulkPublishingPayload>;
   publishSnapshot?: Maybe<Snapshot>;
   publishSnapshots?: Maybe<BulkPublishingPayload>;
   /** Creates a Tvshow snapshot and immediately publishes it if it's valid. */
-  publishTvshow?: Maybe<Snapshot>;
+  publishTvshow: Snapshot;
   /** Creates a Tvshow genres snapshot and immediately publishes it if it's valid. */
-  publishTvshowGenres?: Maybe<Snapshot>;
+  publishTvshowGenres: Snapshot;
   publishTvshows?: Maybe<BulkPublishingPayload>;
   recreateSnapshots?: Maybe<BulkPublishingPayload>;
   startIngest?: Maybe<StartIngestPayload>;
   /** Unpublishes the currently published Collection snapshot. */
-  unpublishCollection?: Maybe<Snapshot>;
+  unpublishCollection: Snapshot;
   unpublishCollections?: Maybe<BulkMutationPayload>;
   /** Unpublishes the currently published Episode snapshot. */
-  unpublishEpisode?: Maybe<Snapshot>;
+  unpublishEpisode: Snapshot;
   unpublishEpisodes?: Maybe<BulkMutationPayload>;
   /** Unpublishes the currently published Movie snapshot. */
-  unpublishMovie?: Maybe<Snapshot>;
+  unpublishMovie: Snapshot;
   /** Unpublishes the currently published Movie genres snapshot. */
-  unpublishMovieGenres?: Maybe<Snapshot>;
+  unpublishMovieGenres: Snapshot;
   unpublishMovies?: Maybe<BulkMutationPayload>;
   /** Unpublishes the currently published Season snapshot. */
-  unpublishSeason?: Maybe<Snapshot>;
+  unpublishSeason: Snapshot;
   unpublishSeasons?: Maybe<BulkMutationPayload>;
   unpublishSnapshot?: Maybe<Snapshot>;
   unpublishSnapshots?: Maybe<BulkMutationPayload>;
   /** Unpublishes the currently published Tvshow snapshot. */
-  unpublishTvshow?: Maybe<Snapshot>;
+  unpublishTvshow: Snapshot;
   /** Unpublishes the currently published Tvshow genres snapshot. */
-  unpublishTvshowGenres?: Maybe<Snapshot>;
+  unpublishTvshowGenres: Snapshot;
   unpublishTvshows?: Maybe<BulkMutationPayload>;
   /** Updates a single `Collection` using a unique key and a patch. */
   updateCollection?: Maybe<UpdateCollectionPayload>;
@@ -9654,6 +9711,7 @@ export type Mutation = {
 export type MutationBulkEditCollectionsAsyncArgs = {
   filter?: InputMaybe<CollectionFilter>;
   relatedEntitiesToAdd?: InputMaybe<BulkEditAsyncCollectionAddInput>;
+  relatedEntitiesToClear?: InputMaybe<BulkEditAsyncCollectionClearInput>;
   relatedEntitiesToRemove?: InputMaybe<BulkEditAsyncCollectionRemoveInput>;
   set?: InputMaybe<CollectionPatch>;
 };
@@ -9663,6 +9721,7 @@ export type MutationBulkEditCollectionsAsyncArgs = {
 export type MutationBulkEditEpisodesAsyncArgs = {
   filter?: InputMaybe<EpisodeFilter>;
   relatedEntitiesToAdd?: InputMaybe<BulkEditAsyncEpisodeAddInput>;
+  relatedEntitiesToClear?: InputMaybe<BulkEditAsyncEpisodeClearInput>;
   relatedEntitiesToRemove?: InputMaybe<BulkEditAsyncEpisodeRemoveInput>;
   set?: InputMaybe<EpisodePatch>;
 };
@@ -9672,6 +9731,7 @@ export type MutationBulkEditEpisodesAsyncArgs = {
 export type MutationBulkEditMoviesAsyncArgs = {
   filter?: InputMaybe<MovieFilter>;
   relatedEntitiesToAdd?: InputMaybe<BulkEditAsyncMovieAddInput>;
+  relatedEntitiesToClear?: InputMaybe<BulkEditAsyncMovieClearInput>;
   relatedEntitiesToRemove?: InputMaybe<BulkEditAsyncMovieRemoveInput>;
   set?: InputMaybe<MoviePatch>;
 };
@@ -9681,6 +9741,7 @@ export type MutationBulkEditMoviesAsyncArgs = {
 export type MutationBulkEditSeasonsAsyncArgs = {
   filter?: InputMaybe<SeasonFilter>;
   relatedEntitiesToAdd?: InputMaybe<BulkEditAsyncSeasonAddInput>;
+  relatedEntitiesToClear?: InputMaybe<BulkEditAsyncSeasonClearInput>;
   relatedEntitiesToRemove?: InputMaybe<BulkEditAsyncSeasonRemoveInput>;
   set?: InputMaybe<SeasonPatch>;
 };
@@ -9690,6 +9751,7 @@ export type MutationBulkEditSeasonsAsyncArgs = {
 export type MutationBulkEditTvShowsAsyncArgs = {
   filter?: InputMaybe<TvshowFilter>;
   relatedEntitiesToAdd?: InputMaybe<BulkEditAsyncTvshowAddInput>;
+  relatedEntitiesToClear?: InputMaybe<BulkEditAsyncTvshowClearInput>;
   relatedEntitiesToRemove?: InputMaybe<BulkEditAsyncTvshowRemoveInput>;
   set?: InputMaybe<TvshowPatch>;
 };
@@ -17329,14 +17391,14 @@ export type PublishCollectionMutationVariables = Exact<{
 }>;
 
 
-export type PublishCollectionMutation = { __typename?: 'Mutation', publishCollection?: { __typename?: 'Snapshot', id: number } | null };
+export type PublishCollectionMutation = { __typename?: 'Mutation', publishCollection: { __typename?: 'Snapshot', id: number, snapshotNo: number } };
 
 export type UnpublishCollectionMutationVariables = Exact<{
   id: Scalars['Int'];
 }>;
 
 
-export type UnpublishCollectionMutation = { __typename?: 'Mutation', unpublishCollection?: { __typename?: 'Snapshot', id: number } | null };
+export type UnpublishCollectionMutation = { __typename?: 'Mutation', unpublishCollection: { __typename?: 'Snapshot', id: number } };
 
 export type CollectionTitleQueryVariables = Exact<{
   id: Scalars['Int'];
@@ -17372,7 +17434,7 @@ export type CreateCollectionSnapshotMutationVariables = Exact<{
 }>;
 
 
-export type CreateCollectionSnapshotMutation = { __typename?: 'Mutation', createCollectionSnapshot?: { __typename?: 'Snapshot', id: number } | null };
+export type CreateCollectionSnapshotMutation = { __typename?: 'Mutation', createCollectionSnapshot: { __typename?: 'Snapshot', id: number, snapshotNo: number } };
 
 export type CollectionExplorerPropertiesFragment = { __typename?: 'Collection', id: number, title: string, externalId?: string | null, publishedDate?: any | null, createdDate: any, updatedDate: any, publishStatus: PublishStatus, collectionsTags: { __typename?: 'CollectionsTagsConnection', nodes: Array<{ __typename?: 'CollectionsTag', name: string }> }, collectionsImages: { __typename?: 'CollectionsImagesConnection', nodes: Array<{ __typename?: 'CollectionsImage', imageId: any }> } };
 
@@ -17451,14 +17513,14 @@ export type PublishEpisodeMutationVariables = Exact<{
 }>;
 
 
-export type PublishEpisodeMutation = { __typename?: 'Mutation', publishEpisode?: { __typename?: 'Snapshot', id: number } | null };
+export type PublishEpisodeMutation = { __typename?: 'Mutation', publishEpisode: { __typename?: 'Snapshot', id: number, snapshotNo: number } };
 
 export type UnpublishEpisodeMutationVariables = Exact<{
   id: Scalars['Int'];
 }>;
 
 
-export type UnpublishEpisodeMutation = { __typename?: 'Mutation', unpublishEpisode?: { __typename?: 'Snapshot', id: number } | null };
+export type UnpublishEpisodeMutation = { __typename?: 'Mutation', unpublishEpisode: { __typename?: 'Snapshot', id: number } };
 
 export type EpisodeTitleQueryVariables = Exact<{
   id: Scalars['Int'];
@@ -17584,7 +17646,7 @@ export type CreateEpisodeSnapshotMutationVariables = Exact<{
 }>;
 
 
-export type CreateEpisodeSnapshotMutation = { __typename?: 'Mutation', createEpisodeSnapshot?: { __typename?: 'Snapshot', id: number } | null };
+export type CreateEpisodeSnapshotMutation = { __typename?: 'Mutation', createEpisodeSnapshot: { __typename?: 'Snapshot', id: number, snapshotNo: number } };
 
 export type EpisodeVideosQueryVariables = Exact<{
   id: Scalars['Int'];
@@ -17690,14 +17752,14 @@ export type PublishMovieMutationVariables = Exact<{
 }>;
 
 
-export type PublishMovieMutation = { __typename?: 'Mutation', publishMovie?: { __typename?: 'Snapshot', id: number } | null };
+export type PublishMovieMutation = { __typename?: 'Mutation', publishMovie: { __typename?: 'Snapshot', id: number, snapshotNo: number } };
 
 export type UnpublishMovieMutationVariables = Exact<{
   id: Scalars['Int'];
 }>;
 
 
-export type UnpublishMovieMutation = { __typename?: 'Mutation', unpublishMovie?: { __typename?: 'Snapshot', id: number } | null };
+export type UnpublishMovieMutation = { __typename?: 'Mutation', unpublishMovie: { __typename?: 'Snapshot', id: number, snapshotNo: number } };
 
 export type MovieTitleQueryVariables = Exact<{
   id: Scalars['Int'];
@@ -17782,17 +17844,17 @@ export type MovieGenresQuery = { __typename?: 'Query', movieGenres?: { __typenam
 export type PublishMovieGenresMutationVariables = Exact<{ [key: string]: never; }>;
 
 
-export type PublishMovieGenresMutation = { __typename?: 'Mutation', publishMovieGenres?: { __typename?: 'Snapshot', id: number } | null };
+export type PublishMovieGenresMutation = { __typename?: 'Mutation', publishMovieGenres: { __typename?: 'Snapshot', id: number } };
 
 export type UnpublishMovieGenresMutationVariables = Exact<{ [key: string]: never; }>;
 
 
-export type UnpublishMovieGenresMutation = { __typename?: 'Mutation', unpublishMovieGenres?: { __typename?: 'Snapshot', id: number } | null };
+export type UnpublishMovieGenresMutation = { __typename?: 'Mutation', unpublishMovieGenres: { __typename?: 'Snapshot', id: number } };
 
 export type CreateMovieGenresSnapshotMutationVariables = Exact<{ [key: string]: never; }>;
 
 
-export type CreateMovieGenresSnapshotMutation = { __typename?: 'Mutation', createMovieGenresSnapshot?: { __typename?: 'Snapshot', id: number } | null };
+export type CreateMovieGenresSnapshotMutation = { __typename?: 'Mutation', createMovieGenresSnapshot: { __typename?: 'Snapshot', id: number } };
 
 export type MovieImagesQueryVariables = Exact<{
   id: Scalars['Int'];
@@ -17843,7 +17905,7 @@ export type CreateMovieSnapshotMutationVariables = Exact<{
 }>;
 
 
-export type CreateMovieSnapshotMutation = { __typename?: 'Mutation', createMovieSnapshot?: { __typename?: 'Snapshot', id: number } | null };
+export type CreateMovieSnapshotMutation = { __typename?: 'Mutation', createMovieSnapshot: { __typename?: 'Snapshot', id: number, snapshotNo: number } };
 
 export type MovieVideosQueryVariables = Exact<{
   id: Scalars['Int'];
@@ -18003,14 +18065,14 @@ export type PublishSeasonMutationVariables = Exact<{
 }>;
 
 
-export type PublishSeasonMutation = { __typename?: 'Mutation', publishSeason?: { __typename?: 'Snapshot', id: number } | null };
+export type PublishSeasonMutation = { __typename?: 'Mutation', publishSeason: { __typename?: 'Snapshot', id: number, snapshotNo: number } };
 
 export type UnpublishSeasonMutationVariables = Exact<{
   id: Scalars['Int'];
 }>;
 
 
-export type UnpublishSeasonMutation = { __typename?: 'Mutation', unpublishSeason?: { __typename?: 'Snapshot', id: number } | null };
+export type UnpublishSeasonMutation = { __typename?: 'Mutation', unpublishSeason: { __typename?: 'Snapshot', id: number, snapshotNo: number } };
 
 export type SeasonTitleQueryVariables = Exact<{
   id: Scalars['Int'];
@@ -18143,7 +18205,7 @@ export type CreateSeasonSnapshotMutationVariables = Exact<{
 }>;
 
 
-export type CreateSeasonSnapshotMutation = { __typename?: 'Mutation', createSeasonSnapshot?: { __typename?: 'Snapshot', id: number } | null };
+export type CreateSeasonSnapshotMutation = { __typename?: 'Mutation', createSeasonSnapshot: { __typename?: 'Snapshot', id: number, snapshotNo: number } };
 
 export type SeasonVideosQueryVariables = Exact<{
   id: Scalars['Int'];
@@ -18206,14 +18268,14 @@ export type PublishTvShowMutationVariables = Exact<{
 }>;
 
 
-export type PublishTvShowMutation = { __typename?: 'Mutation', publishTvshow?: { __typename?: 'Snapshot', id: number } | null };
+export type PublishTvShowMutation = { __typename?: 'Mutation', publishTvshow: { __typename?: 'Snapshot', id: number, snapshotNo: number } };
 
 export type UnpublishTvShowMutationVariables = Exact<{
   id: Scalars['Int'];
 }>;
 
 
-export type UnpublishTvShowMutation = { __typename?: 'Mutation', unpublishTvshow?: { __typename?: 'Snapshot', id: number } | null };
+export type UnpublishTvShowMutation = { __typename?: 'Mutation', unpublishTvshow: { __typename?: 'Snapshot', id: number, snapshotNo: number } };
 
 export type TvShowTitleQueryVariables = Exact<{
   id: Scalars['Int'];
@@ -18298,17 +18360,17 @@ export type TvShowGenresQuery = { __typename?: 'Query', tvshowGenres?: { __typen
 export type PublishTvShowGenresMutationVariables = Exact<{ [key: string]: never; }>;
 
 
-export type PublishTvShowGenresMutation = { __typename?: 'Mutation', publishTvshowGenres?: { __typename?: 'Snapshot', id: number } | null };
+export type PublishTvShowGenresMutation = { __typename?: 'Mutation', publishTvshowGenres: { __typename?: 'Snapshot', id: number } };
 
 export type UnpublishTvShowGenresMutationVariables = Exact<{ [key: string]: never; }>;
 
 
-export type UnpublishTvShowGenresMutation = { __typename?: 'Mutation', unpublishTvshowGenres?: { __typename?: 'Snapshot', id: number } | null };
+export type UnpublishTvShowGenresMutation = { __typename?: 'Mutation', unpublishTvshowGenres: { __typename?: 'Snapshot', id: number } };
 
 export type CreateTvShowGenresMutationVariables = Exact<{ [key: string]: never; }>;
 
 
-export type CreateTvShowGenresMutation = { __typename?: 'Mutation', createTvshowGenresSnapshot?: { __typename?: 'Snapshot', id: number } | null };
+export type CreateTvShowGenresMutation = { __typename?: 'Mutation', createTvshowGenresSnapshot: { __typename?: 'Snapshot', id: number } };
 
 export type TvshowImagesQueryVariables = Exact<{
   id: Scalars['Int'];
@@ -18366,7 +18428,7 @@ export type CreateTvShowSnapshotMutationVariables = Exact<{
 }>;
 
 
-export type CreateTvShowSnapshotMutation = { __typename?: 'Mutation', createTvshowSnapshot?: { __typename?: 'Snapshot', id: number } | null };
+export type CreateTvShowSnapshotMutation = { __typename?: 'Mutation', createTvshowSnapshot: { __typename?: 'Snapshot', id: number, snapshotNo: number } };
 
 export type TvShowVideosQueryVariables = Exact<{
   id: Scalars['Int'];
@@ -18798,6 +18860,7 @@ export const PublishCollectionDocument = gql`
     mutation PublishCollection($id: Int!) {
   publishCollection(collectionId: $id) {
     id
+    snapshotNo
   }
 }
     `;
@@ -19059,6 +19122,7 @@ export const CreateCollectionSnapshotDocument = gql`
     mutation CreateCollectionSnapshot($collectionId: Int!) {
   createCollectionSnapshot(collectionId: $collectionId) {
     id
+    snapshotNo
   }
 }
     `;
@@ -19516,6 +19580,7 @@ export const PublishEpisodeDocument = gql`
     mutation PublishEpisode($id: Int!) {
   publishEpisode(episodeId: $id) {
     id
+    snapshotNo
   }
 }
     `;
@@ -20199,6 +20264,7 @@ export const CreateEpisodeSnapshotDocument = gql`
     mutation CreateEpisodeSnapshot($episodeId: Int!) {
   createEpisodeSnapshot(episodeId: $episodeId) {
     id
+    snapshotNo
   }
 }
     `;
@@ -20810,6 +20876,7 @@ export const PublishMovieDocument = gql`
     mutation PublishMovie($id: Int!) {
   publishMovie(movieId: $id) {
     id
+    snapshotNo
   }
 }
     `;
@@ -20843,6 +20910,7 @@ export const UnpublishMovieDocument = gql`
     mutation UnpublishMovie($id: Int!) {
   unpublishMovie(movieId: $id) {
     id
+    snapshotNo
   }
 }
     `;
@@ -21631,6 +21699,7 @@ export const CreateMovieSnapshotDocument = gql`
     mutation CreateMovieSnapshot($movieId: Int!) {
   createMovieSnapshot(movieId: $movieId) {
     id
+    snapshotNo
   }
 }
     `;
@@ -22496,6 +22565,7 @@ export const PublishSeasonDocument = gql`
     mutation PublishSeason($id: Int!) {
   publishSeason(seasonId: $id) {
     id
+    snapshotNo
   }
 }
     `;
@@ -22529,6 +22599,7 @@ export const UnpublishSeasonDocument = gql`
     mutation UnpublishSeason($id: Int!) {
   unpublishSeason(seasonId: $id) {
     id
+    snapshotNo
   }
 }
     `;
@@ -23218,6 +23289,7 @@ export const CreateSeasonSnapshotDocument = gql`
     mutation CreateSeasonSnapshot($seasonId: Int!) {
   createSeasonSnapshot(seasonId: $seasonId) {
     id
+    snapshotNo
   }
 }
     `;
@@ -23580,6 +23652,7 @@ export const PublishTvShowDocument = gql`
     mutation PublishTvShow($id: Int!) {
   publishTvshow(tvshowId: $id) {
     id
+    snapshotNo
   }
 }
     `;
@@ -23613,6 +23686,7 @@ export const UnpublishTvShowDocument = gql`
     mutation UnpublishTvShow($id: Int!) {
   unpublishTvshow(tvshowId: $id) {
     id
+    snapshotNo
   }
 }
     `;
@@ -24445,6 +24519,7 @@ export const CreateTvShowSnapshotDocument = gql`
     mutation CreateTvShowSnapshot($tvshowId: Int!) {
   createTvshowSnapshot(tvshowId: $tvshowId) {
     id
+    snapshotNo
   }
 }
     `;
@@ -24646,25 +24721,15 @@ export type BulkCreateTvShowSnapshotsMutationHookResult = ReturnType<typeof useB
 export type BulkCreateTvShowSnapshotsMutationResult = Apollo.MutationResult<BulkCreateTvShowSnapshotsMutation>;
 export type BulkCreateTvShowSnapshotsMutationOptions = Apollo.BaseMutationOptions<BulkCreateTvShowSnapshotsMutation, BulkCreateTvShowSnapshotsMutationVariables>;
 /** Bulk Edit Configurations **/
-export const BulkEditCollectionsAsyncFormFieldsConfig = { mutation: 'bulkEditCollectionsAsync', keys: { add: 'relatedEntitiesToAdd', remove: 'relatedEntitiesToRemove', set: 'set', filter: 'filter' }, fields: {
+export const BulkEditCollectionsAsyncFormFieldsConfig = { mutation: 'bulkEditCollectionsAsync', keys: { add: 'relatedEntitiesToAdd', remove: 'relatedEntitiesToRemove', clear: 'relatedEntitiesToClear', set: 'set', filter: 'filter' }, fields: {
   "collectionRelationsAdd": {
     "type": [
       {
-        "episodeId": "Int"
-      },
-      {
-        "id": "Int"
-      },
-      {
-        "movieId": "Int"
-      },
-      {
-        "seasonId": "Int"
-      },
-      {
-        "sortOrder": "Int"
-      },
-      {
+        "episodeId": "Int",
+        "id": "Int",
+        "movieId": "Int",
+        "seasonId": "Int",
+        "sortOrder": "Int",
         "tvshowId": "Int"
       }
     ],
@@ -24675,9 +24740,7 @@ export const BulkEditCollectionsAsyncFormFieldsConfig = { mutation: 'bulkEditCol
   "collectionsImagesAdd": {
     "type": [
       {
-        "imageId": "UUID!"
-      },
-      {
+        "imageId": "UUID!",
         "imageType": "CollectionImageType!"
       }
     ],
@@ -24708,40 +24771,32 @@ export const BulkEditCollectionsAsyncFormFieldsConfig = { mutation: 'bulkEditCol
   "collectionRelationsRemove": {
     "type": [
       {
-        "episodeId": "Int"
-      },
-      {
-        "id": "Int"
-      },
-      {
-        "movieId": "Int"
-      },
-      {
-        "seasonId": "Int"
-      },
-      {
-        "sortOrder": "Int"
-      },
-      {
+        "episodeId": "Int",
+        "id": "Int",
+        "movieId": "Int",
+        "seasonId": "Int",
+        "sortOrder": "Int",
         "tvshowId": "Int"
       }
     ],
     "label": "Collection Relations (Remove)",
     "originalFieldName": "collectionRelations",
-    "action": "relatedEntitiesToRemove"
+    "action": "relatedEntitiesToRemove",
+    "clearable": true,
+    "clearValue": []
   },
   "collectionsImagesRemove": {
     "type": [
       {
-        "imageId": "UUID!"
-      },
-      {
+        "imageId": "UUID!",
         "imageType": "CollectionImageType!"
       }
     ],
     "label": "Collections Images (Remove)",
     "originalFieldName": "collectionsImages",
-    "action": "relatedEntitiesToRemove"
+    "action": "relatedEntitiesToRemove",
+    "clearable": true,
+    "clearValue": []
   },
   "collectionsSnapshotsRemove": {
     "type": [
@@ -24751,7 +24806,9 @@ export const BulkEditCollectionsAsyncFormFieldsConfig = { mutation: 'bulkEditCol
     ],
     "label": "Collections Snapshots (Remove)",
     "originalFieldName": "collectionsSnapshots",
-    "action": "relatedEntitiesToRemove"
+    "action": "relatedEntitiesToRemove",
+    "clearable": true,
+    "clearValue": []
   },
   "collectionsTagsRemove": {
     "type": [
@@ -24761,7 +24818,9 @@ export const BulkEditCollectionsAsyncFormFieldsConfig = { mutation: 'bulkEditCol
     ],
     "label": "Collections Tags (Remove)",
     "originalFieldName": "collectionsTags",
-    "action": "relatedEntitiesToRemove"
+    "action": "relatedEntitiesToRemove",
+    "clearable": true,
+    "clearValue": []
   },
   "description": {
     "type": "String",
@@ -24788,25 +24847,15 @@ export const BulkEditCollectionsAsyncFormFieldsConfig = { mutation: 'bulkEditCol
     "action": "set"
   }
 }};
-export const BulkEditEpisodesAsyncFormFieldsConfig = { mutation: 'bulkEditEpisodesAsync', keys: { add: 'relatedEntitiesToAdd', remove: 'relatedEntitiesToRemove', set: 'set', filter: 'filter' }, fields: {
+export const BulkEditEpisodesAsyncFormFieldsConfig = { mutation: 'bulkEditEpisodesAsync', keys: { add: 'relatedEntitiesToAdd', remove: 'relatedEntitiesToRemove', clear: 'relatedEntitiesToClear', set: 'set', filter: 'filter' }, fields: {
   "collectionRelationsAdd": {
     "type": [
       {
-        "collectionId": "Int!"
-      },
-      {
-        "id": "Int"
-      },
-      {
-        "movieId": "Int"
-      },
-      {
-        "seasonId": "Int"
-      },
-      {
-        "sortOrder": "Int"
-      },
-      {
+        "collectionId": "Int!",
+        "id": "Int",
+        "movieId": "Int",
+        "seasonId": "Int",
+        "sortOrder": "Int",
         "tvshowId": "Int"
       }
     ],
@@ -24827,9 +24876,7 @@ export const BulkEditEpisodesAsyncFormFieldsConfig = { mutation: 'bulkEditEpisod
   "episodesImagesAdd": {
     "type": [
       {
-        "imageId": "UUID!"
-      },
-      {
+        "imageId": "UUID!",
         "imageType": "EpisodeImageType!"
       }
     ],
@@ -24840,9 +24887,7 @@ export const BulkEditEpisodesAsyncFormFieldsConfig = { mutation: 'bulkEditEpisod
   "episodesLicensesAdd": {
     "type": [
       {
-        "licenseEnd": "Datetime"
-      },
-      {
+        "licenseEnd": "Datetime",
         "licenseStart": "Datetime"
       }
     ],
@@ -24903,27 +24948,19 @@ export const BulkEditEpisodesAsyncFormFieldsConfig = { mutation: 'bulkEditEpisod
   "collectionRelationsRemove": {
     "type": [
       {
-        "collectionId": "Int!"
-      },
-      {
-        "id": "Int"
-      },
-      {
-        "movieId": "Int"
-      },
-      {
-        "seasonId": "Int"
-      },
-      {
-        "sortOrder": "Int"
-      },
-      {
+        "collectionId": "Int!",
+        "id": "Int",
+        "movieId": "Int",
+        "seasonId": "Int",
+        "sortOrder": "Int",
         "tvshowId": "Int"
       }
     ],
     "label": "Collection Relations (Remove)",
     "originalFieldName": "collectionRelations",
-    "action": "relatedEntitiesToRemove"
+    "action": "relatedEntitiesToRemove",
+    "clearable": true,
+    "clearValue": []
   },
   "episodesCastsRemove": {
     "type": [
@@ -24933,33 +24970,35 @@ export const BulkEditEpisodesAsyncFormFieldsConfig = { mutation: 'bulkEditEpisod
     ],
     "label": "Episodes Casts (Remove)",
     "originalFieldName": "episodesCasts",
-    "action": "relatedEntitiesToRemove"
+    "action": "relatedEntitiesToRemove",
+    "clearable": true,
+    "clearValue": []
   },
   "episodesImagesRemove": {
     "type": [
       {
-        "imageId": "UUID!"
-      },
-      {
+        "imageId": "UUID!",
         "imageType": "EpisodeImageType!"
       }
     ],
     "label": "Episodes Images (Remove)",
     "originalFieldName": "episodesImages",
-    "action": "relatedEntitiesToRemove"
+    "action": "relatedEntitiesToRemove",
+    "clearable": true,
+    "clearValue": []
   },
   "episodesLicensesRemove": {
     "type": [
       {
-        "licenseEnd": "Datetime"
-      },
-      {
+        "licenseEnd": "Datetime",
         "licenseStart": "Datetime"
       }
     ],
     "label": "Episodes Licenses (Remove)",
     "originalFieldName": "episodesLicenses",
-    "action": "relatedEntitiesToRemove"
+    "action": "relatedEntitiesToRemove",
+    "clearable": true,
+    "clearValue": []
   },
   "episodesProductionCountriesRemove": {
     "type": [
@@ -24969,7 +25008,9 @@ export const BulkEditEpisodesAsyncFormFieldsConfig = { mutation: 'bulkEditEpisod
     ],
     "label": "Episodes Production Countries (Remove)",
     "originalFieldName": "episodesProductionCountries",
-    "action": "relatedEntitiesToRemove"
+    "action": "relatedEntitiesToRemove",
+    "clearable": true,
+    "clearValue": []
   },
   "episodesSnapshotsRemove": {
     "type": [
@@ -24979,7 +25020,9 @@ export const BulkEditEpisodesAsyncFormFieldsConfig = { mutation: 'bulkEditEpisod
     ],
     "label": "Episodes Snapshots (Remove)",
     "originalFieldName": "episodesSnapshots",
-    "action": "relatedEntitiesToRemove"
+    "action": "relatedEntitiesToRemove",
+    "clearable": true,
+    "clearValue": []
   },
   "episodesTagsRemove": {
     "type": [
@@ -24989,7 +25032,9 @@ export const BulkEditEpisodesAsyncFormFieldsConfig = { mutation: 'bulkEditEpisod
     ],
     "label": "Episodes Tags (Remove)",
     "originalFieldName": "episodesTags",
-    "action": "relatedEntitiesToRemove"
+    "action": "relatedEntitiesToRemove",
+    "clearable": true,
+    "clearValue": []
   },
   "episodesTrailersRemove": {
     "type": [
@@ -24999,7 +25044,9 @@ export const BulkEditEpisodesAsyncFormFieldsConfig = { mutation: 'bulkEditEpisod
     ],
     "label": "Episodes Trailers (Remove)",
     "originalFieldName": "episodesTrailers",
-    "action": "relatedEntitiesToRemove"
+    "action": "relatedEntitiesToRemove",
+    "clearable": true,
+    "clearValue": []
   },
   "episodesTvshowGenresRemove": {
     "type": [
@@ -25009,7 +25056,9 @@ export const BulkEditEpisodesAsyncFormFieldsConfig = { mutation: 'bulkEditEpisod
     ],
     "label": "Episodes Tvshow Genres (Remove)",
     "originalFieldName": "episodesTvshowGenres",
-    "action": "relatedEntitiesToRemove"
+    "action": "relatedEntitiesToRemove",
+    "clearable": true,
+    "clearValue": []
   },
   "description": {
     "type": "String",
@@ -25072,25 +25121,15 @@ export const BulkEditEpisodesAsyncFormFieldsConfig = { mutation: 'bulkEditEpisod
     "action": "set"
   }
 }};
-export const BulkEditMoviesAsyncFormFieldsConfig = { mutation: 'bulkEditMoviesAsync', keys: { add: 'relatedEntitiesToAdd', remove: 'relatedEntitiesToRemove', set: 'set', filter: 'filter' }, fields: {
+export const BulkEditMoviesAsyncFormFieldsConfig = { mutation: 'bulkEditMoviesAsync', keys: { add: 'relatedEntitiesToAdd', remove: 'relatedEntitiesToRemove', clear: 'relatedEntitiesToClear', set: 'set', filter: 'filter' }, fields: {
   "collectionRelationsAdd": {
     "type": [
       {
-        "collectionId": "Int!"
-      },
-      {
-        "episodeId": "Int"
-      },
-      {
-        "id": "Int"
-      },
-      {
-        "seasonId": "Int"
-      },
-      {
-        "sortOrder": "Int"
-      },
-      {
+        "collectionId": "Int!",
+        "episodeId": "Int",
+        "id": "Int",
+        "seasonId": "Int",
+        "sortOrder": "Int",
         "tvshowId": "Int"
       }
     ],
@@ -25111,9 +25150,7 @@ export const BulkEditMoviesAsyncFormFieldsConfig = { mutation: 'bulkEditMoviesAs
   "moviesImagesAdd": {
     "type": [
       {
-        "imageId": "UUID!"
-      },
-      {
+        "imageId": "UUID!",
         "imageType": "MovieImageType!"
       }
     ],
@@ -25124,9 +25161,7 @@ export const BulkEditMoviesAsyncFormFieldsConfig = { mutation: 'bulkEditMoviesAs
   "moviesLicensesAdd": {
     "type": [
       {
-        "licenseEnd": "Datetime"
-      },
-      {
+        "licenseEnd": "Datetime",
         "licenseStart": "Datetime"
       }
     ],
@@ -25187,27 +25222,19 @@ export const BulkEditMoviesAsyncFormFieldsConfig = { mutation: 'bulkEditMoviesAs
   "collectionRelationsRemove": {
     "type": [
       {
-        "collectionId": "Int!"
-      },
-      {
-        "episodeId": "Int"
-      },
-      {
-        "id": "Int"
-      },
-      {
-        "seasonId": "Int"
-      },
-      {
-        "sortOrder": "Int"
-      },
-      {
+        "collectionId": "Int!",
+        "episodeId": "Int",
+        "id": "Int",
+        "seasonId": "Int",
+        "sortOrder": "Int",
         "tvshowId": "Int"
       }
     ],
     "label": "Collection Relations (Remove)",
     "originalFieldName": "collectionRelations",
-    "action": "relatedEntitiesToRemove"
+    "action": "relatedEntitiesToRemove",
+    "clearable": true,
+    "clearValue": []
   },
   "moviesCastsRemove": {
     "type": [
@@ -25217,33 +25244,35 @@ export const BulkEditMoviesAsyncFormFieldsConfig = { mutation: 'bulkEditMoviesAs
     ],
     "label": "Movies Casts (Remove)",
     "originalFieldName": "moviesCasts",
-    "action": "relatedEntitiesToRemove"
+    "action": "relatedEntitiesToRemove",
+    "clearable": true,
+    "clearValue": []
   },
   "moviesImagesRemove": {
     "type": [
       {
-        "imageId": "UUID!"
-      },
-      {
+        "imageId": "UUID!",
         "imageType": "MovieImageType!"
       }
     ],
     "label": "Movies Images (Remove)",
     "originalFieldName": "moviesImages",
-    "action": "relatedEntitiesToRemove"
+    "action": "relatedEntitiesToRemove",
+    "clearable": true,
+    "clearValue": []
   },
   "moviesLicensesRemove": {
     "type": [
       {
-        "licenseEnd": "Datetime"
-      },
-      {
+        "licenseEnd": "Datetime",
         "licenseStart": "Datetime"
       }
     ],
     "label": "Movies Licenses (Remove)",
     "originalFieldName": "moviesLicenses",
-    "action": "relatedEntitiesToRemove"
+    "action": "relatedEntitiesToRemove",
+    "clearable": true,
+    "clearValue": []
   },
   "moviesMovieGenresRemove": {
     "type": [
@@ -25253,7 +25282,9 @@ export const BulkEditMoviesAsyncFormFieldsConfig = { mutation: 'bulkEditMoviesAs
     ],
     "label": "Movies Movie Genres (Remove)",
     "originalFieldName": "moviesMovieGenres",
-    "action": "relatedEntitiesToRemove"
+    "action": "relatedEntitiesToRemove",
+    "clearable": true,
+    "clearValue": []
   },
   "moviesProductionCountriesRemove": {
     "type": [
@@ -25263,7 +25294,9 @@ export const BulkEditMoviesAsyncFormFieldsConfig = { mutation: 'bulkEditMoviesAs
     ],
     "label": "Movies Production Countries (Remove)",
     "originalFieldName": "moviesProductionCountries",
-    "action": "relatedEntitiesToRemove"
+    "action": "relatedEntitiesToRemove",
+    "clearable": true,
+    "clearValue": []
   },
   "moviesSnapshotsRemove": {
     "type": [
@@ -25273,7 +25306,9 @@ export const BulkEditMoviesAsyncFormFieldsConfig = { mutation: 'bulkEditMoviesAs
     ],
     "label": "Movies Snapshots (Remove)",
     "originalFieldName": "moviesSnapshots",
-    "action": "relatedEntitiesToRemove"
+    "action": "relatedEntitiesToRemove",
+    "clearable": true,
+    "clearValue": []
   },
   "moviesTagsRemove": {
     "type": [
@@ -25283,7 +25318,9 @@ export const BulkEditMoviesAsyncFormFieldsConfig = { mutation: 'bulkEditMoviesAs
     ],
     "label": "Movies Tags (Remove)",
     "originalFieldName": "moviesTags",
-    "action": "relatedEntitiesToRemove"
+    "action": "relatedEntitiesToRemove",
+    "clearable": true,
+    "clearValue": []
   },
   "moviesTrailersRemove": {
     "type": [
@@ -25293,7 +25330,9 @@ export const BulkEditMoviesAsyncFormFieldsConfig = { mutation: 'bulkEditMoviesAs
     ],
     "label": "Movies Trailers (Remove)",
     "originalFieldName": "moviesTrailers",
-    "action": "relatedEntitiesToRemove"
+    "action": "relatedEntitiesToRemove",
+    "clearable": true,
+    "clearValue": []
   },
   "description": {
     "type": "String",
@@ -25344,25 +25383,15 @@ export const BulkEditMoviesAsyncFormFieldsConfig = { mutation: 'bulkEditMoviesAs
     "action": "set"
   }
 }};
-export const BulkEditSeasonsAsyncFormFieldsConfig = { mutation: 'bulkEditSeasonsAsync', keys: { add: 'relatedEntitiesToAdd', remove: 'relatedEntitiesToRemove', set: 'set', filter: 'filter' }, fields: {
+export const BulkEditSeasonsAsyncFormFieldsConfig = { mutation: 'bulkEditSeasonsAsync', keys: { add: 'relatedEntitiesToAdd', remove: 'relatedEntitiesToRemove', clear: 'relatedEntitiesToClear', set: 'set', filter: 'filter' }, fields: {
   "collectionRelationsAdd": {
     "type": [
       {
-        "collectionId": "Int!"
-      },
-      {
-        "episodeId": "Int"
-      },
-      {
-        "id": "Int"
-      },
-      {
-        "movieId": "Int"
-      },
-      {
-        "sortOrder": "Int"
-      },
-      {
+        "collectionId": "Int!",
+        "episodeId": "Int",
+        "id": "Int",
+        "movieId": "Int",
+        "sortOrder": "Int",
         "tvshowId": "Int"
       }
     ],
@@ -25373,30 +25402,14 @@ export const BulkEditSeasonsAsyncFormFieldsConfig = { mutation: 'bulkEditSeasons
   "episodesAdd": {
     "type": [
       {
-        "description": "String"
-      },
-      {
-        "externalId": "String"
-      },
-      {
-        "index": "Int!"
-      },
-      {
-        "mainVideoId": "UUID"
-      },
-      {
-        "originalTitle": "String"
-      },
-      {
-        "released": "Date"
-      },
-      {
-        "studio": "String"
-      },
-      {
-        "synopsis": "String"
-      },
-      {
+        "description": "String",
+        "externalId": "String",
+        "index": "Int!",
+        "mainVideoId": "UUID",
+        "originalTitle": "String",
+        "released": "Date",
+        "studio": "String",
+        "synopsis": "String",
         "title": "String!"
       }
     ],
@@ -25417,9 +25430,7 @@ export const BulkEditSeasonsAsyncFormFieldsConfig = { mutation: 'bulkEditSeasons
   "seasonsImagesAdd": {
     "type": [
       {
-        "imageId": "UUID!"
-      },
-      {
+        "imageId": "UUID!",
         "imageType": "SeasonImageType!"
       }
     ],
@@ -25430,9 +25441,7 @@ export const BulkEditSeasonsAsyncFormFieldsConfig = { mutation: 'bulkEditSeasons
   "seasonsLicensesAdd": {
     "type": [
       {
-        "licenseEnd": "Datetime"
-      },
-      {
+        "licenseEnd": "Datetime",
         "licenseStart": "Datetime"
       }
     ],
@@ -25493,61 +25502,39 @@ export const BulkEditSeasonsAsyncFormFieldsConfig = { mutation: 'bulkEditSeasons
   "collectionRelationsRemove": {
     "type": [
       {
-        "collectionId": "Int!"
-      },
-      {
-        "episodeId": "Int"
-      },
-      {
-        "id": "Int"
-      },
-      {
-        "movieId": "Int"
-      },
-      {
-        "sortOrder": "Int"
-      },
-      {
+        "collectionId": "Int!",
+        "episodeId": "Int",
+        "id": "Int",
+        "movieId": "Int",
+        "sortOrder": "Int",
         "tvshowId": "Int"
       }
     ],
     "label": "Collection Relations (Remove)",
     "originalFieldName": "collectionRelations",
-    "action": "relatedEntitiesToRemove"
+    "action": "relatedEntitiesToRemove",
+    "clearable": true,
+    "clearValue": []
   },
   "episodesRemove": {
     "type": [
       {
-        "description": "String"
-      },
-      {
-        "externalId": "String"
-      },
-      {
-        "index": "Int!"
-      },
-      {
-        "mainVideoId": "UUID"
-      },
-      {
-        "originalTitle": "String"
-      },
-      {
-        "released": "Date"
-      },
-      {
-        "studio": "String"
-      },
-      {
-        "synopsis": "String"
-      },
-      {
+        "description": "String",
+        "externalId": "String",
+        "index": "Int!",
+        "mainVideoId": "UUID",
+        "originalTitle": "String",
+        "released": "Date",
+        "studio": "String",
+        "synopsis": "String",
         "title": "String!"
       }
     ],
     "label": "Episodes (Remove)",
     "originalFieldName": "episodes",
-    "action": "relatedEntitiesToRemove"
+    "action": "relatedEntitiesToRemove",
+    "clearable": true,
+    "clearValue": []
   },
   "seasonsCastsRemove": {
     "type": [
@@ -25557,33 +25544,35 @@ export const BulkEditSeasonsAsyncFormFieldsConfig = { mutation: 'bulkEditSeasons
     ],
     "label": "Seasons Casts (Remove)",
     "originalFieldName": "seasonsCasts",
-    "action": "relatedEntitiesToRemove"
+    "action": "relatedEntitiesToRemove",
+    "clearable": true,
+    "clearValue": []
   },
   "seasonsImagesRemove": {
     "type": [
       {
-        "imageId": "UUID!"
-      },
-      {
+        "imageId": "UUID!",
         "imageType": "SeasonImageType!"
       }
     ],
     "label": "Seasons Images (Remove)",
     "originalFieldName": "seasonsImages",
-    "action": "relatedEntitiesToRemove"
+    "action": "relatedEntitiesToRemove",
+    "clearable": true,
+    "clearValue": []
   },
   "seasonsLicensesRemove": {
     "type": [
       {
-        "licenseEnd": "Datetime"
-      },
-      {
+        "licenseEnd": "Datetime",
         "licenseStart": "Datetime"
       }
     ],
     "label": "Seasons Licenses (Remove)",
     "originalFieldName": "seasonsLicenses",
-    "action": "relatedEntitiesToRemove"
+    "action": "relatedEntitiesToRemove",
+    "clearable": true,
+    "clearValue": []
   },
   "seasonsProductionCountriesRemove": {
     "type": [
@@ -25593,7 +25582,9 @@ export const BulkEditSeasonsAsyncFormFieldsConfig = { mutation: 'bulkEditSeasons
     ],
     "label": "Seasons Production Countries (Remove)",
     "originalFieldName": "seasonsProductionCountries",
-    "action": "relatedEntitiesToRemove"
+    "action": "relatedEntitiesToRemove",
+    "clearable": true,
+    "clearValue": []
   },
   "seasonsSnapshotsRemove": {
     "type": [
@@ -25603,7 +25594,9 @@ export const BulkEditSeasonsAsyncFormFieldsConfig = { mutation: 'bulkEditSeasons
     ],
     "label": "Seasons Snapshots (Remove)",
     "originalFieldName": "seasonsSnapshots",
-    "action": "relatedEntitiesToRemove"
+    "action": "relatedEntitiesToRemove",
+    "clearable": true,
+    "clearValue": []
   },
   "seasonsTagsRemove": {
     "type": [
@@ -25613,7 +25606,9 @@ export const BulkEditSeasonsAsyncFormFieldsConfig = { mutation: 'bulkEditSeasons
     ],
     "label": "Seasons Tags (Remove)",
     "originalFieldName": "seasonsTags",
-    "action": "relatedEntitiesToRemove"
+    "action": "relatedEntitiesToRemove",
+    "clearable": true,
+    "clearValue": []
   },
   "seasonsTrailersRemove": {
     "type": [
@@ -25623,7 +25618,9 @@ export const BulkEditSeasonsAsyncFormFieldsConfig = { mutation: 'bulkEditSeasons
     ],
     "label": "Seasons Trailers (Remove)",
     "originalFieldName": "seasonsTrailers",
-    "action": "relatedEntitiesToRemove"
+    "action": "relatedEntitiesToRemove",
+    "clearable": true,
+    "clearValue": []
   },
   "seasonsTvshowGenresRemove": {
     "type": [
@@ -25633,7 +25630,9 @@ export const BulkEditSeasonsAsyncFormFieldsConfig = { mutation: 'bulkEditSeasons
     ],
     "label": "Seasons Tvshow Genres (Remove)",
     "originalFieldName": "seasonsTvshowGenres",
-    "action": "relatedEntitiesToRemove"
+    "action": "relatedEntitiesToRemove",
+    "clearable": true,
+    "clearValue": []
   },
   "description": {
     "type": "String",
@@ -25678,25 +25677,15 @@ export const BulkEditSeasonsAsyncFormFieldsConfig = { mutation: 'bulkEditSeasons
     "action": "set"
   }
 }};
-export const BulkEditTvShowsAsyncFormFieldsConfig = { mutation: 'bulkEditTvShowsAsync', keys: { add: 'relatedEntitiesToAdd', remove: 'relatedEntitiesToRemove', set: 'set', filter: 'filter' }, fields: {
+export const BulkEditTvShowsAsyncFormFieldsConfig = { mutation: 'bulkEditTvShowsAsync', keys: { add: 'relatedEntitiesToAdd', remove: 'relatedEntitiesToRemove', clear: 'relatedEntitiesToClear', set: 'set', filter: 'filter' }, fields: {
   "collectionRelationsAdd": {
     "type": [
       {
-        "collectionId": "Int!"
-      },
-      {
-        "episodeId": "Int"
-      },
-      {
-        "id": "Int"
-      },
-      {
-        "movieId": "Int"
-      },
-      {
-        "seasonId": "Int"
-      },
-      {
+        "collectionId": "Int!",
+        "episodeId": "Int",
+        "id": "Int",
+        "movieId": "Int",
+        "seasonId": "Int",
         "sortOrder": "Int"
       }
     ],
@@ -25707,21 +25696,11 @@ export const BulkEditTvShowsAsyncFormFieldsConfig = { mutation: 'bulkEditTvShows
   "seasonsAdd": {
     "type": [
       {
-        "description": "String"
-      },
-      {
-        "externalId": "String"
-      },
-      {
-        "index": "Int!"
-      },
-      {
-        "released": "Date"
-      },
-      {
-        "studio": "String"
-      },
-      {
+        "description": "String",
+        "externalId": "String",
+        "index": "Int!",
+        "released": "Date",
+        "studio": "String",
         "synopsis": "String"
       }
     ],
@@ -25742,9 +25721,7 @@ export const BulkEditTvShowsAsyncFormFieldsConfig = { mutation: 'bulkEditTvShows
   "tvshowsImagesAdd": {
     "type": [
       {
-        "imageId": "UUID!"
-      },
-      {
+        "imageId": "UUID!",
         "imageType": "TvshowImageType!"
       }
     ],
@@ -25755,9 +25732,7 @@ export const BulkEditTvShowsAsyncFormFieldsConfig = { mutation: 'bulkEditTvShows
   "tvshowsLicensesAdd": {
     "type": [
       {
-        "licenseEnd": "Datetime"
-      },
-      {
+        "licenseEnd": "Datetime",
         "licenseStart": "Datetime"
       }
     ],
@@ -25818,52 +25793,36 @@ export const BulkEditTvShowsAsyncFormFieldsConfig = { mutation: 'bulkEditTvShows
   "collectionRelationsRemove": {
     "type": [
       {
-        "collectionId": "Int!"
-      },
-      {
-        "episodeId": "Int"
-      },
-      {
-        "id": "Int"
-      },
-      {
-        "movieId": "Int"
-      },
-      {
-        "seasonId": "Int"
-      },
-      {
+        "collectionId": "Int!",
+        "episodeId": "Int",
+        "id": "Int",
+        "movieId": "Int",
+        "seasonId": "Int",
         "sortOrder": "Int"
       }
     ],
     "label": "Collection Relations (Remove)",
     "originalFieldName": "collectionRelations",
-    "action": "relatedEntitiesToRemove"
+    "action": "relatedEntitiesToRemove",
+    "clearable": true,
+    "clearValue": []
   },
   "seasonsRemove": {
     "type": [
       {
-        "description": "String"
-      },
-      {
-        "externalId": "String"
-      },
-      {
-        "index": "Int!"
-      },
-      {
-        "released": "Date"
-      },
-      {
-        "studio": "String"
-      },
-      {
+        "description": "String",
+        "externalId": "String",
+        "index": "Int!",
+        "released": "Date",
+        "studio": "String",
         "synopsis": "String"
       }
     ],
     "label": "Seasons (Remove)",
     "originalFieldName": "seasons",
-    "action": "relatedEntitiesToRemove"
+    "action": "relatedEntitiesToRemove",
+    "clearable": true,
+    "clearValue": []
   },
   "tvshowsCastsRemove": {
     "type": [
@@ -25873,33 +25832,35 @@ export const BulkEditTvShowsAsyncFormFieldsConfig = { mutation: 'bulkEditTvShows
     ],
     "label": "Tvshows Casts (Remove)",
     "originalFieldName": "tvshowsCasts",
-    "action": "relatedEntitiesToRemove"
+    "action": "relatedEntitiesToRemove",
+    "clearable": true,
+    "clearValue": []
   },
   "tvshowsImagesRemove": {
     "type": [
       {
-        "imageId": "UUID!"
-      },
-      {
+        "imageId": "UUID!",
         "imageType": "TvshowImageType!"
       }
     ],
     "label": "Tvshows Images (Remove)",
     "originalFieldName": "tvshowsImages",
-    "action": "relatedEntitiesToRemove"
+    "action": "relatedEntitiesToRemove",
+    "clearable": true,
+    "clearValue": []
   },
   "tvshowsLicensesRemove": {
     "type": [
       {
-        "licenseEnd": "Datetime"
-      },
-      {
+        "licenseEnd": "Datetime",
         "licenseStart": "Datetime"
       }
     ],
     "label": "Tvshows Licenses (Remove)",
     "originalFieldName": "tvshowsLicenses",
-    "action": "relatedEntitiesToRemove"
+    "action": "relatedEntitiesToRemove",
+    "clearable": true,
+    "clearValue": []
   },
   "tvshowsProductionCountriesRemove": {
     "type": [
@@ -25909,7 +25870,9 @@ export const BulkEditTvShowsAsyncFormFieldsConfig = { mutation: 'bulkEditTvShows
     ],
     "label": "Tvshows Production Countries (Remove)",
     "originalFieldName": "tvshowsProductionCountries",
-    "action": "relatedEntitiesToRemove"
+    "action": "relatedEntitiesToRemove",
+    "clearable": true,
+    "clearValue": []
   },
   "tvshowsSnapshotsRemove": {
     "type": [
@@ -25919,7 +25882,9 @@ export const BulkEditTvShowsAsyncFormFieldsConfig = { mutation: 'bulkEditTvShows
     ],
     "label": "Tvshows Snapshots (Remove)",
     "originalFieldName": "tvshowsSnapshots",
-    "action": "relatedEntitiesToRemove"
+    "action": "relatedEntitiesToRemove",
+    "clearable": true,
+    "clearValue": []
   },
   "tvshowsTagsRemove": {
     "type": [
@@ -25929,7 +25894,9 @@ export const BulkEditTvShowsAsyncFormFieldsConfig = { mutation: 'bulkEditTvShows
     ],
     "label": "Tvshows Tags (Remove)",
     "originalFieldName": "tvshowsTags",
-    "action": "relatedEntitiesToRemove"
+    "action": "relatedEntitiesToRemove",
+    "clearable": true,
+    "clearValue": []
   },
   "tvshowsTrailersRemove": {
     "type": [
@@ -25939,7 +25906,9 @@ export const BulkEditTvShowsAsyncFormFieldsConfig = { mutation: 'bulkEditTvShows
     ],
     "label": "Tvshows Trailers (Remove)",
     "originalFieldName": "tvshowsTrailers",
-    "action": "relatedEntitiesToRemove"
+    "action": "relatedEntitiesToRemove",
+    "clearable": true,
+    "clearValue": []
   },
   "tvshowsTvshowGenresRemove": {
     "type": [
@@ -25949,7 +25918,9 @@ export const BulkEditTvShowsAsyncFormFieldsConfig = { mutation: 'bulkEditTvShows
     ],
     "label": "Tvshows Tvshow Genres (Remove)",
     "originalFieldName": "tvshowsTvshowGenres",
-    "action": "relatedEntitiesToRemove"
+    "action": "relatedEntitiesToRemove",
+    "clearable": true,
+    "clearValue": []
   },
   "description": {
     "type": "String",

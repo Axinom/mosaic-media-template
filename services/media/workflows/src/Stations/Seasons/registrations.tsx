@@ -4,7 +4,8 @@ import {
 } from '@axinom/mosaic-managed-workflow-integration';
 import { PiletApi } from '@axinom/mosaic-portal';
 import React from 'react';
-import { Extensions, ExtensionsContext } from '../../externals';
+import { Extensions, ExtensionsProvider } from '../../externals';
+import { NotificationProvider } from '../../Util/Notifications/NotificationContext';
 import { MediaIconName, MediaIcons } from '../../MediaIcons';
 import { piletConfig } from '../../piletConfig';
 import { SeasonCreate } from './SeasonCreate/SeasonCreate';
@@ -83,9 +84,11 @@ export function register(app: PiletApi, extensions: Extensions): void {
   app.registerPage(
     '/seasons',
     () => (
-      <ExtensionsContext.Provider value={extensions}>
-        <Seasons />
-      </ExtensionsContext.Provider>
+      <ExtensionsProvider value={extensions}>
+        <NotificationProvider value={app.showNotification}>
+          <Seasons />
+        </NotificationProvider>
+      </ExtensionsProvider>
     ),
     {
       breadcrumb: () => 'Seasons',
@@ -103,9 +106,11 @@ export function register(app: PiletApi, extensions: Extensions): void {
   app.registerPage(
     '/seasons/:seasonId',
     () => (
-      <ExtensionsContext.Provider value={extensions}>
-        <SeasonDetails />
-      </ExtensionsContext.Provider>
+      <ExtensionsProvider value={extensions}>
+        <NotificationProvider value={app.showNotification}>
+          <SeasonDetails />
+        </NotificationProvider>
+      </ExtensionsProvider>
     ),
     {
       breadcrumb: SeasonDetailsCrumb,
@@ -123,9 +128,9 @@ export function register(app: PiletApi, extensions: Extensions): void {
   app.registerPage(
     '/seasons/:seasonId/videos',
     () => (
-      <ExtensionsContext.Provider value={extensions}>
+      <ExtensionsProvider value={extensions}>
         <SeasonVideoManagement />
-      </ExtensionsContext.Provider>
+      </ExtensionsProvider>
     ),
     {
       breadcrumb: () => 'Video Management',
@@ -138,9 +143,9 @@ export function register(app: PiletApi, extensions: Extensions): void {
   app.registerPage(
     '/seasons/:seasonId/images',
     () => (
-      <ExtensionsContext.Provider value={extensions}>
+      <ExtensionsProvider value={extensions}>
         <SeasonImageManagement />
-      </ExtensionsContext.Provider>
+      </ExtensionsProvider>
     ),
     {
       breadcrumb: () => 'Image Management',

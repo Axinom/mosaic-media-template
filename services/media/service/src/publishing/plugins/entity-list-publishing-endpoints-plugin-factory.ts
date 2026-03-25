@@ -6,7 +6,11 @@ import {
 import { MosaicError } from '@axinom/mosaic-service-common';
 import { Plugin } from 'graphile-build';
 import { GraphileHelpers } from 'graphile-utils/node8plus/fieldHelpers';
-import { GraphQLFieldConfig, GraphQLObjectType } from 'graphql';
+import {
+  GraphQLFieldConfig,
+  GraphQLNonNull,
+  GraphQLNullableType,
+} from 'graphql';
 import { humanize } from 'inflection';
 import {
   MediaServiceMessagingSettings,
@@ -38,15 +42,16 @@ import {
 export const EntityListPublishingEndpointsPluginFactory = (
   info: EntityListInfo,
 ): Plugin => {
-  let outType: GraphQLObjectType;
+  let outType: GraphQLNonNull<GraphQLNullableType>;
 
   return (builder) => {
     builder.hook('init', (input, build, _context) => {
-      outType = getTableGqlType(build, 'snapshots');
-      if (build.getTypeByName(outType.name) === undefined) {
+      const nullableType = getTableGqlType(build, 'snapshots');
+      outType = new GraphQLNonNull(nullableType as GraphQLNullableType);
+      if (build.getTypeByName(nullableType.name) === undefined) {
         build.newWithHooks(
           build.graphql.GraphQLObjectType,
-          outType.toConfig(),
+          nullableType.toConfig(),
           {},
         );
       }

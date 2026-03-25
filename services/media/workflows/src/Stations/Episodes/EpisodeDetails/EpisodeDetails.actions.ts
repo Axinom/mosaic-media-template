@@ -7,12 +7,16 @@ import {
   usePublishEpisodeMutation,
   useUnpublishEpisodeMutation,
 } from '../../../generated/graphql';
+import { useNotification } from '../../../Util/Notifications/NotificationContext';
+import { publishNowNotification } from '../../../Util/Notifications/PublishNowNotification';
+import { unpublishNotification } from '../../../Util/Notifications/UnpublishNotification';
 import { EpisodeDetailsFormData } from './EpisodeDetails.types';
 
 export function useEpisodeDetailsActions(id: number): {
   readonly actions: FormActionData<EpisodeDetailsFormData>[];
 } {
   const history = useHistory();
+  const showNotification = useNotification();
   const localizationPath = getLocalizationEntryPoint('episode');
 
   const [deleteEpisodeMutation] = useDeleteEpisodeMutation({
@@ -60,7 +64,16 @@ export function useEpisodeDetailsActions(id: number): {
       label: 'Publish Now',
       confirmationMode: 'Simple',
       onActionSelected: async () => {
-        await publishEpisodeMutation({ variables: { id } });
+        const response = await publishEpisodeMutation({ variables: { id } });
+        if (!response.data) {
+          return response.errors;
+        }
+        showNotification(
+          publishNowNotification({
+            link: `/episodes/${id}/snapshots/${response.data.publishEpisode.id}`,
+            snapshotNo: response.data.publishEpisode?.snapshotNo,
+          }),
+        );
       },
     },
     {
@@ -71,7 +84,11 @@ export function useEpisodeDetailsActions(id: number): {
       label: 'Unpublish',
       confirmationMode: 'Simple',
       onActionSelected: async () => {
-        await unpublishEpisodeMutation({ variables: { id } });
+        const response = await unpublishEpisodeMutation({ variables: { id } });
+        if (!response.data) {
+          return response.errors;
+        }
+        showNotification(unpublishNotification());
       },
     },
     {

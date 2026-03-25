@@ -28,6 +28,9 @@ import {
   usePublishCollectionMutation,
   useUnpublishCollectionMutation,
 } from '../../../generated/graphql';
+import { publishNowNotification } from '../../../Util/Notifications/PublishNowNotification';
+import { snapshotCreateNotification } from '../../../Util/Notifications/SnapshotCreateNotification';
+import { unpublishNotification } from '../../../Util/Notifications/UnpublishNotification';
 import { PublishStatusStateMap } from '../../../Util/PublishStatusStateMap/PublishStatusStateMap';
 import { CollectionDetailsQuickEdit } from '../CollectionDetails/CollectionDetailsQuickEdit';
 import { CollectionEntityManagementQuickEdit } from '../CollectionEntityManagement/CollectionEntityManagementQuickEdit';
@@ -36,8 +39,10 @@ import { CollectionsBulkEdit, CollectionsBulkEditConfig } from './BulkEdit';
 import { useCollectionsActions } from './Collections.actions';
 import { useCollectionsFilters } from './Collections.filters';
 import { CollectionData } from './Collections.types';
+import { useNotification } from '../../../Util/Notifications/NotificationContext';
 
 export const Collections: React.FC = () => {
+  const showNotification = useNotification();
   const history = useHistory();
   const { transformFilters, filterOptions } = useCollectionsFilters();
   const { bulkActions } = useCollectionsActions();
@@ -151,9 +156,18 @@ export const Collections: React.FC = () => {
       {
         label: 'Create Snapshot',
         onActionSelected: async () => {
-          await createCollectionSnapshotMutation({
+          const response = await createCollectionSnapshotMutation({
             variables: { collectionId: id },
           });
+          if (!response.data) {
+            return response.errors;
+          }
+          showNotification(
+            snapshotCreateNotification({
+              link: `/collections/${id}/snapshots/${response.data.createCollectionSnapshot.id}`,
+              snapshotNo: response.data.createCollectionSnapshot?.snapshotNo,
+            }),
+          );
           history.push('/collections');
         },
         icon: IconName.Snapshot,
@@ -161,7 +175,18 @@ export const Collections: React.FC = () => {
       {
         label: 'Publish Now',
         onActionSelected: async () => {
-          await publishCollectionMutation({ variables: { id } });
+          const response = await publishCollectionMutation({
+            variables: { id },
+          });
+          if (!response.data) {
+            return response.errors;
+          }
+          showNotification(
+            publishNowNotification({
+              link: `/collections/${id}/snapshots/${response.data.publishCollection.id}`,
+              snapshotNo: response.data.publishCollection?.snapshotNo,
+            }),
+          );
           history.push('/collections');
         },
         icon: IconName.Publish,
@@ -170,7 +195,13 @@ export const Collections: React.FC = () => {
       {
         label: 'Unpublish',
         onActionSelected: async () => {
-          await unpublishCollectionMutation({ variables: { id } });
+          const response = await unpublishCollectionMutation({
+            variables: { id },
+          });
+          if (!response.data) {
+            return response.errors;
+          }
+          showNotification(unpublishNotification());
           history.push('/collections');
         },
         icon: IconName.Unpublish,
