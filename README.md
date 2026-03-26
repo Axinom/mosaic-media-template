@@ -111,9 +111,6 @@ Start the following commands in parallel (in separate terminals):
    different workflow options (Movies, Videos, Images, TV shows, Seasons,
    Episodes).
 
-Alternatively, use the "...:all" scripts to include also the `channel-service`
-and the `vod-to-live-service`.
-
 ## Agentic Development
 
 Axinom Mosaic distributes agent skills for more efficient development in Mosaic-based solutions via npm packages. Check out the 
