@@ -29,7 +29,8 @@ export const SeverityRenderer: ColumnRenderer<Data> = (val): ReactNode => {
 
     return (
       <div className={classes.severityRendererContainer}>
-        {image}
+        {/* Adding an empty div to support Safari browser which renders SVG icon differently */}
+        <div>{image}</div>
         <div className={classes.text}>{formatTitleCase(val as string)}</div>
       </div>
     );
