@@ -100,9 +100,21 @@
     "wsrun": "^5.2.4",
     "yargs": "^16.2.0"
   },
+  "dependenciesMeta": {
+    "@hyperjump/json-pointer": {
+      "built": false
+    },
+    "@hyperjump/json-schema-core": {
+      "built": false
+    },
+    "@hyperjump/pact": {
+      "built": false
+    }
+  },
   "resolutions": {
     "@stoplight/spectral-core": "1.18.3",
     "@types/jest": "^29",
+    "@types/node": "^18",
     "css-loader": "^6.7.3",
     "jest": "^29",
     "jest-cli": "^29"

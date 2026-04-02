@@ -6,7 +6,7 @@
 # Swap the comments on the following lines if you don't wish to use zero-installs
 # Documentation here: https://yarnpkg.com/features/zero-installs
 !/.yarn/cache
-#/.pnp.*
+/.pnp.*
 
 node_modules
 
