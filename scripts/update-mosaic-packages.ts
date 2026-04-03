@@ -6,7 +6,6 @@ import * as path from 'path';
 interface YarnWorkspace {
   location: string;
 }
-
 interface YarnWorkspaces {
   [name: string]: YarnWorkspace;
 }
@@ -28,18 +27,35 @@ function runYarnCommand(args: string[], wsPath?: string): string {
 }
 
 function getYarnWorkspaces(): YarnWorkspaces {
-  const stdout = runYarnCommand(['workspaces', 'info']);
-  const ws = JSON.parse(stdout) as YarnWorkspaces;
+  const stdout = runYarnCommand(['workspaces', 'list', '--json']);
+  const lines = stdout.trim().split('\n');
+  const ws: YarnWorkspaces = {};
+
+  for (const line of lines) {
+    try {
+      const workspace = JSON.parse(line);
+      ws[workspace.name] = { location: workspace.location };
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
   // adding the workspace root package
   ws.root = { location: '.' };
   return ws;
 }
 
 function getPackageDistTags(packageName: string): PackageDistTags {
-  const stdout = runYarnCommand(['info', packageName, 'dist-tags']);
-  // yarn info <pkg> returns a "relaxed" JSON i.e. JSON5. This is a hack to make it work without additional deps.
-  const distTags = eval(`(${stdout})`) as PackageDistTags;
-  return distTags;
+  const stdout = runYarnCommand([
+    'npm',
+    'info',
+    packageName,
+    '--fields',
+    'dist-tags',
+    '--json',
+  ]);
+  const info = JSON.parse(stdout);
+  return info['dist-tags'] as PackageDistTags;
 }
 
 function updateMosaicDeps(
