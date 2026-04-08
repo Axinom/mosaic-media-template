@@ -49,6 +49,7 @@
     "@axinom/mosaic-messages": "0.63.1",
     "@axinom/mosaic-service-common": "0.65.0",
     "@axinom/mosaic-transactional-inbox-outbox": "0.25.0",
+    "@azure/storage-blob": "^12.27.0",
     "@graphile-contrib/pg-simplify-inflector": "^6.1.0",
     "add": "^2.0.6",
     "dotenv": "^8.6.0",
