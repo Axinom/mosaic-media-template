@@ -61,7 +61,7 @@
     "ajv": "^8.18.0",
     "ajv-formats": "^2.1.1",
     "altair-express-middleware": "^7.0.1",
-    "axios": "^1.8.3",
+    "axios": "^1.14.0",
     "dotenv": "^8.6.0",
     "env-cmd": "^10.1.0",
     "env-var": "^6.3.0",

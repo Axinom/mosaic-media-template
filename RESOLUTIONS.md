@@ -12,7 +12,7 @@ The goal is to minimize resolutions and remove them when no longer needed.
 - **Parent packages**: All 5 workspace services, `@axinom/mosaic-graphql-common`, `@axinom/mosaic-service-common`, `jest-auto-stub`
 - **Date added**: 2023-04-18
 - **Commit**: `296f757c` — *"chore: bump dependencies, update jest config node bumps for build pipelines"*
-- **Can be removed when**: All consumers naturally depend on Jest 29.x (unlikely to be needed since Mosaic packages may lag behind)
+- **Can be removed when**: All consumers naturally depend on Jest 29.x (unlikely to be needed since `jest-auto-stub@1.0.8` still depends on `jest@^26.6.3`)
 
 ### jest-cli
 
@@ -44,6 +44,15 @@ The goal is to minimize resolutions and remove them when no longer needed.
 
 ## Waiting for Upstream Fix
 
+### axios@1.14.0 (Dependabot #257)
+
+- **Vulnerability**: NO_PROXY Hostname Normalization Bypass leads to SSRF (critical severity)
+- **Current version**: 1.14.0
+- **Patched in**: 1.15.0
+- **Blocked by**: `npmMinimalAgeGate: '7d'` in `.yarnrc.yml` — axios 1.15.0 was published on 2026-04-08, less than 7 days ago. Yarn refuses to resolve to it.
+- **Date**: 2026-04-14
+- **Check again when**: After 2026-04-15 (delete the `axios` lockfile entry and run `yarn install --no-immutable`)
+
 ### ajv@7.x (Dependabot #209, #208)
 
 - **Vulnerability**: ReDoS when using `$data` option (medium severity)
@@ -53,59 +62,68 @@ The goal is to minimize resolutions and remove them when no longer needed.
 - **Date**: 2026-02-23
 - **Check again when**: `@axinom/mosaic-service-common` updates to `ajv@^8`
 
-### ajv@5.x (Dependabot #86)
+### ajv@5.x / 6.x (Dependabot #86, npm audit)
 
-- **Vulnerability**: Prototype Pollution (medium severity)
-- **Current version**: 5.5.2
-- **Patched in**: 6.12.3 (major version jump)
-- **Blocked by**: `@axinom/mosaic-cli` → `@asyncapi/parser@2.1.2` → `@asyncapi/raml-dt-schema-parser@4.0.3` → `ramldt2jsonschema@1.2.3` → `json-schema-migrate@0.2.0` → `ajv@^5.0.0`
+- **Vulnerability**: Prototype Pollution (medium severity), ReDoS (medium severity)
+- **Current versions**: 5.5.2, 6.5.2, 6.12.6
+- **Patched in**: 6.12.3 (Prototype Pollution), 6.14.0 (ReDoS for 6.x) / 8.18.0 (ReDoS for 7.x+)
+- **Blocked by**: `@axinom/mosaic-cli` → `@asyncapi/parser@2.1.2` → `ramldt2jsonschema@1.2.3` → `json-schema-migrate@0.2.0` → `ajv@^5.0.0`; also `webapi-parser@0.5.0` uses old ajv
 - **Date**: 2026-02-23
 - **Check again when**: `@axinom/mosaic-cli` updates `@asyncapi/parser` to `^3.x`
 
-### qs@6.13.0 (Dependabot #201, #184)
+### lodash@4.17.23 via tilde ranges (Dependabot #254, #255)
 
-- **Vulnerability**: arrayLimit bypass DoS (high + low severity)
-- **Current version**: 6.13.0
-- **Patched in**: 6.14.1 (#184) / 6.14.2 (#201)
-- **Blocked by**: `express@4.21.2` and `body-parser@1.20.3` exact-pin `qs@6.13.0`. Express 5.x uses `^6.14.0` but all Mosaic packages use `express@^4.x`
-- **Date**: 2026-02-23
-- **Check again when**: Express 4.x releases a patch with updated qs, or Mosaic packages migrate to Express 5
+- **Vulnerability**: Prototype Pollution via array path bypass (medium), Code Injection via `_.template` imports (high)
+- **Current version**: 4.17.23
+- **Patched in**: 4.18.0
+- **Blocked by**: `@graphql-codegen/plugin-helpers` uses `~4.17.0` and `@stoplight/spectral-core`/`@stoplight/spectral-functions` use `~4.17.21` — tilde ranges cap at 4.17.x. The `^4.17.x` consumers have been updated to 4.18.1. Only the tilde-range entry remains.
+- **Date**: 2026-04-14
+- **Check again when**: `@graphql-codegen/plugin-helpers` or `@stoplight/spectral-core` update their lodash range to `^4.18.0`
 
-### minimatch@3.1.2 (Dependabot #219)
+### minimatch@3.1.2 (Dependabot #219, npm audit)
 
 - **Vulnerability**: ReDoS via multiple non-adjacent GLOBSTAR segments (high severity)
 - **Current version**: 3.1.2
-- **Patched in**: 3.1.3
-- **Blocked by**: `@stoplight/spectral-core@1.20.0`/`1.21.0` exact-pins `minimatch@3.1.2`. The `^3.x` consumers have been split into a separate lockfile entry and resolve to 3.1.3 (patched). Only the exact-pin entry remains vulnerable.
+- **Patched in**: 3.1.3 / 3.1.4
+- **Blocked by**: `@stoplight/spectral-core@1.20.0` exact-pins `minimatch@3.1.2`. Latest `spectral-core@1.22.0` uses `^3.1.4` but was published 2026-04-13, blocked by the 7-day age gate.
 - **Date**: 2026-03-03
-- **Check again when**: `@stoplight/spectral-core` updates its minimatch dependency
+- **Check again when**: After 2026-04-20 (delete the `@stoplight/spectral-core` lockfile entry and run `yarn install --no-immutable`)
 
-### serialize-javascript (Dependabot #223)
+### serialize-javascript (Dependabot #223, #247)
 
-- **Vulnerability**: RCE via RegExp.flags and Date.prototype.toISOString() (high severity)
+- **Vulnerability**: RCE via RegExp.flags/Date.prototype.toISOString (high), CPU Exhaustion DoS (medium)
 - **Current version**: 6.0.2
-- **Patched in**: 7.0.3 (major version jump)
-- **Blocked by**: `terser-webpack-plugin` and `css-minimizer-webpack-plugin` require `^6.0.1`/`^6.0.2`. Latest versions still use `^6.x`.
+- **Patched in**: 7.0.3 (#223), 7.0.5 (#247)
+- **Blocked by**: `css-minimizer-webpack-plugin@5.0.1` requires `^6.0.1`. Only 5.0.0 and 5.0.1 exist for 5.x. Latest css-minimizer-webpack-plugin (7.x) uses `^7.0.3`, but `piral-cli-webpack5@1.5.3` requires `^5.0.1`.
 - **Date**: 2026-03-03
-- **Check again when**: `terser-webpack-plugin` updates to `serialize-javascript@^7`
+- **Check again when**: `piral-cli-webpack5` updates its css-minimizer-webpack-plugin range
 
-### rollup (Dependabot #214)
+### rollup@2.79.2 (Dependabot #214)
 
 - **Vulnerability**: Arbitrary File Write via Path Traversal (high severity)
 - **Current version**: 2.79.2
 - **Patched in**: 2.80.0
-- **Blocked by**: `@stoplight/spectral-ruleset-bundler@latest` pins `rollup@~2.79.2` (tilde range only allows 2.79.x)
+- **Blocked by**: `@stoplight/spectral-ruleset-bundler@1.5.2` pins `rollup@~2.79.2`. Latest `spectral-ruleset-bundler@1.7.0` uses `~2.80.0` but was published 2026-04-13, blocked by the 7-day age gate.
 - **Date**: 2026-03-03
-- **Check again when**: `@stoplight/spectral-ruleset-bundler` updates its rollup dependency
+- **Check again when**: After 2026-04-20 (delete the `@stoplight/spectral-ruleset-bundler` lockfile entry and run `yarn install --no-immutable`)
 
 ### immutable@~3.7.6 (Dependabot #229)
 
-- **Vulnerability**: Prototype Pollution in `_.unset` and `_.omit` (high severity)
+- **Vulnerability**: Prototype Pollution (high severity)
 - **Current version**: 3.7.6
 - **Patched in**: 3.8.3
-- **Blocked by**: `@ardatan/relay-compiler@12.0.0` tilde-pins `immutable@~3.7.6` (allows only 3.7.x). Fix requires `@graphql-tools/relay-operation-optimizer` to update from `^6.5.0` to `^7.x` (which uses `@ardatan/relay-compiler@13.x` with `immutable@^5.1.5`).
+- **Blocked by**: `@ardatan/relay-compiler@12.0.0` tilde-pins `immutable@~3.7.6` (allows only 3.7.x). `@graphql-tools/relay-operation-optimizer@7.1.3` uses `@ardatan/relay-compiler@^13.0.1` (fixed), but `@graphql-codegen/visitor-plugin-common@2.x` requires `^6.5.0` of relay-operation-optimizer.
 - **Date**: 2026-03-12
-- **Check again when**: `@graphql-tools/relay-operation-optimizer` releases a v7 that the graphql-codegen plugins accept
+- **Check again when**: `@graphql-codegen/visitor-plugin-common` releases a v3+ that accepts `@graphql-tools/relay-operation-optimizer@^7`
+
+### brace-expansion@1.1.11 (npm audit)
+
+- **Vulnerability**: ReDoS (low severity), Zero-step sequence process hang (medium severity)
+- **Current version**: 1.1.11
+- **Patched in**: 2.0.3 (major version jump)
+- **Blocked by**: `minimatch@3.x` and `minimatch@4.x` use `^1.1.7`, capped at 1.x. Fix only available in 2.x.
+- **Date**: 2026-04-14
+- **Check again when**: `minimatch@3.x` updates to use `brace-expansion@^2.x` (unlikely for 3.x line)
 
 ### tmp@^0.0.33 (Dependabot #168)
 
