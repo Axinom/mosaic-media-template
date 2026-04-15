@@ -4,24 +4,23 @@
     "strict": true,
     "noImplicitReturns": true,
     "noFallthroughCasesInSwitch": true,
+    "noImplicitOverride": true,
     "esModuleInterop": true, // Needed to be able to import 'postgraphile-plugin-connection-filter'
-    "allowSyntheticDefaultImports": true, // Needed to be able to import 'ajv' together with esModuleInterop
     "outDir": "./dist",
     "resolveJsonModule": true,
-    "target": "es2017",
+    "target": "es2022",
     "module": "commonjs",
     "declaration": true,
     "removeComments": true,
-    "emitDecoratorMetadata": true,
-    "experimentalDecorators": true,
     "sourceMap": true,
     "skipLibCheck": true,
-    "baseUrl": "./",
     "preserveWatchOutput": true
   },
-  "exclude": ["node_modules", "dist", "scripts", "*/tests", "**/*spec.ts"],
-  "watchOptions": {
-    "watchFile": "dynamicPriorityPolling",
-    "watchDirectory": "dynamicPriorityPolling",
-  }
+  "exclude": [
+    "node_modules",
+    "dist",
+    "scripts",
+    "*/tests",
+    "**/*spec.ts"
+  ]
 }

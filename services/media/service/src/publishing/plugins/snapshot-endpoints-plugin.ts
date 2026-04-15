@@ -4,7 +4,7 @@ import {
   PublishEntityCommand,
   UnpublishEntityCommand,
 } from 'media-messages';
-import { gql as gqlExtended, makeExtendSchemaPlugin } from 'postgraphile';
+import { gql as gqlExtended, makeExtendSchemaPlugin } from 'graphile-utils';
 import { CommonErrors, getLongLivedToken } from '../../common';
 import { getValidatedExtendedContext } from '../../graphql';
 import { getSnapshotPgField } from '../utils';

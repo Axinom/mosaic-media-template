@@ -80,7 +80,7 @@
     "postgraphile-plugin-atomic-mutations": "^1.0.4",
     "postgraphile-plugin-connection-filter": "^2.3.0",
     "tar-stream": "^3.1.7",
-    "typescript": "^4.9.4",
+    "typescript": "^5.8.0",
     "url-join": "^4.0.1",
     "uuid": "^8.3.2",
     "yup": "^0.32.11",

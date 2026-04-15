@@ -2,7 +2,8 @@
 {
   "extends": "./tsconfig.json",
   "compilerOptions": {
-    "noEmit": false
+    "noEmit": false,
+    "removeComments": true
   },
   "exclude": [
     "node_modules",

@@ -30,7 +30,7 @@ import * as ingestSchema from '../schemas/ingest-validation-schema.json';
 import { customIngestValidation } from '../utils';
 
 function streamToString(stream: Stream): Promise<string> {
-  const chunks: Buffer[] = [];
+  const chunks: Uint8Array[] = [];
   return new Promise((resolve, reject) => {
     stream.on('data', (chunk) => chunks.push(chunk));
     stream.on('error', reject);
