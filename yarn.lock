@@ -7080,20 +7080,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"ajv-formats@npm:^1.6.1":
-  version: 1.6.1
-  resolution: "ajv-formats@npm:1.6.1"
-  dependencies:
-    ajv: "npm:^7.0.0"
-  peerDependencies:
-    ajv: ^7.0.0
-  peerDependenciesMeta:
-    ajv:
-      optional: true
-  checksum: 10c0/6abae18cc287f479d86d0f23a7b9bcac87b182252f03bd5f4bfa17e5620bc6727390589463343dc384f09d9dc371951c10be7b0a60c0e4ce070e67a619f237ba
-  languageName: node
-  linkType: hard
-
 "ajv-formats@npm:^2.1.1, ajv-formats@npm:~2.1.0, ajv-formats@npm:~2.1.1":
   version: 2.1.1
   resolution: "ajv-formats@npm:2.1.1"
@@ -7173,18 +7159,6 @@ __metadata:
     json-schema-traverse: "npm:^0.4.1"
     uri-js: "npm:^4.2.2"
   checksum: 10c0/a2bc39b0555dc9802c899f86990eb8eed6e366cddbf65be43d5aa7e4f3c4e1a199d5460fd7ca4fb3d864000dbbc049253b72faa83b3b30e641ca52cb29a68c22
-  languageName: node
-  linkType: hard
-
-"ajv@npm:^7.0.0, ajv@npm:^7.2.4":
-  version: 7.2.4
-  resolution: "ajv@npm:7.2.4"
-  dependencies:
-    fast-deep-equal: "npm:^3.1.1"
-    json-schema-traverse: "npm:^1.0.0"
-    require-from-string: "npm:^2.0.2"
-    uri-js: "npm:^4.2.2"
-  checksum: 10c0/420b72d7f6af89c7e63e00856b894e16a8a2ea107b2b2a76ff36d8dd05f6d708ab120a8c7cc627983ad1f75c6990363eda7c68f45943635f084de62353ca1c56
   languageName: node
   linkType: hard
 
@@ -10286,8 +10260,8 @@ __metadata:
     "@types/tar-stream": "npm:^3.1.4"
     "@types/uuid": "npm:^8.3.4"
     "@types/verror": "npm:^1.10.6"
-    ajv: "npm:^7.2.4"
-    ajv-formats: "npm:^1.6.1"
+    ajv: "npm:^8.18.0"
+    ajv-formats: "npm:^2.1.1"
     axios: "npm:^1.8.3"
     concurrently: "npm:^6.5.1"
     dotenv: "npm:^8.6.0"
@@ -15543,8 +15517,8 @@ __metadata:
     "@types/uuid": "npm:^8.3.4"
     "@types/verror": "npm:^1.10.6"
     "@types/yargs": "npm:^16.0.5"
-    ajv: "npm:^7.2.4"
-    ajv-formats: "npm:^1.6.1"
+    ajv: "npm:^8.18.0"
+    ajv-formats: "npm:^2.1.1"
     altair-express-middleware: "npm:^7.0.1"
     axios: "npm:^1.8.3"
     concurrently: "npm:^6.5.1"

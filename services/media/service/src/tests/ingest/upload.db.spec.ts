@@ -280,14 +280,14 @@ describe('Movies GraphQL endpoints', () => {
           validationErrors: [
             {
               message:
-                'JSON path "document/items/0/data" should have required property \'title\' (line: 7, column: 15)',
+                'JSON path "document/items/0/data" must have required property \'title\' (line: 7, column: 15)',
               schemaPath:
                 '#/properties/items/items/allOf/0/then/properties/data/required',
               type: 'JsonSchemaValidation',
             },
             {
               message:
-                'JSON path "document/items/0" should match "then" schema (line: 4, column: 5)',
+                'JSON path "document/items/0" must match "then" schema (line: 4, column: 5)',
               schemaPath: '#/properties/items/items/allOf/0/if',
               type: 'JsonSchemaValidation',
             },
@@ -338,14 +338,14 @@ describe('Movies GraphQL endpoints', () => {
           validationErrors: [
             {
               message:
-                'JSON path "document/items/0/data" should have required property \'title\' (line: 1, column: 94)',
+                'JSON path "document/items/0/data" must have required property \'title\' (line: 1, column: 94)',
               schemaPath:
                 '#/properties/items/items/allOf/0/then/properties/data/required',
               type: 'JsonSchemaValidation',
             },
             {
               message:
-                'JSON path "document/items/0" should match "then" schema (line: 1, column: 37)',
+                'JSON path "document/items/0" must match "then" schema (line: 1, column: 37)',
               schemaPath: '#/properties/items/items/allOf/0/if',
               type: 'JsonSchemaValidation',
             },
@@ -396,20 +396,20 @@ describe('Movies GraphQL endpoints', () => {
           validationErrors: [
             {
               message:
-                'JSON path "document/items/0/data" should have required property \'title\' (line: 7, column: 15)',
+                'JSON path "document/items/0/data" must have required property \'title\' (line: 7, column: 15)',
               schemaPath:
                 '#/properties/items/items/allOf/0/then/properties/data/required',
               type: 'JsonSchemaValidation',
             },
             {
               message:
-                'JSON path "document/items/0" should match "then" schema (line: 4, column: 5)',
+                'JSON path "document/items/0" must match "then" schema (line: 4, column: 5)',
               schemaPath: '#/properties/items/items/allOf/0/if',
               type: 'JsonSchemaValidation',
             },
             {
               message:
-                'JSON path "document/items/1" should have required property \'data\' (line: 33, column: 5)',
+                'JSON path "document/items/1" must have required property \'data\' (line: 33, column: 5)',
               schemaPath: '#/properties/items/items/required',
               type: 'JsonSchemaValidation',
             },

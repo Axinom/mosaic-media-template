@@ -211,7 +211,7 @@ describe('publishingMovieGenresProcessor', () => {
       const customError = {
         context: 'METADATA',
         message:
-          'JSON path "movie_genre" should have required property \'genres\' (line: 1, column: 1)',
+          'JSON path "movie_genre" must have required property \'genres\' (line: 1, column: 1)',
         severity: 'ERROR',
       };
       const result = await commonPublishValidator(
