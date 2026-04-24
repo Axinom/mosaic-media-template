@@ -18,5 +18,8 @@ export interface DeleteEntityCommand {
    * The name of the entity type.
    */
   entity_type?: string;
+  /**
+   * Additional input data.
+   */
   input?: { [name: string]: unknown };
 }
