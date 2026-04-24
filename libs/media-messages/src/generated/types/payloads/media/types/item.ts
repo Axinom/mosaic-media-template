@@ -11,5 +11,8 @@ export interface Item {
    * A string with at least one character and not only whitespace characters.
    */
   external_id: string;
+  /**
+   * Metadata of a specific ingest item.
+   */
   data: { [name: string]: unknown };
 }

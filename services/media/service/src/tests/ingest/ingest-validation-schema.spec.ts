@@ -35,7 +35,7 @@ describe('ingest-validation-schema.json', () => {
   ];
 
   beforeAll(async () => {
-    ajv = new Ajv({ allErrors: true, validateFormats: true });
+    ajv = new Ajv({ allErrors: true });
     addFormats(ajv);
   });
 
@@ -52,13 +52,13 @@ describe('ingest-validation-schema.json', () => {
       expect(errors).toIncludeSameMembers([
         {
           message:
-            'JSON path "document" should have required property \'name\' (line: 1, column: 1)',
+            'JSON path "document" must have required property \'name\' (line: 1, column: 1)',
           schemaPath: '#/required',
           type: 'JsonSchemaValidation',
         },
         {
           message:
-            'JSON path "document" should have required property \'items\' (line: 1, column: 1)',
+            'JSON path "document" must have required property \'items\' (line: 1, column: 1)',
           schemaPath: '#/required',
           type: 'JsonSchemaValidation',
         },
@@ -78,13 +78,13 @@ describe('ingest-validation-schema.json', () => {
       expect(errors).toIncludeSameMembers([
         {
           message:
-            'JSON path "document" should have required property \'name\' (line: 1, column: 1)',
+            'JSON path "document" must have required property \'name\' (line: 1, column: 1)',
           schemaPath: '#/required',
           type: 'JsonSchemaValidation',
         },
         {
           message:
-            'JSON path "document" should have required property \'items\' (line: 1, column: 1)',
+            'JSON path "document" must have required property \'items\' (line: 1, column: 1)',
           schemaPath: '#/required',
           type: 'JsonSchemaValidation',
         },
@@ -104,13 +104,13 @@ describe('ingest-validation-schema.json', () => {
       expect(errors).toIncludeSameMembers([
         {
           message:
-            'JSON path "document/name" should be string (line: 2, column: 11)',
+            'JSON path "document/name" must be string (line: 2, column: 11)',
           schemaPath: '#/properties/name/type',
           type: 'JsonSchemaValidation',
         },
         {
           message:
-            'JSON path "document" should have required property \'items\' (line: 1, column: 1)',
+            'JSON path "document" must have required property \'items\' (line: 1, column: 1)',
           schemaPath: '#/required',
           type: 'JsonSchemaValidation',
         },
@@ -130,13 +130,13 @@ describe('ingest-validation-schema.json', () => {
       expect(errors).toIncludeSameMembers([
         {
           message:
-            'JSON path "document/name" should NOT have fewer than 1 characters (line: 2, column: 11)',
+            'JSON path "document/name" must NOT have fewer than 1 characters (line: 2, column: 11)',
           schemaPath: '#/properties/name/minLength',
           type: 'JsonSchemaValidation',
         },
         {
           message:
-            'JSON path "document" should have required property \'items\' (line: 1, column: 1)',
+            'JSON path "document" must have required property \'items\' (line: 1, column: 1)',
           schemaPath: '#/required',
           type: 'JsonSchemaValidation',
         },
@@ -158,13 +158,13 @@ describe('ingest-validation-schema.json', () => {
         expect(errors).toIncludeSameMembers([
           {
             message:
-              'JSON path "document/name" should match pattern "^$|.*\\S.*" (line: 2, column: 11)',
+              'JSON path "document/name" must match pattern "^$|.*\\S.*" (line: 2, column: 11)',
             schemaPath: '#/properties/name/pattern',
             type: 'JsonSchemaValidation',
           },
           {
             message:
-              'JSON path "document" should have required property \'items\' (line: 1, column: 1)',
+              'JSON path "document" must have required property \'items\' (line: 1, column: 1)',
             schemaPath: '#/required',
             type: 'JsonSchemaValidation',
           },
@@ -185,7 +185,7 @@ describe('ingest-validation-schema.json', () => {
       expect(errors).toIncludeSameMembers([
         {
           message:
-            'JSON path "document" should have required property \'items\' (line: 1, column: 1)',
+            'JSON path "document" must have required property \'items\' (line: 1, column: 1)',
           schemaPath: '#/required',
           type: 'JsonSchemaValidation',
         },
@@ -215,7 +215,7 @@ describe('ingest-validation-schema.json', () => {
         expect(errors).toIncludeSameMembers([
           {
             message:
-              'JSON path "document/items" should NOT have fewer than 1 items (line: 3, column: 12)',
+              'JSON path "document/items" must NOT have fewer than 1 items (line: 3, column: 12)',
             schemaPath: '#/properties/items/minItems',
             type: 'JsonSchemaValidation',
           },
@@ -236,13 +236,13 @@ describe('ingest-validation-schema.json', () => {
       expect(errors).toIncludeSameMembers([
         {
           message:
-            'JSON path "document" should have required property \'items\' (line: 1, column: 1)',
+            'JSON path "document" must have required property \'items\' (line: 1, column: 1)',
           schemaPath: '#/required',
           type: 'JsonSchemaValidation',
         },
         {
           message:
-            'JSON path "document/name" should NOT have more than 50 characters (line: 2, column: 11)',
+            'JSON path "document/name" must NOT have more than 50 characters (line: 2, column: 11)',
           schemaPath: '#/properties/name/maxLength',
           type: 'JsonSchemaValidation',
         },
@@ -265,19 +265,19 @@ describe('ingest-validation-schema.json', () => {
       expect(errors).toIncludeSameMembers([
         {
           message:
-            'JSON path "document/items/0" should have required property \'data\' (line: 4, column: 5)',
+            'JSON path "document/items/0" must have required property \'data\' (line: 4, column: 5)',
           schemaPath: '#/properties/items/items/required',
           type: 'JsonSchemaValidation',
         },
         {
           message:
-            'JSON path "document/items/0" should have required property \'type\' (line: 4, column: 5)',
+            'JSON path "document/items/0" must have required property \'type\' (line: 4, column: 5)',
           schemaPath: '#/properties/items/items/required',
           type: 'JsonSchemaValidation',
         },
         {
           message:
-            'JSON path "document/items/0" should have required property \'external_id\' (line: 4, column: 5)',
+            'JSON path "document/items/0" must have required property \'external_id\' (line: 4, column: 5)',
           schemaPath: '#/properties/items/items/required',
           type: 'JsonSchemaValidation',
         },
@@ -340,7 +340,7 @@ describe('ingest-validation-schema.json', () => {
         expect(errors).toIncludeSameMembers([
           {
             message:
-              'JSON path "document/document_created" should match format "date-time" (line: 3, column: 23)',
+              'JSON path "document/document_created" must match format "date-time" (line: 3, column: 23)',
             schemaPath: '#/properties/document_created/format',
             type: 'JsonSchemaValidation',
           },
@@ -399,14 +399,14 @@ describe('ingest-validation-schema.json', () => {
       expect(errors).toIncludeSameMembers([
         {
           message:
-            'JSON path "document/items/1/data" should have required property \'title\' (line: 15, column: 15)',
+            'JSON path "document/items/1/data" must have required property \'title\' (line: 15, column: 15)',
           schemaPath:
             '#/properties/items/items/allOf/0/then/properties/data/required',
           type: 'JsonSchemaValidation',
         },
         {
           message:
-            'JSON path "document/items/1" should match "then" schema (line: 12, column: 5)',
+            'JSON path "document/items/1" must match "then" schema (line: 12, column: 5)',
           schemaPath: '#/properties/items/items/allOf/0/if',
           type: 'JsonSchemaValidation',
         },
@@ -441,27 +441,27 @@ describe('ingest-validation-schema.json', () => {
       expect(errors).toIncludeSameMembers([
         {
           message:
-            'JSON path "document/items/0/data" should have required property \'title\' (line: 8, column: 15)',
+            'JSON path "document/items/0/data" must have required property \'title\' (line: 8, column: 15)',
           schemaPath:
             '#/properties/items/items/allOf/0/then/properties/data/required',
           type: 'JsonSchemaValidation',
         },
         {
           message:
-            'JSON path "document/items/0" should match "then" schema (line: 5, column: 5)',
+            'JSON path "document/items/0" must match "then" schema (line: 5, column: 5)',
           schemaPath: '#/properties/items/items/allOf/0/if',
           type: 'JsonSchemaValidation',
         },
         {
           message:
-            'JSON path "document/items/1/data" should have required property \'title\' (line: 13, column: 15)',
+            'JSON path "document/items/1/data" must have required property \'title\' (line: 13, column: 15)',
           schemaPath:
             '#/properties/items/items/allOf/0/then/properties/data/required',
           type: 'JsonSchemaValidation',
         },
         {
           message:
-            'JSON path "document/items/1" should match "then" schema (line: 10, column: 5)',
+            'JSON path "document/items/1" must match "then" schema (line: 10, column: 5)',
           schemaPath: '#/properties/items/items/allOf/0/if',
           type: 'JsonSchemaValidation',
         },
@@ -496,27 +496,27 @@ describe('ingest-validation-schema.json', () => {
       expect(errors).toIncludeSameMembers([
         {
           message:
-            'JSON path "document/items/0/data" should have required property \'title\' (line: 1, column: 131)',
+            'JSON path "document/items/0/data" must have required property \'title\' (line: 1, column: 131)',
           schemaPath:
             '#/properties/items/items/allOf/0/then/properties/data/required',
           type: 'JsonSchemaValidation',
         },
         {
           message:
-            'JSON path "document/items/0" should match "then" schema (line: 1, column: 75)',
+            'JSON path "document/items/0" must match "then" schema (line: 1, column: 75)',
           schemaPath: '#/properties/items/items/allOf/0/if',
           type: 'JsonSchemaValidation',
         },
         {
           message:
-            'JSON path "document/items/1/data" should have required property \'title\' (line: 1, column: 193)',
+            'JSON path "document/items/1/data" must have required property \'title\' (line: 1, column: 193)',
           schemaPath:
             '#/properties/items/items/allOf/0/then/properties/data/required',
           type: 'JsonSchemaValidation',
         },
         {
           message:
-            'JSON path "document/items/1" should match "then" schema (line: 1, column: 135)',
+            'JSON path "document/items/1" must match "then" schema (line: 1, column: 135)',
           schemaPath: '#/properties/items/items/allOf/0/if',
           type: 'JsonSchemaValidation',
         },
@@ -541,19 +541,19 @@ describe('ingest-validation-schema.json', () => {
       expect(errors).toIncludeSameMembers([
         {
           message:
-            'JSON path "document/items/0" should have required property \'data\' (line: 4, column: 5)',
+            'JSON path "document/items/0" must have required property \'data\' (line: 4, column: 5)',
           schemaPath: '#/properties/items/items/required',
           type: 'JsonSchemaValidation',
         },
         {
           message:
-            'JSON path "document/items/0" should have required property \'type\' (line: 4, column: 5)',
+            'JSON path "document/items/0" must have required property \'type\' (line: 4, column: 5)',
           schemaPath: '#/properties/items/items/required',
           type: 'JsonSchemaValidation',
         },
         {
           message:
-            'JSON path "document/items/0" should have required property \'external_id\' (line: 4, column: 5)',
+            'JSON path "document/items/0" must have required property \'external_id\' (line: 4, column: 5)',
           schemaPath: '#/properties/items/items/required',
           type: 'JsonSchemaValidation',
         },
@@ -590,19 +590,19 @@ describe('ingest-validation-schema.json', () => {
         expect(errors).toIncludeSameMembers([
           {
             message:
-              'JSON path "document/items/0" should have required property \'data\' (line: 4, column: 5)',
+              'JSON path "document/items/0" must have required property \'data\' (line: 4, column: 5)',
             schemaPath: '#/properties/items/items/required',
             type: 'JsonSchemaValidation',
           },
           {
             message:
-              'JSON path "document/items/0/type" should be equal to one of the allowed values: MOVIE, TVSHOW, SEASON, EPISODE (line: 5, column: 15)',
+              'JSON path "document/items/0/type" must be equal to one of the allowed values: MOVIE, TVSHOW, SEASON, EPISODE (line: 5, column: 15)',
             schemaPath: '#/properties/items/items/properties/type/enum',
             type: 'JsonSchemaValidation',
           },
           {
             message:
-              'JSON path "document/items/0" should have required property \'external_id\' (line: 4, column: 5)',
+              'JSON path "document/items/0" must have required property \'external_id\' (line: 4, column: 5)',
             schemaPath: '#/properties/items/items/required',
             type: 'JsonSchemaValidation',
           },
@@ -628,13 +628,13 @@ describe('ingest-validation-schema.json', () => {
         expect(errors).toIncludeSameMembers([
           {
             message:
-              'JSON path "document/items/0" should have required property \'data\' (line: 4, column: 5)',
+              'JSON path "document/items/0" must have required property \'data\' (line: 4, column: 5)',
             schemaPath: '#/properties/items/items/required',
             type: 'JsonSchemaValidation',
           },
           {
             message:
-              'JSON path "document/items/0" should have required property \'external_id\' (line: 4, column: 5)',
+              'JSON path "document/items/0" must have required property \'external_id\' (line: 4, column: 5)',
             schemaPath: '#/properties/items/items/required',
             type: 'JsonSchemaValidation',
           },
@@ -658,13 +658,13 @@ describe('ingest-validation-schema.json', () => {
       expect(errors).toIncludeSameMembers([
         {
           message:
-            'JSON path "document/items/0" should have required property \'data\' (line: 4, column: 5)',
+            'JSON path "document/items/0" must have required property \'data\' (line: 4, column: 5)',
           schemaPath: '#/properties/items/items/required',
           type: 'JsonSchemaValidation',
         },
         {
           message:
-            'JSON path "document/items/0" should have required property \'external_id\' (line: 4, column: 5)',
+            'JSON path "document/items/0" must have required property \'external_id\' (line: 4, column: 5)',
           schemaPath: '#/properties/items/items/required',
           type: 'JsonSchemaValidation',
         },
@@ -687,13 +687,13 @@ describe('ingest-validation-schema.json', () => {
       expect(errors).toIncludeSameMembers([
         {
           message:
-            'JSON path "document/items/0" should have required property \'data\' (line: 4, column: 5)',
+            'JSON path "document/items/0" must have required property \'data\' (line: 4, column: 5)',
           schemaPath: '#/properties/items/items/required',
           type: 'JsonSchemaValidation',
         },
         {
           message:
-            'JSON path "document/items/0/external_id" should be string (line: 6, column: 22)',
+            'JSON path "document/items/0/external_id" must be string (line: 6, column: 22)',
           schemaPath: '#/definitions/non-empty-string/type',
           type: 'JsonSchemaValidation',
         },
@@ -716,13 +716,13 @@ describe('ingest-validation-schema.json', () => {
       expect(errors).toIncludeSameMembers([
         {
           message:
-            'JSON path "document/items/0" should have required property \'data\' (line: 4, column: 5)',
+            'JSON path "document/items/0" must have required property \'data\' (line: 4, column: 5)',
           schemaPath: '#/properties/items/items/required',
           type: 'JsonSchemaValidation',
         },
         {
           message:
-            'JSON path "document/items/0/external_id" should NOT have fewer than 1 characters (line: 6, column: 22)',
+            'JSON path "document/items/0/external_id" must NOT have fewer than 1 characters (line: 6, column: 22)',
           schemaPath: '#/definitions/non-empty-string/minLength',
           type: 'JsonSchemaValidation',
         },
@@ -747,13 +747,13 @@ describe('ingest-validation-schema.json', () => {
         expect(errors).toIncludeSameMembers([
           {
             message:
-              'JSON path "document/items/0" should have required property \'data\' (line: 4, column: 5)',
+              'JSON path "document/items/0" must have required property \'data\' (line: 4, column: 5)',
             schemaPath: '#/properties/items/items/required',
             type: 'JsonSchemaValidation',
           },
           {
             message:
-              'JSON path "document/items/0/external_id" should match pattern "^$|.*\\S.*" (line: 6, column: 22)',
+              'JSON path "document/items/0/external_id" must match pattern "^$|.*\\S.*" (line: 6, column: 22)',
             schemaPath: '#/definitions/non-empty-string/pattern',
             type: 'JsonSchemaValidation',
           },
@@ -784,7 +784,7 @@ describe('ingest-validation-schema.json', () => {
         expect(errors).toIncludeSameMembers([
           {
             message:
-              'JSON path "document/items/0" should have required property \'data\' (line: 4, column: 5)',
+              'JSON path "document/items/0" must have required property \'data\' (line: 4, column: 5)',
             schemaPath: '#/properties/items/items/required',
             type: 'JsonSchemaValidation',
           },
@@ -808,14 +808,14 @@ describe('ingest-validation-schema.json', () => {
       expect(errors).toIncludeSameMembers([
         {
           message:
-            'JSON path "document/items/0/data" should have required property \'title\' (line: 7, column: 15)',
+            'JSON path "document/items/0/data" must have required property \'title\' (line: 7, column: 15)',
           schemaPath:
             '#/properties/items/items/allOf/0/then/properties/data/required',
           type: 'JsonSchemaValidation',
         },
         {
           message:
-            'JSON path "document/items/0" should match "then" schema (line: 4, column: 5)',
+            'JSON path "document/items/0" must match "then" schema (line: 4, column: 5)',
           schemaPath: '#/properties/items/items/allOf/0/if',
           type: 'JsonSchemaValidation',
         },
@@ -839,13 +839,13 @@ describe('ingest-validation-schema.json', () => {
         expect(errors).toIncludeSameMembers([
           {
             message:
-              'JSON path "document/items/0/data/title" should be string (line: 8, column: 18)',
+              'JSON path "document/items/0/data/title" must be string (line: 8, column: 18)',
             schemaPath: '#/definitions/title/type',
             type: 'JsonSchemaValidation',
           },
           {
             message:
-              'JSON path "document/items/0" should match "then" schema (line: 4, column: 5)',
+              'JSON path "document/items/0" must match "then" schema (line: 4, column: 5)',
             schemaPath: '#/properties/items/items/allOf/0/if',
             type: 'JsonSchemaValidation',
           },
@@ -866,13 +866,13 @@ describe('ingest-validation-schema.json', () => {
       expect(errors).toIncludeSameMembers([
         {
           message:
-            'JSON path "document/items/0/data/title" should NOT have fewer than 1 characters (line: 8, column: 18)',
+            'JSON path "document/items/0/data/title" must NOT have fewer than 1 characters (line: 8, column: 18)',
           schemaPath: '#/definitions/title/minLength',
           type: 'JsonSchemaValidation',
         },
         {
           message:
-            'JSON path "document/items/0" should match "then" schema (line: 4, column: 5)',
+            'JSON path "document/items/0" must match "then" schema (line: 4, column: 5)',
           schemaPath: '#/properties/items/items/allOf/0/if',
           type: 'JsonSchemaValidation',
         },
@@ -892,13 +892,13 @@ describe('ingest-validation-schema.json', () => {
       expect(errors).toIncludeSameMembers([
         {
           message:
-            'JSON path "document/items/0/data/title" should NOT have more than 100 characters (line: 8, column: 18)',
+            'JSON path "document/items/0/data/title" must NOT have more than 100 characters (line: 8, column: 18)',
           schemaPath: '#/definitions/title/maxLength',
           type: 'JsonSchemaValidation',
         },
         {
           message:
-            'JSON path "document/items/0" should match "then" schema (line: 4, column: 5)',
+            'JSON path "document/items/0" must match "then" schema (line: 4, column: 5)',
           schemaPath: '#/properties/items/items/allOf/0/if',
           type: 'JsonSchemaValidation',
         },
@@ -920,13 +920,13 @@ describe('ingest-validation-schema.json', () => {
         expect(errors).toIncludeSameMembers([
           {
             message:
-              'JSON path "document/items/0/data/title" should match pattern "^$|.*\\S.*" (line: 8, column: 18)',
+              'JSON path "document/items/0/data/title" must match pattern "^$|.*\\S.*" (line: 8, column: 18)',
             schemaPath: '#/definitions/title/pattern',
             type: 'JsonSchemaValidation',
           },
           {
             message:
-              'JSON path "document/items/0" should match "then" schema (line: 4, column: 5)',
+              'JSON path "document/items/0" must match "then" schema (line: 4, column: 5)',
             schemaPath: '#/properties/items/items/allOf/0/if',
             type: 'JsonSchemaValidation',
           },
@@ -1023,13 +1023,13 @@ describe('ingest-validation-schema.json', () => {
       expect(errors).toIncludeSameMembers([
         {
           message:
-            'JSON path "document/items/0/data/released" should match format "date" (line: 9, column: 21)',
+            'JSON path "document/items/0/data/released" must match format "date" (line: 9, column: 21)',
           schemaPath: '#/definitions/released/format',
           type: 'JsonSchemaValidation',
         },
         {
           message:
-            'JSON path "document/items/0" should match "then" schema (line: 4, column: 5)',
+            'JSON path "document/items/0" must match "then" schema (line: 4, column: 5)',
           schemaPath: '#/properties/items/items/allOf/0/if',
           type: 'JsonSchemaValidation',
         },
@@ -1101,13 +1101,13 @@ describe('ingest-validation-schema.json', () => {
       expect(errors).toIncludeSameMembers([
         {
           message:
-            'JSON path "document/items/0/data/tags/0" should be string (line: 10, column: 11)',
+            'JSON path "document/items/0/data/tags/0" must be string (line: 10, column: 11)',
           schemaPath: '#/definitions/non-empty-string/type',
           type: 'JsonSchemaValidation',
         },
         {
           message:
-            'JSON path "document/items/0" should match "then" schema (line: 4, column: 5)',
+            'JSON path "document/items/0" must match "then" schema (line: 4, column: 5)',
           schemaPath: '#/properties/items/items/allOf/0/if',
           type: 'JsonSchemaValidation',
         },
@@ -1127,13 +1127,13 @@ describe('ingest-validation-schema.json', () => {
       expect(errors).toIncludeSameMembers([
         {
           message:
-            'JSON path "document/items/0/data/tags/0" should NOT have fewer than 1 characters (line: 10, column: 11)',
+            'JSON path "document/items/0/data/tags/0" must NOT have fewer than 1 characters (line: 10, column: 11)',
           schemaPath: '#/definitions/non-empty-string/minLength',
           type: 'JsonSchemaValidation',
         },
         {
           message:
-            'JSON path "document/items/0" should match "then" schema (line: 4, column: 5)',
+            'JSON path "document/items/0" must match "then" schema (line: 4, column: 5)',
           schemaPath: '#/properties/items/items/allOf/0/if',
           type: 'JsonSchemaValidation',
         },
@@ -1153,13 +1153,13 @@ describe('ingest-validation-schema.json', () => {
       expect(errors).toIncludeSameMembers([
         {
           message:
-            'JSON path "document/items/0/data/tags/0" should match pattern "^$|.*\\S.*" (line: 10, column: 11)',
+            'JSON path "document/items/0/data/tags/0" must match pattern "^$|.*\\S.*" (line: 10, column: 11)',
           schemaPath: '#/definitions/non-empty-string/pattern',
           type: 'JsonSchemaValidation',
         },
         {
           message:
-            'JSON path "document/items/0" should match "then" schema (line: 4, column: 5)',
+            'JSON path "document/items/0" must match "then" schema (line: 4, column: 5)',
           schemaPath: '#/properties/items/items/allOf/0/if',
           type: 'JsonSchemaValidation',
         },
@@ -1182,13 +1182,13 @@ describe('ingest-validation-schema.json', () => {
       expect(errors).toIncludeSameMembers([
         {
           message:
-            'JSON path "document/items/0/data/tags" should NOT have duplicate items (items ## 0 and 1 are identical) (line: 9, column: 17)',
+            'JSON path "document/items/0/data/tags" must NOT have duplicate items (items ## 0 and 1 are identical) (line: 9, column: 17)',
           schemaPath: '#/uniqueItems', // TODO: Open issue: https://github.com/ajv-validator/ajv/issues/512
           type: 'JsonSchemaValidation',
         },
         {
           message:
-            'JSON path "document/items/0" should match "then" schema (line: 4, column: 5)',
+            'JSON path "document/items/0" must match "then" schema (line: 4, column: 5)',
           schemaPath: '#/properties/items/items/allOf/0/if',
           type: 'JsonSchemaValidation',
         },
@@ -1229,13 +1229,13 @@ describe('ingest-validation-schema.json', () => {
       expect(errors).toIncludeSameMembers([
         {
           message:
-            'JSON path "document/items/0/data/genres/0" should be string (line: 10, column: 11)',
+            'JSON path "document/items/0/data/genres/0" must be string (line: 10, column: 11)',
           schemaPath: '#/definitions/non-empty-string/type',
           type: 'JsonSchemaValidation',
         },
         {
           message:
-            'JSON path "document/items/0" should match "then" schema (line: 4, column: 5)',
+            'JSON path "document/items/0" must match "then" schema (line: 4, column: 5)',
           schemaPath: '#/properties/items/items/allOf/0/if',
           type: 'JsonSchemaValidation',
         },
@@ -1255,13 +1255,13 @@ describe('ingest-validation-schema.json', () => {
       expect(errors).toIncludeSameMembers([
         {
           message:
-            'JSON path "document/items/0/data/genres/0" should NOT have fewer than 1 characters (line: 10, column: 11)',
+            'JSON path "document/items/0/data/genres/0" must NOT have fewer than 1 characters (line: 10, column: 11)',
           schemaPath: '#/definitions/non-empty-string/minLength',
           type: 'JsonSchemaValidation',
         },
         {
           message:
-            'JSON path "document/items/0" should match "then" schema (line: 4, column: 5)',
+            'JSON path "document/items/0" must match "then" schema (line: 4, column: 5)',
           schemaPath: '#/properties/items/items/allOf/0/if',
           type: 'JsonSchemaValidation',
         },
@@ -1281,13 +1281,13 @@ describe('ingest-validation-schema.json', () => {
       expect(errors).toIncludeSameMembers([
         {
           message:
-            'JSON path "document/items/0/data/genres/0" should match pattern "^$|.*\\S.*" (line: 10, column: 11)',
+            'JSON path "document/items/0/data/genres/0" must match pattern "^$|.*\\S.*" (line: 10, column: 11)',
           schemaPath: '#/definitions/non-empty-string/pattern',
           type: 'JsonSchemaValidation',
         },
         {
           message:
-            'JSON path "document/items/0" should match "then" schema (line: 4, column: 5)',
+            'JSON path "document/items/0" must match "then" schema (line: 4, column: 5)',
           schemaPath: '#/properties/items/items/allOf/0/if',
           type: 'JsonSchemaValidation',
         },
@@ -1310,13 +1310,13 @@ describe('ingest-validation-schema.json', () => {
       expect(errors).toIncludeSameMembers([
         {
           message:
-            'JSON path "document/items/0/data/genres" should NOT have duplicate items (items ## 0 and 1 are identical) (line: 9, column: 19)',
+            'JSON path "document/items/0/data/genres" must NOT have duplicate items (items ## 0 and 1 are identical) (line: 9, column: 19)',
           schemaPath: '#/uniqueItems', // TODO: Open issue: https://github.com/ajv-validator/ajv/issues/512
           type: 'JsonSchemaValidation',
         },
         {
           message:
-            'JSON path "document/items/0" should match "then" schema (line: 4, column: 5)',
+            'JSON path "document/items/0" must match "then" schema (line: 4, column: 5)',
           schemaPath: '#/properties/items/items/allOf/0/if',
           type: 'JsonSchemaValidation',
         },
@@ -1357,13 +1357,13 @@ describe('ingest-validation-schema.json', () => {
       expect(errors).toIncludeSameMembers([
         {
           message:
-            'JSON path "document/items/0/data/cast/0" should be string (line: 10, column: 11)',
+            'JSON path "document/items/0/data/cast/0" must be string (line: 10, column: 11)',
           schemaPath: '#/definitions/non-empty-string/type',
           type: 'JsonSchemaValidation',
         },
         {
           message:
-            'JSON path "document/items/0" should match "then" schema (line: 4, column: 5)',
+            'JSON path "document/items/0" must match "then" schema (line: 4, column: 5)',
           schemaPath: '#/properties/items/items/allOf/0/if',
           type: 'JsonSchemaValidation',
         },
@@ -1383,13 +1383,13 @@ describe('ingest-validation-schema.json', () => {
       expect(errors).toIncludeSameMembers([
         {
           message:
-            'JSON path "document/items/0/data/cast/0" should NOT have fewer than 1 characters (line: 10, column: 11)',
+            'JSON path "document/items/0/data/cast/0" must NOT have fewer than 1 characters (line: 10, column: 11)',
           schemaPath: '#/definitions/non-empty-string/minLength',
           type: 'JsonSchemaValidation',
         },
         {
           message:
-            'JSON path "document/items/0" should match "then" schema (line: 4, column: 5)',
+            'JSON path "document/items/0" must match "then" schema (line: 4, column: 5)',
           schemaPath: '#/properties/items/items/allOf/0/if',
           type: 'JsonSchemaValidation',
         },
@@ -1409,13 +1409,13 @@ describe('ingest-validation-schema.json', () => {
       expect(errors).toIncludeSameMembers([
         {
           message:
-            'JSON path "document/items/0/data/cast/0" should match pattern "^$|.*\\S.*" (line: 10, column: 11)',
+            'JSON path "document/items/0/data/cast/0" must match pattern "^$|.*\\S.*" (line: 10, column: 11)',
           schemaPath: '#/definitions/non-empty-string/pattern',
           type: 'JsonSchemaValidation',
         },
         {
           message:
-            'JSON path "document/items/0" should match "then" schema (line: 4, column: 5)',
+            'JSON path "document/items/0" must match "then" schema (line: 4, column: 5)',
           schemaPath: '#/properties/items/items/allOf/0/if',
           type: 'JsonSchemaValidation',
         },
@@ -1438,13 +1438,13 @@ describe('ingest-validation-schema.json', () => {
       expect(errors).toIncludeSameMembers([
         {
           message:
-            'JSON path "document/items/0/data/cast" should NOT have duplicate items (items ## 0 and 1 are identical) (line: 9, column: 17)',
+            'JSON path "document/items/0/data/cast" must NOT have duplicate items (items ## 0 and 1 are identical) (line: 9, column: 17)',
           schemaPath: '#/uniqueItems', // TODO: Open issue: https://github.com/ajv-validator/ajv/issues/512
           type: 'JsonSchemaValidation',
         },
         {
           message:
-            'JSON path "document/items/0" should match "then" schema (line: 4, column: 5)',
+            'JSON path "document/items/0" must match "then" schema (line: 4, column: 5)',
           schemaPath: '#/properties/items/items/allOf/0/if',
           type: 'JsonSchemaValidation',
         },
@@ -1488,13 +1488,13 @@ describe('ingest-validation-schema.json', () => {
       expect(errors).toIncludeSameMembers([
         {
           message:
-            'JSON path "document/items/0/data/production_countries/0" should be string (line: 10, column: 11)',
+            'JSON path "document/items/0/data/production_countries/0" must be string (line: 10, column: 11)',
           schemaPath: '#/definitions/non-empty-string/type',
           type: 'JsonSchemaValidation',
         },
         {
           message:
-            'JSON path "document/items/0" should match "then" schema (line: 4, column: 5)',
+            'JSON path "document/items/0" must match "then" schema (line: 4, column: 5)',
           schemaPath: '#/properties/items/items/allOf/0/if',
           type: 'JsonSchemaValidation',
         },
@@ -1517,13 +1517,13 @@ describe('ingest-validation-schema.json', () => {
       expect(errors).toIncludeSameMembers([
         {
           message:
-            'JSON path "document/items/0/data/production_countries/0" should NOT have fewer than 1 characters (line: 10, column: 11)',
+            'JSON path "document/items/0/data/production_countries/0" must NOT have fewer than 1 characters (line: 10, column: 11)',
           schemaPath: '#/definitions/non-empty-string/minLength',
           type: 'JsonSchemaValidation',
         },
         {
           message:
-            'JSON path "document/items/0" should match "then" schema (line: 4, column: 5)',
+            'JSON path "document/items/0" must match "then" schema (line: 4, column: 5)',
           schemaPath: '#/properties/items/items/allOf/0/if',
           type: 'JsonSchemaValidation',
         },
@@ -1546,13 +1546,13 @@ describe('ingest-validation-schema.json', () => {
       expect(errors).toIncludeSameMembers([
         {
           message:
-            'JSON path "document/items/0/data/production_countries/0" should match pattern "^$|.*\\S.*" (line: 10, column: 11)',
+            'JSON path "document/items/0/data/production_countries/0" must match pattern "^$|.*\\S.*" (line: 10, column: 11)',
           schemaPath: '#/definitions/non-empty-string/pattern',
           type: 'JsonSchemaValidation',
         },
         {
           message:
-            'JSON path "document/items/0" should match "then" schema (line: 4, column: 5)',
+            'JSON path "document/items/0" must match "then" schema (line: 4, column: 5)',
           schemaPath: '#/properties/items/items/allOf/0/if',
           type: 'JsonSchemaValidation',
         },
@@ -1575,13 +1575,13 @@ describe('ingest-validation-schema.json', () => {
       expect(errors).toIncludeSameMembers([
         {
           message:
-            'JSON path "document/items/0/data/production_countries" should NOT have duplicate items (items ## 0 and 1 are identical) (line: 9, column: 33)',
+            'JSON path "document/items/0/data/production_countries" must NOT have duplicate items (items ## 0 and 1 are identical) (line: 9, column: 33)',
           schemaPath: '#/uniqueItems',
           type: 'JsonSchemaValidation',
         },
         {
           message:
-            'JSON path "document/items/0" should match "then" schema (line: 4, column: 5)',
+            'JSON path "document/items/0" must match "then" schema (line: 4, column: 5)',
           schemaPath: '#/properties/items/items/allOf/0/if',
           type: 'JsonSchemaValidation',
         },
@@ -1623,31 +1623,31 @@ describe('ingest-validation-schema.json', () => {
       expect(errors).toIncludeSameMembers([
         {
           message:
-            'JSON path "document/items/0/data/licenses/0" should have required property \'start\' (line: 10, column: 11)',
+            'JSON path "document/items/0/data/licenses/0" must have required property \'start\' (line: 10, column: 11)',
           schemaPath: '#/definitions/licenses/items/anyOf/0/required',
           type: 'JsonSchemaValidation',
         },
         {
           message:
-            'JSON path "document/items/0/data/licenses/0" should have required property \'end\' (line: 10, column: 11)',
+            'JSON path "document/items/0/data/licenses/0" must have required property \'end\' (line: 10, column: 11)',
           schemaPath: '#/definitions/licenses/items/anyOf/1/required',
           type: 'JsonSchemaValidation',
         },
         {
           message:
-            'JSON path "document/items/0/data/licenses/0" should have required property \'countries\' (line: 10, column: 11)',
+            'JSON path "document/items/0/data/licenses/0" must have required property \'countries\' (line: 10, column: 11)',
           schemaPath: '#/definitions/licenses/items/anyOf/2/required',
           type: 'JsonSchemaValidation',
         },
         {
           message:
-            'JSON path "document/items/0/data/licenses/0" should match some schema in anyOf (line: 10, column: 11)',
+            'JSON path "document/items/0/data/licenses/0" must match a schema in anyOf (line: 10, column: 11)',
           schemaPath: '#/definitions/licenses/items/anyOf',
           type: 'JsonSchemaValidation',
         },
         {
           message:
-            'JSON path "document/items/0" should match "then" schema (line: 4, column: 5)',
+            'JSON path "document/items/0" must match "then" schema (line: 4, column: 5)',
           schemaPath: '#/properties/items/items/allOf/0/if',
           type: 'JsonSchemaValidation',
         },
@@ -1688,19 +1688,19 @@ describe('ingest-validation-schema.json', () => {
         expect(errors).toIncludeSameMembers([
           {
             message:
-              'JSON path "document/items/0/data/licenses/0/start" should match format "date-time" (line: 14, column: 22)',
+              'JSON path "document/items/0/data/licenses/0/start" must match format "date-time" (line: 14, column: 22)',
             schemaPath: '#/definitions/licenses/items/properties/start/format',
             type: 'JsonSchemaValidation',
           },
           {
             message:
-              'JSON path "document/items/0/data/licenses/0/end" should match format "date-time" (line: 15, column: 20)',
+              'JSON path "document/items/0/data/licenses/0/end" must match format "date-time" (line: 15, column: 20)',
             schemaPath: '#/definitions/licenses/items/properties/end/format',
             type: 'JsonSchemaValidation',
           },
           {
             message:
-              'JSON path "document/items/0" should match "then" schema (line: 4, column: 5)',
+              'JSON path "document/items/0" must match "then" schema (line: 4, column: 5)',
             schemaPath: '#/properties/items/items/allOf/0/if',
             type: 'JsonSchemaValidation',
           },
@@ -1730,14 +1730,14 @@ describe('ingest-validation-schema.json', () => {
       expect(errors).toIncludeSameMembers([
         {
           message:
-            'JSON path "document/items/0/data/licenses/0/countries/0" should be string (line: 14, column: 15)',
+            'JSON path "document/items/0/data/licenses/0/countries/0" must be string (line: 14, column: 15)',
           schemaPath:
             '#/definitions/licenses/items/properties/countries/items/type',
           type: 'JsonSchemaValidation',
         },
         {
           message:
-            'JSON path "document/items/0" should match "then" schema (line: 4, column: 5)',
+            'JSON path "document/items/0" must match "then" schema (line: 4, column: 5)',
           schemaPath: '#/properties/items/items/allOf/0/if',
           type: 'JsonSchemaValidation',
         },
@@ -1768,14 +1768,14 @@ describe('ingest-validation-schema.json', () => {
         expect(errors).toIncludeSameMembers([
           {
             message:
-              'JSON path "document/items/0/data/licenses/0/countries/0" should match pattern "^[A-Z]{2}$" (line: 14, column: 15)',
+              'JSON path "document/items/0/data/licenses/0/countries/0" must match pattern "^[A-Z]{2}$" (line: 14, column: 15)',
             schemaPath:
               '#/definitions/licenses/items/properties/countries/items/pattern',
             type: 'JsonSchemaValidation',
           },
           {
             message:
-              'JSON path "document/items/0" should match "then" schema (line: 4, column: 5)',
+              'JSON path "document/items/0" must match "then" schema (line: 4, column: 5)',
             schemaPath: '#/properties/items/items/allOf/0/if',
             type: 'JsonSchemaValidation',
           },
@@ -1805,14 +1805,14 @@ describe('ingest-validation-schema.json', () => {
       expect(errors).toIncludeSameMembers([
         {
           message:
-            'JSON path "document/items/0/data/licenses/0/countries" should NOT have duplicate items (items ## 1 and 0 are identical) (line: 13, column: 26)',
+            'JSON path "document/items/0/data/licenses/0/countries" must NOT have duplicate items (items ## 1 and 0 are identical) (line: 13, column: 26)',
           schemaPath:
             '#/definitions/licenses/items/properties/countries/uniqueItems',
           type: 'JsonSchemaValidation',
         },
         {
           message:
-            'JSON path "document/items/0" should match "then" schema (line: 4, column: 5)',
+            'JSON path "document/items/0" must match "then" schema (line: 4, column: 5)',
           schemaPath: '#/properties/items/items/allOf/0/if',
           type: 'JsonSchemaValidation',
         },
@@ -1884,13 +1884,13 @@ describe('ingest-validation-schema.json', () => {
       expect(errors).toIncludeSameMembers([
         {
           message:
-            'JSON path "document/items/0/data/main_video" should have required property \'source\' (line: 9, column: 23)',
+            'JSON path "document/items/0/data/main_video" must have required property \'source\' (line: 9, column: 23)',
           schemaPath: '#/dependencies/profile/required', // TODO: Open issue: https://github.com/ajv-validator/ajv/issues/512
           type: 'JsonSchemaValidation',
         },
         {
           message:
-            'JSON path "document/items/0" should match "then" schema (line: 4, column: 5)',
+            'JSON path "document/items/0" must match "then" schema (line: 4, column: 5)',
           schemaPath: '#/properties/items/items/allOf/0/if',
           type: 'JsonSchemaValidation',
         },
@@ -1915,13 +1915,13 @@ describe('ingest-validation-schema.json', () => {
       expect(errors).toIncludeSameMembers([
         {
           message:
-            'JSON path "document/items/0/data/main_video/source" should be string (line: 10, column: 21)',
+            'JSON path "document/items/0/data/main_video/source" must be string (line: 10, column: 21)',
           schemaPath: '#/definitions/non-empty-string/type',
           type: 'JsonSchemaValidation',
         },
         {
           message:
-            'JSON path "document/items/0" should match "then" schema (line: 4, column: 5)',
+            'JSON path "document/items/0" must match "then" schema (line: 4, column: 5)',
           schemaPath: '#/properties/items/items/allOf/0/if',
           type: 'JsonSchemaValidation',
         },
@@ -1946,13 +1946,13 @@ describe('ingest-validation-schema.json', () => {
       expect(errors).toIncludeSameMembers([
         {
           message:
-            'JSON path "document/items/0/data/main_video/source" should NOT have fewer than 1 characters (line: 10, column: 21)',
+            'JSON path "document/items/0/data/main_video/source" must NOT have fewer than 1 characters (line: 10, column: 21)',
           schemaPath: '#/definitions/non-empty-string/minLength',
           type: 'JsonSchemaValidation',
         },
         {
           message:
-            'JSON path "document/items/0" should match "then" schema (line: 4, column: 5)',
+            'JSON path "document/items/0" must match "then" schema (line: 4, column: 5)',
           schemaPath: '#/properties/items/items/allOf/0/if',
           type: 'JsonSchemaValidation',
         },
@@ -1979,13 +1979,13 @@ describe('ingest-validation-schema.json', () => {
         expect(errors).toIncludeSameMembers([
           {
             message:
-              'JSON path "document/items/0/data/main_video/source" should match pattern "^$|.*\\S.*" (line: 10, column: 21)',
+              'JSON path "document/items/0/data/main_video/source" must match pattern "^$|.*\\S.*" (line: 10, column: 21)',
             schemaPath: '#/definitions/non-empty-string/pattern',
             type: 'JsonSchemaValidation',
           },
           {
             message:
-              'JSON path "document/items/0" should match "then" schema (line: 4, column: 5)',
+              'JSON path "document/items/0" must match "then" schema (line: 4, column: 5)',
             schemaPath: '#/properties/items/items/allOf/0/if',
             type: 'JsonSchemaValidation',
           },
@@ -2036,13 +2036,13 @@ describe('ingest-validation-schema.json', () => {
       expect(errors).toIncludeSameMembers([
         {
           message:
-            'JSON path "document/items/0/data/main_video/profile" should be string (line: 11, column: 22)',
+            'JSON path "document/items/0/data/main_video/profile" must be string (line: 11, column: 22)',
           schemaPath: '#/definitions/non-empty-string/type',
           type: 'JsonSchemaValidation',
         },
         {
           message:
-            'JSON path "document/items/0" should match "then" schema (line: 4, column: 5)',
+            'JSON path "document/items/0" must match "then" schema (line: 4, column: 5)',
           schemaPath: '#/properties/items/items/allOf/0/if',
           type: 'JsonSchemaValidation',
         },
@@ -2068,13 +2068,13 @@ describe('ingest-validation-schema.json', () => {
       expect(errors).toIncludeSameMembers([
         {
           message:
-            'JSON path "document/items/0/data/main_video/profile" should NOT have fewer than 1 characters (line: 11, column: 22)',
+            'JSON path "document/items/0/data/main_video/profile" must NOT have fewer than 1 characters (line: 11, column: 22)',
           schemaPath: '#/definitions/non-empty-string/minLength',
           type: 'JsonSchemaValidation',
         },
         {
           message:
-            'JSON path "document/items/0" should match "then" schema (line: 4, column: 5)',
+            'JSON path "document/items/0" must match "then" schema (line: 4, column: 5)',
           schemaPath: '#/properties/items/items/allOf/0/if',
           type: 'JsonSchemaValidation',
         },
@@ -2102,13 +2102,13 @@ describe('ingest-validation-schema.json', () => {
         expect(errors).toIncludeSameMembers([
           {
             message:
-              'JSON path "document/items/0/data/main_video/profile" should match pattern "^$|.*\\S.*" (line: 11, column: 22)',
+              'JSON path "document/items/0/data/main_video/profile" must match pattern "^$|.*\\S.*" (line: 11, column: 22)',
             schemaPath: '#/definitions/non-empty-string/pattern',
             type: 'JsonSchemaValidation',
           },
           {
             message:
-              'JSON path "document/items/0" should match "then" schema (line: 4, column: 5)',
+              'JSON path "document/items/0" must match "then" schema (line: 4, column: 5)',
             schemaPath: '#/properties/items/items/allOf/0/if',
             type: 'JsonSchemaValidation',
           },
@@ -2174,13 +2174,13 @@ describe('ingest-validation-schema.json', () => {
       expect(errors).toIncludeSameMembers([
         {
           message:
-            'JSON path "document/items/0/data/trailers/0" should be object (line: 10, column: 11)',
+            'JSON path "document/items/0/data/trailers/0" must be object (line: 10, column: 11)',
           schemaPath: '#/items/type', // TODO: Open issue: https://github.com/ajv-validator/ajv/issues/512
           type: 'JsonSchemaValidation',
         },
         {
           message:
-            'JSON path "document/items/0" should match "then" schema (line: 4, column: 5)',
+            'JSON path "document/items/0" must match "then" schema (line: 4, column: 5)',
           schemaPath: '#/properties/items/items/allOf/0/if',
           type: 'JsonSchemaValidation',
         },
@@ -2203,13 +2203,13 @@ describe('ingest-validation-schema.json', () => {
       expect(errors).toIncludeSameMembers([
         {
           message:
-            'JSON path "document/items/0/data/trailers/0/source" should be string (line: 11, column: 23)',
+            'JSON path "document/items/0/data/trailers/0/source" must be string (line: 11, column: 23)',
           schemaPath: '#/definitions/non-empty-string/type',
           type: 'JsonSchemaValidation',
         },
         {
           message:
-            'JSON path "document/items/0" should match "then" schema (line: 4, column: 5)',
+            'JSON path "document/items/0" must match "then" schema (line: 4, column: 5)',
           schemaPath: '#/properties/items/items/allOf/0/if',
           type: 'JsonSchemaValidation',
         },
@@ -2232,13 +2232,13 @@ describe('ingest-validation-schema.json', () => {
       expect(errors).toIncludeSameMembers([
         {
           message:
-            'JSON path "document/items/0/data/trailers/0/source" should NOT have fewer than 1 characters (line: 11, column: 23)',
+            'JSON path "document/items/0/data/trailers/0/source" must NOT have fewer than 1 characters (line: 11, column: 23)',
           schemaPath: '#/definitions/non-empty-string/minLength',
           type: 'JsonSchemaValidation',
         },
         {
           message:
-            'JSON path "document/items/0" should match "then" schema (line: 4, column: 5)',
+            'JSON path "document/items/0" must match "then" schema (line: 4, column: 5)',
           schemaPath: '#/properties/items/items/allOf/0/if',
           type: 'JsonSchemaValidation',
         },
@@ -2263,13 +2263,13 @@ describe('ingest-validation-schema.json', () => {
         expect(errors).toIncludeSameMembers([
           {
             message:
-              'JSON path "document/items/0/data/trailers/0/source" should match pattern "^$|.*\\S.*" (line: 11, column: 23)',
+              'JSON path "document/items/0/data/trailers/0/source" must match pattern "^$|.*\\S.*" (line: 11, column: 23)',
             schemaPath: '#/definitions/non-empty-string/pattern',
             type: 'JsonSchemaValidation',
           },
           {
             message:
-              'JSON path "document/items/0" should match "then" schema (line: 4, column: 5)',
+              'JSON path "document/items/0" must match "then" schema (line: 4, column: 5)',
             schemaPath: '#/properties/items/items/allOf/0/if',
             type: 'JsonSchemaValidation',
           },
@@ -2317,13 +2317,13 @@ describe('ingest-validation-schema.json', () => {
       expect(errors).toIncludeSameMembers([
         {
           message:
-            'JSON path "document/items/0/data/trailers/0/profile" should be string (line: 12, column: 24)',
+            'JSON path "document/items/0/data/trailers/0/profile" must be string (line: 12, column: 24)',
           schemaPath: '#/definitions/non-empty-string/type',
           type: 'JsonSchemaValidation',
         },
         {
           message:
-            'JSON path "document/items/0" should match "then" schema (line: 4, column: 5)',
+            'JSON path "document/items/0" must match "then" schema (line: 4, column: 5)',
           schemaPath: '#/properties/items/items/allOf/0/if',
           type: 'JsonSchemaValidation',
         },
@@ -2346,13 +2346,13 @@ describe('ingest-validation-schema.json', () => {
       expect(errors).toIncludeSameMembers([
         {
           message:
-            'JSON path "document/items/0/data/trailers/0/profile" should NOT have fewer than 1 characters (line: 12, column: 24)',
+            'JSON path "document/items/0/data/trailers/0/profile" must NOT have fewer than 1 characters (line: 12, column: 24)',
           schemaPath: '#/definitions/non-empty-string/minLength',
           type: 'JsonSchemaValidation',
         },
         {
           message:
-            'JSON path "document/items/0" should match "then" schema (line: 4, column: 5)',
+            'JSON path "document/items/0" must match "then" schema (line: 4, column: 5)',
           schemaPath: '#/properties/items/items/allOf/0/if',
           type: 'JsonSchemaValidation',
         },
@@ -2377,13 +2377,13 @@ describe('ingest-validation-schema.json', () => {
         expect(errors).toIncludeSameMembers([
           {
             message:
-              'JSON path "document/items/0/data/trailers/0/profile" should match pattern "^$|.*\\S.*" (line: 12, column: 24)',
+              'JSON path "document/items/0/data/trailers/0/profile" must match pattern "^$|.*\\S.*" (line: 12, column: 24)',
             schemaPath: '#/definitions/non-empty-string/pattern',
             type: 'JsonSchemaValidation',
           },
           {
             message:
-              'JSON path "document/items/0" should match "then" schema (line: 4, column: 5)',
+              'JSON path "document/items/0" must match "then" schema (line: 4, column: 5)',
             schemaPath: '#/properties/items/items/allOf/0/if',
             type: 'JsonSchemaValidation',
           },
@@ -2430,13 +2430,13 @@ describe('ingest-validation-schema.json', () => {
         expect(errors).toIncludeSameMembers([
           {
             message:
-              'JSON path "document/items/0/data/trailers/0" should have required property \'source\' (line: 10, column: 11)',
+              'JSON path "document/items/0/data/trailers/0" must have required property \'source\' (line: 10, column: 11)',
             schemaPath: '#/items/required', // TODO: Open issue: https://github.com/ajv-validator/ajv/issues/512
             type: 'JsonSchemaValidation',
           },
           {
             message:
-              'JSON path "document/items/0" should match "then" schema (line: 4, column: 5)',
+              'JSON path "document/items/0" must match "then" schema (line: 4, column: 5)',
             schemaPath: '#/properties/items/items/allOf/0/if',
             type: 'JsonSchemaValidation',
           },
@@ -2482,13 +2482,13 @@ describe('ingest-validation-schema.json', () => {
       expect(errors).toIncludeSameMembers([
         {
           message:
-            'JSON path "document/items/0/data/images/0" should be object (line: 10, column: 11)',
+            'JSON path "document/items/0/data/images/0" must be object (line: 10, column: 11)',
           schemaPath: '#/definitions/images/items/type',
           type: 'JsonSchemaValidation',
         },
         {
           message:
-            'JSON path "document/items/0" should match "then" schema (line: 4, column: 5)',
+            'JSON path "document/items/0" must match "then" schema (line: 4, column: 5)',
           schemaPath: '#/properties/items/items/allOf/0/if',
           type: 'JsonSchemaValidation',
         },
@@ -2511,19 +2511,19 @@ describe('ingest-validation-schema.json', () => {
       expect(errors).toIncludeSameMembers([
         {
           message:
-            'JSON path "document/items/0/data/images/0/path" should be string (line: 11, column: 21)',
+            'JSON path "document/items/0/data/images/0/path" must be string (line: 11, column: 21)',
           schemaPath: '#/definitions/images/items/properties/path/type',
           type: 'JsonSchemaValidation',
         },
         {
           message:
-            'JSON path "document/items/0/data/images/0" should have required property \'type\' (line: 10, column: 11)',
+            'JSON path "document/items/0/data/images/0" must have required property \'type\' (line: 10, column: 11)',
           schemaPath: '#/definitions/images/items/required',
           type: 'JsonSchemaValidation',
         },
         {
           message:
-            'JSON path "document/items/0" should match "then" schema (line: 4, column: 5)',
+            'JSON path "document/items/0" must match "then" schema (line: 4, column: 5)',
           schemaPath: '#/properties/items/items/allOf/0/if',
           type: 'JsonSchemaValidation',
         },
@@ -2546,19 +2546,19 @@ describe('ingest-validation-schema.json', () => {
       expect(errors).toIncludeSameMembers([
         {
           message:
-            'JSON path "document/items/0/data/images/0" should have required property \'type\' (line: 10, column: 11)',
+            'JSON path "document/items/0/data/images/0" must have required property \'type\' (line: 10, column: 11)',
           schemaPath: '#/definitions/images/items/required',
           type: 'JsonSchemaValidation',
         },
         {
           message:
-            'JSON path "document/items/0/data/images/0/path" should match pattern "^.*(.jpg|.jpeg|.png|.webp|.gif|.svg|.tiff|.avif|.heif)$" (line: 11, column: 21)',
+            'JSON path "document/items/0/data/images/0/path" must match pattern "^.*(.jpg|.jpeg|.png|.webp|.gif|.svg|.tiff|.avif|.heif)$" (line: 11, column: 21)',
           schemaPath: '#/definitions/images/items/properties/path/pattern',
           type: 'JsonSchemaValidation',
         },
         {
           message:
-            'JSON path "document/items/0" should match "then" schema (line: 4, column: 5)',
+            'JSON path "document/items/0" must match "then" schema (line: 4, column: 5)',
           schemaPath: '#/properties/items/items/allOf/0/if',
           type: 'JsonSchemaValidation',
         },
@@ -2581,19 +2581,19 @@ describe('ingest-validation-schema.json', () => {
       expect(errors).toIncludeSameMembers([
         {
           message:
-            'JSON path "document/items/0/data/images/0/type" should be string (line: 12, column: 21)',
+            'JSON path "document/items/0/data/images/0/type" must be string (line: 12, column: 21)',
           schemaPath: '#/definitions/images/items/properties/type/type',
           type: 'JsonSchemaValidation',
         },
         {
           message:
-            'JSON path "document/items/0/data/images/0/type" should be equal to one of the allowed values: COVER, TEASER (line: 12, column: 21)',
+            'JSON path "document/items/0/data/images/0/type" must be equal to one of the allowed values: COVER, TEASER (line: 12, column: 21)',
           schemaPath: '#/definitions/images/items/properties/type/enum',
           type: 'JsonSchemaValidation',
         },
         {
           message:
-            'JSON path "document/items/0" should match "then" schema (line: 4, column: 5)',
+            'JSON path "document/items/0" must match "then" schema (line: 4, column: 5)',
           schemaPath: '#/properties/items/items/allOf/0/if',
           type: 'JsonSchemaValidation',
         },
@@ -2616,13 +2616,13 @@ describe('ingest-validation-schema.json', () => {
       expect(errors).toIncludeSameMembers([
         {
           message:
-            'JSON path "document/items/0/data/images/0/type" should be equal to one of the allowed values: COVER, TEASER (line: 12, column: 21)',
+            'JSON path "document/items/0/data/images/0/type" must be equal to one of the allowed values: COVER, TEASER (line: 12, column: 21)',
           schemaPath: '#/definitions/images/items/properties/type/enum',
           type: 'JsonSchemaValidation',
         },
         {
           message:
-            'JSON path "document/items/0" should match "then" schema (line: 4, column: 5)',
+            'JSON path "document/items/0" must match "then" schema (line: 4, column: 5)',
           schemaPath: '#/properties/items/items/allOf/0/if',
           type: 'JsonSchemaValidation',
         },

@@ -50,7 +50,18 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@apidevtools/json-schema-ref-parser@npm:9.0.9, @apidevtools/json-schema-ref-parser@npm:^9.0.6, @apidevtools/json-schema-ref-parser@npm:^9.0.9":
+"@apidevtools/json-schema-ref-parser@npm:11.7.2":
+  version: 11.7.2
+  resolution: "@apidevtools/json-schema-ref-parser@npm:11.7.2"
+  dependencies:
+    "@jsdevtools/ono": "npm:^7.1.3"
+    "@types/json-schema": "npm:^7.0.15"
+    js-yaml: "npm:^4.1.0"
+  checksum: 10c0/90dd8e60e25ccfe5c7de2453de893d5f5bb7c6cabcce028edf0678a119f0e433f422d730aa14fd718542e80fa7b3acf40923d69dc8e9f6c25603842b76ad2f16
+  languageName: node
+  linkType: hard
+
+"@apidevtools/json-schema-ref-parser@npm:9.0.9":
   version: 9.0.9
   resolution: "@apidevtools/json-schema-ref-parser@npm:9.0.9"
   dependencies:
@@ -62,7 +73,18 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@apidevtools/openapi-schemas@npm:^2.0.4":
+"@apidevtools/json-schema-ref-parser@npm:^11.1.0":
+  version: 11.9.3
+  resolution: "@apidevtools/json-schema-ref-parser@npm:11.9.3"
+  dependencies:
+    "@jsdevtools/ono": "npm:^7.1.3"
+    "@types/json-schema": "npm:^7.0.15"
+    js-yaml: "npm:^4.1.0"
+  checksum: 10c0/5745813b3d964279f387677b7a903ba6634cdeaf879ff3a331a694392cbc923763f398506df190be114f2574b8b570baab3e367c2194bb35f50147ff6cf27d7a
+  languageName: node
+  linkType: hard
+
+"@apidevtools/openapi-schemas@npm:^2.1.0":
   version: 2.1.0
   resolution: "@apidevtools/openapi-schemas@npm:2.1.0"
   checksum: 10c0/f4aa0f9df32e474d166c84ef91bceb18fa1c4f44b5593879529154ef340846811ea57dc2921560f157f692262827d28d988dd6e19fb21f00320e9961964176b4
@@ -76,19 +98,20 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@apidevtools/swagger-parser@npm:^10.0.3":
-  version: 10.0.3
-  resolution: "@apidevtools/swagger-parser@npm:10.0.3"
+"@apidevtools/swagger-parser@npm:^10.1.0":
+  version: 10.1.1
+  resolution: "@apidevtools/swagger-parser@npm:10.1.1"
   dependencies:
-    "@apidevtools/json-schema-ref-parser": "npm:^9.0.6"
-    "@apidevtools/openapi-schemas": "npm:^2.0.4"
+    "@apidevtools/json-schema-ref-parser": "npm:11.7.2"
+    "@apidevtools/openapi-schemas": "npm:^2.1.0"
     "@apidevtools/swagger-methods": "npm:^3.0.2"
     "@jsdevtools/ono": "npm:^7.1.3"
-    call-me-maybe: "npm:^1.0.1"
-    z-schema: "npm:^5.0.1"
+    ajv: "npm:^8.17.1"
+    ajv-draft-04: "npm:^1.0.0"
+    call-me-maybe: "npm:^1.0.2"
   peerDependencies:
     openapi-types: ">=7"
-  checksum: 10c0/3b43f719c2d647ac8dcf30f132834d413ce21cbf7a8d9c3b35ec91149dd25d608c8fd892358fcd61a8edd8c5140a7fb13676f948e2d87067d081a47b8c7107e9
+  checksum: 10c0/21be668c64311d54579ef06e71b6d5640df032f4cdd959dfde93210f26128cbe3c84eb29ead1895c93af703cd4f2fd7efae31dd316549f1f9d29293c78b0ccd4
   languageName: node
   linkType: hard
 
@@ -167,97 +190,121 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@asyncapi/avro-schema-parser@npm:^3.0.2":
-  version: 3.0.2
-  resolution: "@asyncapi/avro-schema-parser@npm:3.0.2"
+"@asyncapi/avro-schema-parser@npm:^3.0.3":
+  version: 3.0.24
+  resolution: "@asyncapi/avro-schema-parser@npm:3.0.24"
   dependencies:
-    "@asyncapi/parser": "npm:^2.0.3"
+    "@asyncapi/parser": "npm:^3.1.0"
     "@types/json-schema": "npm:^7.0.11"
     avsc: "npm:^5.7.6"
-  checksum: 10c0/0273abc5b29aee6333f564befd6891c09793498a6497a38af9f1c3dec1ef8b247ab8537a53965d9d1c26424cdfae6752a41355c9cbbf2dae8e0aa99ecae02c19
+  checksum: 10c0/a8c7d9a57ee4e1b9a4cbc9733cf5fbfaab9c2640bb4fa73ae1e52b1d1cb38b776366999c0cc0a3b219029f908d2293db26b7a62c3a4891624fb1dfc032c3570d
   languageName: node
   linkType: hard
 
-"@asyncapi/diff@npm:^0.4.1":
-  version: 0.4.1
-  resolution: "@asyncapi/diff@npm:0.4.1"
+"@asyncapi/diff@npm:^0.5.0":
+  version: 0.5.0
+  resolution: "@asyncapi/diff@npm:0.5.0"
   dependencies:
     fast-json-patch: "npm:^3.0.0-1"
     js-yaml: "npm:^4.1.0"
     json2md: "npm:^1.12.0"
-  checksum: 10c0/161c35662bef03a9de78932cdd36822cbec2ca00f7c744cd941a0d5e608759ccb03027fa24228861eca620bb78c46b110cd98119031c35359a6efc5f0913738b
+  checksum: 10c0/5b2ccbdc4c62b493ceb5c5052203d3b0464b6e5c8a3bb754999e3a9c9f86451db159f5258f134a81efe54b40282f991d47eb3c3f2c4377909d6e999caf0ba243
   languageName: node
   linkType: hard
 
-"@asyncapi/modelina@npm:^1.8.4":
-  version: 1.8.6
-  resolution: "@asyncapi/modelina@npm:1.8.6"
+"@asyncapi/modelina@npm:^5.10.1":
+  version: 5.10.1
+  resolution: "@asyncapi/modelina@npm:5.10.1"
   dependencies:
-    "@apidevtools/json-schema-ref-parser": "npm:^9.0.9"
-    "@apidevtools/swagger-parser": "npm:^10.0.3"
-    "@asyncapi/avro-schema-parser": "npm:^3.0.2"
-    "@asyncapi/openapi-schema-parser": "npm:^3.0.2"
-    "@asyncapi/parser": "npm:^2.0.3"
-    "@asyncapi/raml-dt-schema-parser": "npm:^4.0.2"
-    "@swc/core": "npm:^1.3.5"
-    "@swc/jest": "npm:^0.2.23"
+    "@apidevtools/json-schema-ref-parser": "npm:^11.1.0"
+    "@apidevtools/swagger-parser": "npm:^10.1.0"
+    "@asyncapi/multi-parser": "npm:^2.2.0"
+    "@asyncapi/parser": "npm:^3.4.0"
     alterschema: "npm:^1.1.2"
     change-case: "npm:^4.1.2"
-    openapi-types: "npm:9.3.0"
-    typescript-json-schema: "npm:^0.53.0"
-  checksum: 10c0/0b0a7c9793125fb0c6f6bda04f34c947c7ac30f95c969c18fee0c87f813dcb4b35956e9ee323a1062c3562778e60e0bb16d593789134704384244fe64c0d7846
+    fast-xml-parser: "npm:^5.3.0"
+    js-yaml: "npm:^4.1.0"
+    openapi-types: "npm:^12.1.3"
+    typescript-json-schema: "npm:^0.58.1"
+  checksum: 10c0/5aa9649f9e860760b46eb280dda43ffada5382061799f4748a49960877f9780ea2b3e78c9d15baa08c3ef00595fc67557dadeeb7197e6ff6e96a745c504f0d5c
   languageName: node
   linkType: hard
 
-"@asyncapi/openapi-schema-parser@npm:^3.0.2":
-  version: 3.0.3
-  resolution: "@asyncapi/openapi-schema-parser@npm:3.0.3"
+"@asyncapi/multi-parser@npm:^2.2.0":
+  version: 2.3.0
+  resolution: "@asyncapi/multi-parser@npm:2.3.0"
   dependencies:
-    "@asyncapi/parser": "npm:^2.0.3"
+    "@asyncapi/avro-schema-parser": "npm:^3.0.3"
+    "@asyncapi/openapi-schema-parser": "npm:^3.0.4"
+    "@asyncapi/parser": "npm:*"
+    "@asyncapi/protobuf-schema-parser": "npm:^3.3.0"
+    "@asyncapi/raml-dt-schema-parser": "npm:^4.0.4"
+    parserapiv1: "npm:@asyncapi/parser@^2.1.0"
+    parserapiv2: "npm:@asyncapi/parser@3.0.0-next-major-spec.8"
+  checksum: 10c0/9a4a49e6822633c3fd97319c74f09e0907485a0e395ea2642595002c92809c0139a002a51a0bd684ed483a531c836de30506ff396615a047d1f7515fba7ec2e9
+  languageName: node
+  linkType: hard
+
+"@asyncapi/openapi-schema-parser@npm:^3.0.4":
+  version: 3.0.24
+  resolution: "@asyncapi/openapi-schema-parser@npm:3.0.24"
+  dependencies:
+    "@asyncapi/parser": "npm:^3.1.0"
     "@openapi-contrib/openapi-schema-to-json-schema": "npm:~3.2.0"
     ajv: "npm:^8.11.0"
     ajv-errors: "npm:^3.0.0"
     ajv-formats: "npm:^2.1.1"
-  checksum: 10c0/43b888bfd4ec42407d73d73611989efb0e7b7fc5ee40e0c69f57271fbc45fc561977d744eba817c2cc378fe905390a57342565a8d283aedb907c67379fbbabd8
+  checksum: 10c0/b5c301fe08befb7527dce4b582a66a09d35b3d62afbf92a13f687b1af96a40c5c711c275bb9a110be58b5beb1813aec89199abfeb01813c89e1c3c757168d2b9
   languageName: node
   linkType: hard
 
-"@asyncapi/parser@npm:^2.0.2, @asyncapi/parser@npm:^2.0.3":
-  version: 2.1.2
-  resolution: "@asyncapi/parser@npm:2.1.2"
+"@asyncapi/parser@npm:*, @asyncapi/parser@npm:^3.1.0, @asyncapi/parser@npm:^3.4.0, @asyncapi/parser@npm:^3.6.0":
+  version: 3.6.0
+  resolution: "@asyncapi/parser@npm:3.6.0"
   dependencies:
-    "@asyncapi/specs": "npm:^5.1.0"
+    "@asyncapi/specs": "npm:^6.11.1"
     "@openapi-contrib/openapi-schema-to-json-schema": "npm:~3.2.0"
-    "@stoplight/json": "npm:^3.20.2"
+    "@stoplight/json": "npm:3.21.0"
     "@stoplight/json-ref-readers": "npm:^1.2.2"
     "@stoplight/json-ref-resolver": "npm:^3.1.5"
-    "@stoplight/spectral-core": "npm:^1.16.1"
+    "@stoplight/spectral-core": "npm:^1.18.3"
     "@stoplight/spectral-functions": "npm:^1.7.2"
     "@stoplight/spectral-parsers": "npm:^1.0.2"
     "@stoplight/spectral-ref-resolver": "npm:^1.0.3"
     "@stoplight/types": "npm:^13.12.0"
     "@types/json-schema": "npm:^7.0.11"
     "@types/urijs": "npm:^1.19.19"
-    ajv: "npm:^8.11.0"
+    ajv: "npm:^8.17.1"
     ajv-errors: "npm:^3.0.0"
     ajv-formats: "npm:^2.1.1"
     avsc: "npm:^5.7.5"
-    js-yaml: "npm:^4.1.0"
-    jsonpath-plus: "npm:^7.2.0"
+    js-yaml: "npm:^4.1.1"
+    jsonpath-plus: "npm:^10.0.7"
     node-fetch: "npm:2.6.7"
-  checksum: 10c0/20463be8bf4a657a1dccf8e1c69ad623e6f3cac39dd12b8c772bcd0a88f2ac3f00f9fbc7e6517305fb97b8b33eb53ec0852c2241ab3a2c220f8b51c69934b5ca
+  checksum: 10c0/7e30586345ddc854dac661aef31ca71cf2d0d437e5b954441e3371617e984ff744dca7e9b966bd0f45baabfe83afd485d611f1d100c26aa8dd6651503bad36f7
   languageName: node
   linkType: hard
 
-"@asyncapi/raml-dt-schema-parser@npm:^4.0.2":
-  version: 4.0.3
-  resolution: "@asyncapi/raml-dt-schema-parser@npm:4.0.3"
+"@asyncapi/protobuf-schema-parser@npm:^3.3.0":
+  version: 3.6.0
+  resolution: "@asyncapi/protobuf-schema-parser@npm:3.6.0"
   dependencies:
-    "@asyncapi/parser": "npm:^2.0.3"
+    "@asyncapi/parser": "npm:^3.4.0"
+    "@types/protocol-buffers-schema": "npm:^3.4.3"
+    protobufjs: "npm:^7.4.0"
+  checksum: 10c0/5804aed24ac4069b2c8d04768919992b3b7cb76c496923f4adb1f1691667ea34d974ae29c3b7498d8e47799d3c933d27537d29bef953fe963253ac8883eb4784
+  languageName: node
+  linkType: hard
+
+"@asyncapi/raml-dt-schema-parser@npm:^4.0.4":
+  version: 4.0.24
+  resolution: "@asyncapi/raml-dt-schema-parser@npm:4.0.24"
+  dependencies:
+    "@asyncapi/parser": "npm:^3.1.0"
     js-yaml: "npm:^4.1.0"
     ramldt2jsonschema: "npm:^1.2.3"
     webapi-parser: "npm:^0.5.0"
-  checksum: 10c0/753785d11f6c7c2439326b976efc2dad32f66b9fa39eec27571afab714b26aff69bbddeb571828db68a543876a3a205d87373a56f704056044bcc9e5ff149208
+  checksum: 10c0/34da35f81bc94fedf003a17768d098e57fde184e3b6d3b4b0b483a8a5951346f6c907538a183a47650344edd61c80f8e07fdabccdc8c5b00a2263951f465f8d6
   languageName: node
   linkType: hard
 
@@ -279,15 +326,24 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@axinom/mosaic-cli@npm:0.53.0":
-  version: 0.53.0
-  resolution: "@axinom/mosaic-cli@npm:0.53.0"
+"@asyncapi/specs@npm:^6.0.0-next-major-spec.9, @asyncapi/specs@npm:^6.11.1":
+  version: 6.11.1
+  resolution: "@asyncapi/specs@npm:6.11.1"
   dependencies:
-    "@asyncapi/diff": "npm:^0.4.1"
-    "@asyncapi/modelina": "npm:^1.8.4"
-    "@asyncapi/parser": "npm:^2.0.2"
-    "@axinom/mosaic-id-link-be": "npm:^0.36.0"
-    "@axinom/mosaic-service-common": "npm:^0.66.0"
+    "@types/json-schema": "npm:^7.0.11"
+  checksum: 10c0/dac4bfb88a0e8bb163b99072ee839705d5909d951968a0c9187e90d72430341d51e7e4e3beee037fc14159262fc7ff003d74d1e11272a3f41b53ece0efc67523
+  languageName: node
+  linkType: hard
+
+"@axinom/mosaic-cli@npm:0.54.0":
+  version: 0.54.0
+  resolution: "@axinom/mosaic-cli@npm:0.54.0"
+  dependencies:
+    "@asyncapi/diff": "npm:^0.5.0"
+    "@asyncapi/modelina": "npm:^5.10.1"
+    "@asyncapi/parser": "npm:^3.6.0"
+    "@axinom/mosaic-id-link-be": "npm:^0.37.0"
+    "@axinom/mosaic-service-common": "npm:^0.67.0"
     "@graphql-inspector/core": "npm:^3.1.2"
     "@inquirer/confirm": "npm:^3.1.0"
     "@inquirer/core": "npm:^9.1.0"
@@ -320,55 +376,55 @@ __metadata:
     tar: "npm:^7.5.9"
   bin:
     mosaic: ./bin/mosaic.js
-  checksum: 10c0/32234681df7ca7fbacbe867a8d0e40a8c8693dbd57f551cca38af005dc16df4fb27bf9562138ea9b316ac2ac4e2fa1e5078a4115217a03e6b04c2a9a8c667a95
+  checksum: 10c0/86a62c3dfecfd2733b1e3a86c9f18f3de32fbd05e782d95963f935308460659ff4d5f9cae7261cccc3d1b52764f4cd5edd74f3436b0730c46dc75a1ac4526078
   languageName: node
   linkType: hard
 
-"@axinom/mosaic-core@npm:^0.4.30":
-  version: 0.4.30
-  resolution: "@axinom/mosaic-core@npm:0.4.30"
-  checksum: 10c0/559c8c84bfec897b016dcbaee8f537ec49b8a6ba93964950159d68194babb4e9d6b10163a7befc5cef8c10e7c37c27f54ebd8ec9f1a22bc88b58dd27cd9c1821
+"@axinom/mosaic-core@npm:^0.4.31":
+  version: 0.4.31
+  resolution: "@axinom/mosaic-core@npm:0.4.31"
+  checksum: 10c0/0b345a2e1acc3402ec4e86d2d184cbcc5e8051b732a7b3aeb68d49488eaa21cd5a61aa7c78363d354194f55381052a7d2bf67cb6e234aad4c08ccd96f63145dd
   languageName: node
   linkType: hard
 
-"@axinom/mosaic-db-common@npm:0.54.0, @axinom/mosaic-db-common@npm:^0.54.0":
-  version: 0.54.0
-  resolution: "@axinom/mosaic-db-common@npm:0.54.0"
+"@axinom/mosaic-db-common@npm:0.55.0, @axinom/mosaic-db-common@npm:^0.55.0":
+  version: 0.55.0
+  resolution: "@axinom/mosaic-db-common@npm:0.55.0"
   dependencies:
     express: "npm:^4.17.1"
     graphile-migrate: "npm:^1.4.0"
     pg: "npm:^8.11.3"
     pg-logical-replication: "npm:^2.0.3"
     prom-client: "npm:^15.1.0"
-    readdirp: "npm:^3.4.0"
+    readdirp: "npm:^4.0.0"
     yargs: "npm:^16.2.0"
     zapatos: "npm:3.6.0"
-  checksum: 10c0/29f609876b8e04b8e59382f0331d6b9c9dccdf952818bb8e847622d1c9db39fb5629295546b321812ef56c62d786e6c12ec49e3e15cba266e81f434394392ef7
+  checksum: 10c0/60e92ad4bfb7a29a7f24897dd43af7e50553fe168681779fca5d7048f4fece0a50c50e3fd85942243f0b4741d7edc0d1b8814fc8c5ab916235155edaebecbae0
   languageName: node
   linkType: hard
 
-"@axinom/mosaic-graphql-codegen-plugins@npm:0.6.0":
-  version: 0.6.0
-  resolution: "@axinom/mosaic-graphql-codegen-plugins@npm:0.6.0"
+"@axinom/mosaic-graphql-codegen-plugins@npm:0.7.0":
+  version: 0.7.0
+  resolution: "@axinom/mosaic-graphql-codegen-plugins@npm:0.7.0"
   dependencies:
     change-case-all: "npm:^2.1.0"
     handlebars: "npm:^4.7.7"
   peerDependencies:
     graphql: ^0.12.0 || ^0.13.0 || ^14.0.0 || ^15.0.0
-  checksum: 10c0/7abee730e2a421f95981a01087246a33e5c9202363cafd6df49bd87a1ddb585069cb2ee7f7967eb53241913eae8af33b245daf029ea590a58d4538ee61549951
+  checksum: 10c0/1cfb069b43ef90a481704a24df105798c41c500cd86663dad4d2719cb8835d59ae1591f7d6af6988d48ac263346ac4a59b4cd7b5b3fdcea1dbfcc7e9c33c876c
   languageName: node
   linkType: hard
 
-"@axinom/mosaic-graphql-common@npm:0.30.0":
-  version: 0.30.0
-  resolution: "@axinom/mosaic-graphql-common@npm:0.30.0"
+"@axinom/mosaic-graphql-common@npm:0.31.0":
+  version: 0.31.0
+  resolution: "@axinom/mosaic-graphql-common@npm:0.31.0"
   dependencies:
-    "@axinom/mosaic-db-common": "npm:^0.54.0"
-    "@axinom/mosaic-message-bus": "npm:^0.47.0"
-    "@axinom/mosaic-message-bus-abstractions": "npm:^0.24.0"
-    "@axinom/mosaic-messages": "npm:^0.64.0"
-    "@axinom/mosaic-service-common": "npm:^0.66.0"
-    "@axinom/mosaic-transactional-inbox-outbox": "npm:^0.26.0"
+    "@axinom/mosaic-db-common": "npm:^0.55.0"
+    "@axinom/mosaic-message-bus": "npm:^0.48.0"
+    "@axinom/mosaic-message-bus-abstractions": "npm:^0.24.1"
+    "@axinom/mosaic-messages": "npm:^0.65.0"
+    "@axinom/mosaic-service-common": "npm:^0.67.0"
+    "@axinom/mosaic-transactional-inbox-outbox": "npm:^0.27.0"
     "@graphile/pg-pubsub": "npm:^4.12.3"
     endent: "npm:^2.1.0"
     express: "npm:^4.17.1"
@@ -377,23 +433,21 @@ __metadata:
     graphile-utils: "npm:^4.13.0"
     graphql: "npm:^15.4.0"
     inflection: "npm:^1.12.0"
-    jest: "npm:^29"
-    jest-expect-message: "npm:^1.1.3"
     pg: "npm:^8.11.3"
     pg-transactional-outbox: "npm:^0.6.4"
     postgraphile: "npm:^4.13.0"
-  checksum: 10c0/3463949a56121578c78fcfe2a15942cee46133e5f29a878a75ac15dd803bf2f141ff673ac9826c757415664cfe2b9e51c1806f195f6903fc75d0a1b60005734d
+  checksum: 10c0/d87ffdd29c17ce047ae5cdfac3b9e392b4cc4705af76480e1e2b7cd142e106c8d90ab5b898b5f7aa6b0e410a6f20c8353b4c36531d2efe59fe0b791c9a97f3c1
   languageName: node
   linkType: hard
 
-"@axinom/mosaic-id-guard@npm:0.45.0":
-  version: 0.45.0
-  resolution: "@axinom/mosaic-id-guard@npm:0.45.0"
+"@axinom/mosaic-id-guard@npm:0.46.0":
+  version: 0.46.0
+  resolution: "@axinom/mosaic-id-guard@npm:0.46.0"
   dependencies:
-    "@axinom/mosaic-id-utils": "npm:^0.24.0"
-    "@axinom/mosaic-message-bus": "npm:^0.47.0"
-    "@axinom/mosaic-service-common": "npm:^0.66.0"
-    "@axinom/mosaic-transactional-inbox-outbox": "npm:^0.26.0"
+    "@axinom/mosaic-id-utils": "npm:^0.25.0"
+    "@axinom/mosaic-message-bus": "npm:^0.48.0"
+    "@axinom/mosaic-service-common": "npm:^0.67.0"
+    "@axinom/mosaic-transactional-inbox-outbox": "npm:^0.27.0"
     amqplib: "npm:^0.10.3"
     express: "npm:^4.17.1"
     express-bearer-token: "npm:^3.0.0"
@@ -410,60 +464,60 @@ __metadata:
     postgraphile: "npm:^4.13.0"
     rascal: "npm:^14.0.1"
     subscriptions-transport-ws: "npm:^0.9.19"
-  checksum: 10c0/7a292b13de8e02bd6323814258b1ec86656da876e8d89b14ba067a01bd0b441bb6c4257d44e14a52e53e84a6177177e612a61c772973606b62a77fd39102ea59
+  checksum: 10c0/46a1ff50065574ea72e284f599d6972ba0700d225bd35b5c78c8c7784347f08dc0d37280cb2a3e29c46b13f198bb47074d95f7ba4933a31dc4127707abccaf52
   languageName: node
   linkType: hard
 
-"@axinom/mosaic-id-link-be@npm:0.36.0, @axinom/mosaic-id-link-be@npm:^0.36.0":
-  version: 0.36.0
-  resolution: "@axinom/mosaic-id-link-be@npm:0.36.0"
+"@axinom/mosaic-id-link-be@npm:0.37.0, @axinom/mosaic-id-link-be@npm:^0.37.0":
+  version: 0.37.0
+  resolution: "@axinom/mosaic-id-link-be@npm:0.37.0"
   dependencies:
     "@apollo/client": "npm:^3.7.9"
-    "@axinom/mosaic-core": "npm:^0.4.30"
-    "@axinom/mosaic-id-utils": "npm:^0.24.0"
-    "@axinom/mosaic-service-common": "npm:^0.66.0"
+    "@axinom/mosaic-core": "npm:^0.4.31"
+    "@axinom/mosaic-id-utils": "npm:^0.25.0"
+    "@axinom/mosaic-service-common": "npm:^0.67.0"
     axios: "npm:^1.8.3"
     cross-fetch: "npm:^3.0.4"
     graphql: "npm:^15.4.0"
     graphql-tag: "npm:^2.11.0"
-  checksum: 10c0/053c3c6111224e9b7fac391f04c42aba85dcccb384b8e8398af13e150b5bc78d708d2b6a8df0fad68d10e45a01a56452832e0df130eb54287274dfe2962bbe87
+  checksum: 10c0/279614d984ac3e2e039cade4d04da9adeaab8c29579b051dcfb995e04e2de29f48b14d1bfabbfd23a5b260af812806bfdcaef27403e042e8d620a129a2735bb7
   languageName: node
   linkType: hard
 
-"@axinom/mosaic-id-utils@npm:0.24.0, @axinom/mosaic-id-utils@npm:^0.24.0":
-  version: 0.24.0
-  resolution: "@axinom/mosaic-id-utils@npm:0.24.0"
+"@axinom/mosaic-id-utils@npm:0.25.0, @axinom/mosaic-id-utils@npm:^0.25.0":
+  version: 0.25.0
+  resolution: "@axinom/mosaic-id-utils@npm:0.25.0"
   dependencies:
-    "@axinom/mosaic-core": "npm:^0.4.30"
-  checksum: 10c0/79ba5325526a635c3e271b0cf6b25a0a552653ce346b34249bc5b72c325316b10491e34c8d1b497fba092f0fd1f78835f9e32fd0df6130e5d43dd5fff3fed92a
+    "@axinom/mosaic-core": "npm:^0.4.31"
+  checksum: 10c0/b5b51e4face51f8be0757ab006fd11fb8a38b9c7fec2939b824ce7b80465a1f266acfdd26a71641d984075500b2d3a28305498d3cf81607ab48748b538e7063e
   languageName: node
   linkType: hard
 
-"@axinom/mosaic-managed-workflow-integration@npm:0.28.0":
-  version: 0.28.0
-  resolution: "@axinom/mosaic-managed-workflow-integration@npm:0.28.0"
+"@axinom/mosaic-managed-workflow-integration@npm:0.29.0":
+  version: 0.29.0
+  resolution: "@axinom/mosaic-managed-workflow-integration@npm:0.29.0"
   peerDependencies:
     "@axinom/mosaic-portal": "*"
     "@axinom/mosaic-ui": "*"
     react: ">=17.0.1"
     react-dom: ">=17.0.1"
-  checksum: 10c0/3e4b38dd45ae3d614d3e864b7ff7e88a7edbb60f7e53a988f6c3e36e9c4913d2a89309fec3a47f85b9e27b55c3b6f26c694d04dd8134bdf0d22d30b330ff3135
+  checksum: 10c0/2054bcb311c62f9a093e5b2b8e63619ad3dd0202b0c07cd46c920d7f7d9c877f97a65dcfb136dea6be10c2811c82ccc1579776a532738b958f44c14cd66a3bb0
   languageName: node
   linkType: hard
 
-"@axinom/mosaic-message-bus-abstractions@npm:0.24.0, @axinom/mosaic-message-bus-abstractions@npm:^0.24.0":
-  version: 0.24.0
-  resolution: "@axinom/mosaic-message-bus-abstractions@npm:0.24.0"
-  checksum: 10c0/69b8904cd42e6988ce2ba1ce4e6a6b544132cea38e219c5cbe77edf8b1e0d036fb2d5f82f5952b962ffe935474570abc35e846237a5f1d57d90e0c45d62eba50
+"@axinom/mosaic-message-bus-abstractions@npm:0.24.1, @axinom/mosaic-message-bus-abstractions@npm:^0.24.1":
+  version: 0.24.1
+  resolution: "@axinom/mosaic-message-bus-abstractions@npm:0.24.1"
+  checksum: 10c0/bd379722328f68c9a546c9ae122398e7a21d3525bc05bb0e7fcd56dbf3937be0bd5342b731f3abb96c071a15c0b9a602647de1132ea6ab4ef019f127b58b7e19
   languageName: node
   linkType: hard
 
-"@axinom/mosaic-message-bus@npm:0.47.0, @axinom/mosaic-message-bus@npm:^0.47.0":
-  version: 0.47.0
-  resolution: "@axinom/mosaic-message-bus@npm:0.47.0"
+"@axinom/mosaic-message-bus@npm:0.48.0, @axinom/mosaic-message-bus@npm:^0.48.0":
+  version: 0.48.0
+  resolution: "@axinom/mosaic-message-bus@npm:0.48.0"
   dependencies:
-    "@axinom/mosaic-message-bus-abstractions": "npm:^0.24.0"
-    "@axinom/mosaic-service-common": "npm:^0.66.0"
+    "@axinom/mosaic-message-bus-abstractions": "npm:^0.24.1"
+    "@axinom/mosaic-service-common": "npm:^0.67.0"
     amqplib: "npm:^0.10.3"
     dotenv: "npm:^8.2.0"
     graphql: "npm:^15.4.0"
@@ -471,40 +525,33 @@ __metadata:
     graphql-tag: "npm:^2.11.0"
     node-cache: "npm:^5.1.2"
     prom-client: "npm:^15.1.0"
-    ramda: "npm:^0.27.0"
+    ramda: "npm:^0.32.0"
     rascal: "npm:^14.0.1"
     uuid: "npm:^8.3.2"
-  checksum: 10c0/ca8514baaa85eb3cf90d0bdf1ef5c36f79e66f55b7f75664b4dea3701e411da7823b37f527ea6dd4c89e7493dbc684b7dc9ed291b7dedd009678b4ba0ccaa5c1
+  checksum: 10c0/2566558a447e6420b366a23cabd683cf894ee529337b66d144c4ca18aecdb80c0add893a252a2e4c11f6a1a27e7e07f1fd917a1346af29c7c391863695c7d3fe
   languageName: node
   linkType: hard
 
-"@axinom/mosaic-messages@npm:0.64.0, @axinom/mosaic-messages@npm:^0.64.0":
-  version: 0.64.0
-  resolution: "@axinom/mosaic-messages@npm:0.64.0"
-  checksum: 10c0/6d17b66eecc4499c09517178c9a161189dfde4e590d052f430e14a435d0a69d39b1feb244e8f61b62463893a394f794185ee3084a602ceab3c4226b48f22927c
+"@axinom/mosaic-messages@npm:0.65.0, @axinom/mosaic-messages@npm:^0.65.0":
+  version: 0.65.0
+  resolution: "@axinom/mosaic-messages@npm:0.65.0"
+  checksum: 10c0/63da425533e10a984bee9a6a7bbfee2cdc1b82d49251fa9d933f68a0aab6b4729f2ff045079a2aecdba65a519eb265046b517d680b4455ad4fd68efd0bb6650b
   languageName: node
   linkType: hard
 
-"@axinom/mosaic-portal@npm:0.44.0":
-  version: 0.44.0
-  resolution: "@axinom/mosaic-portal@npm:0.44.0"
-  checksum: 10c0/34b66a93c58c4f7b50c50611a204c5fc4ae672bdd5b031a34474589c97fe53d96fc0f2ca282bf68ac6a1c262608cc082382acba2676c7732ccfc7c1cd14d493a
+"@axinom/mosaic-portal@npm:0.45.0":
+  version: 0.45.0
+  resolution: "@axinom/mosaic-portal@npm:0.45.0"
+  checksum: 10c0/01405fba07f2c342c4a2da8f2c8d74ecc385f5921b51493603e011bc5991d87749cc2a4a65954421374776a0f1af44fa24f25027cfe48204c1893ec6f59aa206
   languageName: node
   linkType: hard
 
-"@axinom/mosaic-portal@npm:0.44.1":
-  version: 0.44.1
-  resolution: "@axinom/mosaic-portal@npm:0.44.1"
-  checksum: 10c0/4bfd2f1d7d5aa27227cfcf96f31befe2a0aa0aa5cf74f1e70c693a6ebf768740747519d03b70c36863f599bd79d1624b00eb718b8bd9e8272676a9ebc779b5a4
-  languageName: node
-  linkType: hard
-
-"@axinom/mosaic-service-common@npm:0.66.0, @axinom/mosaic-service-common@npm:^0.66.0":
-  version: 0.66.0
-  resolution: "@axinom/mosaic-service-common@npm:0.66.0"
+"@axinom/mosaic-service-common@npm:0.67.0, @axinom/mosaic-service-common@npm:^0.67.0":
+  version: 0.67.0
+  resolution: "@axinom/mosaic-service-common@npm:0.67.0"
   dependencies:
     "@types/verror": "npm:^1.10.6"
-    ajv: "npm:^7.0.3"
+    ajv: "npm:^8.18.0"
     ajv-formats: "npm:^2.1.1"
     axios: "npm:^1.8.3"
     endent: "npm:^2.1.0"
@@ -513,8 +560,6 @@ __metadata:
     express-basic-auth: "npm:^1.2.1"
     fast-stable-stringify: "npm:^1.0.0"
     inflection: "npm:^1.12.0"
-    jest: "npm:^29"
-    jest-expect-message: "npm:^1.1.3"
     moment: "npm:^2.29.4"
     p-retry: "npm:^4.6.2"
     prom-client: "npm:^15.1.0"
@@ -524,30 +569,30 @@ __metadata:
     uuid: "npm:^8.3.2"
     uuid-encoder: "npm:^1.2.0"
     verror: "npm:^1.10.1"
-  checksum: 10c0/3b1cd61eb777dd3e797e3ac975f94c381178824289962e3aae8f2e024b42af4d60165c0b6d7a0b9f19fb02c16f7faafdb91fa4196d15e4f2c749e302e661a243
+  checksum: 10c0/1fb4f0e13ca52b4a0e40d6316928584bffe9a7d6454f9f274c7bdf2250c409b79fc0d9dc23d9cf5b4194e87902877c14de631675d7f25fabf112d184309bc2d1
   languageName: node
   linkType: hard
 
-"@axinom/mosaic-transactional-inbox-outbox@npm:0.26.0, @axinom/mosaic-transactional-inbox-outbox@npm:^0.26.0":
-  version: 0.26.0
-  resolution: "@axinom/mosaic-transactional-inbox-outbox@npm:0.26.0"
+"@axinom/mosaic-transactional-inbox-outbox@npm:0.27.0, @axinom/mosaic-transactional-inbox-outbox@npm:^0.27.0":
+  version: 0.27.0
+  resolution: "@axinom/mosaic-transactional-inbox-outbox@npm:0.27.0"
   dependencies:
-    "@axinom/mosaic-message-bus": "npm:^0.47.0"
-    "@axinom/mosaic-message-bus-abstractions": "npm:^0.24.0"
+    "@axinom/mosaic-message-bus": "npm:^0.48.0"
+    "@axinom/mosaic-message-bus-abstractions": "npm:^0.24.1"
     async-mutex: "npm:^0.4.0"
     env-var: "npm:^6.3.0"
     pg: "npm:^8.11.3"
     pg-transactional-outbox: "npm:^0.6.4"
     prom-client: "npm:^15.1.0"
-  checksum: 10c0/0553f0f27e2715ae647a10998615e8728efc2f1f1039676f27d3d6c476f38227ce14059490ac43a5f10bd6e40e13409d6bcf642cfdaadab3b09094f597b59e66
+  checksum: 10c0/045073553534e93988d5a7c937588267fa1e6d06ad458a4bd2500e864e80c47bf613f61ad1b2aad3ba2e4291afb3f6b3f1778eb4af492111ca3b7057e53391db
   languageName: node
   linkType: hard
 
-"@axinom/mosaic-ui@npm:0.68.1":
-  version: 0.68.1
-  resolution: "@axinom/mosaic-ui@npm:0.68.1"
+"@axinom/mosaic-ui@npm:0.69.0":
+  version: 0.69.0
+  resolution: "@axinom/mosaic-ui@npm:0.69.0"
   dependencies:
-    "@axinom/mosaic-core": "npm:^0.4.30"
+    "@axinom/mosaic-core": "npm:^0.4.31"
     "@faker-js/faker": "npm:^7.4.0"
     "@geoffcox/react-splitter": "npm:^2.1.2"
     "@mui/base": "npm:5.0.0-beta.40"
@@ -570,26 +615,26 @@ __metadata:
     react: ">=17.0.1"
     react-dom: ">=17.0.1"
     react-router-dom: ">=5.2.0"
-  checksum: 10c0/19f1805355f45760d7ba7ba9450a705eb33704b268925af501b5fc68d2eb282679398637e95fa954eb58e405ff9ce6030b2dedadab85bceb5be0d7d7d523998b
+  checksum: 10c0/264319fb061d62d2dda0fa66f5555c64bd51cd0e304fa1d346090cf9e0fd55aaed98cceadf3130bee7740c7d6e45fccf302da1af2008fb2a13f4c0ac8c5e5654
   languageName: node
   linkType: hard
 
-"@axinom/mosaic-video-messages@npm:0.5.0":
-  version: 0.5.0
-  resolution: "@axinom/mosaic-video-messages@npm:0.5.0"
-  checksum: 10c0/f8f9d7b9c73a6f86324b82e6649932aad604d5be7f647a2a22678b9ebe931d3a790e5ca836cf5da74272a1bd04aec3ebd84471468c839eccce6eeaae227c8a39
+"@axinom/mosaic-video-messages@npm:0.6.0":
+  version: 0.6.0
+  resolution: "@axinom/mosaic-video-messages@npm:0.6.0"
+  checksum: 10c0/8fa1d5eb2a00b62a1ebd7044530062113d418d5c2ad3587937d177962199de5eb32e2f9ba8e5d5bba2e817ff6dfdb79e4272b803bbeeb6c45285747c9f731f1a
   languageName: node
   linkType: hard
 
-"@axinom/mosaic-video-workflow-integration@npm:0.3.0":
-  version: 0.3.0
-  resolution: "@axinom/mosaic-video-workflow-integration@npm:0.3.0"
+"@axinom/mosaic-video-workflow-integration@npm:0.4.0":
+  version: 0.4.0
+  resolution: "@axinom/mosaic-video-workflow-integration@npm:0.4.0"
   peerDependencies:
     "@axinom/mosaic-portal": "*"
     "@axinom/mosaic-ui": "*"
     react: ">=17.0.1"
     react-dom: ">=17.0.1"
-  checksum: 10c0/ab87899e6c2e6a5864f25c5820bf4a7aa8c686522f3139bdbf9b80da8b36ca1964543175498eb23318dc0505262b80c0a8de236f4eec5469417b16569c15ee27
+  checksum: 10c0/fb0fb57bdde9b7f559799363410fed31dc7d700a39eed5f6a5459bd459a83f1a8f4679bd68d9d441e7a2bf8536f3b7d0f40b5a79275ce8f32e6eab523075e5e0
   languageName: node
   linkType: hard
 
@@ -4033,15 +4078,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@jest/create-cache-key-function@npm:^27.4.2":
-  version: 27.5.1
-  resolution: "@jest/create-cache-key-function@npm:27.5.1"
-  dependencies:
-    "@jest/types": "npm:^27.5.1"
-  checksum: 10c0/1890ac93fad852e0a98c31de1e5f2c548974aefd36e838d27b70834dda1654a153ed6a52258447ebacfd47463e9bdb83750631bee827797c7b9973c083998a96
-  languageName: node
-  linkType: hard
-
 "@jest/environment@npm:^29.5.0":
   version: 29.5.0
   resolution: "@jest/environment@npm:29.5.0"
@@ -4388,19 +4424,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@jest/types@npm:^27.5.1":
-  version: 27.5.1
-  resolution: "@jest/types@npm:27.5.1"
-  dependencies:
-    "@types/istanbul-lib-coverage": "npm:^2.0.0"
-    "@types/istanbul-reports": "npm:^3.0.0"
-    "@types/node": "npm:*"
-    "@types/yargs": "npm:^16.0.0"
-    chalk: "npm:^4.0.0"
-  checksum: 10c0/4598b302398db0eb77168b75a6c58148ea02cc9b9f21c5d1bbe985c1c9257110a5653cf7b901c3cab87fba231e3fed83633687f1c0903b4bc6939ab2a8452504
-  languageName: node
-  linkType: hard
-
 "@jest/types@npm:^29.5.0":
   version: 29.5.0
   resolution: "@jest/types@npm:29.5.0"
@@ -4691,6 +4714,13 @@ __metadata:
   version: 1.8.0
   resolution: "@noble/hashes@npm:1.8.0"
   checksum: 10c0/06a0b52c81a6fa7f04d67762e08b2c476a00285858150caeaaff4037356dd5e119f45b2a530f638b77a5eeca013168ec1b655db41bae3236cb2e9d511484fc77
+  languageName: node
+  linkType: hard
+
+"@nodable/entities@npm:^1.1.0":
+  version: 1.1.0
+  resolution: "@nodable/entities@npm:1.1.0"
+  checksum: 10c0/ff9b8d515d08ff8a5b83f587bc4a2482508250ac051d0967a8c77da3813cc7aae23d8ce8654c97a948536ca73387300ede734ff7c8ae61461220dca09a2911ec
   languageName: node
   linkType: hard
 
@@ -5000,6 +5030,79 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@protobufjs/aspromise@npm:^1.1.1, @protobufjs/aspromise@npm:^1.1.2":
+  version: 1.1.2
+  resolution: "@protobufjs/aspromise@npm:1.1.2"
+  checksum: 10c0/a83343a468ff5b5ec6bff36fd788a64c839e48a07ff9f4f813564f58caf44d011cd6504ed2147bf34835bd7a7dd2107052af755961c6b098fd8902b4f6500d0f
+  languageName: node
+  linkType: hard
+
+"@protobufjs/base64@npm:^1.1.2":
+  version: 1.1.2
+  resolution: "@protobufjs/base64@npm:1.1.2"
+  checksum: 10c0/eec925e681081af190b8ee231f9bad3101e189abbc182ff279da6b531e7dbd2a56f1f306f37a80b1be9e00aa2d271690d08dcc5f326f71c9eed8546675c8caf6
+  languageName: node
+  linkType: hard
+
+"@protobufjs/codegen@npm:^2.0.4":
+  version: 2.0.4
+  resolution: "@protobufjs/codegen@npm:2.0.4"
+  checksum: 10c0/26ae337c5659e41f091606d16465bbcc1df1f37cc1ed462438b1f67be0c1e28dfb2ca9f294f39100c52161aef82edf758c95d6d75650a1ddf31f7ddee1440b43
+  languageName: node
+  linkType: hard
+
+"@protobufjs/eventemitter@npm:^1.1.0":
+  version: 1.1.0
+  resolution: "@protobufjs/eventemitter@npm:1.1.0"
+  checksum: 10c0/1eb0a75180e5206d1033e4138212a8c7089a3d418c6dfa5a6ce42e593a4ae2e5892c4ef7421f38092badba4040ea6a45f0928869989411001d8c1018ea9a6e70
+  languageName: node
+  linkType: hard
+
+"@protobufjs/fetch@npm:^1.1.0":
+  version: 1.1.0
+  resolution: "@protobufjs/fetch@npm:1.1.0"
+  dependencies:
+    "@protobufjs/aspromise": "npm:^1.1.1"
+    "@protobufjs/inquire": "npm:^1.1.0"
+  checksum: 10c0/cda6a3dc2d50a182c5865b160f72077aac197046600091dbb005dd0a66db9cce3c5eaed6d470ac8ed49d7bcbeef6ee5f0bc288db5ff9a70cbd003e5909065233
+  languageName: node
+  linkType: hard
+
+"@protobufjs/float@npm:^1.0.2":
+  version: 1.0.2
+  resolution: "@protobufjs/float@npm:1.0.2"
+  checksum: 10c0/18f2bdede76ffcf0170708af15c9c9db6259b771e6b84c51b06df34a9c339dbbeec267d14ce0bddd20acc142b1d980d983d31434398df7f98eb0c94a0eb79069
+  languageName: node
+  linkType: hard
+
+"@protobufjs/inquire@npm:^1.1.0":
+  version: 1.1.0
+  resolution: "@protobufjs/inquire@npm:1.1.0"
+  checksum: 10c0/64372482efcba1fb4d166a2664a6395fa978b557803857c9c03500e0ac1013eb4b1aacc9ed851dd5fc22f81583670b4f4431bae186f3373fedcfde863ef5921a
+  languageName: node
+  linkType: hard
+
+"@protobufjs/path@npm:^1.1.2":
+  version: 1.1.2
+  resolution: "@protobufjs/path@npm:1.1.2"
+  checksum: 10c0/cece0a938e7f5dfd2fa03f8c14f2f1cf8b0d6e13ac7326ff4c96ea311effd5fb7ae0bba754fbf505312af2e38500250c90e68506b97c02360a43793d88a0d8b4
+  languageName: node
+  linkType: hard
+
+"@protobufjs/pool@npm:^1.1.0":
+  version: 1.1.0
+  resolution: "@protobufjs/pool@npm:1.1.0"
+  checksum: 10c0/eda2718b7f222ac6e6ad36f758a92ef90d26526026a19f4f17f668f45e0306a5bd734def3f48f51f8134ae0978b6262a5c517c08b115a551756d1a3aadfcf038
+  languageName: node
+  linkType: hard
+
+"@protobufjs/utf8@npm:^1.1.0":
+  version: 1.1.0
+  resolution: "@protobufjs/utf8@npm:1.1.0"
+  checksum: 10c0/a3fe31fe3fa29aa3349e2e04ee13dc170cc6af7c23d92ad49e3eeaf79b9766264544d3da824dba93b7855bd6a2982fb40032ef40693da98a136d835752beb487
+  languageName: node
+  linkType: hard
+
 "@repeaterjs/repeater@npm:^3.0.4":
   version: 3.0.5
   resolution: "@repeaterjs/repeater@npm:3.0.5"
@@ -5127,7 +5230,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@stoplight/json@npm:^3.17.0, @stoplight/json@npm:^3.17.1, @stoplight/json@npm:^3.21.0":
+"@stoplight/json@npm:3.21.0, @stoplight/json@npm:^3.17.0, @stoplight/json@npm:^3.17.1, @stoplight/json@npm:^3.21.0":
   version: 3.21.0
   resolution: "@stoplight/json@npm:3.21.0"
   dependencies:
@@ -5458,132 +5561,6 @@ __metadata:
     "@stoplight/yaml-ast-parser": "npm:0.0.48"
     tslib: "npm:^2.2.0"
   checksum: 10c0/1426b00755965cdbde36c1ec1642e2fa3b292beef0ede1d5d57a48a9bbe7d4c841c7574f5d1992d6c40f9d7d5688089226653bc5583ff6c084a42ba8e4f4c417
-  languageName: node
-  linkType: hard
-
-"@swc/core-darwin-arm64@npm:1.3.66":
-  version: 1.3.66
-  resolution: "@swc/core-darwin-arm64@npm:1.3.66"
-  conditions: os=darwin & cpu=arm64
-  languageName: node
-  linkType: hard
-
-"@swc/core-darwin-x64@npm:1.3.66":
-  version: 1.3.66
-  resolution: "@swc/core-darwin-x64@npm:1.3.66"
-  conditions: os=darwin & cpu=x64
-  languageName: node
-  linkType: hard
-
-"@swc/core-linux-arm-gnueabihf@npm:1.3.66":
-  version: 1.3.66
-  resolution: "@swc/core-linux-arm-gnueabihf@npm:1.3.66"
-  conditions: os=linux & cpu=arm
-  languageName: node
-  linkType: hard
-
-"@swc/core-linux-arm64-gnu@npm:1.3.66":
-  version: 1.3.66
-  resolution: "@swc/core-linux-arm64-gnu@npm:1.3.66"
-  conditions: os=linux & cpu=arm64 & libc=glibc
-  languageName: node
-  linkType: hard
-
-"@swc/core-linux-arm64-musl@npm:1.3.66":
-  version: 1.3.66
-  resolution: "@swc/core-linux-arm64-musl@npm:1.3.66"
-  conditions: os=linux & cpu=arm64 & libc=musl
-  languageName: node
-  linkType: hard
-
-"@swc/core-linux-x64-gnu@npm:1.3.66":
-  version: 1.3.66
-  resolution: "@swc/core-linux-x64-gnu@npm:1.3.66"
-  conditions: os=linux & cpu=x64 & libc=glibc
-  languageName: node
-  linkType: hard
-
-"@swc/core-linux-x64-musl@npm:1.3.66":
-  version: 1.3.66
-  resolution: "@swc/core-linux-x64-musl@npm:1.3.66"
-  conditions: os=linux & cpu=x64 & libc=musl
-  languageName: node
-  linkType: hard
-
-"@swc/core-win32-arm64-msvc@npm:1.3.66":
-  version: 1.3.66
-  resolution: "@swc/core-win32-arm64-msvc@npm:1.3.66"
-  conditions: os=win32 & cpu=arm64
-  languageName: node
-  linkType: hard
-
-"@swc/core-win32-ia32-msvc@npm:1.3.66":
-  version: 1.3.66
-  resolution: "@swc/core-win32-ia32-msvc@npm:1.3.66"
-  conditions: os=win32 & cpu=ia32
-  languageName: node
-  linkType: hard
-
-"@swc/core-win32-x64-msvc@npm:1.3.66":
-  version: 1.3.66
-  resolution: "@swc/core-win32-x64-msvc@npm:1.3.66"
-  conditions: os=win32 & cpu=x64
-  languageName: node
-  linkType: hard
-
-"@swc/core@npm:^1.3.5":
-  version: 1.3.66
-  resolution: "@swc/core@npm:1.3.66"
-  dependencies:
-    "@swc/core-darwin-arm64": "npm:1.3.66"
-    "@swc/core-darwin-x64": "npm:1.3.66"
-    "@swc/core-linux-arm-gnueabihf": "npm:1.3.66"
-    "@swc/core-linux-arm64-gnu": "npm:1.3.66"
-    "@swc/core-linux-arm64-musl": "npm:1.3.66"
-    "@swc/core-linux-x64-gnu": "npm:1.3.66"
-    "@swc/core-linux-x64-musl": "npm:1.3.66"
-    "@swc/core-win32-arm64-msvc": "npm:1.3.66"
-    "@swc/core-win32-ia32-msvc": "npm:1.3.66"
-    "@swc/core-win32-x64-msvc": "npm:1.3.66"
-  peerDependencies:
-    "@swc/helpers": ^0.5.0
-  dependenciesMeta:
-    "@swc/core-darwin-arm64":
-      optional: true
-    "@swc/core-darwin-x64":
-      optional: true
-    "@swc/core-linux-arm-gnueabihf":
-      optional: true
-    "@swc/core-linux-arm64-gnu":
-      optional: true
-    "@swc/core-linux-arm64-musl":
-      optional: true
-    "@swc/core-linux-x64-gnu":
-      optional: true
-    "@swc/core-linux-x64-musl":
-      optional: true
-    "@swc/core-win32-arm64-msvc":
-      optional: true
-    "@swc/core-win32-ia32-msvc":
-      optional: true
-    "@swc/core-win32-x64-msvc":
-      optional: true
-  peerDependenciesMeta:
-    "@swc/helpers":
-      optional: true
-  checksum: 10c0/bf1d9eb0c29d1cc100cb15272dfb55db8da02f9a90c4ae11af1803a189f686bdad9ce9b06af3b7ad004b6811efd9332cbab75be87a2c2aa7cf0a44999fab6d5d
-  languageName: node
-  linkType: hard
-
-"@swc/jest@npm:^0.2.23":
-  version: 0.2.26
-  resolution: "@swc/jest@npm:0.2.26"
-  dependencies:
-    "@jest/create-cache-key-function": "npm:^27.4.2"
-    jsonc-parser: "npm:^3.2.0"
-  peerDependencies:
-    "@swc/core": "*"
-  checksum: 10c0/98184f5412174cd56a3be400bb676750373940169b865f1d739f5debeb56864801e7ed65f8a20ae90d9a42434a91644f86b9677a60d14c4bbdf23dee737977f0
   languageName: node
   linkType: hard
 
@@ -6147,6 +6124,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@types/node@npm:>=13.7.0":
+  version: 25.6.0
+  resolution: "@types/node@npm:25.6.0"
+  dependencies:
+    undici-types: "npm:~7.19.0"
+  checksum: 10c0/d2d2015630ff098a201407f55f5077a20270ae4f465c739b40865cd9933b91b9c5d2b85568eadaf3db0801b91e267333ca7eb39f007428b173d1cdab4b339ac5
+  languageName: node
+  linkType: hard
+
 "@types/node@npm:^14.6.0":
   version: 14.18.26
   resolution: "@types/node@npm:14.18.26"
@@ -6268,6 +6254,15 @@ __metadata:
   version: 15.7.14
   resolution: "@types/prop-types@npm:15.7.14"
   checksum: 10c0/1ec775160bfab90b67a782d735952158c7e702ca4502968aa82565bd8e452c2de8601c8dfe349733073c31179116cf7340710160d3836aa8a1ef76d1532893b1
+  languageName: node
+  linkType: hard
+
+"@types/protocol-buffers-schema@npm:^3.4.3":
+  version: 3.4.3
+  resolution: "@types/protocol-buffers-schema@npm:3.4.3"
+  dependencies:
+    "@types/node": "npm:*"
+  checksum: 10c0/9f434fbdc7e3d8f8ae600affca61b43ff2d5a54e30ad08e2647cf5f183814ce02df1f2b3ffdfdc1b84f3ae01bc875d08e2418d1489c1e8bf4ccceb8426a684cf
   languageName: node
   linkType: hard
 
@@ -6517,15 +6512,6 @@ __metadata:
   dependencies:
     "@types/yargs-parser": "npm:*"
   checksum: 10c0/b52519ba68a8d90996b54143ff74fcd8ac1722a1ef4a50ed8c3dbc1f7a76d14210f0262f8b91eabcdab202ff4babdd92ce7332ab1cdd6af4eae7c9fc81c83797
-  languageName: node
-  linkType: hard
-
-"@types/yargs@npm:^16.0.0":
-  version: 16.0.5
-  resolution: "@types/yargs@npm:16.0.5"
-  dependencies:
-    "@types/yargs-parser": "npm:*"
-  checksum: 10c0/7b2824c749b6e28f5ee3248d13b244eaf7d3c5bb96089add774997572b5a10f1a0826d29a7bc797d64d29ca504b0b0d6ba2e74931b3fabae78ccbbcf07282f0c
   languageName: node
   linkType: hard
 
@@ -7073,7 +7059,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"ajv-draft-04@npm:~1.0.0":
+"ajv-draft-04@npm:^1.0.0, ajv-draft-04@npm:~1.0.0":
   version: 1.0.0
   resolution: "ajv-draft-04@npm:1.0.0"
   peerDependencies:
@@ -7091,20 +7077,6 @@ __metadata:
   peerDependencies:
     ajv: ^8.0.1
   checksum: 10c0/f3d864ebd4bc0b51ad622b5a889cc8903000295eaa058d59c2102f293fe126c3d901419da143eaa817b863cac2e92ae2ef6f55e6c31d07bf272099afe73961ae
-  languageName: node
-  linkType: hard
-
-"ajv-formats@npm:^1.6.1":
-  version: 1.6.1
-  resolution: "ajv-formats@npm:1.6.1"
-  dependencies:
-    ajv: "npm:^7.0.0"
-  peerDependencies:
-    ajv: ^7.0.0
-  peerDependenciesMeta:
-    ajv:
-      optional: true
-  checksum: 10c0/6abae18cc287f479d86d0f23a7b9bcac87b182252f03bd5f4bfa17e5620bc6727390589463343dc384f09d9dc371951c10be7b0a60c0e4ce070e67a619f237ba
   languageName: node
   linkType: hard
 
@@ -7190,18 +7162,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"ajv@npm:^7.0.0, ajv@npm:^7.0.3, ajv@npm:^7.2.4":
-  version: 7.2.4
-  resolution: "ajv@npm:7.2.4"
-  dependencies:
-    fast-deep-equal: "npm:^3.1.1"
-    json-schema-traverse: "npm:^1.0.0"
-    require-from-string: "npm:^2.0.2"
-    uri-js: "npm:^4.2.2"
-  checksum: 10c0/420b72d7f6af89c7e63e00856b894e16a8a2ea107b2b2a76ff36d8dd05f6d708ab120a8c7cc627983ad1f75c6990363eda7c68f45943635f084de62353ca1c56
-  languageName: node
-  linkType: hard
-
 "ajv@npm:^8.0.0, ajv@npm:^8.11.0, ajv@npm:^8.17.1, ajv@npm:^8.6.0, ajv@npm:^8.6.3, ajv@npm:^8.8.0, ajv@npm:^8.8.2, ajv@npm:^8.9.0":
   version: 8.17.1
   resolution: "ajv@npm:8.17.1"
@@ -7211,6 +7171,18 @@ __metadata:
     json-schema-traverse: "npm:^1.0.0"
     require-from-string: "npm:^2.0.2"
   checksum: 10c0/ec3ba10a573c6b60f94639ffc53526275917a2df6810e4ab5a6b959d87459f9ef3f00d5e7865b82677cb7d21590355b34da14d1d0b9c32d75f95a187e76fff35
+  languageName: node
+  linkType: hard
+
+"ajv@npm:^8.18.0":
+  version: 8.18.0
+  resolution: "ajv@npm:8.18.0"
+  dependencies:
+    fast-deep-equal: "npm:^3.1.3"
+    fast-uri: "npm:^3.0.1"
+    json-schema-traverse: "npm:^1.0.0"
+    require-from-string: "npm:^2.0.2"
+  checksum: 10c0/e7517c426173513a07391be951879932bdf3348feaebd2199f5b901c20f99d60db8cd1591502d4d551dc82f594e82a05c4fe1c70139b15b8937f7afeaed9532f
   languageName: node
   linkType: hard
 
@@ -8324,6 +8296,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"call-me-maybe@npm:^1.0.2":
+  version: 1.0.2
+  resolution: "call-me-maybe@npm:1.0.2"
+  checksum: 10c0/8eff5dbb61141ebb236ed71b4e9549e488bcb5451c48c11e5667d5c75b0532303788a1101e6978cafa2d0c8c1a727805599c2741e3e0982855c9f1d78cd06c9f
+  languageName: node
+  linkType: hard
+
 "callsites@npm:^3.0.0":
   version: 3.1.0
   resolution: "callsites@npm:3.1.0"
@@ -8410,15 +8389,15 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "catalog-service@workspace:services/catalog/service"
   dependencies:
-    "@axinom/mosaic-cli": "npm:0.53.0"
-    "@axinom/mosaic-db-common": "npm:0.54.0"
-    "@axinom/mosaic-graphql-common": "npm:0.30.0"
-    "@axinom/mosaic-id-guard": "npm:0.45.0"
-    "@axinom/mosaic-message-bus": "npm:0.47.0"
-    "@axinom/mosaic-message-bus-abstractions": "npm:0.24.0"
-    "@axinom/mosaic-messages": "npm:0.64.0"
-    "@axinom/mosaic-service-common": "npm:0.66.0"
-    "@axinom/mosaic-transactional-inbox-outbox": "npm:0.26.0"
+    "@axinom/mosaic-cli": "npm:0.54.0"
+    "@axinom/mosaic-db-common": "npm:0.55.0"
+    "@axinom/mosaic-graphql-common": "npm:0.31.0"
+    "@axinom/mosaic-id-guard": "npm:0.46.0"
+    "@axinom/mosaic-message-bus": "npm:0.48.0"
+    "@axinom/mosaic-message-bus-abstractions": "npm:0.24.1"
+    "@axinom/mosaic-messages": "npm:0.65.0"
+    "@axinom/mosaic-service-common": "npm:0.67.0"
+    "@axinom/mosaic-transactional-inbox-outbox": "npm:0.27.0"
     "@graphile-contrib/pg-simplify-inflector": "npm:^6.1.0"
     "@types/express": "npm:^4.17.14"
     "@types/jest": "npm:^29.4.1"
@@ -8573,17 +8552,17 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "channel-service@workspace:services/channel/service"
   dependencies:
-    "@axinom/mosaic-cli": "npm:0.53.0"
-    "@axinom/mosaic-db-common": "npm:0.54.0"
-    "@axinom/mosaic-graphql-common": "npm:0.30.0"
-    "@axinom/mosaic-id-guard": "npm:0.45.0"
-    "@axinom/mosaic-id-link-be": "npm:0.36.0"
-    "@axinom/mosaic-message-bus": "npm:0.47.0"
-    "@axinom/mosaic-message-bus-abstractions": "npm:0.24.0"
-    "@axinom/mosaic-messages": "npm:0.64.0"
-    "@axinom/mosaic-service-common": "npm:0.66.0"
-    "@axinom/mosaic-transactional-inbox-outbox": "npm:0.26.0"
-    "@axinom/mosaic-video-messages": "npm:0.5.0"
+    "@axinom/mosaic-cli": "npm:0.54.0"
+    "@axinom/mosaic-db-common": "npm:0.55.0"
+    "@axinom/mosaic-graphql-common": "npm:0.31.0"
+    "@axinom/mosaic-id-guard": "npm:0.46.0"
+    "@axinom/mosaic-id-link-be": "npm:0.37.0"
+    "@axinom/mosaic-message-bus": "npm:0.48.0"
+    "@axinom/mosaic-message-bus-abstractions": "npm:0.24.1"
+    "@axinom/mosaic-messages": "npm:0.65.0"
+    "@axinom/mosaic-service-common": "npm:0.67.0"
+    "@axinom/mosaic-transactional-inbox-outbox": "npm:0.27.0"
+    "@axinom/mosaic-video-messages": "npm:0.6.0"
     "@graphile-contrib/pg-simplify-inflector": "npm:^6.1.0"
     "@graphql-codegen/cli": "npm:^4.0.1"
     "@graphql-codegen/typescript": "npm:^2.7.3"
@@ -8636,10 +8615,10 @@ __metadata:
   resolution: "channel-workflows@workspace:services/channel/workflows"
   dependencies:
     "@apollo/client": "npm:^3.7.10"
-    "@axinom/mosaic-managed-workflow-integration": "npm:0.28.0"
-    "@axinom/mosaic-portal": "npm:0.44.0"
-    "@axinom/mosaic-ui": "npm:0.68.1"
-    "@axinom/mosaic-video-workflow-integration": "npm:0.3.0"
+    "@axinom/mosaic-managed-workflow-integration": "npm:0.29.0"
+    "@axinom/mosaic-portal": "npm:0.45.0"
+    "@axinom/mosaic-ui": "npm:0.69.0"
+    "@axinom/mosaic-video-workflow-integration": "npm:0.4.0"
     "@graphql-codegen/cli": "npm:^4.0.1"
     "@graphql-codegen/typescript": "npm:^2.7.3"
     "@graphql-codegen/typescript-operations": "npm:^2.5.3"
@@ -9045,7 +9024,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"commander@npm:^2.12.1, commander@npm:^2.19.0, commander@npm:^2.20.0, commander@npm:^2.7.1":
+"commander@npm:^2.12.1, commander@npm:^2.19.0, commander@npm:^2.20.0":
   version: 2.20.3
   resolution: "commander@npm:2.20.3"
   checksum: 10c0/74c781a5248c2402a0a3e966a0a2bba3c054aad144f5c023364be83265e796b20565aa9feff624132ff629aa64e16999fa40a743c10c12f7c61e96a794b99288
@@ -10256,15 +10235,15 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "entitlement-service@workspace:services/entitlement/service"
   dependencies:
-    "@axinom/mosaic-cli": "npm:0.53.0"
-    "@axinom/mosaic-db-common": "npm:0.54.0"
-    "@axinom/mosaic-graphql-common": "npm:0.30.0"
-    "@axinom/mosaic-id-guard": "npm:0.45.0"
-    "@axinom/mosaic-id-utils": "npm:0.24.0"
-    "@axinom/mosaic-message-bus": "npm:0.47.0"
-    "@axinom/mosaic-service-common": "npm:0.66.0"
-    "@axinom/mosaic-transactional-inbox-outbox": "npm:0.26.0"
-    "@axinom/mosaic-video-messages": "npm:0.5.0"
+    "@axinom/mosaic-cli": "npm:0.54.0"
+    "@axinom/mosaic-db-common": "npm:0.55.0"
+    "@axinom/mosaic-graphql-common": "npm:0.31.0"
+    "@axinom/mosaic-id-guard": "npm:0.46.0"
+    "@axinom/mosaic-id-utils": "npm:0.25.0"
+    "@axinom/mosaic-message-bus": "npm:0.48.0"
+    "@axinom/mosaic-service-common": "npm:0.67.0"
+    "@axinom/mosaic-transactional-inbox-outbox": "npm:0.27.0"
+    "@axinom/mosaic-video-messages": "npm:0.6.0"
     "@graphile-contrib/pg-simplify-inflector": "npm:^6.1.0"
     "@graphql-codegen/cli": "npm:^4.0.1"
     "@graphql-codegen/typescript": "npm:^2.7.3"
@@ -10281,8 +10260,8 @@ __metadata:
     "@types/tar-stream": "npm:^3.1.4"
     "@types/uuid": "npm:^8.3.4"
     "@types/verror": "npm:^1.10.6"
-    ajv: "npm:^7.2.4"
-    ajv-formats: "npm:^1.6.1"
+    ajv: "npm:^8.18.0"
+    ajv-formats: "npm:^2.1.1"
     axios: "npm:^1.8.3"
     concurrently: "npm:^6.5.1"
     dotenv: "npm:^8.6.0"
@@ -11267,6 +11246,29 @@ __metadata:
   dependencies:
     punycode: "npm:^1.3.2"
   checksum: 10c0/d85c5c409cf0215417380f98a2d29c23a95004d93ff0d8bdf1af5f1a9d1fc608ac89ac6ffe863783d2c73efb3850dd35390feb1de3296f49877bfee0392eb5d3
+  languageName: node
+  linkType: hard
+
+"fast-xml-builder@npm:^1.1.4":
+  version: 1.1.4
+  resolution: "fast-xml-builder@npm:1.1.4"
+  dependencies:
+    path-expression-matcher: "npm:^1.1.3"
+  checksum: 10c0/d5dfc0660f7f886b9f42747e6aa1d5e16c090c804b322652f65a5d7ffb93aa00153c3e1276cd053629f9f4c4f625131dc6886677394f7048e827e63b97b18927
+  languageName: node
+  linkType: hard
+
+"fast-xml-parser@npm:^5.3.0":
+  version: 5.6.0
+  resolution: "fast-xml-parser@npm:5.6.0"
+  dependencies:
+    "@nodable/entities": "npm:^1.1.0"
+    fast-xml-builder: "npm:^1.1.4"
+    path-expression-matcher: "npm:^1.5.0"
+    strnum: "npm:^2.2.3"
+  bin:
+    fxparser: src/cli/cli.js
+  checksum: 10c0/3c6c1084d5aab932d34549492e16ccf6ba1267daf21664933fb719fa86a20efc0a60a575720a314cd7b0a4a36b1842bd34b9a22240af98f63e98c83782d8bb2e
   languageName: node
   linkType: hard
 
@@ -14729,13 +14731,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"jsonc-parser@npm:^3.2.0":
-  version: 3.2.0
-  resolution: "jsonc-parser@npm:3.2.0"
-  checksum: 10c0/5a12d4d04dad381852476872a29dcee03a57439574e4181d91dca71904fcdcc5e8e4706c0a68a2c61ad9810e1e1c5806b5100d52d3e727b78f5cdc595401045b
-  languageName: node
-  linkType: hard
-
 "jsonc-parser@npm:~2.2.1":
   version: 2.2.1
   resolution: "jsonc-parser@npm:2.2.1"
@@ -15189,20 +15184,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"lodash.get@npm:^4.4.2":
-  version: 4.4.2
-  resolution: "lodash.get@npm:4.4.2"
-  checksum: 10c0/48f40d471a1654397ed41685495acb31498d5ed696185ac8973daef424a749ca0c7871bf7b665d5c14f5cc479394479e0307e781f61d5573831769593411be6e
-  languageName: node
-  linkType: hard
-
-"lodash.isequal@npm:^4.5.0":
-  version: 4.5.0
-  resolution: "lodash.isequal@npm:4.5.0"
-  checksum: 10c0/dfdb2356db19631a4b445d5f37868a095e2402292d59539a987f134a8778c62a2810c2452d11ae9e6dcac71fc9de40a6fedcb20e2952a15b431ad8b29e50e28f
-  languageName: node
-  linkType: hard
-
 "lodash.memoize@npm:4.x, lodash.memoize@npm:^4.1.1, lodash.memoize@npm:^4.1.2":
   version: 4.1.2
   resolution: "lodash.memoize@npm:4.1.2"
@@ -15274,6 +15255,13 @@ __metadata:
     slice-ansi: "npm:^4.0.0"
     wrap-ansi: "npm:^6.2.0"
   checksum: 10c0/18b299e230432a156f2535660776406d15ba8bb7817dd3eaadd58004b363756d4ecaabcd658f9949f90b62ea7d3354423be3fdeb7a201ab951ec0e8d6139af86
+  languageName: node
+  linkType: hard
+
+"long@npm:^5.0.0":
+  version: 5.3.2
+  resolution: "long@npm:5.3.2"
+  checksum: 10c0/7130fe1cbce2dca06734b35b70d380ca3f70271c7f8852c922a7c62c86c4e35f0c39290565eca7133c625908d40e126ac57c02b1b1a4636b9457d77e1e60b981
   languageName: node
   linkType: hard
 
@@ -15484,8 +15472,8 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "media-messages@workspace:libs/media-messages"
   dependencies:
-    "@axinom/mosaic-cli": "npm:0.53.0"
-    "@axinom/mosaic-message-bus-abstractions": "npm:0.24.0"
+    "@axinom/mosaic-cli": "npm:0.54.0"
+    "@axinom/mosaic-message-bus-abstractions": "npm:0.24.1"
     "@types/glob": "npm:^7.2.0"
     chokidar-cli: "npm:^3.0.0"
     concurrently: "npm:^5.3.0"
@@ -15500,17 +15488,17 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "media-service@workspace:services/media/service"
   dependencies:
-    "@axinom/mosaic-cli": "npm:0.53.0"
-    "@axinom/mosaic-db-common": "npm:0.54.0"
-    "@axinom/mosaic-graphql-common": "npm:0.30.0"
-    "@axinom/mosaic-id-guard": "npm:0.45.0"
-    "@axinom/mosaic-id-link-be": "npm:0.36.0"
-    "@axinom/mosaic-message-bus": "npm:0.47.0"
-    "@axinom/mosaic-message-bus-abstractions": "npm:0.24.0"
-    "@axinom/mosaic-messages": "npm:0.64.0"
-    "@axinom/mosaic-service-common": "npm:0.66.0"
-    "@axinom/mosaic-transactional-inbox-outbox": "npm:0.26.0"
-    "@axinom/mosaic-video-messages": "npm:0.5.0"
+    "@axinom/mosaic-cli": "npm:0.54.0"
+    "@axinom/mosaic-db-common": "npm:0.55.0"
+    "@axinom/mosaic-graphql-common": "npm:0.31.0"
+    "@axinom/mosaic-id-guard": "npm:0.46.0"
+    "@axinom/mosaic-id-link-be": "npm:0.37.0"
+    "@axinom/mosaic-message-bus": "npm:0.48.0"
+    "@axinom/mosaic-message-bus-abstractions": "npm:0.24.1"
+    "@axinom/mosaic-messages": "npm:0.65.0"
+    "@axinom/mosaic-service-common": "npm:0.67.0"
+    "@axinom/mosaic-transactional-inbox-outbox": "npm:0.27.0"
+    "@axinom/mosaic-video-messages": "npm:0.6.0"
     "@azure/storage-blob": "npm:^12.14.0"
     "@faker-js/faker": "npm:^7.6.0"
     "@graphile-contrib/pg-simplify-inflector": "npm:^6.1.0"
@@ -15529,8 +15517,8 @@ __metadata:
     "@types/uuid": "npm:^8.3.4"
     "@types/verror": "npm:^1.10.6"
     "@types/yargs": "npm:^16.0.5"
-    ajv: "npm:^7.2.4"
-    ajv-formats: "npm:^1.6.1"
+    ajv: "npm:^8.18.0"
+    ajv-formats: "npm:^2.1.1"
     altair-express-middleware: "npm:^7.0.1"
     axios: "npm:^1.8.3"
     concurrently: "npm:^6.5.1"
@@ -15581,7 +15569,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "media-template@workspace:."
   dependencies:
-    "@axinom/mosaic-cli": "npm:0.53.0"
+    "@axinom/mosaic-cli": "npm:0.54.0"
     "@jest/globals": "npm:^29.5.0"
     "@types/jest": "npm:^29.4.1"
     "@types/node": "npm:^18.11.19"
@@ -15651,11 +15639,11 @@ __metadata:
   resolution: "media-workflows@workspace:services/media/workflows"
   dependencies:
     "@apollo/client": "npm:^3.7.10"
-    "@axinom/mosaic-graphql-codegen-plugins": "npm:0.6.0"
-    "@axinom/mosaic-managed-workflow-integration": "npm:0.28.0"
-    "@axinom/mosaic-portal": "npm:0.44.1"
-    "@axinom/mosaic-ui": "npm:0.68.1"
-    "@axinom/mosaic-video-workflow-integration": "npm:0.3.0"
+    "@axinom/mosaic-graphql-codegen-plugins": "npm:0.7.0"
+    "@axinom/mosaic-managed-workflow-integration": "npm:0.29.0"
+    "@axinom/mosaic-portal": "npm:0.45.0"
+    "@axinom/mosaic-ui": "npm:0.69.0"
+    "@axinom/mosaic-video-workflow-integration": "npm:0.4.0"
     "@graphql-codegen/cli": "npm:^4.0.1"
     "@graphql-codegen/typescript": "npm:^2.7.3"
     "@graphql-codegen/typescript-operations": "npm:^2.5.3"
@@ -16584,10 +16572,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"openapi-types@npm:9.3.0":
-  version: 9.3.0
-  resolution: "openapi-types@npm:9.3.0"
-  checksum: 10c0/f124d697fe80d5af33ff8be1e598d4c377320055da5301726fd5066f037343851ee6d99046e92175a9e020c294cbe5e1894265bc9ae762edf2f866180801658d
+"openapi-types@npm:^12.1.3":
+  version: 12.1.3
+  resolution: "openapi-types@npm:12.1.3"
+  checksum: 10c0/4ad4eb91ea834c237edfa6ab31394e87e00c888fc2918009763389c00d02342345195d6f302d61c3fd807f17723cd48df29b47b538b68375b3827b3758cd520f
   languageName: node
   linkType: hard
 
@@ -16876,6 +16864,58 @@ __metadata:
   languageName: node
   linkType: hard
 
+"parserapiv1@npm:@asyncapi/parser@^2.1.0":
+  version: 2.1.2
+  resolution: "@asyncapi/parser@npm:2.1.2"
+  dependencies:
+    "@asyncapi/specs": "npm:^5.1.0"
+    "@openapi-contrib/openapi-schema-to-json-schema": "npm:~3.2.0"
+    "@stoplight/json": "npm:^3.20.2"
+    "@stoplight/json-ref-readers": "npm:^1.2.2"
+    "@stoplight/json-ref-resolver": "npm:^3.1.5"
+    "@stoplight/spectral-core": "npm:^1.16.1"
+    "@stoplight/spectral-functions": "npm:^1.7.2"
+    "@stoplight/spectral-parsers": "npm:^1.0.2"
+    "@stoplight/spectral-ref-resolver": "npm:^1.0.3"
+    "@stoplight/types": "npm:^13.12.0"
+    "@types/json-schema": "npm:^7.0.11"
+    "@types/urijs": "npm:^1.19.19"
+    ajv: "npm:^8.11.0"
+    ajv-errors: "npm:^3.0.0"
+    ajv-formats: "npm:^2.1.1"
+    avsc: "npm:^5.7.5"
+    js-yaml: "npm:^4.1.0"
+    jsonpath-plus: "npm:^7.2.0"
+    node-fetch: "npm:2.6.7"
+  checksum: 10c0/20463be8bf4a657a1dccf8e1c69ad623e6f3cac39dd12b8c772bcd0a88f2ac3f00f9fbc7e6517305fb97b8b33eb53ec0852c2241ab3a2c220f8b51c69934b5ca
+  languageName: node
+  linkType: hard
+
+"parserapiv2@npm:@asyncapi/parser@3.0.0-next-major-spec.8":
+  version: 3.0.0-next-major-spec.8
+  resolution: "@asyncapi/parser@npm:3.0.0-next-major-spec.8"
+  dependencies:
+    "@asyncapi/specs": "npm:^6.0.0-next-major-spec.9"
+    "@openapi-contrib/openapi-schema-to-json-schema": "npm:~3.2.0"
+    "@stoplight/json-ref-resolver": "npm:^3.1.5"
+    "@stoplight/spectral-core": "npm:^1.16.1"
+    "@stoplight/spectral-functions": "npm:^1.7.2"
+    "@stoplight/spectral-parsers": "npm:^1.0.2"
+    "@types/json-schema": "npm:^7.0.11"
+    "@types/urijs": "npm:^1.19.19"
+    ajv: "npm:^8.11.0"
+    ajv-errors: "npm:^3.0.0"
+    ajv-formats: "npm:^2.1.1"
+    avsc: "npm:^5.7.5"
+    js-yaml: "npm:^4.1.0"
+    jsonpath-plus: "npm:^7.2.0"
+    node-fetch: "npm:2.6.7"
+    ramldt2jsonschema: "npm:^1.2.3"
+    webapi-parser: "npm:^0.5.0"
+  checksum: 10c0/c5b96eda7ef60f02ae2bc0d9eeaf4221f0d0aaca3d3edc32ca9c3c63d154ad4b55ac236acaa6bf3b3904103544bf2b404579e171098b26052550d9b7212bd049
+  languageName: node
+  linkType: hard
+
 "parseurl@npm:^1.3.2, parseurl@npm:~1.3.2, parseurl@npm:~1.3.3":
   version: 1.3.3
   resolution: "parseurl@npm:1.3.3"
@@ -16903,10 +16943,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"path-equal@npm:1.1.2":
-  version: 1.1.2
-  resolution: "path-equal@npm:1.1.2"
-  checksum: 10c0/5e38ddedecb14104f039105275e594cced89399807a0986fb6b5654f1f7b4407cd56720aaec7b51d80773380d68af7348dc8b7eea1dbc1747f2c74a8425244b5
+"path-equal@npm:^1.2.5":
+  version: 1.2.5
+  resolution: "path-equal@npm:1.2.5"
+  checksum: 10c0/c589767af1c9021dda41f3431ee52f5779ebba6cb10c9c00f7fb71f78af8454273680007b07654a7e8322f91a649c4b5727bfb88cf31565d738bdd0cf913ec25
   languageName: node
   linkType: hard
 
@@ -16928,6 +16968,13 @@ __metadata:
   version: 5.0.0
   resolution: "path-exists@npm:5.0.0"
   checksum: 10c0/b170f3060b31604cde93eefdb7392b89d832dfbc1bed717c9718cbe0f230c1669b7e75f87e19901da2250b84d092989a0f9e44d2ef41deb09aa3ad28e691a40a
+  languageName: node
+  linkType: hard
+
+"path-expression-matcher@npm:^1.1.3, path-expression-matcher@npm:^1.5.0":
+  version: 1.5.0
+  resolution: "path-expression-matcher@npm:1.5.0"
+  checksum: 10c0/646cb5bc66cd7d809a52288336f3ac1e6223f156fd8e912936e490e590f7f93e8056d4fd25fcbcc7da61bb698fa520112cb050372a3f65e7b79bd4afa0f77610
   languageName: node
   linkType: hard
 
@@ -18226,6 +18273,26 @@ __metadata:
   languageName: node
   linkType: hard
 
+"protobufjs@npm:^7.4.0":
+  version: 7.5.5
+  resolution: "protobufjs@npm:7.5.5"
+  dependencies:
+    "@protobufjs/aspromise": "npm:^1.1.2"
+    "@protobufjs/base64": "npm:^1.1.2"
+    "@protobufjs/codegen": "npm:^2.0.4"
+    "@protobufjs/eventemitter": "npm:^1.1.0"
+    "@protobufjs/fetch": "npm:^1.1.0"
+    "@protobufjs/float": "npm:^1.0.2"
+    "@protobufjs/inquire": "npm:^1.1.0"
+    "@protobufjs/path": "npm:^1.1.2"
+    "@protobufjs/pool": "npm:^1.1.0"
+    "@protobufjs/utf8": "npm:^1.1.0"
+    "@types/node": "npm:>=13.7.0"
+    long: "npm:^5.0.0"
+  checksum: 10c0/3d48896a916761e3e60b52f80027eb4fba3f5a6e3f8461e04939db18812db2cb0db4c73d03e1134a960e99525ae1d236f076a0bc01273016f573b76f33ffbd47
+  languageName: node
+  linkType: hard
+
 "proxy-addr@npm:~2.0.7":
   version: 2.0.7
   resolution: "proxy-addr@npm:2.0.7"
@@ -18384,10 +18451,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"ramda@npm:^0.27.0":
-  version: 0.27.2
-  resolution: "ramda@npm:0.27.2"
-  checksum: 10c0/1bbcb5bcde33ab2669810644f920b8af4e228967ff800962100803dcdad57b09c5eeee50d9871c74aa20ce496a2d96ec48774e545d7943c8f742ccac5e0fa072
+"ramda@npm:^0.32.0":
+  version: 0.32.0
+  resolution: "ramda@npm:0.32.0"
+  checksum: 10c0/6ad24338813cbf91932f7f160e33af9159a540580a43386b974365a8c98b8aa63e2a9d98affa9b2ac4b6628ff34705ddf9ced8f2987c04e3562f58f202c41cf9
   languageName: node
   linkType: hard
 
@@ -18748,7 +18815,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"readdirp@npm:^3.4.0, readdirp@npm:^3.6.0, readdirp@npm:~3.6.0":
+"readdirp@npm:^3.6.0, readdirp@npm:~3.6.0":
   version: 3.6.0
   resolution: "readdirp@npm:3.6.0"
   dependencies:
@@ -18757,7 +18824,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"readdirp@npm:^4.0.1":
+"readdirp@npm:^4.0.0, readdirp@npm:^4.0.1":
   version: 4.1.2
   resolution: "readdirp@npm:4.1.2"
   checksum: 10c0/60a14f7619dec48c9c850255cd523e2717001b0e179dc7037cfa0895da7b9e9ab07532d324bfb118d73a710887d1e35f79c495fa91582784493e085d18c72c62
@@ -20586,6 +20653,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"strnum@npm:^2.2.3":
+  version: 2.2.3
+  resolution: "strnum@npm:2.2.3"
+  checksum: 10c0/1ee78101f1cd73a5b32f63cfd0be501bd246801a002f5987efef903a49e9297d1b63574e302ab3c06ee5e715c524d6cbdfef010e372ec1ea848e0179836cc208
+  languageName: node
+  linkType: hard
+
 "style-loader@npm:^3.3.3":
   version: 3.3.4
   resolution: "style-loader@npm:3.3.4"
@@ -21173,7 +21247,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"ts-node@npm:^10.2.1, ts-node@npm:^10.9.1":
+"ts-node@npm:^10.9.1":
   version: 10.9.1
   resolution: "ts-node@npm:10.9.1"
   dependencies:
@@ -21430,21 +21504,21 @@ __metadata:
   languageName: node
   linkType: hard
 
-"typescript-json-schema@npm:^0.53.0":
-  version: 0.53.1
-  resolution: "typescript-json-schema@npm:0.53.1"
+"typescript-json-schema@npm:^0.58.1":
+  version: 0.58.1
+  resolution: "typescript-json-schema@npm:0.58.1"
   dependencies:
     "@types/json-schema": "npm:^7.0.9"
     "@types/node": "npm:^16.9.2"
     glob: "npm:^7.1.7"
-    path-equal: "npm:1.1.2"
+    path-equal: "npm:^1.2.5"
     safe-stable-stringify: "npm:^2.2.0"
-    ts-node: "npm:^10.2.1"
-    typescript: "npm:~4.6.0"
+    ts-node: "npm:^10.9.1"
+    typescript: "npm:~4.9.5"
     yargs: "npm:^17.1.1"
   bin:
     typescript-json-schema: bin/typescript-json-schema
-  checksum: 10c0/28eb19d030cb99dfb02b532ed21723998887c0e9d7235fb7dc60d4ee1071e66c4919f7bed256be232d126361a2ee12bc44de5068cb37b88a3062b61f50054033
+  checksum: 10c0/a8f034ee5014b01f1c312a18b4bd877f2f63ae12669ed1b53d3812acc4aff16a62c31c818c979a41316433ae215827e14ec483c36eba312639c9de31de6cc839
   languageName: node
   linkType: hard
 
@@ -21504,13 +21578,13 @@ __metadata:
   languageName: node
   linkType: hard
 
-"typescript@npm:~4.6.0":
-  version: 4.6.4
-  resolution: "typescript@npm:4.6.4"
+"typescript@npm:~4.9.5":
+  version: 4.9.5
+  resolution: "typescript@npm:4.9.5"
   bin:
     tsc: bin/tsc
     tsserver: bin/tsserver
-  checksum: 10c0/92e2c0328485a4f7bd7435f5b105f03addff32f867e241dc3be8c372ed801a138c732d9a55697696d2f82a80dd6ad4bddff1ad6b0d1884bf4a24b92e71094c44
+  checksum: 10c0/5f6cad2e728a8a063521328e612d7876e12f0d8a8390d3b3aaa452a6a65e24e9ac8ea22beb72a924fd96ea0a49ea63bb4e251fb922b12eedfb7f7a26475e5c56
   languageName: node
   linkType: hard
 
@@ -21544,13 +21618,13 @@ __metadata:
   languageName: node
   linkType: hard
 
-"typescript@patch:typescript@npm%3A~4.6.0#optional!builtin<compat/typescript>":
-  version: 4.6.4
-  resolution: "typescript@patch:typescript@npm%3A4.6.4#optional!builtin<compat/typescript>::version=4.6.4&hash=5d3a66"
+"typescript@patch:typescript@npm%3A~4.9.5#optional!builtin<compat/typescript>":
+  version: 4.9.5
+  resolution: "typescript@patch:typescript@npm%3A4.9.5#optional!builtin<compat/typescript>::version=4.9.5&hash=289587"
   bin:
     tsc: bin/tsc
     tsserver: bin/tsserver
-  checksum: 10c0/0e3fa814d454942a689daf4c00f82328d323e7ecd4077e3265d45375e64642611631f4c882a71be87774468ba03793e9b8ff4bccfac3018194a9e36d8f72c251
+  checksum: 10c0/e3333f887c6829dfe0ab6c1dbe0dd1e3e2aeb56c66460cb85c5440c566f900c833d370ca34eb47558c0c69e78ced4bfe09b8f4f98b6de7afed9b84b8d1dd06a1
   languageName: node
   linkType: hard
 
@@ -21614,6 +21688,13 @@ __metadata:
   version: 6.21.0
   resolution: "undici-types@npm:6.21.0"
   checksum: 10c0/c01ed51829b10aa72fc3ce64b747f8e74ae9b60eafa19a7b46ef624403508a54c526ffab06a14a26b3120d055e1104d7abe7c9017e83ced038ea5cf52f8d5e04
+  languageName: node
+  linkType: hard
+
+"undici-types@npm:~7.19.0":
+  version: 7.19.2
+  resolution: "undici-types@npm:7.19.2"
+  checksum: 10c0/7159f10546f9f6c47d36776bb1bbf8671e87c1e587a6fee84ae1f111ae8de4f914efa8ca0dfcd224f4f4a9dfc3f6028f627ccb5ddaccf82d7fd54671b89fac3e
   languageName: node
   linkType: hard
 
@@ -21911,12 +21992,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"validator@npm:^13.6.0":
-  resolution: "validator@npm:13.15.22"
-  checksum: 10c0/69c0ad0abff0bc9f96faeb6790f5dd4e11b685031e4a115a056f3ed729aaac4d218e61f3582c051cb593305614a0a0d3b5da6ca7d5e0b426fa21be256a0ad852
-  languageName: node
-  linkType: hard
-
 "value-equal@npm:^1.0.1":
   version: 1.0.1
   resolution: "value-equal@npm:1.0.1"
@@ -21960,10 +22035,10 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "vod-to-live-service@workspace:services/vod-to-live/service"
   dependencies:
-    "@axinom/mosaic-id-guard": "npm:0.45.0"
-    "@axinom/mosaic-message-bus": "npm:0.47.0"
-    "@axinom/mosaic-messages": "npm:0.64.0"
-    "@axinom/mosaic-service-common": "npm:0.66.0"
+    "@axinom/mosaic-id-guard": "npm:0.46.0"
+    "@axinom/mosaic-message-bus": "npm:0.48.0"
+    "@axinom/mosaic-messages": "npm:0.65.0"
+    "@axinom/mosaic-service-common": "npm:0.67.0"
     "@azure/storage-blob": "npm:^12.14.0"
     "@types/jest": "npm:^29.4.1"
     "@types/rascal": "npm:^10.0.6"
@@ -22610,23 +22685,6 @@ __metadata:
     property-expr: "npm:^2.0.4"
     toposort: "npm:^2.0.2"
   checksum: 10c0/f0802798dc64b49f313886b983a9bea5f283e2094ee2aa1197587b84f50ac5b5d03af99857c313139e63dc02558fac3aaa343503bdbffa96f70006b39d1f59c9
-  languageName: node
-  linkType: hard
-
-"z-schema@npm:^5.0.1":
-  version: 5.0.1
-  resolution: "z-schema@npm:5.0.1"
-  dependencies:
-    commander: "npm:^2.7.1"
-    lodash.get: "npm:^4.4.2"
-    lodash.isequal: "npm:^4.5.0"
-    validator: "npm:^13.6.0"
-  dependenciesMeta:
-    commander:
-      optional: true
-  bin:
-    z-schema: bin/z-schema
-  checksum: 10c0/912a09bea2fcf6db6dbf974f9e186d79e0686555df294566adf2a57ad341edc857ec12076a61cecbc89f31348235ca341ebcb4c8cfda0a4b8bbb270d492488fe
   languageName: node
   linkType: hard
 
