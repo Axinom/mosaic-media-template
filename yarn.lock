@@ -592,35 +592,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@axinom/mosaic-service-common@npm:0.65.0, @axinom/mosaic-service-common@npm:^0.65.0":
-  version: 0.65.0
-  resolution: "@axinom/mosaic-service-common@npm:0.65.0"
-  dependencies:
-    "@types/verror": "npm:^1.10.6"
-    ajv: "npm:^7.0.3"
-    ajv-formats: "npm:^2.1.1"
-    axios: "npm:^1.8.3"
-    endent: "npm:^2.1.0"
-    env-var: "npm:^6.3.0"
-    express: "npm:^4.17.1"
-    express-basic-auth: "npm:^1.2.1"
-    fast-stable-stringify: "npm:^1.0.0"
-    inflection: "npm:^1.12.0"
-    jest: "npm:^29"
-    jest-expect-message: "npm:^1.1.3"
-    moment: "npm:^2.29.4"
-    p-retry: "npm:^4.6.2"
-    prom-client: "npm:^15.1.0"
-    serialize-error: "npm:^7.0.1"
-    serve-favicon: "npm:^2.5.0"
-    short-hash: "npm:^1.0.0"
-    uuid: "npm:^8.3.2"
-    uuid-encoder: "npm:^1.2.0"
-    verror: "npm:^1.10.1"
-  checksum: 10c0/28deacfe8911a4aeba5b79d048b4d0decf389b18f43addb88b043feb44f4dd288a9d545f55cff15045dae7e3d6b98020aca43c5154d6fa7ebf0578247b9722d0
-  languageName: node
-  linkType: hard
-
 "@axinom/mosaic-service-common@npm:0.66.0, @axinom/mosaic-service-common@npm:^0.66.0":
   version: 0.66.0
   resolution: "@axinom/mosaic-service-common@npm:0.66.0"
@@ -647,6 +618,35 @@ __metadata:
     uuid-encoder: "npm:^1.2.0"
     verror: "npm:^1.10.1"
   checksum: 10c0/3b1cd61eb777dd3e797e3ac975f94c381178824289962e3aae8f2e024b42af4d60165c0b6d7a0b9f19fb02c16f7faafdb91fa4196d15e4f2c749e302e661a243
+  languageName: node
+  linkType: hard
+
+"@axinom/mosaic-service-common@npm:^0.65.0":
+  version: 0.65.0
+  resolution: "@axinom/mosaic-service-common@npm:0.65.0"
+  dependencies:
+    "@types/verror": "npm:^1.10.6"
+    ajv: "npm:^7.0.3"
+    ajv-formats: "npm:^2.1.1"
+    axios: "npm:^1.8.3"
+    endent: "npm:^2.1.0"
+    env-var: "npm:^6.3.0"
+    express: "npm:^4.17.1"
+    express-basic-auth: "npm:^1.2.1"
+    fast-stable-stringify: "npm:^1.0.0"
+    inflection: "npm:^1.12.0"
+    jest: "npm:^29"
+    jest-expect-message: "npm:^1.1.3"
+    moment: "npm:^2.29.4"
+    p-retry: "npm:^4.6.2"
+    prom-client: "npm:^15.1.0"
+    serialize-error: "npm:^7.0.1"
+    serve-favicon: "npm:^2.5.0"
+    short-hash: "npm:^1.0.0"
+    uuid: "npm:^8.3.2"
+    uuid-encoder: "npm:^1.2.0"
+    verror: "npm:^1.10.1"
+  checksum: 10c0/28deacfe8911a4aeba5b79d048b4d0decf389b18f43addb88b043feb44f4dd288a9d545f55cff15045dae7e3d6b98020aca43c5154d6fa7ebf0578247b9722d0
   languageName: node
   linkType: hard
 
@@ -8968,7 +8968,7 @@ __metadata:
     "@axinom/mosaic-message-bus": "npm:0.47.0"
     "@axinom/mosaic-message-bus-abstractions": "npm:0.24.0"
     "@axinom/mosaic-messages": "npm:0.63.1"
-    "@axinom/mosaic-service-common": "npm:0.65.0"
+    "@axinom/mosaic-service-common": "npm:0.66.0"
     "@axinom/mosaic-transactional-inbox-outbox": "npm:0.25.0"
     "@azure/storage-blob": "npm:^12.27.0"
     "@graphile-contrib/pg-simplify-inflector": "npm:^6.1.0"
@@ -8982,10 +8982,10 @@ __metadata:
     env-cmd: "npm:^10.1.0"
     env-var: "npm:^6.3.0"
     express: "npm:^4.18.1"
-    graphile-build: "npm:4.13.0"
-    graphile-build-pg: "npm:4.13.0"
+    graphile-build: "npm:4.14.1"
+    graphile-build-pg: "npm:4.14.1"
     graphile-migrate: "npm:^1.4.0"
-    graphile-utils: "npm:4.13.0"
+    graphile-utils: "npm:4.14.1"
     graphql: "npm:^15.4.0"
     graphql-tag: "npm:^2.12.6"
     jest: "npm:^29.5.0"
@@ -8996,7 +8996,7 @@ __metadata:
     pg: "npm:^8.11.0"
     pg-formatter: "npm:^1.3.0"
     pg-transactional-outbox: "npm:0.5.6"
-    postgraphile: "npm:4.13.0"
+    postgraphile: "npm:4.14.1"
     postgraphile-plugin-connection-filter: "npm:^2.3.0"
     rascal: "npm:^14.4.5"
     reflect-metadata: "npm:^0.1.13"
@@ -10857,7 +10857,7 @@ __metadata:
     node-fetch: "npm:^2.6.7"
     pg: "npm:^8.8.0"
     pluralize: "npm:^7.0.0"
-    postgraphile: "npm:4.13.0"
+    postgraphile: "npm:4.14.1"
     postgraphile-plugin-atomic-mutations: "npm:^1.0.4"
     postgraphile-plugin-connection-filter: "npm:^2.3.0"
     readdirp: "npm:^3.6.0"
@@ -12600,24 +12600,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"graphile-build-pg@npm:4.13.0":
-  version: 4.13.0
-  resolution: "graphile-build-pg@npm:4.13.0"
-  dependencies:
-    "@graphile/lru": "npm:4.11.0"
-    chalk: "npm:^2.4.2"
-    debug: "npm:^4.1.1"
-    graphile-build: "npm:4.13.0"
-    jsonwebtoken: "npm:^9.0.0"
-    lodash: "npm:>=4 <5"
-    lru-cache: "npm:>=4 <5"
-    pg-sql2: "npm:4.13.0"
-  peerDependencies:
-    pg: ">=6.1.0 <9"
-  checksum: 10c0/c474f4ae66059a9de5d93bd4eff0230113f7adca671851483b1db79b1a05da6d4ca26bd6fe351667eafef283175486dceae22c1655c2d8c8f2f5b4f3bb262116
-  languageName: node
-  linkType: hard
-
 "graphile-build-pg@npm:4.14.1, graphile-build-pg@npm:^4.13.0":
   version: 4.14.1
   resolution: "graphile-build-pg@npm:4.14.1"
@@ -12633,25 +12615,6 @@ __metadata:
   peerDependencies:
     pg: ">=6.1.0 <9"
   checksum: 10c0/b0f272a045a0ec81a74bca1542f2614fcb60b5b769761ab45b0d3902ff7fb107f1566035f4643a71398dfaffe29d1b700621ed1e9d121287d6ff78fb6b2c1db4
-  languageName: node
-  linkType: hard
-
-"graphile-build@npm:4.13.0":
-  version: 4.13.0
-  resolution: "graphile-build@npm:4.13.0"
-  dependencies:
-    "@graphile/lru": "npm:4.11.0"
-    chalk: "npm:^2.4.2"
-    debug: "npm:^4.1.1"
-    graphql-parse-resolve-info: "npm:4.13.0"
-    iterall: "npm:^1.2.2"
-    lodash: "npm:>=4 <5"
-    lru-cache: "npm:^5.0.0"
-    pluralize: "npm:^7.0.0"
-    semver: "npm:^6.0.0"
-  peerDependencies:
-    graphql: ">=0.9 <0.14 || ^14.0.2 || ^15.4.0"
-  checksum: 10c0/1d3631122fd82bfa33a47977fef253396bce20125896e84ffb5a1c86627aaa507b9c9a74afc6911de5e6a2e44c925cdc39af40bbeb9cd9bb0549215d403fe877
   languageName: node
   linkType: hard
 
@@ -12696,21 +12659,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"graphile-utils@npm:4.13.0":
-  version: 4.13.0
-  resolution: "graphile-utils@npm:4.13.0"
-  dependencies:
-    debug: "npm:^4.1.1"
-    graphql: "npm:>=0.9 <0.14 || ^14.0.2 || ^15.4.0"
-    tslib: "npm:^2.0.1"
-  peerDependencies:
-    graphile-build: ^4.5.0
-    graphile-build-pg: ^4.5.0
-  checksum: 10c0/89826b7fb6cc11617ab3b439f7116efd4e2a03f9a4ba3bc3feb33311808a401a5d47ad9851ee452e1b9aff82d7e919429992cead09334c518dfeb77c0ed1b305
-  languageName: node
-  linkType: hard
-
-"graphile-utils@npm:^4.13.0, graphile-utils@npm:^4.14.1":
+"graphile-utils@npm:4.14.1, graphile-utils@npm:^4.13.0, graphile-utils@npm:^4.14.1":
   version: 4.14.1
   resolution: "graphile-utils@npm:4.14.1"
   dependencies:
@@ -12771,18 +12720,6 @@ __metadata:
     cosmiconfig-toml-loader:
       optional: true
   checksum: 10c0/f7cc385754a823c126c8c95ed4c73de3f34d2ca98c8fd2e4dbc55ef3a02a4adec8638eeebc019d80ffc9a21eaf5431455d9138fc159c35b9788d84f2b910d8e5
-  languageName: node
-  linkType: hard
-
-"graphql-parse-resolve-info@npm:4.13.0":
-  version: 4.13.0
-  resolution: "graphql-parse-resolve-info@npm:4.13.0"
-  dependencies:
-    debug: "npm:^4.1.1"
-    tslib: "npm:^2.0.1"
-  peerDependencies:
-    graphql: ">=0.9 <0.14 || ^14.0.2 || ^15.4.0 || ^16.3.0"
-  checksum: 10c0/7dacdf1491f15e6eeccd601065b450aa8b0e4cb2b64cd5f7e2a2441ca365605249f226d6a463d29a84ae9166ba8cb1ef2630b0231b34c9192f0a1f31623a0843
   languageName: node
   linkType: hard
 
@@ -15887,7 +15824,7 @@ __metadata:
     "@axinom/mosaic-message-bus": "npm:0.47.0"
     "@axinom/mosaic-message-bus-abstractions": "npm:0.24.0"
     "@axinom/mosaic-messages": "npm:0.63.1"
-    "@axinom/mosaic-service-common": "npm:0.65.0"
+    "@axinom/mosaic-service-common": "npm:0.66.0"
     "@axinom/mosaic-transactional-inbox-outbox": "npm:0.25.0"
     "@axinom/mosaic-video-messages": "npm:0.4.1"
     "@azure/storage-blob": "npm:^12.14.0"
@@ -15918,10 +15855,10 @@ __metadata:
     env-cmd: "npm:^10.1.0"
     env-var: "npm:^6.3.0"
     express: "npm:^4.18.1"
-    graphile-build: "npm:4.13.0"
-    graphile-build-pg: "npm:4.13.0"
+    graphile-build: "npm:4.14.1"
+    graphile-build-pg: "npm:4.14.1"
     graphile-migrate: "npm:^1.4.0"
-    graphile-utils: "npm:4.13.0"
+    graphile-utils: "npm:4.14.1"
     graphql: "npm:^15.4.0"
     graphql-request: "npm:^3.7.0"
     graphql-tag: "npm:^2.12.6"
@@ -15938,7 +15875,7 @@ __metadata:
     pg: "npm:^8.11.0"
     pg-transactional-outbox: "npm:^0.5.7"
     pluralize: "npm:^7.0.0"
-    postgraphile: "npm:4.13.0"
+    postgraphile: "npm:4.14.1"
     postgraphile-plugin-atomic-mutations: "npm:^1.0.4"
     postgraphile-plugin-connection-filter: "npm:^2.3.0"
     rascal: "npm:^14.4.5"
@@ -17580,20 +17517,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"pg-sql2@npm:4.13.0":
-  version: 4.13.0
-  resolution: "pg-sql2@npm:4.13.0"
-  dependencies:
-    "@graphile/lru": "npm:4.11.0"
-    "@types/pg": "npm:>=6 <9"
-    debug: "npm:>=3 <5"
-    tslib: "npm:^2.0.1"
-  peerDependencies:
-    pg: ">=6.1.0 <9"
-  checksum: 10c0/3ad6f49728c4fcfedad3c6c6a339a648b520328e6aadadeec5ded4ac0be54c3f62d2bc47c3e2fcd1490e0acb57296014708093be6773748380ebb0c4edc9dda0
-  languageName: node
-  linkType: hard
-
 "pg-sql2@npm:4.14.1":
   version: 4.14.1
   resolution: "pg-sql2@npm:4.14.1"
@@ -18476,20 +18399,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"postgraphile-core@npm:4.13.0":
-  version: 4.13.0
-  resolution: "postgraphile-core@npm:4.13.0"
-  dependencies:
-    graphile-build: "npm:4.13.0"
-    graphile-build-pg: "npm:4.13.0"
-    tslib: "npm:^2.0.1"
-  peerDependencies:
-    graphql: ">=0.9 <0.14 || ^14.0.2 || ^15.4.0"
-    pg: ">=6.1.0 <9"
-  checksum: 10c0/4974e3928c7b4cf1ea728a11af6d580955c94c4b9438b57e23ac1f1aa6c3ebdee06c8819360af756e190cf0366f10c132d6aa01c50ef84d97cb6698e7bc1855b
-  languageName: node
-  linkType: hard
-
 "postgraphile-core@npm:4.14.1":
   version: 4.14.1
   resolution: "postgraphile-core@npm:4.14.1"
@@ -18520,44 +18429,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"postgraphile@npm:4.13.0":
-  version: 4.13.0
-  resolution: "postgraphile@npm:4.13.0"
-  dependencies:
-    "@graphile/lru": "npm:4.11.0"
-    "@types/json5": "npm:^0.0.30"
-    "@types/jsonwebtoken": "npm:^9.0.1"
-    "@types/pg": "npm:>=6 <9"
-    "@types/ws": "npm:^7.4.0"
-    body-parser: "npm:^1.15.2"
-    chalk: "npm:^2.4.2"
-    commander: "npm:^2.19.0"
-    debug: "npm:^4.1.1"
-    finalhandler: "npm:^1.0.6"
-    graphile-build: "npm:4.13.0"
-    graphile-build-pg: "npm:4.13.0"
-    graphile-utils: "npm:^4.13.0"
-    graphql: "npm:^0.6.0 || ^0.7.0 || ^0.8.0-b || ^0.9.0 || ^0.10.0 || ^0.11.0 || ^0.12.0 || ^0.13.0 || ^14.0.2 || ^15.0.0"
-    graphql-ws: "npm:^5.6.2"
-    http-errors: "npm:^1.5.1"
-    iterall: "npm:^1.0.2"
-    json5: "npm:^2.1.1"
-    jsonwebtoken: "npm:^9.0.0"
-    parseurl: "npm:^1.3.2"
-    pg: "npm:>=6.1.0 <9"
-    pg-connection-string: "npm:^2.0.0"
-    pg-sql2: "npm:4.13.0"
-    postgraphile-core: "npm:4.13.0"
-    subscriptions-transport-ws: "npm:^0.9.18"
-    tslib: "npm:^2.1.0"
-    ws: "npm:^7.4.2"
-  bin:
-    postgraphile: cli.js
-  checksum: 10c0/aae2bdbf632c3072d7949ec955e411b140354e28af12e064c0d58fcfa5415531528b387241d6a70cb70562612b74c6f211c7430e570ff9e9fb0707babf449eb0
-  languageName: node
-  linkType: hard
-
-"postgraphile@npm:^4.13.0":
+"postgraphile@npm:4.14.1, postgraphile@npm:^4.13.0":
   version: 4.14.1
   resolution: "postgraphile@npm:4.14.1"
   dependencies:
@@ -20044,7 +19916,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"semver@npm:^6.0.0, semver@npm:^6.3.0, semver@npm:^6.3.1":
+"semver@npm:^6.3.0, semver@npm:^6.3.1":
   version: 6.3.1
   resolution: "semver@npm:6.3.1"
   bin:
