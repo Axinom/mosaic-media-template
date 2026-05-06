@@ -53,9 +53,11 @@ async function main(): Promise<void> {
           'CONFIGURATIONS_VIEW',
           'SERVICE_DEFINITIONS_EDIT',
           'CONTAINER_REGISTRY_CONNECTIONS_VIEW',
+          'CONTAINER_REGISTRY_CONNECTIONS_EDIT',
           'SERVICE_PILET_ARTIFACTS_EDIT',
           'SERVICE_DEPLOYMENT_CONFIG_EDIT',
           'SERVICE_DEPLOYMENTS_EDIT',
+          'SERVICE_DEPLOYMENTS_VIEW',
         ],
       },
       {
