@@ -2,7 +2,7 @@ trigger: none
 pr: none
 
 pool:
-  name: Mosaic Hetzner Cloud Service Builders
+  vmImage: ubuntu-latest
 
 resources:
   pipelines:

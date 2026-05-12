@@ -11,7 +11,7 @@ schedules:
     always: true
 
 pool:
-  name: Mosaic Hetzner Cloud Service Builders
+  vmImage: ubuntu-latest
 
 variables:
   YARN_CACHE_FOLDER: $(Pipeline.Workspace)/.yarn
