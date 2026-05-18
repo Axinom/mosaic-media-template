@@ -75,7 +75,7 @@ export const buildPostgraphileOptions = (
         req,
         authConfig,
       );
-      let clientIpAddress = req.ip;
+      let clientIpAddress = req.ip ?? '';
       // This is done for local and test environment testing of being located in different countries
       const mosaicTestingIp = req.headers[mosaicTestingIpHeader] as string;
       if (
@@ -84,7 +84,7 @@ export const buildPostgraphileOptions = (
       ) {
         clientIpAddress = mosaicTestingIp;
         res.setHeader('mosaic-client-ip-address', clientIpAddress);
-        res.setHeader('mosaic-request-ip-address', req.ip);
+        res.setHeader('mosaic-request-ip-address', req.ip ?? '');
         logger.debug({
           message:
             'Debug info on IP-related request information. This is helpful to make sure that correct ip address is being populated by Kubernetes or other proxy.',
