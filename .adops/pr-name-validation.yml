@@ -13,6 +13,7 @@ variables:
 
 jobs:
   - job: VerifyPrName
+    condition: ne(variables['System.PullRequest.IsFork'], 'True')
     pool:
       vmImage: 'ubuntu-latest'
     steps:
