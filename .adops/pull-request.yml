@@ -19,6 +19,7 @@ variables:
 
 stages:
   - stage: cache_init
+    condition: ne(variables['System.PullRequest.IsFork'], 'True')
     jobs:
       - job: cache_init
         displayName: Init Cache
@@ -38,6 +39,7 @@ stages:
 
   - stage: pr_check
     dependsOn: cache_init
+    condition: and(succeeded(), ne(variables['System.PullRequest.IsFork'], 'True'))
     jobs:
       - deployment: pr_check
         displayName: PR Check
