@@ -44,24 +44,6 @@ The goal is to minimize resolutions and remove them when no longer needed.
 
 ## Waiting for Upstream Fix
 
-### axios@1.14.0 (Dependabot #257)
-
-- **Vulnerability**: NO_PROXY Hostname Normalization Bypass leads to SSRF (critical severity)
-- **Current version**: 1.14.0
-- **Patched in**: 1.15.0
-- **Blocked by**: `npmMinimalAgeGate: '7d'` in `.yarnrc.yml` — axios 1.15.0 was published on 2026-04-08, less than 7 days ago. Yarn refuses to resolve to it.
-- **Date**: 2026-04-14
-- **Check again when**: After 2026-04-15 (delete the `axios` lockfile entry and run `yarn install --no-immutable`)
-
-### ajv@7.x (Dependabot #209, #208)
-
-- **Vulnerability**: ReDoS when using `$data` option (medium severity)
-- **Current version**: 7.2.4
-- **Patched in**: 8.18.0 (major version jump)
-- **Blocked by**: `@axinom/mosaic-service-common@0.66.0` depends on `ajv@^7.0.3`; `entitlement-service` and `media-service` directly depend on `ajv@^7.2.4`
-- **Date**: 2026-02-23
-- **Check again when**: `@axinom/mosaic-service-common` updates to `ajv@^8`
-
 ### ajv@5.x / 6.x (Dependabot #86, npm audit)
 
 - **Vulnerability**: Prototype Pollution (medium severity), ReDoS (medium severity)
@@ -80,15 +62,6 @@ The goal is to minimize resolutions and remove them when no longer needed.
 - **Date**: 2026-04-14
 - **Check again when**: `@graphql-codegen/plugin-helpers` or `@stoplight/spectral-core` update their lodash range to `^4.18.0`
 
-### minimatch@3.1.2 (Dependabot #219, npm audit)
-
-- **Vulnerability**: ReDoS via multiple non-adjacent GLOBSTAR segments (high severity)
-- **Current version**: 3.1.2
-- **Patched in**: 3.1.3 / 3.1.4
-- **Blocked by**: `@stoplight/spectral-core@1.20.0` exact-pins `minimatch@3.1.2`. Latest `spectral-core@1.22.0` uses `^3.1.4` but was published 2026-04-13, blocked by the 7-day age gate.
-- **Date**: 2026-03-03
-- **Check again when**: After 2026-04-20 (delete the `@stoplight/spectral-core` lockfile entry and run `yarn install --no-immutable`)
-
 ### serialize-javascript (Dependabot #223, #247)
 
 - **Vulnerability**: RCE via RegExp.flags/Date.prototype.toISOString (high), CPU Exhaustion DoS (medium)
@@ -97,15 +70,6 @@ The goal is to minimize resolutions and remove them when no longer needed.
 - **Blocked by**: `css-minimizer-webpack-plugin@5.0.1` requires `^6.0.1`. Only 5.0.0 and 5.0.1 exist for 5.x. Latest css-minimizer-webpack-plugin (7.x) uses `^7.0.3`, but `piral-cli-webpack5@1.5.3` requires `^5.0.1`.
 - **Date**: 2026-03-03
 - **Check again when**: `piral-cli-webpack5` updates its css-minimizer-webpack-plugin range
-
-### rollup@2.79.2 (Dependabot #214)
-
-- **Vulnerability**: Arbitrary File Write via Path Traversal (high severity)
-- **Current version**: 2.79.2
-- **Patched in**: 2.80.0
-- **Blocked by**: `@stoplight/spectral-ruleset-bundler@1.5.2` pins `rollup@~2.79.2`. Latest `spectral-ruleset-bundler@1.7.0` uses `~2.80.0` but was published 2026-04-13, blocked by the 7-day age gate.
-- **Date**: 2026-03-03
-- **Check again when**: After 2026-04-20 (delete the `@stoplight/spectral-ruleset-bundler` lockfile entry and run `yarn install --no-immutable`)
 
 ### immutable@~3.7.6 (Dependabot #229)
 

@@ -59,7 +59,7 @@
     "@faker-js/faker": "^7.6.0",
     "@graphile-contrib/pg-simplify-inflector": "^6.1.0",
     "ajv": "^8.18.0",
-    "ajv-formats": "^2.1.1",
+    "ajv-formats": "^3.0.1",
     "altair-express-middleware": "^7.0.1",
     "axios": "^1.14.0",
     "dotenv": "^8.6.0",
