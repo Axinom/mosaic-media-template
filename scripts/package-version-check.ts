@@ -24,11 +24,18 @@ Please run "yarn pilet upgrade" in "%s" to update.`);
 async function checkPackageVersion(): Promise<void> {
   let latestVersion = '';
   try {
-    latestVersion = execSync(`yarn info ${packageName} version`)
+    latestVersion = execSync(`npm view ${packageName} version`, {
+      stdio: ['ignore', 'pipe', 'ignore'],
+    })
       .toString()
       .trim();
-  } catch (error) {
-    console.error(error);
+  } catch {
+    // Registry lookup failed (offline, private registry, package not found, etc.).
+    // This is a non-critical warning script — skip silently rather than crash.
+    return;
+  }
+  if (!semver.valid(latestVersion)) {
+    return;
   }
 
   const packageJsonPaths = await glob(path.join(baseFolder, packageJsonGlob));
@@ -41,7 +48,11 @@ async function checkPackageVersion(): Promise<void> {
     const localVersion =
       dependencies[packageName] || devDependencies[packageName];
 
-    if (localVersion && semver.gt(latestVersion, localVersion)) {
+    if (
+      localVersion &&
+      semver.valid(localVersion) &&
+      semver.gt(latestVersion, localVersion)
+    ) {
       console.log(
         message,
         latestVersion,

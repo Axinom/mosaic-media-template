@@ -52,7 +52,9 @@ export function buildPostgraphileOptions(
         context: 'postgraphile-options',
       });
 
-      const geoData = geoIpReaderContainer.reader.get(req.ip);
+      const geoData = req.ip
+        ? geoIpReaderContainer.reader.get(req.ip)
+        : undefined;
       logger.debug({
         message: `Request IP: ${req.ip}`,
         details: {
