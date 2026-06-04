@@ -361,15 +361,15 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@axinom/mosaic-cli@npm:0.54.0":
-  version: 0.54.0
-  resolution: "@axinom/mosaic-cli@npm:0.54.0"
+"@axinom/mosaic-cli@npm:0.55.0":
+  version: 0.55.0
+  resolution: "@axinom/mosaic-cli@npm:0.55.0"
   dependencies:
     "@asyncapi/diff": "npm:^0.5.0"
     "@asyncapi/modelina": "npm:^5.10.1"
     "@asyncapi/parser": "npm:^3.6.0"
-    "@axinom/mosaic-id-link-be": "npm:^0.37.0"
-    "@axinom/mosaic-service-common": "npm:^0.67.0"
+    "@axinom/mosaic-id-link-be": "npm:^0.38.0"
+    "@axinom/mosaic-service-common": "npm:^0.68.0"
     "@graphql-inspector/core": "npm:^3.1.2"
     "@inquirer/confirm": "npm:^3.1.0"
     "@inquirer/core": "npm:^9.1.0"
@@ -402,20 +402,20 @@ __metadata:
     tar: "npm:^7.5.9"
   bin:
     mosaic: ./bin/mosaic.js
-  checksum: 10c0/86a62c3dfecfd2733b1e3a86c9f18f3de32fbd05e782d95963f935308460659ff4d5f9cae7261cccc3d1b52764f4cd5edd74f3436b0730c46dc75a1ac4526078
+  checksum: 10c0/7e610729ef5056ea5ee6d27e2e557ef5d7b7220c074322db12804ec57f108ee925dfeed89110a7ea74d657b2472d72eff78beba79603731a88440f2c666a2c4a
   languageName: node
   linkType: hard
 
-"@axinom/mosaic-core@npm:^0.4.31":
-  version: 0.4.31
-  resolution: "@axinom/mosaic-core@npm:0.4.31"
-  checksum: 10c0/0b345a2e1acc3402ec4e86d2d184cbcc5e8051b732a7b3aeb68d49488eaa21cd5a61aa7c78363d354194f55381052a7d2bf67cb6e234aad4c08ccd96f63145dd
+"@axinom/mosaic-core@npm:^0.4.32":
+  version: 0.4.32
+  resolution: "@axinom/mosaic-core@npm:0.4.32"
+  checksum: 10c0/59cd9b2ba22f20122ddcdbe1e0e208bded528fc32bf977738030d18dbe63cbc8561451ee944acd0177646558b19e8be65d438211bb8dbaeef9adda335882bc2c
   languageName: node
   linkType: hard
 
-"@axinom/mosaic-db-common@npm:0.55.0, @axinom/mosaic-db-common@npm:^0.55.0":
-  version: 0.55.0
-  resolution: "@axinom/mosaic-db-common@npm:0.55.0"
+"@axinom/mosaic-db-common@npm:0.56.0, @axinom/mosaic-db-common@npm:^0.56.0":
+  version: 0.56.0
+  resolution: "@axinom/mosaic-db-common@npm:0.56.0"
   dependencies:
     express: "npm:^4.17.1"
     graphile-migrate: "npm:^1.4.0"
@@ -425,32 +425,32 @@ __metadata:
     readdirp: "npm:^4.0.0"
     yargs: "npm:^16.2.0"
     zapatos: "npm:3.6.0"
-  checksum: 10c0/60e92ad4bfb7a29a7f24897dd43af7e50553fe168681779fca5d7048f4fece0a50c50e3fd85942243f0b4741d7edc0d1b8814fc8c5ab916235155edaebecbae0
+  checksum: 10c0/47c7053bd32453ba8be023cca35f6dae4229af69424b50cc575efa7d95fff5657fddf3e8d12ba0e84174c6a8171f6f9a650474ebab35ae687ac76d09d8459de9
   languageName: node
   linkType: hard
 
-"@axinom/mosaic-graphql-codegen-plugins@npm:0.7.0":
-  version: 0.7.0
-  resolution: "@axinom/mosaic-graphql-codegen-plugins@npm:0.7.0"
+"@axinom/mosaic-graphql-codegen-plugins@npm:0.8.0":
+  version: 0.8.0
+  resolution: "@axinom/mosaic-graphql-codegen-plugins@npm:0.8.0"
   dependencies:
     change-case-all: "npm:^2.1.0"
     handlebars: "npm:^4.7.7"
   peerDependencies:
     graphql: ^0.12.0 || ^0.13.0 || ^14.0.0 || ^15.0.0
-  checksum: 10c0/1cfb069b43ef90a481704a24df105798c41c500cd86663dad4d2719cb8835d59ae1591f7d6af6988d48ac263346ac4a59b4cd7b5b3fdcea1dbfcc7e9c33c876c
+  checksum: 10c0/696837c04ae67cbd149d95834e599db87da96a8b5a0bd0a199bb6a549b77921d3b111300a6a47672a6a4694dace57f36c872c483651b6d48f6018d45450dff58
   languageName: node
   linkType: hard
 
-"@axinom/mosaic-graphql-common@npm:0.31.0":
-  version: 0.31.0
-  resolution: "@axinom/mosaic-graphql-common@npm:0.31.0"
+"@axinom/mosaic-graphql-common@npm:0.32.0":
+  version: 0.32.0
+  resolution: "@axinom/mosaic-graphql-common@npm:0.32.0"
   dependencies:
-    "@axinom/mosaic-db-common": "npm:^0.55.0"
-    "@axinom/mosaic-message-bus": "npm:^0.48.0"
-    "@axinom/mosaic-message-bus-abstractions": "npm:^0.24.1"
-    "@axinom/mosaic-messages": "npm:^0.65.0"
-    "@axinom/mosaic-service-common": "npm:^0.67.0"
-    "@axinom/mosaic-transactional-inbox-outbox": "npm:^0.27.0"
+    "@axinom/mosaic-db-common": "npm:^0.56.0"
+    "@axinom/mosaic-message-bus": "npm:^0.49.0"
+    "@axinom/mosaic-message-bus-abstractions": "npm:^0.24.2"
+    "@axinom/mosaic-messages": "npm:^0.66.0"
+    "@axinom/mosaic-service-common": "npm:^0.68.0"
+    "@axinom/mosaic-transactional-inbox-outbox": "npm:^0.28.0"
     "@graphile/pg-pubsub": "npm:^4.12.3"
     endent: "npm:^2.1.0"
     express: "npm:^4.17.1"
@@ -462,18 +462,18 @@ __metadata:
     pg: "npm:^8.11.3"
     pg-transactional-outbox: "npm:^0.6.4"
     postgraphile: "npm:^4.13.0"
-  checksum: 10c0/d87ffdd29c17ce047ae5cdfac3b9e392b4cc4705af76480e1e2b7cd142e106c8d90ab5b898b5f7aa6b0e410a6f20c8353b4c36531d2efe59fe0b791c9a97f3c1
+  checksum: 10c0/d963cde375fcab40d0b98ae7752191cf0a997b1f03182fc5bd9c62a334417bdb934d6268c79f6a7f37259509a01d3ab8c0a171887e2750d11889bdf16627a216
   languageName: node
   linkType: hard
 
-"@axinom/mosaic-id-guard@npm:0.46.0":
-  version: 0.46.0
-  resolution: "@axinom/mosaic-id-guard@npm:0.46.0"
+"@axinom/mosaic-id-guard@npm:0.47.0":
+  version: 0.47.0
+  resolution: "@axinom/mosaic-id-guard@npm:0.47.0"
   dependencies:
-    "@axinom/mosaic-id-utils": "npm:^0.25.0"
-    "@axinom/mosaic-message-bus": "npm:^0.48.0"
-    "@axinom/mosaic-service-common": "npm:^0.67.0"
-    "@axinom/mosaic-transactional-inbox-outbox": "npm:^0.27.0"
+    "@axinom/mosaic-id-utils": "npm:^0.26.0"
+    "@axinom/mosaic-message-bus": "npm:^0.49.0"
+    "@axinom/mosaic-service-common": "npm:^0.68.0"
+    "@axinom/mosaic-transactional-inbox-outbox": "npm:^0.28.0"
     amqplib: "npm:^0.10.3"
     express: "npm:^4.17.1"
     express-bearer-token: "npm:^3.0.0"
@@ -490,60 +490,60 @@ __metadata:
     postgraphile: "npm:^4.13.0"
     rascal: "npm:^14.0.1"
     subscriptions-transport-ws: "npm:^0.9.19"
-  checksum: 10c0/46a1ff50065574ea72e284f599d6972ba0700d225bd35b5c78c8c7784347f08dc0d37280cb2a3e29c46b13f198bb47074d95f7ba4933a31dc4127707abccaf52
+  checksum: 10c0/42fa6240072ce21d4d0be12773169dd3520af3084bb2493a3f32bbee5826995fd8879b02624ac6d78e40e834267e90d66d0f92d0482945b203d4956e1363785a
   languageName: node
   linkType: hard
 
-"@axinom/mosaic-id-link-be@npm:0.37.0, @axinom/mosaic-id-link-be@npm:^0.37.0":
-  version: 0.37.0
-  resolution: "@axinom/mosaic-id-link-be@npm:0.37.0"
+"@axinom/mosaic-id-link-be@npm:0.38.0, @axinom/mosaic-id-link-be@npm:^0.38.0":
+  version: 0.38.0
+  resolution: "@axinom/mosaic-id-link-be@npm:0.38.0"
   dependencies:
     "@apollo/client": "npm:^3.7.9"
-    "@axinom/mosaic-core": "npm:^0.4.31"
-    "@axinom/mosaic-id-utils": "npm:^0.25.0"
-    "@axinom/mosaic-service-common": "npm:^0.67.0"
+    "@axinom/mosaic-core": "npm:^0.4.32"
+    "@axinom/mosaic-id-utils": "npm:^0.26.0"
+    "@axinom/mosaic-service-common": "npm:^0.68.0"
     axios: "npm:^1.8.3"
     cross-fetch: "npm:^3.0.4"
     graphql: "npm:^15.4.0"
     graphql-tag: "npm:^2.11.0"
-  checksum: 10c0/279614d984ac3e2e039cade4d04da9adeaab8c29579b051dcfb995e04e2de29f48b14d1bfabbfd23a5b260af812806bfdcaef27403e042e8d620a129a2735bb7
+  checksum: 10c0/d0b9c981182f3b8a64ed44e7bc1ed0fe21d58615205efe9d364cad75410ac314d9266e527a4ad9c636937ba8b2cf4e7fe6883d86b8a864f49476e79ee35ba62a
   languageName: node
   linkType: hard
 
-"@axinom/mosaic-id-utils@npm:0.25.0, @axinom/mosaic-id-utils@npm:^0.25.0":
-  version: 0.25.0
-  resolution: "@axinom/mosaic-id-utils@npm:0.25.0"
+"@axinom/mosaic-id-utils@npm:0.26.0, @axinom/mosaic-id-utils@npm:^0.26.0":
+  version: 0.26.0
+  resolution: "@axinom/mosaic-id-utils@npm:0.26.0"
   dependencies:
-    "@axinom/mosaic-core": "npm:^0.4.31"
-  checksum: 10c0/b5b51e4face51f8be0757ab006fd11fb8a38b9c7fec2939b824ce7b80465a1f266acfdd26a71641d984075500b2d3a28305498d3cf81607ab48748b538e7063e
+    "@axinom/mosaic-core": "npm:^0.4.32"
+  checksum: 10c0/9ba4ee4e1934597d0b4147d8ffb460326a86190657c77ff88bdd2287c5d6eb5df3a5268ff44d14007dec4ddebc178cccbae301224b716bf7b3534607447e8a42
   languageName: node
   linkType: hard
 
-"@axinom/mosaic-managed-workflow-integration@npm:0.29.0":
-  version: 0.29.0
-  resolution: "@axinom/mosaic-managed-workflow-integration@npm:0.29.0"
+"@axinom/mosaic-managed-workflow-integration@npm:0.30.0":
+  version: 0.30.0
+  resolution: "@axinom/mosaic-managed-workflow-integration@npm:0.30.0"
   peerDependencies:
     "@axinom/mosaic-portal": "*"
     "@axinom/mosaic-ui": "*"
     react: ">=17.0.1"
     react-dom: ">=17.0.1"
-  checksum: 10c0/2054bcb311c62f9a093e5b2b8e63619ad3dd0202b0c07cd46c920d7f7d9c877f97a65dcfb136dea6be10c2811c82ccc1579776a532738b958f44c14cd66a3bb0
+  checksum: 10c0/0ee1d1da8da425aafcac9548522c905f31320b0909055424a5aa195fa99891df7462cf24d064f37ecf97d9289a6c0bc24505727ed04a8bfe92d4d47162a3c37d
   languageName: node
   linkType: hard
 
-"@axinom/mosaic-message-bus-abstractions@npm:0.24.1, @axinom/mosaic-message-bus-abstractions@npm:^0.24.1":
-  version: 0.24.1
-  resolution: "@axinom/mosaic-message-bus-abstractions@npm:0.24.1"
-  checksum: 10c0/bd379722328f68c9a546c9ae122398e7a21d3525bc05bb0e7fcd56dbf3937be0bd5342b731f3abb96c071a15c0b9a602647de1132ea6ab4ef019f127b58b7e19
+"@axinom/mosaic-message-bus-abstractions@npm:0.24.2, @axinom/mosaic-message-bus-abstractions@npm:^0.24.2":
+  version: 0.24.2
+  resolution: "@axinom/mosaic-message-bus-abstractions@npm:0.24.2"
+  checksum: 10c0/dfd6c6913dccedc0ca3ea0c8ce98c98c0e9892df066709dfb7c05789cc35c346bc7f8eb93eac0c18124521ee64c9289e8685c982e174f57c1d44c9c0193c43fb
   languageName: node
   linkType: hard
 
-"@axinom/mosaic-message-bus@npm:0.48.0, @axinom/mosaic-message-bus@npm:^0.48.0":
-  version: 0.48.0
-  resolution: "@axinom/mosaic-message-bus@npm:0.48.0"
+"@axinom/mosaic-message-bus@npm:0.49.0, @axinom/mosaic-message-bus@npm:^0.49.0":
+  version: 0.49.0
+  resolution: "@axinom/mosaic-message-bus@npm:0.49.0"
   dependencies:
-    "@axinom/mosaic-message-bus-abstractions": "npm:^0.24.1"
-    "@axinom/mosaic-service-common": "npm:^0.67.0"
+    "@axinom/mosaic-message-bus-abstractions": "npm:^0.24.2"
+    "@axinom/mosaic-service-common": "npm:^0.68.0"
     amqplib: "npm:^0.10.3"
     dotenv: "npm:^8.2.0"
     graphql: "npm:^15.4.0"
@@ -554,27 +554,27 @@ __metadata:
     ramda: "npm:^0.32.0"
     rascal: "npm:^14.0.1"
     uuid: "npm:^8.3.2"
-  checksum: 10c0/2566558a447e6420b366a23cabd683cf894ee529337b66d144c4ca18aecdb80c0add893a252a2e4c11f6a1a27e7e07f1fd917a1346af29c7c391863695c7d3fe
+  checksum: 10c0/f2b6ff8333c92cac911f665d97bd721155612fdf44dbb0d168a803a8d9221d23dc1175da9de84c9c67bfc02f45512c8596bac2f4e11d5db3b8a0e80ec499e375
   languageName: node
   linkType: hard
 
-"@axinom/mosaic-messages@npm:0.65.0, @axinom/mosaic-messages@npm:^0.65.0":
-  version: 0.65.0
-  resolution: "@axinom/mosaic-messages@npm:0.65.0"
-  checksum: 10c0/63da425533e10a984bee9a6a7bbfee2cdc1b82d49251fa9d933f68a0aab6b4729f2ff045079a2aecdba65a519eb265046b517d680b4455ad4fd68efd0bb6650b
+"@axinom/mosaic-messages@npm:0.66.0, @axinom/mosaic-messages@npm:^0.66.0":
+  version: 0.66.0
+  resolution: "@axinom/mosaic-messages@npm:0.66.0"
+  checksum: 10c0/4f7021492c987acaca50ca2d8477bd2b0d79059bb1e9fadd4f5c7b53d4002ca0564633dfb1b2a2eb79e6e973c90d1c5e8e4215702bab591780bb977e027ae6d5
   languageName: node
   linkType: hard
 
-"@axinom/mosaic-portal@npm:0.45.2":
-  version: 0.45.2
-  resolution: "@axinom/mosaic-portal@npm:0.45.2"
-  checksum: 10c0/c1273ebd74e086a88873eff7756cb68960b826a010da323ce23f8dc6b6a25a3409780b6aebb5e2b681761432de99cd27e1c8bc7b78b984fb4aa73c8d176472a3
+"@axinom/mosaic-portal@npm:0.46.0":
+  version: 0.46.0
+  resolution: "@axinom/mosaic-portal@npm:0.46.0"
+  checksum: 10c0/98d0558bad30c2ae1752fb05bc8d0eb457033745155b834564708924acc92d4ec4625d9c4c62760f8ccff1672520b82aca7135a2ac6f20ff2a7f2ffaca233388
   languageName: node
   linkType: hard
 
-"@axinom/mosaic-service-common@npm:0.67.0, @axinom/mosaic-service-common@npm:^0.67.0":
-  version: 0.67.0
-  resolution: "@axinom/mosaic-service-common@npm:0.67.0"
+"@axinom/mosaic-service-common@npm:0.68.0, @axinom/mosaic-service-common@npm:^0.68.0":
+  version: 0.68.0
+  resolution: "@axinom/mosaic-service-common@npm:0.68.0"
   dependencies:
     "@types/verror": "npm:^1.10.6"
     ajv: "npm:^8.18.0"
@@ -595,30 +595,30 @@ __metadata:
     uuid: "npm:^8.3.2"
     uuid-encoder: "npm:^1.2.0"
     verror: "npm:^1.10.1"
-  checksum: 10c0/1fb4f0e13ca52b4a0e40d6316928584bffe9a7d6454f9f274c7bdf2250c409b79fc0d9dc23d9cf5b4194e87902877c14de631675d7f25fabf112d184309bc2d1
+  checksum: 10c0/d3dcc05e1c143e60da46d9fb66f91932e44513cd7057b10a86e3f463ebd8bbabcc74f0034098b742d56bb0872a95871681de2376d954b6994c00a1a45d434274
   languageName: node
   linkType: hard
 
-"@axinom/mosaic-transactional-inbox-outbox@npm:0.27.0, @axinom/mosaic-transactional-inbox-outbox@npm:^0.27.0":
-  version: 0.27.0
-  resolution: "@axinom/mosaic-transactional-inbox-outbox@npm:0.27.0"
+"@axinom/mosaic-transactional-inbox-outbox@npm:0.28.0, @axinom/mosaic-transactional-inbox-outbox@npm:^0.28.0":
+  version: 0.28.0
+  resolution: "@axinom/mosaic-transactional-inbox-outbox@npm:0.28.0"
   dependencies:
-    "@axinom/mosaic-message-bus": "npm:^0.48.0"
-    "@axinom/mosaic-message-bus-abstractions": "npm:^0.24.1"
+    "@axinom/mosaic-message-bus": "npm:^0.49.0"
+    "@axinom/mosaic-message-bus-abstractions": "npm:^0.24.2"
     async-mutex: "npm:^0.4.0"
     env-var: "npm:^6.3.0"
     pg: "npm:^8.11.3"
     pg-transactional-outbox: "npm:^0.6.4"
     prom-client: "npm:^15.1.0"
-  checksum: 10c0/045073553534e93988d5a7c937588267fa1e6d06ad458a4bd2500e864e80c47bf613f61ad1b2aad3ba2e4291afb3f6b3f1778eb4af492111ca3b7057e53391db
+  checksum: 10c0/27b4c4410cabc479ad12a716c47fca6e45ef58030115caad28710cbd2e76c893630ac0842cb278bf34e22b36016fd74f8a8185646791ac50a3df6a400e200bf1
   languageName: node
   linkType: hard
 
-"@axinom/mosaic-ui@npm:0.69.0":
-  version: 0.69.0
-  resolution: "@axinom/mosaic-ui@npm:0.69.0"
+"@axinom/mosaic-ui@npm:0.70.0":
+  version: 0.70.0
+  resolution: "@axinom/mosaic-ui@npm:0.70.0"
   dependencies:
-    "@axinom/mosaic-core": "npm:^0.4.31"
+    "@axinom/mosaic-core": "npm:^0.4.32"
     "@faker-js/faker": "npm:^7.4.0"
     "@geoffcox/react-splitter": "npm:^2.1.2"
     "@mui/base": "npm:5.0.0-beta.40"
@@ -641,26 +641,26 @@ __metadata:
     react: ">=17.0.1"
     react-dom: ">=17.0.1"
     react-router-dom: ">=5.2.0"
-  checksum: 10c0/264319fb061d62d2dda0fa66f5555c64bd51cd0e304fa1d346090cf9e0fd55aaed98cceadf3130bee7740c7d6e45fccf302da1af2008fb2a13f4c0ac8c5e5654
+  checksum: 10c0/f722f69850d1b6666105571bd7a30d53a7f3bec4e1c8720ef3cc1d2e85e5b5d0373ecf15e1be7a693b52697d46f943d92e50724e4b35c0f04b38f418a83b6fdb
   languageName: node
   linkType: hard
 
-"@axinom/mosaic-video-messages@npm:0.6.0":
-  version: 0.6.0
-  resolution: "@axinom/mosaic-video-messages@npm:0.6.0"
-  checksum: 10c0/8fa1d5eb2a00b62a1ebd7044530062113d418d5c2ad3587937d177962199de5eb32e2f9ba8e5d5bba2e817ff6dfdb79e4272b803bbeeb6c45285747c9f731f1a
+"@axinom/mosaic-video-messages@npm:0.7.0":
+  version: 0.7.0
+  resolution: "@axinom/mosaic-video-messages@npm:0.7.0"
+  checksum: 10c0/147d86c43378f8a85d96784405a64aa6da12a24b66b0066eea17f90af9418064cdc2be868c79506536e3a77d4f3c66131df89757431579862377770160c3f030
   languageName: node
   linkType: hard
 
-"@axinom/mosaic-video-workflow-integration@npm:0.4.0":
-  version: 0.4.0
-  resolution: "@axinom/mosaic-video-workflow-integration@npm:0.4.0"
+"@axinom/mosaic-video-workflow-integration@npm:0.5.0":
+  version: 0.5.0
+  resolution: "@axinom/mosaic-video-workflow-integration@npm:0.5.0"
   peerDependencies:
     "@axinom/mosaic-portal": "*"
     "@axinom/mosaic-ui": "*"
     react: ">=17.0.1"
     react-dom: ">=17.0.1"
-  checksum: 10c0/fb0fb57bdde9b7f559799363410fed31dc7d700a39eed5f6a5459bd459a83f1a8f4679bd68d9d441e7a2bf8536f3b7d0f40b5a79275ce8f32e6eab523075e5e0
+  checksum: 10c0/e28d4201b1ca620ef2d91bfa868bc72fe4d55adb08b8804c728ac67846299e91bbab0da09de992a89274a2e2aba7ace9b90c4413365c6c7dfd61bf278713053b
   languageName: node
   linkType: hard
 
@@ -7186,15 +7186,15 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "catalog-service@workspace:services/catalog/service"
   dependencies:
-    "@axinom/mosaic-cli": "npm:0.54.0"
-    "@axinom/mosaic-db-common": "npm:0.55.0"
-    "@axinom/mosaic-graphql-common": "npm:0.31.0"
-    "@axinom/mosaic-id-guard": "npm:0.46.0"
-    "@axinom/mosaic-message-bus": "npm:0.48.0"
-    "@axinom/mosaic-message-bus-abstractions": "npm:0.24.1"
-    "@axinom/mosaic-messages": "npm:0.65.0"
-    "@axinom/mosaic-service-common": "npm:0.67.0"
-    "@axinom/mosaic-transactional-inbox-outbox": "npm:0.27.0"
+    "@axinom/mosaic-cli": "npm:0.55.0"
+    "@axinom/mosaic-db-common": "npm:0.56.0"
+    "@axinom/mosaic-graphql-common": "npm:0.32.0"
+    "@axinom/mosaic-id-guard": "npm:0.47.0"
+    "@axinom/mosaic-message-bus": "npm:0.49.0"
+    "@axinom/mosaic-message-bus-abstractions": "npm:0.24.2"
+    "@axinom/mosaic-messages": "npm:0.66.0"
+    "@axinom/mosaic-service-common": "npm:0.68.0"
+    "@axinom/mosaic-transactional-inbox-outbox": "npm:0.28.0"
     "@graphile-contrib/pg-simplify-inflector": "npm:^6.1.0"
     "@types/express": "npm:^4.17.14"
     "@types/jest": "npm:^29.4.1"
@@ -7349,17 +7349,17 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "channel-service@workspace:services/channel/service"
   dependencies:
-    "@axinom/mosaic-cli": "npm:0.54.0"
-    "@axinom/mosaic-db-common": "npm:0.55.0"
-    "@axinom/mosaic-graphql-common": "npm:0.31.0"
-    "@axinom/mosaic-id-guard": "npm:0.46.0"
-    "@axinom/mosaic-id-link-be": "npm:0.37.0"
-    "@axinom/mosaic-message-bus": "npm:0.48.0"
-    "@axinom/mosaic-message-bus-abstractions": "npm:0.24.1"
-    "@axinom/mosaic-messages": "npm:0.65.0"
-    "@axinom/mosaic-service-common": "npm:0.67.0"
-    "@axinom/mosaic-transactional-inbox-outbox": "npm:0.27.0"
-    "@axinom/mosaic-video-messages": "npm:0.6.0"
+    "@axinom/mosaic-cli": "npm:0.55.0"
+    "@axinom/mosaic-db-common": "npm:0.56.0"
+    "@axinom/mosaic-graphql-common": "npm:0.32.0"
+    "@axinom/mosaic-id-guard": "npm:0.47.0"
+    "@axinom/mosaic-id-link-be": "npm:0.38.0"
+    "@axinom/mosaic-message-bus": "npm:0.49.0"
+    "@axinom/mosaic-message-bus-abstractions": "npm:0.24.2"
+    "@axinom/mosaic-messages": "npm:0.66.0"
+    "@axinom/mosaic-service-common": "npm:0.68.0"
+    "@axinom/mosaic-transactional-inbox-outbox": "npm:0.28.0"
+    "@axinom/mosaic-video-messages": "npm:0.7.0"
     "@graphile-contrib/pg-simplify-inflector": "npm:^6.1.0"
     "@graphql-codegen/cli": "npm:^4.0.1"
     "@graphql-codegen/typescript": "npm:^2.7.3"
@@ -7412,10 +7412,10 @@ __metadata:
   resolution: "channel-workflows@workspace:services/channel/workflows"
   dependencies:
     "@apollo/client": "npm:^3.7.10"
-    "@axinom/mosaic-managed-workflow-integration": "npm:0.29.0"
-    "@axinom/mosaic-portal": "npm:0.45.2"
-    "@axinom/mosaic-ui": "npm:0.69.0"
-    "@axinom/mosaic-video-workflow-integration": "npm:0.4.0"
+    "@axinom/mosaic-managed-workflow-integration": "npm:0.30.0"
+    "@axinom/mosaic-portal": "npm:0.46.0"
+    "@axinom/mosaic-ui": "npm:0.70.0"
+    "@axinom/mosaic-video-workflow-integration": "npm:0.5.0"
     "@graphql-codegen/cli": "npm:^4.0.1"
     "@graphql-codegen/typescript": "npm:^2.7.3"
     "@graphql-codegen/typescript-operations": "npm:^2.5.3"
@@ -8958,15 +8958,15 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "entitlement-service@workspace:services/entitlement/service"
   dependencies:
-    "@axinom/mosaic-cli": "npm:0.54.0"
-    "@axinom/mosaic-db-common": "npm:0.55.0"
-    "@axinom/mosaic-graphql-common": "npm:0.31.0"
-    "@axinom/mosaic-id-guard": "npm:0.46.0"
-    "@axinom/mosaic-id-utils": "npm:0.25.0"
-    "@axinom/mosaic-message-bus": "npm:0.48.0"
-    "@axinom/mosaic-service-common": "npm:0.67.0"
-    "@axinom/mosaic-transactional-inbox-outbox": "npm:0.27.0"
-    "@axinom/mosaic-video-messages": "npm:0.6.0"
+    "@axinom/mosaic-cli": "npm:0.55.0"
+    "@axinom/mosaic-db-common": "npm:0.56.0"
+    "@axinom/mosaic-graphql-common": "npm:0.32.0"
+    "@axinom/mosaic-id-guard": "npm:0.47.0"
+    "@axinom/mosaic-id-utils": "npm:0.26.0"
+    "@axinom/mosaic-message-bus": "npm:0.49.0"
+    "@axinom/mosaic-service-common": "npm:0.68.0"
+    "@axinom/mosaic-transactional-inbox-outbox": "npm:0.28.0"
+    "@axinom/mosaic-video-messages": "npm:0.7.0"
     "@graphile-contrib/pg-simplify-inflector": "npm:^6.1.0"
     "@graphql-codegen/cli": "npm:^4.0.1"
     "@graphql-codegen/typescript": "npm:^2.7.3"
@@ -13402,8 +13402,8 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "media-messages@workspace:libs/media-messages"
   dependencies:
-    "@axinom/mosaic-cli": "npm:0.54.0"
-    "@axinom/mosaic-message-bus-abstractions": "npm:0.24.1"
+    "@axinom/mosaic-cli": "npm:0.55.0"
+    "@axinom/mosaic-message-bus-abstractions": "npm:0.24.2"
     "@types/glob": "npm:^7.2.0"
     chokidar-cli: "npm:^3.0.0"
     concurrently: "npm:^5.3.0"
@@ -13418,17 +13418,17 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "media-service@workspace:services/media/service"
   dependencies:
-    "@axinom/mosaic-cli": "npm:0.54.0"
-    "@axinom/mosaic-db-common": "npm:0.55.0"
-    "@axinom/mosaic-graphql-common": "npm:0.31.0"
-    "@axinom/mosaic-id-guard": "npm:0.46.0"
-    "@axinom/mosaic-id-link-be": "npm:0.37.0"
-    "@axinom/mosaic-message-bus": "npm:0.48.0"
-    "@axinom/mosaic-message-bus-abstractions": "npm:0.24.1"
-    "@axinom/mosaic-messages": "npm:0.65.0"
-    "@axinom/mosaic-service-common": "npm:0.67.0"
-    "@axinom/mosaic-transactional-inbox-outbox": "npm:0.27.0"
-    "@axinom/mosaic-video-messages": "npm:0.6.0"
+    "@axinom/mosaic-cli": "npm:0.55.0"
+    "@axinom/mosaic-db-common": "npm:0.56.0"
+    "@axinom/mosaic-graphql-common": "npm:0.32.0"
+    "@axinom/mosaic-id-guard": "npm:0.47.0"
+    "@axinom/mosaic-id-link-be": "npm:0.38.0"
+    "@axinom/mosaic-message-bus": "npm:0.49.0"
+    "@axinom/mosaic-message-bus-abstractions": "npm:0.24.2"
+    "@axinom/mosaic-messages": "npm:0.66.0"
+    "@axinom/mosaic-service-common": "npm:0.68.0"
+    "@axinom/mosaic-transactional-inbox-outbox": "npm:0.28.0"
+    "@axinom/mosaic-video-messages": "npm:0.7.0"
     "@azure/storage-blob": "npm:^12.14.0"
     "@faker-js/faker": "npm:^7.6.0"
     "@graphile-contrib/pg-simplify-inflector": "npm:^6.1.0"
@@ -13499,7 +13499,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "media-template@workspace:."
   dependencies:
-    "@axinom/mosaic-cli": "npm:0.54.0"
+    "@axinom/mosaic-cli": "npm:0.55.0"
     "@jest/globals": "npm:^29.5.0"
     "@types/jest": "npm:^29.4.1"
     "@types/node": "npm:^18.11.19"
@@ -13569,11 +13569,11 @@ __metadata:
   resolution: "media-workflows@workspace:services/media/workflows"
   dependencies:
     "@apollo/client": "npm:^3.7.10"
-    "@axinom/mosaic-graphql-codegen-plugins": "npm:0.7.0"
-    "@axinom/mosaic-managed-workflow-integration": "npm:0.29.0"
-    "@axinom/mosaic-portal": "npm:0.45.2"
-    "@axinom/mosaic-ui": "npm:0.69.0"
-    "@axinom/mosaic-video-workflow-integration": "npm:0.4.0"
+    "@axinom/mosaic-graphql-codegen-plugins": "npm:0.8.0"
+    "@axinom/mosaic-managed-workflow-integration": "npm:0.30.0"
+    "@axinom/mosaic-portal": "npm:0.46.0"
+    "@axinom/mosaic-ui": "npm:0.70.0"
+    "@axinom/mosaic-video-workflow-integration": "npm:0.5.0"
     "@graphql-codegen/cli": "npm:^4.0.1"
     "@graphql-codegen/typescript": "npm:^2.7.3"
     "@graphql-codegen/typescript-operations": "npm:^2.5.3"
@@ -19267,10 +19267,10 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "vod-to-live-service@workspace:services/vod-to-live/service"
   dependencies:
-    "@axinom/mosaic-id-guard": "npm:0.46.0"
-    "@axinom/mosaic-message-bus": "npm:0.48.0"
-    "@axinom/mosaic-messages": "npm:0.65.0"
-    "@axinom/mosaic-service-common": "npm:0.67.0"
+    "@axinom/mosaic-id-guard": "npm:0.47.0"
+    "@axinom/mosaic-message-bus": "npm:0.49.0"
+    "@axinom/mosaic-messages": "npm:0.66.0"
+    "@axinom/mosaic-service-common": "npm:0.68.0"
     "@azure/storage-blob": "npm:^12.14.0"
     "@types/jest": "npm:^29.4.1"
     "@types/rascal": "npm:^10.0.6"
