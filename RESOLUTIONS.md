@@ -89,11 +89,22 @@ The goal is to minimize resolutions and remove them when no longer needed.
 - **Date**: 2026-04-14
 - **Check again when**: `minimatch@3.x` updates to use `brace-expansion@^2.x` (unlikely for 3.x line)
 
-### tmp@^0.0.33 (Dependabot #168)
+## Ignored Vulnerabilities
 
-- **Vulnerability**: Arbitrary temp file/dir write via symlink (low severity)
+### uuid (Dependabot #297, #299, #301–#305)
+
+- **Vulnerability**: Missing buffer bounds check in `v3`/`v5`/`v6` when `buf` is provided (medium severity)
+- **Current versions**: 8.3.2, 9.0.1
+- **Patched in**: 11.1.1 (major version jump)
+- **Reason for ignoring**: The bug only affects `v3`/`v5`/`v6` generation when an explicit output `buf` is passed. All consumers (`@axinom/mosaic-message-bus`, `@axinom/mosaic-service-common`, `@azure/core-http`, `rascal`, `pg-transactional-outbox`, `jest-junit`) pin `uuid@^8.3.2` / `^9.0.x` and use `v4` (random), which is unaffected. Reaching the patched 11.x requires a forced major-version resolution with real breakage risk, for a code path the project does not exercise.
+- **Date**: 2026-06-09
+- **Review again when**: A consumer bumps its `uuid` range to `^11`, or the project starts using `v3`/`v5`/`v6` with an explicit `buf`
+
+### tmp (Dependabot #168, #306)
+
+- **Vulnerability**: Arbitrary temp file/dir write via symlink `dir` parameter (low, #168); path traversal via unsanitized prefix/postfix (high, #306)
 - **Current version**: 0.0.33
-- **Patched in**: 0.2.4
-- **Blocked by**: `external-editor@3.1.0` (latest) pins `tmp@^0.0.33`; `^0.0.33` resolves only `0.0.33` in strict semver. `external-editor` has not released a new version since 3.1.0.
-- **Date**: 2026-03-12
-- **Check again when**: `external-editor` releases a new version with an updated `tmp` dep, or `@graphql-codegen/cli` stops depending on `inquirer@8`
+- **Patched in**: 0.2.4 (#168) / 0.2.6 (#306) — both major-line jumps with API changes
+- **Reason for ignoring**: `tmp@0.0.33` is dev-only — pulled solely via `external-editor@3.1.0` (`@graphql-codegen/cli` → `inquirer@8`). It is not present in any deployed service runtime. `external-editor@3.1.0` (latest, unreleased since) pins `tmp@^0.0.33`; reaching 0.2.6 requires a forced resolution that risks breaking `external-editor`'s use of the old `tmp` API.
+- **Date**: 2026-06-09
+- **Review again when**: `external-editor` releases a new version with an updated `tmp` dep, or `@graphql-codegen/cli` stops depending on `inquirer@8`
