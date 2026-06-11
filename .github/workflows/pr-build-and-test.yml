@@ -42,6 +42,7 @@ jobs:
             relevant:
               - 'services/**'
               - 'libs/**'
+              - '.github/workflows/pr-build-and-test.yml'
       - id: determine
         name: Determine if affected directory paths require checking
         run: |
@@ -74,7 +75,7 @@ jobs:
 
     steps:
       - name: Check prerequisites
-        run: echo "::notice::Postgres is listening on port 5432 via PID $(lsof -i 5432)"
+        run: echo "::notice::Postgres is listening on port 5432 via PID $(lsof -i :5432)"
       - name: Setup docker
         uses: docker/setup-docker-action@v5
       - name: Setup docker compose
@@ -91,7 +92,7 @@ jobs:
           clean: 'true'
 
       - name: Install dependencies
-        run: yarn install --immutable
+        run: yarn install
       - name: Build services
         run: yarn build
 
