@@ -90,7 +90,7 @@ jobs:
 
       - name: Re-tag image with environment-latest
         run: |
-          IMAGE_REPO="harbor.axinom.com/mosaic/managed-services/${{ inputs.image-name }}"
+          IMAGE_REPO="harbor.axinom.com/mosaic/customizable-services-dev/${{ inputs.image-name }}"
           SOURCE_TAG="${IMAGE_REPO}:${{ inputs.image-tag }}"
           LATEST_TAG="${IMAGE_REPO}:${{ inputs.environment-overlay }}-latest"
 

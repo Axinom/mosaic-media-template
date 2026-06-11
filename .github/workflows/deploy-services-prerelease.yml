@@ -79,7 +79,7 @@ jobs:
       environment: Prerelease
       service-name: ${{ matrix.service }}
       image-name: ${{ matrix.image-name || matrix.service }}-service
-      kubernetes-namespace: managed-cb
+      kubernetes-namespace: customizable-cb
       environment-overlay: cb
       image-tag: ${{ fromJSON(needs.resolve_build.outputs.tags)[matrix.service] }}
     strategy:
