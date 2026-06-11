@@ -1,0 +1,143 @@
+name: Deploy Single Workflow Template
+
+on:
+  workflow_call:
+    secrets:
+      workflow-publish-api-key:
+        required: false
+        description: API key for publishing pilets to the frontend service (customer pilets)
+      managed-workflow-publish-api-key:
+        required: false
+        description: API key for publishing pilets to the hosting service (managed pilets)
+    inputs:
+      deploy:
+        required: true
+        type: boolean
+        description: Indicates if this should be deployed
+      runs-on:
+        required: true
+        type: string
+      environment:
+        required: true
+        type: string
+        description: GitHub environment name for deployment
+      workflow-name:
+        required: true
+        type: string
+        description: Name of the workflow being deployed
+      artifact-pattern:
+        required: true
+        type: string
+        description: Pattern to match the artifact directory (e.g., "*id-workflows*")
+      publish-base-url:
+        required: true
+        type: string
+        description: Base URL for pilet publishing (e.g., https://frontends.service.cb.axinom.net)
+      service-name:
+        required: true
+        type: string
+        description: Service name for managed pilet URL (e.g., ax-media-service, ax-channel-service)
+      tenant-id:
+        required: true
+        type: string
+        description: Tenant ID for customer pilet URL
+      environment-id:
+        required: true
+        type: string
+        description: Environment ID for customer pilet URL
+      hosting-service-enabled:
+        required: true
+        type: boolean
+        description: Enable managed/hosting service pilet publish
+      extra-fields:
+        required: false
+        type: string
+        default: ''
+        description: Additional --fields arguments for pilet publish
+      build-run-id:
+        required: true
+        type: string
+        description: Build run ID to download artifacts from
+
+jobs:
+  deploy:
+    if: ${{ inputs.deploy }}
+    name: Deploy ${{ inputs.workflow-name }}
+    runs-on: ${{ inputs.runs-on }}
+    environment: ${{ inputs.environment }}
+    steps:
+      - name: Download artifact
+        uses: actions/download-artifact@v4
+        with:
+          pattern: ${{ inputs.artifact-pattern }}
+          path: ./artifacts
+          run-id: ${{ inputs.build-run-id }}
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Publish customer pilet
+        working-directory: ./artifacts
+        run: |
+          ARTIFACT_DIR=$(find . -type d -name "${{ inputs.artifact-pattern }}" | head -1)
+          if [ -z "$ARTIFACT_DIR" ]; then
+            echo "::error::No artifact directory matching pattern '${{ inputs.artifact-pattern }}'"
+            exit 1
+          fi
+
+          cd "$ARTIFACT_DIR"
+          echo "::notice::Publishing from: $(pwd)"
+          ls -la *.tgz
+
+          # Sleep for random seconds up to 30 to avoid simultaneous uploads
+          sleep $((RANDOM % 30))
+
+          PUBLISH_URL="${{ inputs.publish-base-url }}/v1/pilets/${{ inputs.tenant-id }}/${{ inputs.environment-id }}"
+          echo "::notice::Publishing to: $PUBLISH_URL"
+
+          response=$(npx --node-options='--unhandled-rejections=strict' --package=piral-cli@1.5.2 --yes pilet publish \
+            --no-fresh \
+            --url "$PUBLISH_URL" \
+            --api-key "${{ secrets.workflow-publish-api-key }}" \
+            ${{ inputs.extra-fields }} 2>&1)
+          echo "$response"
+
+          if echo "$response" | grep -q '"success": true' && echo "$response" | grep -q '"status": 200'; then
+            echo "::notice::Response validated and marked as a successful upload"
+          else
+            echo "::error::Response contained non-200 status or success was not true. Marked as an unsuccessful upload"
+            exit 1
+          fi
+
+      - name: Publish managed pilet (hosting service)
+        if: ${{ inputs.hosting-service-enabled }}
+        working-directory: ./artifacts
+        run: |
+          ARTIFACT_DIR=$(find . -type d -name "${{ inputs.artifact-pattern }}" | head -1)
+          if [ -z "$ARTIFACT_DIR" ]; then
+            echo "::error::No artifact directory matching pattern '${{ inputs.artifact-pattern }}'"
+            exit 1
+          fi
+
+          cd "$ARTIFACT_DIR"
+          echo "::notice::Publishing managed pilet from: $(pwd)"
+          ls -la *.tgz
+
+          PUBLISH_URL="${{ inputs.publish-base-url }}/v1/axinom-owned-customizable-pilets/${{ inputs.service-name }}"
+          echo "::notice::Publishing to: $PUBLISH_URL"
+
+          response=$(npx --node-options='--unhandled-rejections=strict' --package=piral-cli@1.5.2 --yes pilet publish \
+            --no-fresh \
+            --url "$PUBLISH_URL" \
+            --api-key "${{ secrets.managed-workflow-publish-api-key }}" \
+            2>&1)
+          echo "$response"
+
+          if echo "$response" | grep -q '"success": true' && echo "$response" | grep -q '"status": 200'; then
+            echo "::notice::Response validated and marked as a successful upload"
+          else
+            echo "::error::Response contained non-200 status or success was not true. Marked as an unsuccessful upload"
+            exit 1
+          fi

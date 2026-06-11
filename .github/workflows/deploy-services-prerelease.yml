@@ -1,0 +1,110 @@
+name: Deploy Services Prerelease (CB)
+# Stages:
+# - Pre-check
+# - Deployment: PRIMARY (id)
+# - Deployment: SECONDARY (all other services in parallel)
+
+on:
+  workflow_dispatch:
+    inputs:
+      deploy-catalog:
+        type: boolean
+        default: true
+        description: Deploy catalog
+      deploy-channel:
+        type: boolean
+        default: true
+        description: Deploy channel
+      deploy-entitlement:
+        type: boolean
+        default: true
+        description: Deploy entitlement
+      deploy-media:
+        type: boolean
+        default: true
+        description: Deploy media
+      deploy-vod-to-live:
+        type: boolean
+        default: true
+        description: Deploy vod-to-live
+
+jobs:
+  # ----------------------------------------- Pre-check ----------------------------------------- #
+  # Check if there's a successful backend build for the same branch, and
+  # extract its run id to be used in deployments.
+  # --------------------------------------------------------------------------------------------- #
+  resolve_build:
+    name: Resolve Build Artifacts
+    runs-on: ubicloud-standard-2
+    outputs:
+      tags: ${{ steps.read.outputs.tags }}
+      catalog: ${{ steps.read.outputs.catalog }}
+      channel: ${{ steps.read.outputs.channel }}
+      entitlement: ${{ steps.read.outputs.entitlement }}
+      media: ${{ steps.read.outputs.media }}
+      vod-to-live: ${{ steps.read.outputs.vod-to-live }}
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          fetch-depth: 1
+      - name: Read deployment versions
+        id: read
+        run: |
+          VERSION_FILE=".github/deployment-versions/services/cb.yaml"
+
+          # Output as JSON for matrix lookups
+          echo "tags=$(yq -o=json '.' "$VERSION_FILE" | jq -c '.')" >> "$GITHUB_OUTPUT"
+
+          # Output individual values
+          for key in catalog channel entitlement media vod-to-live; do
+            value=$(yq ".[\"$key\"]" "$VERSION_FILE")
+            echo "$key=$value" >> "$GITHUB_OUTPUT"
+            echo "::notice::$key: $value"
+          done
+
+  # --------------------------------------- Deployment ------------------------------------------ #
+  # All secondary services depend on ID and are deployed in parallel using a matrix strategy.
+  # --------------------------------------------------------------------------------------------- #
+  deploy:
+    name: Deploy Secondary Services
+    needs: [ resolve_build ]
+    uses: ./.github/workflows/templates-deploy-service.yml
+    secrets:
+      kube-config: ${{ secrets.KUBECONFIG_NON_PRODUCTION }}
+      docker-registry-username: ${{ secrets.HARBOR_PUSH_USERNAME }}
+      docker-registry-password: ${{ secrets.HARBOR_PUSH_PASSWORD }}
+    with:
+      deploy: ${{ github.event_name == 'schedule' || matrix.deploy }}
+      runs-on: ubicloud-standard-2
+      environment: Prerelease
+      service-name: ${{ matrix.service }}
+      image-name: ${{ matrix.image-name || matrix.service }}-service
+      kubernetes-namespace: managed-cb
+      environment-overlay: cb
+      image-tag: ${{ fromJSON(needs.resolve_build.outputs.tags)[matrix.service] }}
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - service: catalog
+            deploy: ${{ inputs.deploy-catalog }}
+          - service: channel
+            deploy: ${{ inputs.deploy-channel }}
+          - service: entitlement
+            deploy: ${{ inputs.deploy-entitlement }}
+          - service: media
+            deploy: ${{ inputs.deploy-media }}
+          - service: vod-to-live
+            deploy: ${{ inputs.deploy-vod-to-live }}
+
+  slack_notification:
+    needs: [ deploy ]
+    if: github.event_name == 'schedule' || !cancelled()
+    uses: ./.github/workflows/templates-slack-deploy-notification.yml
+    secrets:
+      slack_bot_token: ${{ secrets.SLACK_API_TOKEN_NAVY_CHANNELS }}
+      slack_channel_id: ${{ vars.SLACK_CHANNEL_ID_NAVY_CB_AUTO_RELEASE }}
+    with:
+      deploy-type: service
+      environment: cb
+      version-file: .github/deployment-versions/services/cb.yaml

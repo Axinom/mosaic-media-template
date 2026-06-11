@@ -1,0 +1,39 @@
+name: PR Name Validation
+
+on:
+  pull_request:
+    branches:
+      - dev
+      - main
+    types:
+      - opened
+      - edited
+      - synchronize
+      - reopened
+      - ready_for_review
+
+jobs:
+  verify-pr-name:
+    if: github.event.pull_request.draft == false # Skip draft PRs
+    runs-on: ubicloud-standard-2
+    steps:
+      - name: Validate pr name
+        env:
+          PR_TITLE: ${{ github.event.pull_request.title }}
+          PR_USER: ${{ github.event.pull_request.user.login }}
+        run: |
+          dependabotUser="dependabot[bot]"
+          expectedPattern="^\[AB#([0-9]+)\]"
+
+          echo "PR title: '$PR_TITLE'"
+          echo "PR user: '$PR_USER'"
+
+          # Check if PR title matches expected pattern (skip for dependabot)
+          if [[ "$PR_USER" != "$dependabotUser" ]] && [[ ! "$PR_TITLE" =~ $expectedPattern ]]; then
+            echo "::error::Pull request title must start with '[AB#]' followed by a numeric value."
+            echo "::error::Example: [AB#12345] Your pull request title"
+            echo "::error::PR title '$PR_TITLE' does not match expected pattern."
+            exit 1
+          fi
+
+          echo "PR title validation passed."
