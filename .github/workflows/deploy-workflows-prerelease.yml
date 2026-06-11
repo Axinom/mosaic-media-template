@@ -49,14 +49,15 @@ jobs:
     needs: resolve_build
     uses: ./.github/workflows/templates-deploy-workflow.yml
     secrets:
-      managed-workflow-publish-api-key: ${{ secrets.WORKFLOW_PUBLISH_API_KEY_CB }}
+      workflow-publish-api-key: ${{ secrets.WORKFLOW_PUBLISH_API_KEY_CB }}
+      managed-workflow-publish-api-key: ${{ secrets.MANAGED_WORKFLOW_PUBLISH_API_KEY_CB }}
     with:
       deploy: ${{ github.event_name == 'schedule' || inputs.deploy-channel }}
       runs-on: ubicloud-standard-2
       build-run-id: ${{ needs.resolve_build.outputs.channel }}
       environment: Prerelease
       workflow-name: channel
-      artifact-pattern: "*fe-orchestration-channel*"
+      artifact-pattern: "channel-workflows"
       publish-base-url: https://frontends.${{ vars.MOSAIC_CB_SERVICE_SUB_DOMAIN }}
       environment-id: ${{ vars.MOSAIC_CB_SELF_ENVIRONMENT_ID }}
       tenant-id: ${{ vars.MOSAIC_CB_SELF_TENANT_ID }}
@@ -68,29 +69,30 @@ jobs:
     needs: resolve_build
     uses: ./.github/workflows/templates-deploy-workflow.yml
     secrets:
-      managed-workflow-publish-api-key: ${{ secrets.WORKFLOW_PUBLISH_API_KEY_CB }}
+      workflow-publish-api-key: ${{ secrets.WORKFLOW_PUBLISH_API_KEY_CB }}
+      managed-workflow-publish-api-key: ${{ secrets.MANAGED_WORKFLOW_PUBLISH_API_KEY_CB }}
     with:
       deploy: ${{ github.event_name == 'schedule' || inputs.deploy-media }}
       runs-on: ubicloud-standard-2
       build-run-id: ${{ needs.resolve_build.outputs.media }}
       environment: Prerelease
       workflow-name: media
-      artifact-pattern: "*fe-orchestration-media*"
+      artifact-pattern: "media-workflows"
       publish-base-url: https://frontends.${{ vars.MOSAIC_CB_SERVICE_SUB_DOMAIN }}
       environment-id: ${{ vars.MOSAIC_CB_SELF_ENVIRONMENT_ID }}
       tenant-id: ${{ vars.MOSAIC_CB_SELF_TENANT_ID }}
       service-name: ax-media-service
       hosting-service-enabled: true
 
-  slack_notification:
-    name: Slack Notification
-    needs: [ channel, media ]
-    if: github.event_name == 'schedule' || !cancelled()
-    uses: ./.github/workflows/templates-slack-deploy-notification.yml
-    secrets:
-      slack_bot_token: ${{ secrets.SLACK_API_TOKEN_NAVY_CHANNELS }}
-      slack_channel_id: ${{ vars.SLACK_CHANNEL_ID_NAVY_CB_AUTO_RELEASE }}
-    with:
-      deploy-type: workflow
-      environment: cb
-      version-file: .github/deployment-versions/workflows/cb.yaml
+#  slack_notification:
+#    name: Slack Notification
+#    needs: [ channel, media ]
+#    if: github.event_name == 'schedule' || !cancelled()
+#    uses: ./.github/workflows/templates-slack-deploy-notification.yml
+#    secrets:
+#      slack_bot_token: ${{ secrets.SLACK_API_TOKEN_NAVY_CHANNELS }}
+#      slack_channel_id: ${{ vars.SLACK_CHANNEL_ID_NAVY_CB_AUTO_RELEASE }}
+#    with:
+#      deploy-type: workflow
+#      environment: cb
+#      version-file: .github/deployment-versions/workflows/cb.yaml

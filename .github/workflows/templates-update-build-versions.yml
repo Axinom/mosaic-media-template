@@ -27,7 +27,7 @@ jobs:
     steps:
       - name: Create GitHub app token
         id: app-token
-        uses: actions/create-github-app-token@v2
+        uses: actions/create-github-app-token@v3
         with:
           app-id: ${{ secrets.gh_app_id }}
           private-key: ${{ secrets.gh_app_private_key }}
@@ -39,7 +39,7 @@ jobs:
           fetch-tags: 'false'
           fetch-depth: '1'
 
-      - uses: actions/download-artifact@v4
+      - uses: actions/download-artifact@v6
         with:
           pattern: build-result-*
           path: results

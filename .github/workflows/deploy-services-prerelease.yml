@@ -115,14 +115,14 @@ jobs:
       services-to-update: catalog,channel,entitlement,media,vod-to-live
       service-definition-ids: ${{ vars.MOSAIC_CB_SERVICE_DEFINITION_IDS }}
 
-  slack_notification:
-    needs: [ deploy, update_hosting_v2 ]
-    if: github.event_name == 'schedule' || !cancelled()
-    uses: ./.github/workflows/templates-slack-deploy-notification.yml
-    secrets:
-      slack_bot_token: ${{ secrets.SLACK_API_TOKEN_NAVY_CHANNELS }}
-      slack_channel_id: ${{ vars.SLACK_CHANNEL_ID_NAVY_CB_AUTO_RELEASE }}
-    with:
-      deploy-type: service
-      environment: cb
-      version-file: .github/deployment-versions/services/cb.yaml
+#  slack_notification:
+#    needs: [ deploy, update_hosting_v2 ]
+#    if: github.event_name == 'schedule' || !cancelled()
+#    uses: ./.github/workflows/templates-slack-deploy-notification.yml
+#    secrets:
+#      slack_bot_token: ${{ secrets.SLACK_API_TOKEN_NAVY_CHANNELS }}
+#      slack_channel_id: ${{ vars.SLACK_CHANNEL_ID_NAVY_CB_AUTO_RELEASE }}
+#    with:
+#      deploy-type: service
+#      environment: cb
+#      version-file: .github/deployment-versions/services/cb.yaml
