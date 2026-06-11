@@ -1,0 +1,10 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: channel
+spec:
+  template:
+    spec:
+      containers:
+        - name: app
+          image: harbor.axinom.com/mosaic/customizable-services-dev/channel-service:latest

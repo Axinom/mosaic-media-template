@@ -1,0 +1,172 @@
+name: Slack Deploy Notification
+
+on:
+  workflow_call:
+    secrets:
+      slack_bot_token:
+        required: true
+        description: Slack bot token for authentication
+      slack_channel_id:
+        required: true
+        description: Slack channel ID to post the notification
+
+    inputs:
+      deploy-type:
+        required: true
+        type: string
+        description: Type of deployment - either 'service' or 'workflow'
+      environment:
+        required: true
+        type: string
+        description: Environment being deployed to (e.g., cb, test, prod)
+      version-file:
+        required: true
+        type: string
+        description: Path to the version file (e.g., .github/deployment-versions/services/cb.yaml)
+      runs-on:
+        required: false
+        type: string
+        default: ubicloud-standard-2
+
+jobs:
+  notify:
+    name: Send Slack Notification
+    runs-on: ${{ inputs.runs-on }}
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          fetch-depth: 1
+
+      - name: Collect deployment results
+        id: collect
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          # Read versions from file
+          VERSION_FILE="${{ inputs.version-file }}"
+
+          # Get all jobs from this workflow run
+          JOBS_JSON=$(gh api \
+            -H "Accept: application/vnd.github+json" \
+            -H "X-GitHub-Api-Version: 2022-11-28" \
+            "/repos/${{ github.repository }}/actions/runs/${{ github.run_id }}/jobs" 2>/dev/null || echo '{"jobs":[]}')
+
+          # Collect deployment results
+          SUCCESS_COUNT=0
+          FAILURE_COUNT=0
+          SKIPPED_COUNT=0
+          SUCCESSFUL_DEPLOYS=""
+          FAILED_DEPLOYS=""
+          SKIPPED_DEPLOYS=""
+
+          # Get all keys from version file
+          SERVICES=$(yq 'keys | .[]' "$VERSION_FILE")
+
+          while IFS= read -r service; do
+            if [ -n "$service" ]; then
+              version=$(yq ".[\"$service\"]" "$VERSION_FILE")
+
+              # Find job status for this service
+              # Job names contain the service name in various formats
+              job_status=$(echo "$JOBS_JSON" | jq -r --arg svc "$service" '
+                .jobs[] |
+                select(
+                  (.name | ascii_downcase | contains($svc | ascii_downcase)) or
+                  (.name | ascii_downcase | contains("(" + ($svc | ascii_downcase) + ",")) or
+                  (.name | ascii_downcase | contains("(" + ($svc | ascii_downcase) + ")"))
+                ) |
+                .conclusion // .status' | head -1)
+
+              if [ "$job_status" = "success" ]; then
+                if [ -n "$SUCCESSFUL_DEPLOYS" ]; then
+                  SUCCESSFUL_DEPLOYS="${SUCCESSFUL_DEPLOYS}\n"
+                fi
+                SUCCESSFUL_DEPLOYS="${SUCCESSFUL_DEPLOYS}:white_check_mark: *${service}* - \`${version}\`"
+                SUCCESS_COUNT=$((SUCCESS_COUNT + 1))
+              elif [ "$job_status" = "failure" ]; then
+                if [ -n "$FAILED_DEPLOYS" ]; then
+                  FAILED_DEPLOYS="${FAILED_DEPLOYS}\n"
+                fi
+                FAILED_DEPLOYS="${FAILED_DEPLOYS}:x: *${service}* - \`${version}\` (failed)"
+                FAILURE_COUNT=$((FAILURE_COUNT + 1))
+              elif [ "$job_status" = "skipped" ] || [ -z "$job_status" ] || [ "$job_status" = "null" ]; then
+                if [ -n "$SKIPPED_DEPLOYS" ]; then
+                  SKIPPED_DEPLOYS="${SKIPPED_DEPLOYS}\n"
+                fi
+                SKIPPED_DEPLOYS="${SKIPPED_DEPLOYS}:fast_forward: *${service}* - skipped"
+                SKIPPED_COUNT=$((SKIPPED_COUNT + 1))
+              fi
+            fi
+          done <<< "$SERVICES"
+
+          # Build combined results text (successful first, then failed, then skipped)
+          RESULTS_TEXT=""
+          if [ -n "$SUCCESSFUL_DEPLOYS" ]; then
+            RESULTS_TEXT="$SUCCESSFUL_DEPLOYS"
+          fi
+          if [ -n "$FAILED_DEPLOYS" ]; then
+            if [ -n "$RESULTS_TEXT" ]; then
+              RESULTS_TEXT="${RESULTS_TEXT}\n${FAILED_DEPLOYS}"
+            else
+              RESULTS_TEXT="$FAILED_DEPLOYS"
+            fi
+          fi
+          if [ -n "$SKIPPED_DEPLOYS" ]; then
+            if [ -n "$RESULTS_TEXT" ]; then
+              RESULTS_TEXT="${RESULTS_TEXT}\n${SKIPPED_DEPLOYS}"
+            else
+              RESULTS_TEXT="$SKIPPED_DEPLOYS"
+            fi
+          fi
+
+          if [ -z "$RESULTS_TEXT" ]; then
+            RESULTS_TEXT="No deployment results found"
+          fi
+
+          # Determine overall status
+          if [ "$FAILURE_COUNT" -gt 0 ]; then
+            STATUS_EMOJI=":warning:"
+          elif [ "$SUCCESS_COUNT" -gt 0 ]; then
+            STATUS_EMOJI=":white_check_mark:"
+          else
+            STATUS_EMOJI=":fast_forward:"
+          fi
+
+          # Capitalize deploy type
+          DEPLOY_TYPE="${{ inputs.deploy-type }}"
+          DEPLOY_TYPE_TITLE=$(echo "$DEPLOY_TYPE" | sed 's/./\U&/')
+
+          echo "results_text=${RESULTS_TEXT}" >> "$GITHUB_OUTPUT"
+          echo "status_emoji=${STATUS_EMOJI}" >> "$GITHUB_OUTPUT"
+          echo "deploy_type_title=${DEPLOY_TYPE_TITLE}" >> "$GITHUB_OUTPUT"
+          echo "success_count=${SUCCESS_COUNT}" >> "$GITHUB_OUTPUT"
+          echo "failure_count=${FAILURE_COUNT}" >> "$GITHUB_OUTPUT"
+          echo "skipped_count=${SKIPPED_COUNT}" >> "$GITHUB_OUTPUT"
+
+      - name: Send Slack notification
+        uses: slackapi/slack-github-action@v3.0.3
+        with:
+          method: chat.postMessage
+          token: ${{ secrets.slack_bot_token }}
+          payload: |
+            channel: ${{ secrets.slack_channel_id }}
+            text: "${{ inputs.deploy-type }} deployment to ${{ inputs.environment }} completed"
+            blocks:
+              - type: "header"
+                text:
+                  type: "plain_text"
+                  text: "${{ steps.collect.outputs.status_emoji }} ${{ steps.collect.outputs.deploy_type_title }} Deployment Results"
+                  emoji: true
+              - type: "section"
+                text:
+                  type: "mrkdwn"
+                  text: "*Repository:* <${{ github.server_url }}/${{ github.repository }}|${{ github.repository }}>\n*Environment:* `${{ inputs.environment }}`\n*Branch:* `${{ github.ref_name }}`\n*Run:* <${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}|#${{ github.run_id }}>"
+              - type: "divider"
+              - type: "section"
+                text:
+                  type: "mrkdwn"
+                  text: "${{ steps.collect.outputs.results_text }}"
+              - type: "context"
+                elements:
+                  - type: "mrkdwn"
+                    text: "Triggered by *${{ github.actor }}* via *${{ github.event_name }}*"

@@ -1,0 +1,110 @@
+name: Deploy Single Managed Service Template
+
+on:
+  workflow_call:
+    secrets:
+      kube-config:
+        required: true
+        description: Kubernetes config for cluster access
+      docker-registry-username:
+        required: true
+        description: Docker registry username for re-tagging
+      docker-registry-password:
+        required: true
+        description: Docker registry password for re-tagging
+    inputs:
+      deploy:
+        required: true
+        type: boolean
+        description: Indicates if this should be deployed
+      runs-on:
+        required: true
+        type: string
+      environment:
+        required: true
+        type: string
+        description: GitHub environment name for deployment
+      service-name:
+        required: true
+        type: string
+        description: Name of the service being deployed (e.g., id, axauth, hosting)
+      image-name:
+        required: false
+        type: string
+        description: Name of the image inside the Docker repository if the image name and service name are different
+      kubernetes-namespace:
+        required: true
+        type: string
+        description: Kubernetes namespace to deploy to
+      environment-overlay:
+        required: true
+        type: string
+        description: Environment overlay name (e.g., cb, test, prod)
+      image-tag:
+        required: true
+        type: string
+        description: Docker image tag to deploy (typically the build run ID)
+
+jobs:
+  deploy:
+    if: ${{ inputs.deploy }}
+    name: Deploy ${{ inputs.service-name }}
+    runs-on: ${{ inputs.runs-on }}
+    environment: ${{ inputs.environment }}
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 1
+
+      - name: Update image tag in manifest
+        working-directory: .github/kubernetes/${{ inputs.service-name }}/overlays/${{ inputs.environment-overlay }}
+        run: |
+          echo "::notice::Updating image tag to: ${{ inputs.image-tag }}"
+          sed -i 's/:latest/:${{ inputs.image-tag }}/g' image.yaml
+          echo "Updated image.yaml:"
+          cat image.yaml
+
+      - name: Set up kubectl
+        uses: azure/setup-kubectl@v5
+        with:
+          version: 'v1.26.3'
+
+      - name: Configure kubectl
+        run: |
+          mkdir -p ~/.kube
+          echo "${{ secrets.kube-config }}" | base64 -d > ~/.kube/config
+          chmod 600 ~/.kube/config
+
+      - name: Deploy to kubernetes
+        working-directory: .github/kubernetes/${{ inputs.service-name }}/overlays/${{ inputs.environment-overlay }}
+        run: |
+          echo "::notice::Deploying ${{ inputs.service-name }} to ${{ inputs.kubernetes-namespace }}"
+          kubectl apply -k . -n ${{ inputs.kubernetes-namespace }}
+
+      - name: Wait for rollout completion
+        run: |
+          echo "::notice::Waiting for rollout of ${{ inputs.service-name }}..."
+          kubectl rollout status deployment/${{ inputs.service-name }} -n ${{ inputs.kubernetes-namespace }} --timeout=300s
+          echo "::notice::Deployment of ${{ inputs.service-name }} completed successfully"
+
+      - name: Re-tag image with environment-latest
+        run: |
+          IMAGE_REPO="harbor.axinom.com/mosaic/managed-services/${{ inputs.image-name }}"
+          SOURCE_TAG="${IMAGE_REPO}:${{ inputs.image-tag }}"
+          LATEST_TAG="${IMAGE_REPO}:${{ inputs.environment-overlay }}-latest"
+
+          echo "::notice::Logging into Docker registry..."
+          echo "${{ secrets.docker-registry-password }}" | docker login harbor.axinom.com -u "${{ secrets.docker-registry-username }}" --password-stdin
+
+          echo "::notice::Re-tagging $SOURCE_TAG -> $LATEST_TAG"
+          docker pull "$SOURCE_TAG"
+          docker tag "$SOURCE_TAG" "$LATEST_TAG"
+          docker push "$LATEST_TAG"
+
+          docker logout harbor.axinom.com
+          echo "::notice::Image re-tagged as $LATEST_TAG"
+
+      - name: Cleanup kubectl config
+        if: always()
+        run: rm -f ~/.kube/config

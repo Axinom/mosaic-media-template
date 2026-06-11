@@ -1,0 +1,52 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: unifiedstreaming
+spec:
+  template:
+    spec:
+      volumes:
+        - name: redis-data
+          persistentVolumeClaim:
+            claimName: pvc-redis-data-cb
+        - name: channel-volume
+          emptyDir:
+            sizeLimit: 500Mi
+      containers:
+        - name: origin
+          image: ghcr.io/unifiedstreaming/virtual-channel-origin:1.12.8
+          env:
+            - name: RABBITMQ_HOST
+              value: 'rabbitmq.test.axinom.net/wv6ypvgnbca9op5fkz5xah5p_ecc5zfwhykx6c5ohthlz28mxm'
+        - name: channelapi
+          image: ghcr.io/unifiedstreaming/virtual-channel-app:1.12.8
+          env:
+            - name: REMIX_TASK_TIMEOUT
+              value: '600'
+            - name: RABBITMQ_HOST
+              value: 'rabbitmq.test.axinom.net/wv6ypvgnbca9op5fkz5xah5p_ecc5zfwhykx6c5ohthlz28mxm'
+        - name: manifest-proxy
+          image: ghcr.io/unifiedstreaming/virtual-channel-manifest-proxy:1.12.8
+          env:
+            - name: RABBITMQ_HOST
+              value: 'rabbitmq.test.axinom.net/wv6ypvgnbca9op5fkz5xah5p_ecc5zfwhykx6c5ohthlz28mxm'
+        - name: vod2live
+          image: ghcr.io/unifiedstreaming/virtual-channel-app:1.12.8
+          env:
+            - name: RABBITMQ_HOST
+              value: 'rabbitmq.test.axinom.net/wv6ypvgnbca9op5fkz5xah5p_ecc5zfwhykx6c5ohthlz28mxm'
+        - name: transition
+          image: ghcr.io/unifiedstreaming/virtual-channel-app:1.12.8
+          env:
+            - name: RABBITMQ_HOST
+              value: 'rabbitmq.test.axinom.net/wv6ypvgnbca9op5fkz5xah5p_ecc5zfwhykx6c5ohthlz28mxm'
+        - name: housekeeping
+          image: ghcr.io/unifiedstreaming/virtual-channel-app:1.12.8
+          env:
+            - name: RABBITMQ_HOST
+              value: 'rabbitmq.test.axinom.net/wv6ypvgnbca9op5fkz5xah5p_ecc5zfwhykx6c5ohthlz28mxm'
+        - name: beat
+          image: ghcr.io/unifiedstreaming/virtual-channel-app:1.12.8
+          env:
+            - name: RABBITMQ_HOST
+              value: 'rabbitmq.test.axinom.net/wv6ypvgnbca9op5fkz5xah5p_ecc5zfwhykx6c5ohthlz28mxm'

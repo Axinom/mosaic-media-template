@@ -1,0 +1,78 @@
+mutation CreateVodServiceManifest {
+  createAxinomServiceDeploymentManifest(
+    input: {
+      axinomServiceDeploymentManifest: {
+        serviceDefinitionId: "#{serviceDefinitionIdVodToLive}#"
+        configMap: {
+          version: "1.0"
+          serviceId: "ax-vod-to-live-service"
+
+          regularVariables: {
+            SERVICE_ID: "vod-to-live-service"
+            PORT: "${__ax_hosted__.port.api}"
+            NODE_ENV: "production"
+            LOG_LEVEL: "DEBUG"
+            SECURE_LOGGING_MODE: "UNSAFE_DEBUG_UNSAFE"
+            GRAPHQL_GUI_ENABLED: true
+
+            TENANT_ID: "${__ax_hosted__.env.tenant_id}"
+            ENVIRONMENT_ID: "${__ax_hosted__.env.environment_id}"
+
+            POSTGRESQL_HOST: "${__ax_hosted__.pg.host}"
+            POSTGRESQL_PORT: "${__ax_hosted__.pg.port}"
+            POSTGRESQL_USER_SUFFIX: "${__ax_hosted__.pg.user_suffix}"
+            PGSSLMODE: "${__ax_hosted__.pg.sslmode}"
+
+            DATABASE_NAME: "${__ax_hosted__.pg.database_name}"
+            DATABASE_OWNER: "${__ax_hosted__.pg.db_owner_role}"
+            DATABASE_OWNER_PASSWORD: "${__ax_hosted__.pg.db_owner_password}"
+            DATABASE_LOGIN: "${__ax_hosted__.pg.db_login_role}"
+            DATABASE_LOGIN_PASSWORD: "${__ax_hosted__.pg.db_login_password}"
+            DATABASE_GQL_ROLE: "${__ax_hosted__.pg.db_gql_role}"
+
+            RABBITMQ_HOST: "${__ax_hosted__.rmq.host}"
+            RABBITMQ_PORT: "${__ax_hosted__.rmq.port}"
+            RABBITMQ_PROTOCOL: "${__ax_hosted__.rmq.protocol}"
+            RABBITMQ_MGMT_HOST: "${__ax_hosted__.rmq.mgmt_host}"
+            RABBITMQ_MGMT_PORT: "${__ax_hosted__.rmq.mgmt_port}"
+            RABBITMQ_MGMT_PROTOCOL: "${__ax_hosted__.rmq.mgmt_protocol}"
+            RABBITMQ_VHOST: "${__ax_hosted__.rmq.vhost}"
+            RABBITMQ_USER: "${__ax_hosted__.rmq.username}"
+            RABBITMQ_PASSWORD: "${__ax_hosted__.rmq.password}"
+
+            ID_SERVICE_AUTH_BASE_URL: "${__ax_hosted__.svc.ax-id-service.auth_base_url}"
+
+            VIRTUAL_CHANNEL_MANAGEMENT_API_BASE_URL: "#{virtualChannelManagementApiBaseUrl}#"
+            VIRTUAL_CHANNEL_ORIGIN_BASE_URL: "#{virtualChannelOriginBaseUrl}#"
+
+            AZURE_BLOB_CONTAINER_NAME: "#{azureBlobContainerName}#"
+
+            KEY_SERVICE_API_BASE_URL: "#{keyServiceApiBaseUrl}#"
+            KEY_SERVICE_TENANT_ID: "#{keyServiceTenantId}#"
+          }
+
+          secureVariables: {
+            VIRTUAL_CHANNEL_MANAGEMENT_API_KEY: "#{api-key}#"
+
+            AZURE_STORAGE_CONNECTION: "#{azure-storage-connection}#"
+
+            KEY_SERVICE_MANAGEMENT_KEY: "#{key-service-management-key}#"
+            DRM_KEY_SEED_ID: "#{drmKeySeedId}#"
+          }
+
+          serviceAccounts: []
+
+          pilets: []
+
+          dnsMappedPorts: [{ name: "api", port: 11900 }]
+        }
+      }
+    }
+  ) {
+    axinomServiceDeploymentManifest {
+      configMap
+      id
+      serviceDefinitionId
+    }
+  }
+}

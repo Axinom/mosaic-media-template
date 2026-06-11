@@ -1,0 +1,81 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: cleanup-configmap
+data:
+  cleanup.sh: |
+    #!/bin/sh
+    
+    # Set the API endpoint and API key
+    endpoint="https://navy-streaming-api.axtest.net/channels"
+    api_key="$API_KEY"
+    
+    # Make the GET request to /channels
+    response=$(curl -X GET "$endpoint" -H "USP-API-KEY: $api_key")
+    
+    # Iterate through the response
+    channel_names=$(echo "$response" | jq -r '.[].name')
+      
+    # Calculate the threshold timestamp for 1 hour ago
+    current_timestamp=$(date +%s)
+      
+    # Calculate the threshold timestamp for 1 hour ago
+    threshold_timestamp=$(($current_timestamp - 3600))
+    echo "1 hour timestamp: $threshold_timestamp"
+      
+    for channel_name in $channel_names; do
+    
+      echo "Channel name: $channel_name"
+    
+      # Make the GET request to /channels/{channel_name}/transitions
+      transition_endpoint="$endpoint/$channel_name/transitions"
+      transitions=$(curl -s -X GET "$transition_endpoint" -H "USP-API-KEY: $api_key" | jq -r '.transitions' | jq 'select( . != null ) | keys' | jq -r '.[]')
+    
+      for transition in $transitions; do
+        echo "Value: $transition"
+        cropped_time=$(echo "$transition" | cut -c 1-19 | tr 'T' ' ')
+        echo "Cropped time: $cropped_time"
+        transition_timestamp=$(date -u -d "$cropped_time" +"%s")
+        echo "Transition timestamp: $transition_timestamp"
+        if [ $((transition_timestamp)) -le $threshold_timestamp ]; then
+          echo "Transition Date: $transition (older than 1 hour from now)"
+          delete_endpoint="$endpoint/$channel_name/transitions/$transition"
+          response=$(curl -X DELETE "$delete_endpoint" -H "USP-API-KEY: $api_key")
+          echo "Response of delete: $response"
+        else
+          echo "Transition Date is not too old"
+        fi
+      done
+    done
+    
+---
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: cleanup-transition
+spec:
+  schedule: '*/30 * * * *'
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          containers:
+            - name: cleanup
+              image: dwdraju/alpine-curl-jq
+              imagePullPolicy: IfNotPresent
+              command: [ "/script/cleanup.sh" ]
+              env:
+                - name: API_KEY
+                  valueFrom:
+                    secretKeyRef:
+                      name: key-vault-unifiedstreaming
+                      key: api-key
+              volumeMounts:
+                - name: script
+                  mountPath: "/script"
+          volumes:
+            - name: script
+              configMap:
+                name: cleanup-configmap
+                defaultMode: 0500
+          restartPolicy: Never

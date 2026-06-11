@@ -1,0 +1,6 @@
+---
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata:
+  name: vod-to-live-app
+spec:

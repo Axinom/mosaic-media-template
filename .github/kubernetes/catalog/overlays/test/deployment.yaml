@@ -1,0 +1,86 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: catalog
+spec:
+  template:
+    spec:
+      containers:
+        - name: app
+          env:
+            - name: NODE_ENV
+              value: test
+            - name: LOG_LEVEL
+              value: DEBUG
+            - name: POSTGRESQL_HOST
+              value: mosaic-dev-ubi-pub.pgr9c261pwk62k1qyvf5j62vn5.postgres.ubicloud.com
+            - name: POSTGRESQL_PORT
+              value: '5432'
+            - name: POSTGRESQL_USER_SUFFIX
+              value: ''
+            - name: PGSSLMODE
+              value: verify-ca
+            - name: DATABASE_NAME
+              valueFrom:
+                secretKeyRef:
+                  name: key-vault-catalog
+                  key: database-name
+            - name: DATABASE_OWNER
+              valueFrom:
+                secretKeyRef:
+                  name: key-vault-catalog
+                  key: database-owner-username
+            - name: DATABASE_OWNER_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: key-vault-catalog
+                  key: database-owner-password
+            - name: DATABASE_LOGIN
+              valueFrom:
+                secretKeyRef:
+                  name: key-vault-catalog
+                  key: database-login-username
+            - name: DATABASE_LOGIN_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: key-vault-catalog
+                  key: database-login-password
+            - name: DATABASE_GQL_ROLE
+              valueFrom:
+                secretKeyRef:
+                  name: key-vault-catalog
+                  key: database-gql-username
+            - name: RABBITMQ_PROTOCOL
+              value: amqps
+            - name: RABBITMQ_VHOST
+              value: d486uyv5l5o9yakxwcl1jl9tc_2h7un9nxidxl0nrkr2t82kivg
+            - name: RABBITMQ_HOST
+              value: rabbitmq.test.axinom.net
+            - name: RABBITMQ_PORT
+              value: '5671'
+            - name: RABBITMQ_USER
+              valueFrom:
+                secretKeyRef:
+                  name: key-vault-catalog
+                  key: rabbitmq-user
+            - name: RABBITMQ_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: key-vault-catalog
+                  key: rabbitmq-password
+            - name: RABBITMQ_DEV_MIDDLEWARE
+              value: 'false'
+            - name: RABBITMQ_VHOST_ASSERT
+              value: 'false'
+            - name: RABBITMQ_MGMT_PROTOCOL
+              value: https
+            - name: RABBITMQ_MGMT_HOST
+              value: rabbitmq.test.axinom.net
+            - name: RABBITMQ_MGMT_PORT
+              value: '15671'
+            - name: TENANT_ID
+              value: dd91b4fd-7b9e-4f3b-854f-1baa882c0bf0
+            - name: ENVIRONMENT_ID
+              value: 29dc7321-c584-48f2-a9f4-bb6540934e8c
+            - name: ID_SERVICE_AUTH_BASE_URL
+              value: https://id.service.test.axinom.net

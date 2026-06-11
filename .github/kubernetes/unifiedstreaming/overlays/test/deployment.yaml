@@ -1,0 +1,66 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: unifiedstreaming
+spec:
+  template:
+    spec:
+      volumes:
+        - name: redis-data
+          persistentVolumeClaim:
+            claimName: pvc-redis-data-test
+        - name: channel-volume
+          persistentVolumeClaim:
+            claimName: pvc-blob-unifiedstreaming-test
+      containers:
+        - name: origin
+          env:
+            - name: CELERY_BROKER
+              valueFrom:
+                secretKeyRef:
+                  name: key-vault-unifiedstreaming
+                  key: rabbitmq-connection-string
+        - name: channelapi
+          env:
+            - name: REMIX_TASK_TIMEOUT
+              value: '600'
+            - name: CELERY_BROKER
+              valueFrom:
+                secretKeyRef:
+                  name: key-vault-unifiedstreaming
+                  key: rabbitmq-connection-string
+        - name: manifest-proxy
+          env:
+            - name: CELERY_BROKER
+              valueFrom:
+                secretKeyRef:
+                  name: key-vault-unifiedstreaming
+                  key: rabbitmq-connection-string
+        - name: vod2live
+          env:
+            - name: CELERY_BROKER
+              valueFrom:
+                secretKeyRef:
+                  name: key-vault-unifiedstreaming
+                  key: rabbitmq-connection-string
+        - name: transition
+          env:
+            - name: CELERY_BROKER
+              valueFrom:
+                secretKeyRef:
+                  name: key-vault-unifiedstreaming
+                  key: rabbitmq-connection-string
+        - name: housekeeping
+          env:
+            - name: CELERY_BROKER
+              valueFrom:
+                secretKeyRef:
+                  name: key-vault-unifiedstreaming
+                  key: rabbitmq-connection-string
+        - name: beat
+          env:
+            - name: CELERY_BROKER
+              valueFrom:
+                secretKeyRef:
+                  name: key-vault-unifiedstreaming
+                  key: rabbitmq-connection-string

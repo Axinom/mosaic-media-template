@@ -1,0 +1,96 @@
+name: Deploy Workflows Prerelease (CB)
+# Stages:
+# - Pre-check
+# - Deployment: CB (all workflows in parallel)
+
+on:
+  workflow_dispatch: # this is what allows us to run this workflow on-demand/manually.
+    inputs:
+      deploy-channel:
+        description: Deploy channel
+        type: boolean
+        default: true
+      deploy-media:
+        description: Deploy media
+        type: boolean
+        default: true
+
+jobs:
+  # ----------------------------------------- Pre-check ----------------------------------------- #
+  # Check if there's a successful workflow build for the same branch, and
+  # extract its run id to be used in deployments.
+  # --------------------------------------------------------------------------------------------- #
+  resolve_build:
+    name: Resolve Build Artifacts
+    runs-on: ubicloud-standard-2
+    outputs:
+      channel: ${{ steps.read.outputs.channel }}
+      media: ${{ steps.read.outputs.media }}
+    steps:
+      - name: Clone repository
+        uses: actions/checkout@v6
+        with:
+          fetch-tags: 'false'
+          fetch-depth: 1
+      - name: Read and set deployment versions
+        id: read
+        run: |
+          VERSION_FILE=".github/deployment-versions/workflows/cb.yaml"
+
+          for key in channel media; do
+            value=$(yq ".[\"$key\"]" "$VERSION_FILE")
+            echo "$key=$value" >> "$GITHUB_OUTPUT"
+            echo "::notice::$key: $value"
+          done
+
+  # ---------------------------------------- Deployment: CB ------------------------------------- #
+  channel:
+    name: Deploy channel
+    needs: resolve_build
+    uses: ./.github/workflows/templates-deploy-workflow.yml
+    secrets:
+      managed-workflow-publish-api-key: ${{ secrets.WORKFLOW_PUBLISH_API_KEY_CB }}
+    with:
+      deploy: ${{ github.event_name == 'schedule' || inputs.deploy-channel }}
+      runs-on: ubicloud-standard-2
+      build-run-id: ${{ needs.resolve_build.outputs.channel }}
+      environment: Prerelease
+      workflow-name: channel
+      artifact-pattern: "*fe-orchestration-channel*"
+      publish-base-url: https://frontends.${{ vars.MOSAIC_CB_SERVICE_SUB_DOMAIN }}
+      environment-id: ${{ vars.MOSAIC_CB_SELF_ENVIRONMENT_ID }}
+      tenant-id: ${{ vars.MOSAIC_CB_SELF_TENANT_ID }}
+      service-name: ax-channel-service
+      hosting-service-enabled: true
+
+  media:
+    name: Deploy media
+    needs: resolve_build
+    uses: ./.github/workflows/templates-deploy-workflow.yml
+    secrets:
+      managed-workflow-publish-api-key: ${{ secrets.WORKFLOW_PUBLISH_API_KEY_CB }}
+    with:
+      deploy: ${{ github.event_name == 'schedule' || inputs.deploy-media }}
+      runs-on: ubicloud-standard-2
+      build-run-id: ${{ needs.resolve_build.outputs.media }}
+      environment: Prerelease
+      workflow-name: media
+      artifact-pattern: "*fe-orchestration-media*"
+      publish-base-url: https://frontends.${{ vars.MOSAIC_CB_SERVICE_SUB_DOMAIN }}
+      environment-id: ${{ vars.MOSAIC_CB_SELF_ENVIRONMENT_ID }}
+      tenant-id: ${{ vars.MOSAIC_CB_SELF_TENANT_ID }}
+      service-name: ax-media-service
+      hosting-service-enabled: true
+
+  slack_notification:
+    name: Slack Notification
+    needs: [ channel, media ]
+    if: github.event_name == 'schedule' || !cancelled()
+    uses: ./.github/workflows/templates-slack-deploy-notification.yml
+    secrets:
+      slack_bot_token: ${{ secrets.SLACK_API_TOKEN_NAVY_CHANNELS }}
+      slack_channel_id: ${{ vars.SLACK_CHANNEL_ID_NAVY_CB_AUTO_RELEASE }}
+    with:
+      deploy-type: workflow
+      environment: cb
+      version-file: .github/deployment-versions/workflows/cb.yaml

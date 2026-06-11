@@ -1,0 +1,19 @@
+---
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata:
+  name: vod-to-live-app
+spec:
+  hostnames:
+    - mosaic-ott-vod-to-live.axprod.net
+  parentRefs:
+    - name: mosaic
+      namespace: gateway
+  rules:
+    - backendRefs:
+        - name: vod-to-live
+          port: 11900
+      matches:
+        - path:
+            type: PathPrefix
+            value: /

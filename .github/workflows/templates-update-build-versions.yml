@@ -1,0 +1,87 @@
+name: Update Build Versions
+
+on:
+  workflow_call:
+    secrets:
+      gh_app_id:
+        required: true
+        description: ID of the Github App that can bypass restrictions and commit directly to protected branches
+      gh_app_private_key:
+        required: true
+        description: Private Kye of the Github App that can bypass restrictions and commit directly to protected branches
+
+    inputs:
+      build-type:
+        required: true
+        type: string
+        description: Type of build - either 'service' or 'workflow'
+      runs-on:
+        required: false
+        type: string
+        default: ubicloud-standard-2
+
+jobs:
+  collect_results:
+    name: Collect Build Results
+    runs-on: ${{ inputs.runs-on }}
+    steps:
+      - name: Create GitHub app token
+        id: app-token
+        uses: actions/create-github-app-token@v2
+        with:
+          app-id: ${{ secrets.gh_app_id }}
+          private-key: ${{ secrets.gh_app_private_key }}
+
+      - name: Clone repository
+        uses: actions/checkout@v6
+        with:
+          token: '${{ steps.app-token.outputs.token }}'
+          fetch-tags: 'false'
+          fetch-depth: '1'
+
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: build-result-*
+          path: results
+          merge-multiple: false
+
+      - name: Determine version file and release type
+        id: release-info
+        run: |
+          VERSION_FILE=""
+          RELEASE_TYPE=""
+
+          if [[ "${{ github.ref }}" == refs/heads/releases/* ]]; then
+            VERSION_FILE=".github/deployment-versions/${{ inputs.build-type }}s/test.yaml"
+            RELEASE_TYPE="release"
+          else
+            VERSION_FILE=".github/deployment-versions/${{ inputs.build-type }}s/cb.yaml"
+            RELEASE_TYPE="prerelease"
+          fi
+
+          echo "version_file=$VERSION_FILE" >> "$GITHUB_OUTPUT"
+          echo "release_type=$RELEASE_TYPE" >> "$GITHUB_OUTPUT"
+
+      - name: Merge results into version file
+        run: |
+          VERSION_FILE="${{ steps.release-info.outputs.version_file }}"
+
+          echo "::notice::Updating $VERSION_FILE"
+
+          for f in results/*/result.txt; do
+            key=$(cut -d: -f1 < "$f")
+            value=$(cut -d: -f2- < "$f" | xargs)
+            yq -i ".[\"$key\"] = \"$value\"" "$VERSION_FILE"
+          done
+
+          echo "::notice::Diff check for versions"
+          git diff "$VERSION_FILE"
+
+      - name: Commit and push changes
+        run: |
+          git config user.name "GitHub App - Mosaic GitHub Automations"
+          git config user.email "team-se@axinom.com"
+
+          git add "${{ steps.release-info.outputs.version_file }}"
+          git commit -m "chore(${{ steps.release-info.outputs.release_type }}): bump ${{ inputs.build-type }} deployment versions for ${{ github.ref }}"
+          git push
