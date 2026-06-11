@@ -1,0 +1,83 @@
+name: Workflows Build
+
+on:
+  schedule:
+    - cron: '55 3 * * 1-5'
+  workflow_dispatch:
+    inputs:
+      build-channel:
+        type: boolean
+        default: true
+        description: Build channel
+      build-media:
+        type: boolean
+        default: true
+        description: Build media
+
+jobs:
+  build:
+    name: Build Workflows
+    uses: ./.github/workflows/templates-build-workflow.yml
+    with:
+      build: ${{ matrix.build }}
+      service-name: ${{ matrix.service-name }}
+      service-build-command: ${{ matrix.service-build-command }}
+      service-directory-path: ${{ matrix.service-directory-path }}
+      runs-on: ubicloud-standard-2
+      run-id: ${{ github.run_id }}
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - service-name: channel
+            build: ${{ github.event_name == 'schedule' || inputs.build-channel }}
+            service-build-command: build:channel-workflows:prod
+            service-directory-path: services/channel/workflows
+
+          - service-name: media
+            build: ${{ github.event_name == 'schedule' || inputs.build-media }}
+            service-build-command: build:media-workflows:prod
+            service-directory-path: services/media/workflows
+
+  collect_results:
+    name: Collect Results
+    needs: [build]
+    if: always()
+    uses: ./.github/workflows/templates-update-build-versions.yml
+    secrets:
+      gh_app_id: ${{ secrets.GH_APP_MOSAIC_AUTOMATION_APP_ID }}
+      gh_app_private_key: ${{ secrets.GH_APP_MOSAIC_AUTOMATION_PRIVATE_KEY }}
+    with:
+      build-type: workflow
+
+  slack_notification:
+    name: Slack Notification
+    needs: [build, collect_results]
+    if: always()
+    uses: ./.github/workflows/templates-slack-build-notification.yml
+    secrets:
+      slack_bot_token: ${{ secrets.SLACK_API_TOKEN_NAVY_CHANNELS }}
+      slack_channel_id: ${{ vars.SLACK_CHANNEL_ID_NAVY_CB_AUTO_RELEASE }}
+    with:
+      build-type: workflow
+
+  trigger_deploy:
+    name: Trigger Workflow Deployment
+    needs: [ collect_results ]
+    if: always()
+    runs-on: ubicloud-standard-2
+    steps:
+      - name: Trigger workflow deployment
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          WORKFLOW="deploy-workflows-prerelease.yml"
+          
+          if [[ "${{ github.ref }}" == refs/heads/releases/* ]]; then
+            WORKFLOW="deploy-workflows-release.yml"
+          fi
+          
+          gh workflow run "$WORKFLOW" \
+            --repo "${{ github.repository }}" \
+            --ref "${{ github.ref }}"
+          echo "::notice::Triggered $WORKFLOW on ${{ github.ref }}"

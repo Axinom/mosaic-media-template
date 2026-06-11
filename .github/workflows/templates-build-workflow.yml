@@ -1,0 +1,88 @@
+name: Mosaic Workflow Build
+
+on:
+  workflow_call:
+    inputs:
+      build:
+        required: true
+        type: boolean
+        description: Indicates if the build should continue
+      service-name:
+        required: true
+        type: string
+      checkout-fetch-depth:
+        required: false
+        type: number
+        default: 1
+      service-build-command:
+        required: true
+        type: string
+      service-directory-path:
+        required: true
+        type: string
+      runs-on:
+        required: true
+        type: string
+      run-id:
+        required: true
+        type: string
+      dash-url-template:
+        required: false
+        type: string
+        default: https://vtb.axinom.com/?dashUrl=[STREAM_URL]
+      hls-url-template:
+        required: false
+        type: string
+        default: https://vtb.axinom.com/?hlsUrl=[STREAM_URL]
+
+jobs:
+  build_and_publish:
+    if: ${{ inputs.build }}
+    name: Build and Publish Artifact
+    runs-on: ${{ inputs.runs-on }}
+    steps:
+      - id: metadata
+        run: |
+          DATE=$(date -u +%Y.%m.%d-%H.%M.%S)
+          BRANCH_NAME="${GITHUB_HEAD_REF:-$GITHUB_REF_NAME}"
+          BRANCH_NAME_SAFE="${BRANCH_NAME//\//_}"
+          echo "date=$DATE" >> "$GITHUB_OUTPUT"
+          echo "branch=$BRANCH_NAME_SAFE" >> "$GITHUB_OUTPUT"
+
+      - uses: actions/checkout@v6
+        with:
+          fetch-depth: ${{ inputs.checkout-fetch-depth }}
+
+      - uses: actions/setup-node@v6
+        with:
+          node-version: '22.x'
+
+      - run: |
+          yarn --immutable
+          yarn run ${{ inputs.service-build-command }}
+        env:
+          DASH_URL_TEMPLATE: ${{ inputs.dash-url-template }}
+          HLS_URL_TEMPLATE: ${{ inputs.hls-url-template }}
+
+      - id: artifact
+        run: |
+          ARTIFACT_NAME="${{ inputs.service-directory-path }}"
+          ARTIFACT_NAME="${ARTIFACT_NAME//\//-}"
+          ARTIFACT_NAME="$ARTIFACT_NAME-${{ steps.metadata.outputs.branch }}-${{ steps.metadata.outputs.date }}"
+          echo "name=$ARTIFACT_NAME" >> "$GITHUB_OUTPUT"
+
+      - name: Upload pilet artifact
+        uses: actions/upload-artifact@v6
+        with:
+          name: ${{ steps.artifact.outputs.name }}
+          path: '*.tgz'
+          retention-days: 30
+
+      - name: Upload build result
+        run: |
+          echo "${{ inputs.service-name }}: ${{ inputs.run-id }}" > result.txt
+      - uses: actions/upload-artifact@v6
+        with:
+          name: build-result-${{ inputs.service-name }}
+          path: result.txt
+          retention-days: 1

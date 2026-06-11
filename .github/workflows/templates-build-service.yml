@@ -1,0 +1,117 @@
+name: Mosaic Backend Service Build
+
+on:
+  workflow_call:
+    secrets:
+      docker_registry_username:
+        required: true
+        description: Username to authenticate with Docker registry
+      docker_registry_password:
+        required: true
+        description: Password to authenticate with Docker registry
+
+    inputs:
+      build:
+        required: true
+        type: boolean
+        description: Indicates if the build should continue
+      checkout-fetch-depth:
+        required: false
+        type: number
+        default: 1
+      service-name:
+        required: true
+        type: string
+      service-build-command:
+        required: true
+        type: string
+      service-directory-path:
+        required: true
+        type: string
+      service-node-version:
+        required: false
+        type: number
+        default: 22
+      service-build-library-version-target:
+        required: false
+        type: string
+        default: next
+      docker-repository:
+        required: true
+        type: string
+      dockerfile-path:
+        required: false
+        type: string
+        default: build-pipelines/Dockerfile.backend
+      docker-registry-url:
+        required: false
+        type: string
+        default: harbor.axinom.com
+      runs-on:
+        required: true
+        type: string
+      run-id:
+        required: true
+        type: string
+        description: Github Action workflow's run id (execution id or databaseId)
+      composite-id:
+        required: true
+        type: string
+        description: Pre-computed id that contains the date string and the run id, separated by an underscore
+
+jobs:
+  build_and_push:
+    if: ${{ inputs.build }}
+    name: Build and Push to Docker
+    runs-on: ${{ inputs.runs-on }}
+    env:
+      IMAGE_BASE: ${{ inputs.docker-registry-url }}/${{ inputs.docker-repository }}
+    outputs:
+      service_name: ${{ inputs.service-name }}
+      composite_id: ${{ inputs.composite-id }}
+      composite_docker_tag: ${{ env.IMAGE_BASE }}:${{ inputs.composite-id }}
+    steps:
+      - name: Clone repository
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: ${{ inputs.checkout-fetch-depth }}
+      - name: Setup nodejs
+        uses: actions/setup-node@v6
+        with:
+          node-version: ${{ inputs.service-node-version }}
+      - name: Install dependencies
+        run: yarn --immutable
+      - name: Build service
+        run: yarn run ${{ inputs.service-build-command }}
+
+
+      - name: Login to registry
+        uses: docker/login-action@v4
+        with:
+          registry: ${{ inputs.docker-registry-url }}
+          username: ${{ secrets.docker_registry_username }}
+          password: ${{ secrets.docker_registry_password }}
+      - name: Setup docker buildx
+        uses: docker/setup-buildx-action@v4
+      - name: Build and push to docker repository
+        uses: docker/build-push-action@v7
+        with:
+          context: .
+          push: true
+          file: ${{ inputs.dockerfile-path }}
+          build-args: |
+            PACKAGE_ROOT=${{ inputs.service-directory-path }}
+            NPM_LIB_TARGET=${{ inputs.service-build-library-version-target }}
+          tags: |
+            ${{ env.IMAGE_BASE }}:${{ inputs.run-id }}
+            ${{ env.IMAGE_BASE }}:${{ github.sha }}
+            ${{ env.IMAGE_BASE }}:${{ inputs.composite-id }}
+
+      - name: Upload build result
+        run: |
+          echo "${{ inputs.service-name }}: ${{ inputs.composite-id }}" > result.txt
+      - uses: actions/upload-artifact@v6
+        with:
+          name: build-result-${{ inputs.service-name }}
+          path: result.txt
+          retention-days: 1

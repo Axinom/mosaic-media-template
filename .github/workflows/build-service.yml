@@ -1,0 +1,139 @@
+name: Build Services
+
+on:
+  schedule:
+    - cron: '35 3 * * 1-5'
+  workflow_dispatch:
+    inputs:
+      library-target:
+        type: choice
+        description: Library Target
+        options:
+          - prerelease
+          - next
+
+      build-catalog:
+        type: boolean
+        default: true
+        description: Build catalog
+      build-channel:
+        type: boolean
+        default: true
+        description: Build channel
+      build-entitlement:
+        type: boolean
+        default: true
+        description: Build entitlement
+      build-media:
+        type: boolean
+        default: true
+        description: Build media
+      build-vod-to-live:
+        type: boolean
+        default: true
+        description: Build vod-to-live
+
+jobs:
+  prepare:
+    name: Prepare Build
+    runs-on: ubicloud-standard-2
+    outputs:
+      composite_id: ${{ steps.tags.outputs.composite_id }}
+    steps:
+      - name: Generate composite tag
+        id: tags
+        run: |
+          DATE_TAG=$(date -u +%Y.%m.%d-%H.%M.%S)
+          COMPOSITE_ID="${DATE_TAG}_${{ github.run_id }}_${{ inputs.library-target || 'prerelease' }}"
+          echo "composite_id=${COMPOSITE_ID}" >> "$GITHUB_OUTPUT"
+          echo "::notice::Composite tag: ${COMPOSITE_ID}"
+
+  build_services:
+    name: Build Services
+    needs: [ prepare ]
+    uses: ./.github/workflows/templates-build-service.yml
+    secrets:
+      docker_registry_username: ${{ secrets.HARBOR_PUSH_USERNAME }}
+      docker_registry_password: ${{ secrets.HARBOR_PUSH_PASSWORD }}
+    with:
+      build: ${{ matrix.build }}
+      service-name: ${{ matrix.service }}
+      service-build-command: ${{ matrix.service-build-command }}
+      service-directory-path: ${{ matrix.service-directory-path }}
+      service-build-library-version-target: ${{ case(github.event_name == 'schedule', 'prerelease', inputs.library-target) }}
+      docker-repository: mosaic/customizable-services-dev/${{ matrix.image-name || matrix.service }}-service
+      run-id: ${{ github.run_id }}
+      composite-id: ${{ needs.prepare.outputs.composite_id }}
+      dockerfile-path: ${{ matrix.dockerfile-path || 'Dockerfile' }}
+      runs-on: ubicloud-standard-2
+    strategy:
+      fail-fast: false  # without this set to false, GH will cancel all parallel jobs if one job fails.
+      matrix:
+        include:
+          - service: catalog
+            build: ${{ github.event_name == 'schedule' || inputs.build-catalog }}
+            service-build-command: build:catalog-service:prod
+            service-directory-path: services/catalog/service
+
+          - service: channel
+            build: ${{ github.event_name == 'schedule' || inputs.build-channel }}
+            service-build-command: build:channel-service:prod
+            service-directory-path: services/channel/service
+
+          - service: entitlement
+            build: ${{ github.event_name == 'schedule' || inputs.build-entitlement }}
+            service-build-command: build:entitlement-service:prod
+            service-directory-path: services/entitlement/service
+
+          - service: media
+            build: ${{ github.event_name == 'schedule' || inputs.build-media }}
+            service-build-command: build:media:prod
+            service-directory-path: services/media/service
+
+          - service: vod-to-live
+            build: ${{ github.event_name == 'schedule' || inputs.build-vod-to-live }}
+            service-build-command: build:vod-to-live-service:prod
+            service-directory-path: services/vod-to-live/service
+
+  collect_results:
+    name: Collect Results
+    needs: [ prepare, build_services ]
+    if: always()
+    uses: ./.github/workflows/templates-update-build-versions.yml
+    secrets:
+      gh_app_id: ${{ secrets.GH_APP_MOSAIC_AUTOMATION_APP_ID }}
+      gh_app_private_key: ${{ secrets.GH_APP_MOSAIC_AUTOMATION_PRIVATE_KEY }}
+    with:
+      build-type: service
+
+  slack_notification:
+    name: Slack Notification
+    needs: [ collect_results ]
+    if: always()
+    uses: ./.github/workflows/templates-slack-build-notification.yml
+    secrets:
+      slack_bot_token: ${{ secrets.SLACK_API_TOKEN_NAVY_CHANNELS }}
+      slack_channel_id: ${{ vars.SLACK_CHANNEL_ID_NAVY_CB_AUTO_RELEASE }}
+    with:
+      build-type: service
+
+  trigger_deploy:
+    name: Trigger Service Deployment
+    needs: [ collect_results ]
+    if: always()
+    runs-on: ubicloud-standard-2
+    steps:
+      - name: Trigger service deployment
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          WORKFLOW="deploy-services-prerelease.yml"
+          
+          if [[ "${{ github.ref }}" == refs/heads/releases/* ]]; then
+            WORKFLOW="deploy-services-release.yml"
+          fi
+          
+          gh workflow run "$WORKFLOW" \
+            --repo "${{ github.repository }}" \
+            --ref "${{ github.ref }}"
+          echo "::notice::Triggered $WORKFLOW on ${{ github.ref }}"
