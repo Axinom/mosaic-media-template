@@ -1,0 +1,10 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: entitlement
+spec:
+  template:
+    spec:
+      containers:
+        - name: app
+          image: harbor.axinom.com/mosaic/customizable-services-dev/entitlement-service:latest

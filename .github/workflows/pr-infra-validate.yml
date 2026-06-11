@@ -1,0 +1,110 @@
+name: PR Infrastructure Validate
+
+on:
+  pull_request:
+    branches:
+      - dev
+      - main
+    paths:
+      - '.github/kubernetes/**'
+    types:
+      - opened
+      - synchronize
+      - reopened
+      - ready_for_review
+
+jobs:
+  pr-infra-validate:
+    if: github.event.pull_request.draft == false
+    runs-on: ubicloud-standard-2
+    timeout-minutes: 30
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: '0'
+
+      - name: Setup kustomize
+        uses: imranismail/setup-kustomize@v2
+
+      - name: Setup kubeconform
+        run: |
+          curl -sL https://github.com/yannh/kubeconform/releases/latest/download/kubeconform-linux-amd64.tar.gz | tar xz
+          sudo mv kubeconform /usr/local/bin/
+
+      - id: changed-dirs
+        name: Check for affected kubernetes manifest directory paths
+        run: |
+          # Get list of changed files in the kubernetes paths
+          CHANGED_FILES=$(git diff --name-only origin/${{ github.base_ref }}...HEAD -- \
+            'build-pipelines/L3-deployments/managed/kubernetes/' \
+            'build-pipelines/L3-deployments/customizable/kubernetes/')
+
+          # Extract unique top-level service directories that changed
+          CHANGED_DIRS=$(echo "$CHANGED_FILES" | \
+            grep -E '^build-pipelines/L3-deployments/(managed|customizable)/kubernetes/' | \
+            sed -E 's#^(build-pipelines/L3-deployments/(managed|customizable)/kubernetes/[^/]+).*#\1#' | \
+            sort -u)
+
+          echo "Changed directories:"
+          echo "$CHANGED_DIRS"
+
+          # Store as JSON array for matrix or iteration
+          if [ -z "$CHANGED_DIRS" ]; then
+            echo "dirs=[]" >> $GITHUB_OUTPUT
+          else
+            DIRS_JSON=$(echo "$CHANGED_DIRS" | jq -R -s -c 'split("\n") | map(select(length > 0))')
+            echo "dirs=$DIRS_JSON" >> $GITHUB_OUTPUT
+          fi
+
+      - if: steps.changed-dirs.outputs.dirs != '[]'
+        name: Validate kubernetes manifests
+        run: |
+          DIRS='${{ steps.changed-dirs.outputs.dirs }}'
+          FAILED=0
+
+          for DIR in $(echo "$DIRS" | jq -r '.[]'); do
+            echo "=========================================="
+            echo "Validating: $DIR"
+            echo "=========================================="
+
+            # Find all kustomization.yaml files in this directory
+            KUSTOMIZE_DIRS=$(find "$DIR" -name "kustomization.yaml" -exec dirname {} \;)
+
+            for KUST_DIR in $KUSTOMIZE_DIRS; do
+              echo ""
+              echo "Processing: $KUST_DIR"
+              echo "-------------------------------------------"
+
+              # Build the kustomize manifest
+              if ! kustomize build "$KUST_DIR" > /tmp/manifest.yaml 2>&1; then
+                echo "::error::Failed to build kustomize manifest for $KUST_DIR"
+                cat /tmp/manifest.yaml
+                FAILED=1
+                continue
+              fi
+
+              # Validate with kubeconform
+              # --ignore-missing-schemas: skip CRDs that kubeconform doesn't know about
+              # --summary: show summary at the end
+              if ! kubeconform -summary -ignore-missing-schemas -strict /tmp/manifest.yaml; then
+                echo "::error::Validation failed for $KUST_DIR"
+                FAILED=1
+              else
+                echo "Validation passed for $KUST_DIR"
+              fi
+            done
+          done
+
+          if [ $FAILED -ne 0 ]; then
+            echo ""
+            echo "::error::One or more Kubernetes manifests failed validation"
+            exit 1
+          fi
+
+          echo ""
+          echo "All Kubernetes manifests validated successfully!"
+
+      - name: Skip message
+        if: steps.changed-dirs.outputs.dirs == '[]'
+        run: echo "No kubernetes directories changed, skipping validation"

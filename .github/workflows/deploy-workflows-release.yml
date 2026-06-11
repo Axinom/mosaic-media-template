@@ -1,0 +1,251 @@
+name: Deploy Workflows Release (Test -> Production)
+# Stages:
+# - Pre-check
+# - Approval: TEST
+# - Deployment: TEST (all workflows in parallel)
+# - Post-check: TEST
+# - Approval: PRODUCTION
+# - Deployment: PRODUCTION (all workflows in parallel)
+
+on:
+  workflow_dispatch:
+    inputs:
+      deploy-channel:
+        description: Deploy channel
+        type: boolean
+        default: true
+      deploy-media:
+        description: Deploy media
+        type: boolean
+        default: true
+
+jobs:
+  # ----------------------------------------- Pre-check ----------------------------------------- #
+  # Check if release deployment comes from a branch name starting with releases/*
+  # Check if there's a successful workflow build for the same branch, and
+  # extract its run id to be used in both TEST and PRODUCTION deployments.
+  # --------------------------------------------------------------------------------------------- #
+  resolve_build_test:
+    name: Resolve Build Artifacts (Test)
+    runs-on: ubicloud-standard-2
+    outputs:
+      channel: ${{ steps.read.outputs.channel }}
+      media: ${{ steps.read.outputs.media }}
+    steps:
+      - name: Determine if the current branch is allowed
+        run: |
+          BRANCH="${{ github.head_ref || github.ref_name }}"
+          if [[ ! "$BRANCH" =~ ^releases/ ]]; then
+            echo "::error::Branch '$BRANCH' is not allowed. Only branches starting with 'releases/' can trigger this workflow."
+            # exit 1
+          fi
+          echo "::notice::Branch '$BRANCH' is allowed"
+
+      - uses: actions/checkout@v6
+        with:
+          fetch-depth: 1
+      - name: Read deployment versions
+        id: read
+        run: |
+          VERSION_FILE=".github/deployment-versions/workflows/test.yaml"
+
+          for key in channel media; do
+            value=$(yq ".[\"$key\"]" "$VERSION_FILE")
+            echo "$key=$value" >> "$GITHUB_OUTPUT"
+            echo "::notice::$key: $value"
+          done
+
+  # --------------------------------------- Approval: TEST -------------------------------------- #
+  approve_test_deploy:
+    name: Approve Test Deployment
+    needs: resolve_build_test
+    runs-on: ubicloud-standard-2
+    permissions:
+      issues: write
+    steps:
+      - name: Request approval for Test deployment
+        uses: trstringer/manual-approval@v1
+        with:
+          secret: ${{ github.TOKEN }}
+          approvers: yohanAnushka,EmperorRXF,BenjaminSchwendner
+          minimum-approvals: 1
+          issue-title: Manual Approval for Test Workflows Deployment
+          issue-body: |
+            Type `approve` to approve or `denied` to reject the workflow ${{ github.run_name }}
+
+            > [!TIP]
+            > ### Deployment Versions
+            > `Version File`: `.github/deployment-versions/workflows/test.yaml`
+
+            >[!NOTE]
+            > ### Execution Details
+            > Ref: `${{ github.ref_name }}`
+            > By: @${{ github.actor }}
+
+  # -------------------------------------- Deployment: TEST ------------------------------------- #
+  test_channel:
+    name: Deploy channel (Test)
+    needs: [ resolve_build_test, approve_test_deploy ]
+    uses: ./.github/workflows/templates-deploy-workflow.yml
+    secrets:
+      workflow-publish-api-key: ${{ secrets.WORKFLOW_PUBLISH_API_KEY_TEST }}
+      managed-workflow-publish-api-key: ${{ secrets.MANAGED_WORKFLOW_PUBLISH_API_KEY_TEST }}
+    with:
+      deploy: ${{ inputs.deploy-channel }}
+      runs-on: ubicloud-standard-2
+      build-run-id: ${{ needs.resolve_build_test.outputs.channel }}
+      environment: Test
+      workflow-name: channel
+      artifact-pattern: "channel-workflows"
+      publish-base-url: https://frontends.${{ vars.MOSAIC_TEST_SERVICE_SUB_DOMAIN }}
+      environment-id: ${{ vars.MOSAIC_TEST_SELF_ENVIRONMENT_ID }}
+      tenant-id: ${{ vars.MOSAIC_TEST_SELF_TENANT_ID }}
+      service-name: ax-channel-service
+      hosting-service-enabled: true
+
+  test_media:
+    name: Deploy media (Test)
+    needs: [ resolve_build_test, approve_test_deploy ]
+    uses: ./.github/workflows/templates-deploy-workflow.yml
+    secrets:
+      workflow-publish-api-key: ${{ secrets.WORKFLOW_PUBLISH_API_KEY_TEST }}
+      managed-workflow-publish-api-key: ${{ secrets.MANAGED_WORKFLOW_PUBLISH_API_KEY_TEST }}
+    with:
+      deploy: ${{ inputs.deploy-media }}
+      runs-on: ubicloud-standard-2
+      build-run-id: ${{ needs.resolve_build_test.outputs.media }}
+      environment: Test
+      workflow-name: media
+      artifact-pattern: "media-workflows"
+      publish-base-url: https://frontends.${{ vars.MOSAIC_TEST_SERVICE_SUB_DOMAIN }}
+      environment-id: ${{ vars.MOSAIC_TEST_SELF_ENVIRONMENT_ID }}
+      tenant-id: ${{ vars.MOSAIC_TEST_SELF_TENANT_ID }}
+      service-name: ax-media-service
+      hosting-service-enabled: true
+
+  # -------------------------------------- Post-check: TEST ------------------------------------- #
+  # Check if all workflows were successfully deployed to TEST.
+  # Without this condition succeeding, we will not move on to PRODUCTION
+  # --------------------------------------------------------------------------------------------- #
+  test_stage_complete:
+    name: Finish Test Stage
+    runs-on: ubicloud-standard-2
+    needs:
+      - test_channel
+      - test_media
+    if: always()
+    steps:
+      - name: Check test results
+        run: |
+          if [[ "${{ contains(needs.*.result, 'failure') }}" == "true" ]]; then
+            echo "::error::One or more test deployments failed"
+            exit 1
+          fi
+          if [[ "${{ contains(needs.*.result, 'cancelled') }}" == "true" ]]; then
+            echo "::error::One or more test deployments were cancelled"
+            exit 1
+          fi
+          echo "::notice::All test deployments completed successfully"
+
+  # ----------------------------------------- Pre-check ----------------------------------------- #
+  # Check if there's a successful workflow build for the same branch, and
+  # extract its run id to be used in PRODUCTION deployments.
+  # --------------------------------------------------------------------------------------------- #
+  resolve_build_prod:
+    name: Resolve Build Artifacts (Prod)
+    runs-on: ubicloud-standard-2
+    needs: test_stage_complete
+    outputs:
+      channel: ${{ steps.read.outputs.channel }}
+      media: ${{ steps.read.outputs.media }}
+    steps:
+      - name: Determine if the current branch is allowed
+        run: |
+          BRANCH="${{ github.head_ref || github.ref_name }}"
+          if [[ ! "$BRANCH" =~ ^releases/ ]]; then
+            echo "::error::Branch '$BRANCH' is not allowed. Only branches starting with 'releases/' can trigger this workflow."
+            # exit 1
+          fi
+          echo "::notice::Branch '$BRANCH' is allowed"
+
+      - uses: actions/checkout@v6
+        with:
+          fetch-depth: 1
+      - name: Read deployment versions
+        id: read
+        run: |
+          VERSION_FILE=".github/deployment-versions/workflows/prod.yaml"
+
+          for key in channel media; do
+            value=$(yq ".[\"$key\"]" "$VERSION_FILE")
+            echo "$key=$value" >> "$GITHUB_OUTPUT"
+            echo "::notice::$key: $value"
+          done
+
+  # ------------------------------------ Approval: PRODUCTION ----------------------------------- #
+  approve_prod_deploy:
+    name: Approve Production Deployment
+    needs: [ resolve_build_prod, test_stage_complete ]
+    runs-on: ubicloud-standard-2
+    permissions:
+      issues: write
+    steps:
+      - name: Request approval for Production deployment
+        uses: trstringer/manual-approval@v1
+        with:
+          secret: ${{ github.TOKEN }}
+          approvers: yohanAnushka,EmperorRXF,BenjaminSchwendner
+          minimum-approvals: 1
+          issue-title: Manual Approval for Production Workflows Deployment
+          issue-body: |
+            Type `approve` to approve or `denied` to reject the workflow ${{ github.run_name }}
+
+            > [!TIP]
+            > ### Deployment Versions
+            > `Version File`: `.github/deployment-versions/workflows/prod.yaml`
+
+            >[!NOTE]
+            > ### Execution Details
+            > Ref: `${{ github.ref_name }}`
+            > By: @${{ github.actor }}
+
+  # ----------------------------------- Deployment: PRODUCTION ---------------------------------- #
+  prod_channel:
+    name: Deploy channel (Prod)
+    needs: [ resolve_build_prod, approve_prod_deploy ]
+    uses: ./.github/workflows/templates-deploy-workflow.yml
+    secrets:
+      workflow-publish-api-key: ${{ secrets.WORKFLOW_PUBLISH_API_KEY_PROD }}
+      managed-workflow-publish-api-key: ${{ secrets.MANAGED_WORKFLOW_PUBLISH_API_KEY_PROD }}
+    with:
+      deploy: ${{ inputs.deploy-channel }}
+      runs-on: ubicloud-standard-2
+      build-run-id: ${{ needs.resolve_build_prod.outputs.channel }}
+      environment: Production
+      workflow-name: channel
+      artifact-pattern: "channel-workflows"
+      publish-base-url: https://frontends.${{ vars.MOSAIC_PROD_SERVICE_SUB_DOMAIN }}
+      environment-id: ${{ vars.MOSAIC_PROD_SELF_ENVIRONMENT_ID }}
+      tenant-id: ${{ vars.MOSAIC_PROD_SELF_TENANT_ID }}
+      service-name: ax-channel-service
+      hosting-service-enabled: true
+
+  prod_media:
+    name: Deploy media (Prod)
+    needs: [ resolve_build_prod, approve_prod_deploy ]
+    uses: ./.github/workflows/templates-deploy-workflow.yml
+    secrets:
+      workflow-publish-api-key: ${{ secrets.WORKFLOW_PUBLISH_API_KEY_PROD }}
+      managed-workflow-publish-api-key: ${{ secrets.MANAGED_WORKFLOW_PUBLISH_API_KEY_PROD }}
+    with:
+      deploy: ${{ inputs.deploy-media }}
+      runs-on: ubicloud-standard-2
+      build-run-id: ${{ needs.resolve_build_prod.outputs.media }}
+      environment: Production
+      workflow-name: media
+      artifact-pattern: "media-workflows"
+      publish-base-url: https://frontends.${{ vars.MOSAIC_PROD_SERVICE_SUB_DOMAIN }}
+      environment-id: ${{ vars.MOSAIC_PROD_SELF_ENVIRONMENT_ID }}
+      tenant-id: ${{ vars.MOSAIC_PROD_SELF_TENANT_ID }}
+      service-name: ax-media-service
+      hosting-service-enabled: true

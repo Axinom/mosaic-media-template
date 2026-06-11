@@ -87,7 +87,7 @@ jobs:
 
           - service: media
             build: ${{ github.event_name == 'schedule' || inputs.build-media }}
-            service-build-command: build:media:prod
+            service-build-command: build:media-service:prod
             service-directory-path: services/media/service
 
           - service: vod-to-live

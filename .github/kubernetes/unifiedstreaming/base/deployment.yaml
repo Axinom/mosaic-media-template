@@ -1,0 +1,242 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: unifiedstreaming
+  annotations:
+    deployment.kubernetes.io/revision: '1'
+    kubectl.kubernetes.io/default-container: 'origin'
+spec:
+  selector:
+    matchLabels:
+      app: unifiedstreaming
+  replicas: 1
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: unifiedstreaming
+    spec:
+      imagePullSecrets:
+        - name: axinom-registry-customizable-services-pull
+      nodeSelector:
+        mosaic.axinom.com/workload_type: general
+      hostAliases:
+        - ip: "127.0.0.1"
+          hostnames:
+            - "redis"
+            - "origin"
+            - "manifest-proxy"
+      volumes:
+        - name: origin-apache-conf
+          configMap:
+            name: unifiedstreaming-origin-apache-conf
+            defaultMode: 0777
+        - name: origin-apache-ports-conf
+          configMap:
+            name: unifiedstreaming-origin-apache-ports-conf
+            defaultMode: 0777
+      containers:
+        - name: origin
+          image: harbor.axinom.com/mosaic/customizable-services-dev/unifiedstreaming/virtual-channel-origin:1.13.0-with-caching-2
+          env:
+            - name: ORIGIN_PORT
+              value: '10800'
+            - name: LOG_LEVEL
+              value: 'error'
+            - name: UspLicenseKey
+              valueFrom:
+                secretKeyRef:
+                  name: key-vault-unifiedstreaming
+                  key: usp-license-key
+          ports:
+            - containerPort: 80
+              name: origin
+              protocol: TCP
+            - containerPort: 8081
+              name: origin-cache
+              protocol: TCP
+          volumeMounts:
+            - mountPath: /var/www/unified-origin
+              name: channel-volume
+            - mountPath: /etc/apache2/sites-enabled/unified-origin.conf
+              name: origin-apache-conf
+              subPath: unified-origin.apache.conf
+            - mountPath: /etc/apache2/sites-available/unified-origin.conf
+              name: origin-apache-conf
+              subPath: unified-origin.apache.conf
+            - mountPath: /etc/apache2/ports.conf
+              name: origin-apache-ports-conf
+              subPath: ports.conf
+          resources:
+            limits:
+              cpu: '250m'
+              memory: '250Mi'
+            requests:
+              cpu: '100m'
+              memory: '100Mi'
+
+        - name: channelapi
+          image: ghcr.io/unifiedstreaming/virtual-channel-app:1.13.0
+          command: [ "uvicorn" ]
+          args: [ "app.main:app", "--host", "0.0.0.0", "--port", "8000", "--proxy-headers", "--forwarded-allow-ips", "*" ]
+          env:
+            - name: API_PORT
+              value: '8000'
+            - name: LOG_LEVEL
+              value: 'error'
+            - name: UspLicenseKey
+              valueFrom:
+                secretKeyRef:
+                  name: key-vault-unifiedstreaming
+                  key: usp-license-key
+            - name: API_INSECURE
+              value: 'False'
+            - name: API_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: key-vault-unifiedstreaming
+                  key: api-key
+          ports:
+            - containerPort: 8000
+              name: api
+              protocol: TCP
+          volumeMounts:
+            - mountPath: /channels
+              name: channel-volume
+          resources:
+            limits:
+              cpu: '250m'
+              memory: '250Mi'
+            requests:
+              cpu: '100m'
+              memory: '100Mi'
+        - name: manifest-proxy
+          image: ghcr.io/unifiedstreaming/virtual-channel-manifest-proxy:1.13.0
+          command: [ "uvicorn" ]
+          args: [ "app.main:app", "--host", "0.0.0.0", "--port", "8080", "--proxy-headers", "--forwarded-allow-ips", "*" ]
+          env:
+            - name: LOG_LEVEL
+              value: 'error'
+            - name: UspLicenseKey
+              valueFrom:
+                secretKeyRef:
+                  name: key-vault-unifiedstreaming
+                  key: usp-license-key
+          ports:
+            - containerPort: 8080
+              name: proxy
+              protocol: TCP
+          volumeMounts:
+            - mountPath: /channels
+              name: channel-volume
+          resources:
+            limits:
+              cpu: '250m'
+              memory: '250Mi'
+            requests:
+              cpu: '100m'
+              memory: '100Mi'
+        - name: vod2live
+          image: ghcr.io/unifiedstreaming/virtual-channel-app:1.13.0
+          command: [ "celery" ]
+          args: [ "-A", "app.tasks.vod2live", "worker", "-Q", "vod2live", "--loglevel", "error", "-n", "vod2live@%n" ]
+          env:
+            - name: LOG_LEVEL
+              value: 'error'
+            - name: UspLicenseKey
+              valueFrom:
+                secretKeyRef:
+                  name: key-vault-unifiedstreaming
+                  key: usp-license-key
+          volumeMounts:
+            - mountPath: /channels
+              name: channel-volume
+          resources:
+            limits:
+              cpu: '350m'
+              memory: '500Mi'
+            requests:
+              cpu: '150m'
+              memory: '150Mi'
+        - name: transition
+          image: ghcr.io/unifiedstreaming/virtual-channel-app:1.13.0
+          command: [ "celery" ]
+          args: [ "-A", "app.tasks.trigger_transition", "worker", "-Q", "trigger_transition", "--loglevel", "error", "-n", "transition@%n" ]
+          env:
+            - name: LOG_LEVEL
+              value: 'error'
+            - name: UspLicenseKey
+              valueFrom:
+                secretKeyRef:
+                  name: key-vault-unifiedstreaming
+                  key: usp-license-key
+          volumeMounts:
+            - mountPath: /channels
+              name: channel-volume
+          resources:
+            limits:
+              cpu: '500m'
+              memory: '750Mi'
+            requests:
+              cpu: '150m'
+              memory: '150Mi'
+        - name: housekeeping
+          image: ghcr.io/unifiedstreaming/virtual-channel-app:1.13.0
+          command: [ "celery" ]
+          args: [ "-A", "app.tasks.housekeeping", "worker", "--loglevel", "error", "-n", "housekeeping@%n" ]
+          env:
+            - name: LOG_LEVEL
+              value: 'error'
+            - name: UspLicenseKey
+              valueFrom:
+                secretKeyRef:
+                  name: key-vault-unifiedstreaming
+                  key: usp-license-key
+          volumeMounts:
+            - mountPath: /channels
+              name: channel-volume
+          resources:
+            limits:
+              cpu: '350m'
+              memory: '500Mi'
+            requests:
+              cpu: '150m'
+              memory: '150Mi'
+        - name: beat
+          image: ghcr.io/unifiedstreaming/virtual-channel-app:1.13.0
+          command: [ "celery" ]
+          args: [ "-A", "app.tasks.housekeeping", "beat", "--loglevel", "error" ]
+          env:
+            - name: LOG_LEVEL
+              value: 'error'
+            - name: UspLicenseKey
+              valueFrom:
+                secretKeyRef:
+                  name: key-vault-unifiedstreaming
+                  key: usp-license-key
+          volumeMounts:
+            - mountPath: /channels
+              name: channel-volume
+          resources:
+            limits:
+              cpu: '250m'
+              memory: '250Mi'
+            requests:
+              cpu: '100m'
+              memory: '100Mi'
+        - name: redis
+          image: redis:7.0.4
+          command: [ "redis-server" ]
+          args: [ "--appendonly", "yes" ]
+          volumeMounts:
+            - name: redis-data
+              mountPath: /data
+          resources:
+            limits:
+              cpu: '250m'
+              memory: '250Mi'
+            requests:
+              cpu: '100m'
+              memory: '100Mi'

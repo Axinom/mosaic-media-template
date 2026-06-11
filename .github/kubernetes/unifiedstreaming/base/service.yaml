@@ -1,0 +1,21 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: unifiedstreaming
+spec:
+  type: ClusterIP
+  selector:
+    app: unifiedstreaming
+  ports:
+    - name: origin
+      port: 80
+      protocol: TCP
+      targetPort: 80
+    - name: channelapi
+      port: 8000
+      protocol: TCP
+      targetPort: 8000
+    - name: manifest
+      port: 8080
+      protocol: TCP
+      targetPort: 8080

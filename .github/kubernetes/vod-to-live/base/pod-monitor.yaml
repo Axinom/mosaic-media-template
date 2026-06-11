@@ -1,0 +1,15 @@
+---
+apiVersion: monitoring.coreos.com/v1
+kind: PodMonitor
+metadata:
+  name: vod-to-live
+  labels:
+    app: vod-to-live
+    release: rancher-monitoring # Without this label, prometheus won't pick up this pod monitor.
+spec:
+  selector:
+    matchLabels:
+      app: vod-to-live
+  podMetricsEndpoints:
+    - port: metrics
+      path: /metrics

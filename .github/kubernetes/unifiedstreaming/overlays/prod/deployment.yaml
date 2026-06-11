@@ -1,0 +1,90 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: unifiedstreaming
+spec:
+  template:
+    spec:
+      nodeSelector:
+        mosaic.axinom.com/workload_type: customizable-services
+        mosaic.axinom.com/hosting_node_pool: basic_balanced_axinom_owned
+      tolerations:
+        - key: 'mosaic.axinom.com/customizable-services'
+          operator: 'Equal'
+          value: 'True'
+          effect: 'NoSchedule'
+      volumes:
+        - name: redis-data
+          persistentVolumeClaim:
+            claimName: pvc-redis-data-prod
+        - name: channel-volume
+          persistentVolumeClaim:
+            claimName: pvc-blob-unifiedstreaming-prod
+        - name: cpix-files
+          secret:
+            secretName: key-vault-unifiedstreaming
+            defaultMode: 0777
+            items:
+              - key: decryption-cpix
+                path: decryption_cpix.xml
+              - key: protection-hls-cpix
+                path: protection_hls_cpix.xml
+              - key: protection-dash-cpix
+                path: protection_dash_cpix.xml
+      containers:
+        - name: origin
+          env:
+            - name: CELERY_BROKER
+              valueFrom:
+                secretKeyRef:
+                  name: key-vault-unifiedstreaming
+                  key: rabbitmq-connection-string
+            - name: CACHED_STORAGE_ACCOUNT_URL
+              value: https://axinompoc.blob.core.windows.net/vod-to-live-channels/
+          volumeMounts:
+            - mountPath: /vod-to-live
+              name: cpix-files
+        - name: channelapi
+          env:
+            - name: REMIX_TASK_TIMEOUT
+              value: '600'
+            - name: CELERY_BROKER
+              valueFrom:
+                secretKeyRef:
+                  name: key-vault-unifiedstreaming
+                  key: rabbitmq-connection-string
+        - name: manifest-proxy
+          env:
+            - name: CELERY_BROKER
+              valueFrom:
+                secretKeyRef:
+                  name: key-vault-unifiedstreaming
+                  key: rabbitmq-connection-string
+        - name: vod2live
+          env:
+            - name: CELERY_BROKER
+              valueFrom:
+                secretKeyRef:
+                  name: key-vault-unifiedstreaming
+                  key: rabbitmq-connection-string
+        - name: transition
+          env:
+            - name: CELERY_BROKER
+              valueFrom:
+                secretKeyRef:
+                  name: key-vault-unifiedstreaming
+                  key: rabbitmq-connection-string
+        - name: housekeeping
+          env:
+            - name: CELERY_BROKER
+              valueFrom:
+                secretKeyRef:
+                  name: key-vault-unifiedstreaming
+                  key: rabbitmq-connection-string
+        - name: beat
+          env:
+            - name: CELERY_BROKER
+              valueFrom:
+                secretKeyRef:
+                  name: key-vault-unifiedstreaming
+                  key: rabbitmq-connection-string

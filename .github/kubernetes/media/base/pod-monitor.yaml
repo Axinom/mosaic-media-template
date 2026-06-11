@@ -1,0 +1,15 @@
+---
+apiVersion: monitoring.coreos.com/v1
+kind: PodMonitor
+metadata:
+  name: media
+  labels:
+    app: media
+    release: rancher-monitoring # Without this label, prometheus won't pick up this pod monitor.
+spec:
+  selector:
+    matchLabels:
+      app: media
+  podMetricsEndpoints:
+    - port: metrics
+      path: /metrics

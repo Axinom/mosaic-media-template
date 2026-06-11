@@ -1,0 +1,127 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: channel
+  annotations:
+    deployment.kubernetes.io/revision: '1'
+    kubectl.kubernetes.io/default-container: 'app'
+spec:
+  selector:
+    matchLabels:
+      app: channel
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: channel
+    spec:
+      nodeSelector:
+        mosaic.axinom.com/workload_type: general
+      imagePullSecrets:
+        - name: axinom-registry-customizable-services-pull
+      volumes:
+        - name: ax-ca-certs
+          configMap:
+            name: ax-ca-certs
+            defaultMode: 420
+            items:
+              - key: postgres-ca.crt
+                path: postgres-ca.crt
+      containers:
+        - name: app
+          image: harbor.axinom.com/mosaic/customizable-services-dev/channel-service:latest
+          env:
+            - name: SERVICE_ID
+              value: channel-service
+            - name: PORT
+              value: '11800'
+            - name: GRAPHQL_GUI_ENABLED
+              value: 'true'
+            - name: PG_POOL_MAX_CONNECTIONS
+              value: '25'
+            - name: TRX_DB_SCHEMA
+              value: 'app_hidden'
+            - name: TRX_NEXT_MESSAGES_FUNCTION_SCHEMA
+              value: 'app_hidden'
+            - name: TRX_MESSAGE_PROCESSING_TIMEOUT_IN_MS
+              value: '15000'
+            - name: TRX_NEXT_MESSAGES_LOCK_IN_MS
+              value: '15000'
+            - name: TRX_MAX_ATTEMPTS
+              value: '5'
+            - name: TRX_MAX_POISONOUS_ATTEMPTS
+              value: '3'
+            - name: TRX_MESSAGE_CLEANUP_INTERVAL_IN_MS
+              value: '300000'
+            - name: TRX_MESSAGE_CLEANUP_PROCESSED_IN_SEC
+              value: '604800'
+            - name: TRX_MESSAGE_CLEANUP_ABANDONED_IN_SEC
+              value: '1209600'
+            - name: TRX_MESSAGE_CLEANUP_ALL_IN_SEC
+              value: '5184000'
+            - name: TRX_NEXT_MESSAGES_BATCH_SIZE
+              value: '5'
+            - name: TRX_NEXT_MESSAGES_POLLING_INTERVAL_IN_MS
+              value: '500'
+            - name: TRX_OUTBOX_DB_TABLE
+              value: 'outbox'
+            - name: TRX_OUTBOX_NEXT_MESSAGES_FUNCTION_NAME
+              value: 'next_outbox_messages'
+            - name: TRX_OUTBOX_ENABLE_MAX_ATTEMPTS_PROTECTION
+              value: 'false'
+            - name: TRX_OUTBOX_ENABLE_POISONOUS_MESSAGE_PROTECTION
+              value: 'false'
+            - name: TRX_INBOX_DB_TABLE
+              value: 'inbox'
+            - name: TRX_INBOX_NEXT_MESSAGES_FUNCTION_NAME
+              value: 'next_inbox_messages'
+            - name: TRX_INBOX_ENABLE_MAX_ATTEMPTS_PROTECTION
+              value: 'true'
+            - name: TRX_INBOX_ENABLE_POISONOUS_MESSAGE_PROTECTION
+              value: 'true'
+            - name: IS_LOCALIZATION_ENABLED
+              value: 'true'
+            - name: PLAYLIST_SHOULD_BE_24_HOURS
+              value: 'false'
+            - name: NODE_EXTRA_CA_CERTS
+              value: /etc/axinom/tls/extra-ca-certs/postgres-ca.crt
+          volumeMounts:
+            - name: ax-ca-certs
+              mountPath: /etc/axinom/tls/extra-ca-certs/postgres-ca.crt
+              subPath: postgres-ca.crt
+              readOnly: true
+          ports:
+            - containerPort: 9090
+              name: metrics
+              protocol: TCP
+            - containerPort: 9911
+              name: diagnostics
+              protocol: TCP
+            - containerPort: 11800
+              name: app
+              protocol: TCP
+          livenessProbe:
+            failureThreshold: 3
+            httpGet:
+              path: /live
+              port: 9000
+              scheme: HTTP
+            periodSeconds: 30
+            successThreshold: 1
+            timeoutSeconds: 30
+          readinessProbe:
+            failureThreshold: 3
+            httpGet:
+              path: /ready
+              port: 9000
+              scheme: HTTP
+            periodSeconds: 15
+            successThreshold: 1
+            timeoutSeconds: 15
+          securityContext:
+            allowPrivilegeEscalation: false
+            privileged: false
+            runAsNonRoot: true
+            runAsUser: 1000
+            runAsGroup: 1000

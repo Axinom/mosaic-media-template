@@ -28,7 +28,7 @@ on:
       artifact-pattern:
         required: true
         type: string
-        description: Pattern to match the artifact directory (e.g., "*id-workflows*")
+        description: Pattern to match in the artifact path (e.g., "channel-workflows", "media-workflows")
       publish-base-url:
         required: true
         type: string
@@ -67,26 +67,30 @@ jobs:
     environment: ${{ inputs.environment }}
     steps:
       - name: Download artifact
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v6
         with:
-          pattern: ${{ inputs.artifact-pattern }}
+          pattern: "*${{ inputs.artifact-pattern }}*"
           path: ./artifacts
           run-id: ${{ inputs.build-run-id }}
           github-token: ${{ secrets.GITHUB_TOKEN }}
 
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v6
         with:
           node-version: 22
 
       - name: Publish customer pilet
         working-directory: ./artifacts
         run: |
-          ARTIFACT_DIR=$(find . -type d -name "${{ inputs.artifact-pattern }}" | head -1)
-          if [ -z "$ARTIFACT_DIR" ]; then
-            echo "::error::No artifact directory matching pattern '${{ inputs.artifact-pattern }}'"
+          set +e  # Disable exit on error to capture command output
+
+          # Find .tgz file matching the pattern and extract its directory
+          TGZ_FILE=$(find . -type f -name "*.tgz" -path "*${{ inputs.artifact-pattern }}*" | head -1)
+          if [ -z "$TGZ_FILE" ]; then
+            echo "::error::No .tgz file found matching pattern '${{ inputs.artifact-pattern }}'"
             exit 1
           fi
 
+          ARTIFACT_DIR=$(dirname "$TGZ_FILE")
           cd "$ARTIFACT_DIR"
           echo "::notice::Publishing from: $(pwd)"
           ls -la *.tgz
@@ -102,7 +106,13 @@ jobs:
             --url "$PUBLISH_URL" \
             --api-key "${{ secrets.workflow-publish-api-key }}" \
             ${{ inputs.extra-fields }} 2>&1)
+          exit_code=$?
           echo "$response"
+
+          if [ $exit_code -ne 0 ]; then
+            echo "::error::npx command failed with exit code $exit_code"
+            exit 1
+          fi
 
           if echo "$response" | grep -q '"success": true' && echo "$response" | grep -q '"status": 200'; then
             echo "::notice::Response validated and marked as a successful upload"
@@ -115,12 +125,16 @@ jobs:
         if: ${{ inputs.hosting-service-enabled }}
         working-directory: ./artifacts
         run: |
-          ARTIFACT_DIR=$(find . -type d -name "${{ inputs.artifact-pattern }}" | head -1)
-          if [ -z "$ARTIFACT_DIR" ]; then
-            echo "::error::No artifact directory matching pattern '${{ inputs.artifact-pattern }}'"
+          set +e  # Disable exit on error to capture command output
+
+          # Find .tgz file matching the pattern and extract its directory
+          TGZ_FILE=$(find . -type f -name "*.tgz" -path "*${{ inputs.artifact-pattern }}*" | head -1)
+          if [ -z "$TGZ_FILE" ]; then
+            echo "::error::No .tgz file found matching pattern '${{ inputs.artifact-pattern }}'"
             exit 1
           fi
 
+          ARTIFACT_DIR=$(dirname "$TGZ_FILE")
           cd "$ARTIFACT_DIR"
           echo "::notice::Publishing managed pilet from: $(pwd)"
           ls -la *.tgz
@@ -133,7 +147,13 @@ jobs:
             --url "$PUBLISH_URL" \
             --api-key "${{ secrets.managed-workflow-publish-api-key }}" \
             2>&1)
+          exit_code=$?
           echo "$response"
+
+          if [ $exit_code -ne 0 ]; then
+            echo "::error::npx command failed with exit code $exit_code"
+            exit 1
+          fi
 
           if echo "$response" | grep -q '"success": true' && echo "$response" | grep -q '"status": 200'; then
             echo "::notice::Response validated and marked as a successful upload"

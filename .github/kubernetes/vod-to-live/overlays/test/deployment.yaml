@@ -1,0 +1,74 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: vod-to-live
+spec:
+  template:
+    spec:
+      containers:
+        - name: app
+          env:
+            - name: NODE_ENV
+              value: test
+            - name: LOG_LEVEL
+              value: DEBUG
+            - name: RABBITMQ_PROTOCOL
+              value: amqps
+            - name: RABBITMQ_VHOST
+              value: d486uyv5l5o9yakxwcl1jl9tc_2h7un9nxidxl0nrkr2t82kivg
+            - name: RABBITMQ_HOST
+              value: rabbitmq.test.axinom.net
+            - name: RABBITMQ_PORT
+              value: '5671'
+            - name: RABBITMQ_USER
+              valueFrom:
+                secretKeyRef:
+                  name: key-vault-entitlement
+                  key: rabbitmq-user
+            - name: RABBITMQ_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: key-vault-entitlement
+                  key: rabbitmq-password
+            - name: RABBITMQ_DEV_MIDDLEWARE
+              value: 'false'
+            - name: RABBITMQ_VHOST_ASSERT
+              value: 'false'
+            - name: RABBITMQ_MGMT_PROTOCOL
+              value: https
+            - name: RABBITMQ_MGMT_HOST
+              value: rabbitmq.test.axinom.net
+            - name: RABBITMQ_MGMT_PORT
+              value: '15671'
+            - name: TENANT_ID
+              value: dd91b4fd-7b9e-4f3b-854f-1baa882c0bf0
+            - name: ENVIRONMENT_ID
+              value: 29dc7321-c584-48f2-a9f4-bb6540934e8c
+            - name: VIRTUAL_CHANNEL_MANAGEMENT_API_BASE_URL
+              value: 'https://navy-streaming-api.axtest.net'
+            - name: VIRTUAL_CHANNEL_ORIGIN_BASE_URL
+              value: 'https://navy-streaming-origin.axtest.net'
+            - name: AZURE_STORAGE_CONNECTION
+              valueFrom:
+                secretKeyRef:
+                  name: key-vault-vod-to-live
+                  key: azure-storage-connection
+            - name: AZURE_BLOB_CONTAINER_NAME
+              value: 'vod2live'
+            - name: VIRTUAL_CHANNEL_MANAGEMENT_API_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: key-vault-vod-to-live
+                  key: api-key
+            - name: SERVICE_ACCOUNT_CLIENT_ID
+              valueFrom:
+                secretKeyRef:
+                  name: key-vault-vod-to-live
+                  key: service-account-client-id
+            - name: SERVICE_ACCOUNT_CLIENT_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: key-vault-vod-to-live
+                  key: service-account-client-secret
+            - name: ID_SERVICE_AUTH_BASE_URL
+              value: https://id.service.test.axinom.net

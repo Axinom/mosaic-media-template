@@ -1,0 +1,134 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: entitlement
+spec:
+  template:
+    spec:
+      # Force onto dedicated node pool for performance testing
+      nodeSelector:
+        mosaic.axinom.com/workload_type: perf
+      containers:
+        - name: app
+          env:
+            - name: NODE_ENV
+              value: test
+            - name: LOG_LEVEL
+              value: DEBUG
+            - name: SECURE_LOGGING_MODE
+              value: UNSAFE_DEBUG_UNSAFE
+            - name: POSTGRESQL_HOST
+              value: mosaic-loadtest-ubi-pub.pgfexb2rxka65mf3xh8a7hsrvd.postgres.ubicloud.com
+            - name: POSTGRESQL_PORT
+              value: '5432'
+            - name: POSTGRESQL_USER_SUFFIX
+              value: ''
+            - name: PGSSLMODE
+              value: verify-ca
+            - name: DATABASE_NAME
+              valueFrom:
+                secretKeyRef:
+                  name: key-vault-entitlement
+                  key: database-name
+            - name: DATABASE_OWNER
+              valueFrom:
+                secretKeyRef:
+                  name: key-vault-entitlement
+                  key: database-owner-username
+            - name: DATABASE_OWNER_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: key-vault-entitlement
+                  key: database-owner-password
+            - name: DATABASE_LOGIN
+              valueFrom:
+                secretKeyRef:
+                  name: key-vault-entitlement
+                  key: database-login-username
+            - name: DATABASE_LOGIN_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: key-vault-entitlement
+                  key: database-login-password
+            - name: DATABASE_GQL_ROLE
+              valueFrom:
+                secretKeyRef:
+                  name: key-vault-entitlement
+                  key: database-gql-username
+            - name: RABBITMQ_PROTOCOL
+              value: amqps
+            - name: RABBITMQ_VHOST
+              value: 6sfhxoygq1c7uxdpw9431yuox_b223hjxdaiuliuspqsbuuv9n7
+            - name: RABBITMQ_HOST
+              value: rabbitmq.test.axinom.net
+            - name: RABBITMQ_PORT
+              value: '5671'
+            - name: RABBITMQ_USER
+              valueFrom:
+                secretKeyRef:
+                  name: key-vault-entitlement
+                  key: rabbitmq-user
+            - name: RABBITMQ_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: key-vault-entitlement
+                  key: rabbitmq-password
+            - name: RABBITMQ_DEV_MIDDLEWARE
+              value: 'false'
+            - name: RABBITMQ_VHOST_ASSERT
+              value: 'false'
+            - name: RABBITMQ_MGMT_PROTOCOL
+              value: https
+            - name: RABBITMQ_MGMT_HOST
+              value: rabbitmq.test.axinom.net
+            - name: RABBITMQ_MGMT_PORT
+              value: '15671'
+            - name: TENANT_ID
+              value: 72afd24b-5716-4bd8-ba60-3cfffe82dce1
+            - name: ENVIRONMENT_ID
+              value: bac4d986-2b9c-4964-a101-76c71f190893
+            - name: MOSAIC_TESTING_IP_ENABLED
+              value: 'true'
+            - name: DRM_LICENSE_COMMUNICATION_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: key-vault-entitlement
+                  key: drm-license-communication-key
+            - name: DRM_LICENSE_COMMUNICATION_KEY_ID
+              valueFrom:
+                secretKeyRef:
+                  name: key-vault-entitlement
+                  key: drm-license-communication-key-id
+            - name: GEOLITE2_LICENSE_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: key-vault-entitlement
+                  key: geolite2-license-key
+            - name: SERVICE_ACCOUNT_CLIENT_ID
+              valueFrom:
+                secretKeyRef:
+                  name: key-vault-entitlement
+                  key: service-account-client-id
+            - name: SERVICE_ACCOUNT_CLIENT_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: key-vault-entitlement
+                  key: service-account-client-secret
+            - name: CATALOG_SERVICE_BASE_URL
+              value: https://perf-navy-catalog.axtest.net
+            - name: USER_SERVICE_AUTH_BASE_URL
+              value: https://user-auth.service.perf.axinom.net
+            - name: ID_SERVICE_AUTH_BASE_URL
+              value: https://id.service.perf.axinom.net
+            - name: ENTITLEMENT_WEBHOOK_SECRET
+              value: ''
+            - name: MANIFEST_WEBHOOK_SECRET
+              value: ''
+            - name: WIDEVINE_LICENSE_SERVICE_URL
+              value: https://drm-widevine-licensing.axtest.net/AcquireLicense
+            - name: PLAYREADY_LICENSE_SERVICE_URL
+              value: https://drm-playready-licensing.axtest.net/AcquireLicense
+            - name: FAIRPLAY_LICENSE_SERVICE_URL
+              value: https://drm-fairplay-licensing.axtest.net/AcquireLicense
+            - name: FAIRPLAY_STREAMING_CERTIFICATE_URL
+              value: https://vtb.axinom.com/FPScert/fairplay.cer

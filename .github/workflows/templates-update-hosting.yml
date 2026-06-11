@@ -1,0 +1,146 @@
+name: Update Hosting Service Template
+
+on:
+  workflow_call:
+    secrets:
+      managed-service-client-id:
+        required: true
+        description: Client ID for managed service account authentication
+      managed-service-client-secret:
+        required: true
+        description: Client secret for managed service account authentication
+    inputs:
+      runs-on:
+        required: true
+        type: string
+      environment:
+        required: true
+        type: string
+        description: GitHub environment name for deployment
+      environment-subdomain:
+        required: true
+        type: string
+        description: Environment subdomain (e.g., service.cb.axinom.net)
+      gql-manifest-directory:
+        required: false
+        type: string
+        default: '.github/hosting/v2'
+        description: Directory containing GraphQL manifest files
+      services-to-update:
+        required: true
+        type: string
+        description: Comma-separated list of services to update (e.g., "media,catalog,entitlement")
+      service-definition-ids:
+        required: true
+        type: string
+        description: JSON object mapping service names to their definition IDs
+
+jobs:
+  update-hosting:
+    name: Update Hosting Service
+    runs-on: ${{ inputs.runs-on }}
+    environment: ${{ inputs.environment }}
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 1
+
+      - name: Install jq
+        run: |
+          if ! command -v jq &> /dev/null; then
+            sudo apt-get update && sudo apt-get install -y jq
+          fi
+
+      - name: Replace tokens in GraphQL files
+        working-directory: ${{ inputs.gql-manifest-directory }}
+        env:
+          MANAGED_SERVICE_CLIENT_ID: ${{ secrets.managed-service-client-id }}
+          MANAGED_SERVICE_CLIENT_SECRET: ${{ secrets.managed-service-client-secret }}
+          SERVICE_DEFINITION_IDS: ${{ inputs.service-definition-ids }}
+        run: |
+          echo "::notice::Replacing tokens in GraphQL manifest files"
+
+          # Replace managed service credentials in id.get-token.graphql
+          sed -i "s/#{managed-service-client-id}#/$MANAGED_SERVICE_CLIENT_ID/g" id.get-token.graphql
+          sed -i "s/#{managed-service-client-secret}#/$MANAGED_SERVICE_CLIENT_SECRET/g" id.get-token.graphql
+
+          # Replace service definition IDs in service manifests
+          for service in $(echo "${{ inputs.services-to-update }}" | tr ',' ' '); do
+            manifest_file="${service}.create-axinom-service-deployment-manifest.graphql"
+            if [ -f "$manifest_file" ]; then
+              # Get the service definition ID from JSON input
+              # Convert service name to camelCase for the key (e.g., media -> serviceDefinitionIdMedia)
+              service_key="serviceDefinitionId$(echo "$service" | sed -r 's/(^|-)([a-z])/\U\2/g')"
+              definition_id=$(echo "$SERVICE_DEFINITION_IDS" | jq -r ".[\"$service_key\"] // empty")
+
+              if [ -n "$definition_id" ]; then
+                sed -i "s/#{$service_key}#/$definition_id/g" "$manifest_file"
+                echo "::notice::Replaced token in $manifest_file with definition ID: $definition_id"
+              else
+                echo "::warning::No service definition ID found for $service_key"
+              fi
+            fi
+          done
+
+      - name: Get token from ID service
+        id: get-token
+        working-directory: ${{ inputs.gql-manifest-directory }}
+        run: |
+          echo "::notice::Fetching JWT from ID service"
+
+          payload=$(cat id.get-token.graphql | tr -d '\n' | sed 's/"/\\"/g')
+          response=$(curl -g --silent \
+            -X POST \
+            -H 'Content-Type: application/json' \
+            -d "{ \"query\": \"$payload\" }" \
+            "https://id.${{ inputs.environment-subdomain }}/graphql")
+
+          token=$(echo "$response" | jq -r '.data.authenticateManagedServiceAccount.accessToken')
+
+          if [[ "$token" == "null" || -z "$token" ]]; then
+            echo "::error::Failed to retrieve token from ID service"
+            echo "::error::Response: $response"
+            exit 1
+          fi
+
+          echo "token=$token" >> "$GITHUB_OUTPUT"
+          echo "::notice::Successfully fetched JWT from ID service"
+
+      - name: Update service definitions in hosting service
+        working-directory: ${{ inputs.gql-manifest-directory }}
+        env:
+          TOKEN: ${{ steps.get-token.outputs.token }}
+        run: |
+          failed=0
+
+          for service in $(echo "${{ inputs.services-to-update }}" | tr ',' ' '); do
+            manifest_file="${service}.create-axinom-service-deployment-manifest.graphql"
+
+            echo "::notice::Updating service definition for $service"
+
+            if [ ! -f "$manifest_file" ]; then
+              echo "::warning::No GQL manifest exists for $service service; Skipping..."
+              continue
+            fi
+
+            payload=$(cat "$manifest_file" | tr -d '\n' | sed 's/"/\\"/g')
+            response=$(curl -g --silent \
+              -X POST \
+              -H 'Content-Type: application/json' \
+              -H "Authorization: Bearer $TOKEN" \
+              -d "{ \"query\": \"$payload\" }" \
+              "https://hosting.${{ inputs.environment-subdomain }}/graphql")
+
+            if [[ $(echo "$response" | jq '.data.createAxinomServiceDeploymentManifest') == "null" ]]; then
+              echo "::error::Failed to update definitions for $service"
+              echo "::error::Response: $response"
+              failed=1
+            else
+              echo "::notice::Successfully updated service definition for $service"
+            fi
+          done
+
+          if [ $failed -eq 1 ]; then
+            exit 1
+          fi

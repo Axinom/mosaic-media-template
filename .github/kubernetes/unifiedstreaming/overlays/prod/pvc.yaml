@@ -1,0 +1,14 @@
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: pvc-blob-unifiedstreaming-prod
+  namespace: customizable-prod
+spec:
+  accessModes:
+    - ReadWriteMany
+  resources:
+    requests:
+      storage: 50Gi
+  volumeName: pv-blob-unifiedstreaming-prod
+  storageClassName: azureblob-fuse-premium

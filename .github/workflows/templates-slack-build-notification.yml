@@ -1,0 +1,171 @@
+name: Slack Build Notification
+
+on:
+  workflow_call:
+    secrets:
+      slack_bot_token:
+        required: true
+        description: Slack bot token for authentication
+      slack_channel_id:
+        required: true
+        description: Slack channel ID to post the notification
+
+    inputs:
+      build-type:
+        required: true
+        type: string
+        description: Type of build - either 'service' or 'workflow'
+      runs-on:
+        required: false
+        type: string
+        default: ubicloud-standard-2
+
+jobs:
+  notify:
+    name: Send Slack Notification
+    runs-on: ${{ inputs.runs-on }}
+    steps:
+      - uses: actions/download-artifact@v6
+        with:
+          pattern: build-result-*
+          path: results
+          merge-multiple: false
+
+      - name: Collect build results
+        id: collect
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          # Collect successful builds from artifacts
+          SUCCESS_COUNT=0
+          SUCCESSFUL_BUILDS=""
+          if [ -d "results" ]; then
+            for f in results/*/result.txt; do
+              if [ -f "$f" ]; then
+                name=$(cut -d: -f1 < "$f")
+                version=$(cut -d: -f2- < "$f" | xargs)
+                SUCCESSFUL_BUILDS="${SUCCESSFUL_BUILDS}${name}:${version}"$'\n'
+                SUCCESS_COUNT=$((SUCCESS_COUNT + 1))
+              fi
+            done
+          fi
+
+          # Get failed jobs from the workflow run
+          FAILURE_COUNT=0
+          FAILED_BUILDS=""
+          FAILED_JOBS=$(gh api \
+            -H "Accept: application/vnd.github+json" \
+            -H "X-GitHub-Api-Version: 2022-11-28" \
+            "/repos/${{ github.repository }}/actions/runs/${{ github.run_id }}/jobs" \
+            --jq '.jobs[] | select(.conclusion == "failure") | .name' 2>/dev/null || echo "")
+
+          while IFS= read -r job_name; do
+            if [ -n "$job_name" ]; then
+              # Extract service name from job name (format: "job_name (service, ...)")
+              # Using sed instead of grep -oP for better compatibility
+              service_name=$(echo "$job_name" | sed -n 's/.*(\([^,)]*\).*/\1/p' | head -1)
+              if [ -n "$service_name" ]; then
+                FAILED_BUILDS="${FAILED_BUILDS}${service_name}"$'\n'
+                FAILURE_COUNT=$((FAILURE_COUNT + 1))
+              fi
+            fi
+          done <<< "$FAILED_JOBS"
+
+          # Store results
+          echo "successful_builds<<EOF" >> "$GITHUB_OUTPUT"
+          printf '%s' "$SUCCESSFUL_BUILDS" >> "$GITHUB_OUTPUT"
+          echo "EOF" >> "$GITHUB_OUTPUT"
+
+          echo "failed_builds<<EOF" >> "$GITHUB_OUTPUT"
+          printf '%s' "$FAILED_BUILDS" >> "$GITHUB_OUTPUT"
+          echo "EOF" >> "$GITHUB_OUTPUT"
+
+          echo "success_count=$SUCCESS_COUNT" >> "$GITHUB_OUTPUT"
+          echo "failure_count=$FAILURE_COUNT" >> "$GITHUB_OUTPUT"
+
+          # Determine overall status
+          if [ "$FAILURE_COUNT" -gt 0 ]; then
+            echo "overall_status=:warning: Some builds failed" >> "$GITHUB_OUTPUT"
+            echo "status_emoji=:warning:" >> "$GITHUB_OUTPUT"
+          else
+            echo "overall_status=:white_check_mark: All builds succeeded" >> "$GITHUB_OUTPUT"
+            echo "status_emoji=:white_check_mark:" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Build Slack message
+        id: message
+        run: |
+          BUILD_TYPE="${{ inputs.build-type }}"
+          BUILD_TYPE_TITLE=$(echo "$BUILD_TYPE" | sed 's/./\U&/')
+
+          # Build successful items list (one per line)
+          SUCCESSFUL_LIST=""
+          while IFS= read -r line; do
+            if [ -n "$line" ]; then
+              name=$(echo "$line" | cut -d: -f1)
+              version=$(echo "$line" | cut -d: -f2-)
+              if [ -n "$SUCCESSFUL_LIST" ]; then
+                SUCCESSFUL_LIST="${SUCCESSFUL_LIST}\n"
+              fi
+              SUCCESSFUL_LIST="${SUCCESSFUL_LIST}:white_check_mark: *${name}* - \`${version}\`"
+            fi
+          done <<< "${{ steps.collect.outputs.successful_builds }}"
+
+          # Build failed items list (one per line)
+          FAILED_LIST=""
+          while IFS= read -r line; do
+            if [ -n "$line" ]; then
+              if [ -n "$FAILED_LIST" ]; then
+                FAILED_LIST="${FAILED_LIST}\n"
+              fi
+              FAILED_LIST="${FAILED_LIST}:x: *${line}* - build failed"
+            fi
+          done <<< "${{ steps.collect.outputs.failed_builds }}"
+
+          # Combine lists (successful first, then failed)
+          RESULTS_TEXT=""
+          if [ -n "$SUCCESSFUL_LIST" ]; then
+            RESULTS_TEXT="$SUCCESSFUL_LIST"
+          fi
+          if [ -n "$FAILED_LIST" ]; then
+            if [ -n "$RESULTS_TEXT" ]; then
+              RESULTS_TEXT="${RESULTS_TEXT}\n${FAILED_LIST}"
+            else
+              RESULTS_TEXT="$FAILED_LIST"
+            fi
+          fi
+
+          if [ -z "$RESULTS_TEXT" ]; then
+            RESULTS_TEXT="No build results found"
+          fi
+
+          echo "results_text=${RESULTS_TEXT}" >> "$GITHUB_OUTPUT"
+          echo "build_type_title=$BUILD_TYPE_TITLE" >> "$GITHUB_OUTPUT"
+
+      - name: Send Slack notification
+        uses: slackapi/slack-github-action@v3.0.3
+        with:
+          method: chat.postMessage
+          token: ${{ secrets.slack_bot_token }}
+          payload: |
+            channel: ${{ secrets.slack_channel_id }}
+            text: "${{ inputs.build-type }} build completed"
+            blocks:
+              - type: "header"
+                text:
+                  type: "plain_text"
+                  text: "${{ steps.collect.outputs.status_emoji }} ${{ steps.message.outputs.build_type_title }} Build Results"
+                  emoji: true
+              - type: "section"
+                text:
+                  type: "mrkdwn"
+                  text: "*Repository:* <${{ github.server_url }}/${{ github.repository }}|${{ github.repository }}>\n*Branch:* `${{ github.ref_name }}`\n*Run:* <${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}|#${{ github.run_id }}>"
+              - type: "divider"
+              - type: "section"
+                text:
+                  type: "mrkdwn"
+                  text: "${{ steps.message.outputs.results_text }}"
+              - type: "context"
+                elements:
+                  - type: "mrkdwn"
+                    text: "Triggered by *${{ github.actor }}* via *${{ github.event_name }}*"

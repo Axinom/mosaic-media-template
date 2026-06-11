@@ -79,7 +79,7 @@ jobs:
       environment: Prerelease
       service-name: ${{ matrix.service }}
       image-name: ${{ matrix.image-name || matrix.service }}-service
-      kubernetes-namespace: managed-cb
+      kubernetes-namespace: customizable-cb
       environment-overlay: cb
       image-tag: ${{ fromJSON(needs.resolve_build.outputs.tags)[matrix.service] }}
     strategy:
@@ -97,14 +97,32 @@ jobs:
           - service: vod-to-live
             deploy: ${{ inputs.deploy-vod-to-live }}
 
-  slack_notification:
+  # ------------------------------------ Update Hosting Service ---------------------------------- #
+  # After all services are deployed, update the hosting service with the new service definitions.
+  # ------------------ --------------------------------------------------------------------------- #
+  update_hosting_v2:
+    name: Update Hosting Service
     needs: [ deploy ]
     if: github.event_name == 'schedule' || !cancelled()
-    uses: ./.github/workflows/templates-slack-deploy-notification.yml
+    uses: ./.github/workflows/templates-update-hosting.yml
     secrets:
-      slack_bot_token: ${{ secrets.SLACK_API_TOKEN_NAVY_CHANNELS }}
-      slack_channel_id: ${{ vars.SLACK_CHANNEL_ID_NAVY_CB_AUTO_RELEASE }}
+      managed-service-client-id: ${{ secrets.MOSAIC_CB_MANAGED_SERVICE_CLIENT_ID }}
+      managed-service-client-secret: ${{ secrets.MOSAIC_CB_MANAGED_SERVICE_CLIENT_SECRET }}
     with:
-      deploy-type: service
-      environment: cb
-      version-file: .github/deployment-versions/services/cb.yaml
+      runs-on: ubicloud-standard-2
+      environment: Prerelease
+      environment-subdomain: service.cb.axinom.net
+      services-to-update: catalog,channel,entitlement,media,vod-to-live
+      service-definition-ids: ${{ vars.MOSAIC_CB_SERVICE_DEFINITION_IDS }}
+
+#  slack_notification:
+#    needs: [ deploy, update_hosting_v2 ]
+#    if: github.event_name == 'schedule' || !cancelled()
+#    uses: ./.github/workflows/templates-slack-deploy-notification.yml
+#    secrets:
+#      slack_bot_token: ${{ secrets.SLACK_API_TOKEN_NAVY_CHANNELS }}
+#      slack_channel_id: ${{ vars.SLACK_CHANNEL_ID_NAVY_CB_AUTO_RELEASE }}
+#    with:
+#      deploy-type: service
+#      environment: cb
+#      version-file: .github/deployment-versions/services/cb.yaml

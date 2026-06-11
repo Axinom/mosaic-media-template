@@ -1,0 +1,12 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+resources:
+  - cleanup.yaml
+  - secret.yaml
+  - pv.yaml
+  - pvc.yaml
+  - redis-pvc.yaml
+  - ../../base
+namespace: customizable-prod
+patchesStrategicMerge:
+  - deployment.yaml

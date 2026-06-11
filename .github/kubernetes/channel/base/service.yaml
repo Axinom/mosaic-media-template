@@ -1,0 +1,24 @@
+apiVersion: v1
+kind: Service
+metadata:
+  annotations:
+    prometheus.io/port: '10503'
+    prometheus.io/scrape: 'true'
+  name: channel
+spec:
+  type: ClusterIP
+  selector:
+    app: channel
+  ports:
+    - name: app
+      port: 11800
+      protocol: TCP
+      targetPort: 11800
+    - name: metrics
+      port: 9090
+      protocol: TCP
+      targetPort: 9090
+    - name: diagnostics
+      port: 9911
+      protocol: TCP
+      targetPort: 9911

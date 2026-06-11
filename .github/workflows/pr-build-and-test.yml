@@ -1,0 +1,125 @@
+name: PR Build and Test
+
+#
+# Why paths are not defined in .on.pull_request.include attribute.
+#
+# We will make this workflow an essential check for PRs to merge, within master branch protection ruleset.
+# However, this workflow will not trigger if the changes within the PR do not belong to one of those
+# file paths defined under on.pull_request.include attribute.
+# This will result in PR not being able to merge.
+#
+# To avoid such incidents, this workflow will run for any and all PRs. The first job will then determine changes
+# come from a predefined list of paths and if so the pipeline will continue to run.
+#
+on:
+  pull_request:
+    branches:
+      - dev
+    types:
+      - opened
+      - synchronize
+      - reopened
+      - ready_for_review
+
+env:
+  NODE_OPTIONS: --max-old-space-size=16384
+jobs:
+  pre-check:
+    if: github.event.pull_request.draft == false
+    runs-on: ubicloud-standard-2
+    outputs:
+      run-checks: ${{ steps.determine.outputs.run-checks }}
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+      - id: paths-filter
+        name: Check for affected directory paths
+        uses: dorny/paths-filter@v3
+        with:
+          filters: |
+            relevant:
+              - 'services/**'
+              - 'libs/**'
+              - '.github/workflows/pr-build-and-test.yml'
+      - id: determine
+        name: Determine if affected directory paths require checking
+        run: |
+          if [[ "${{ github.head_ref }}" == releases/* ]]; then
+            echo "::notice::Source Branch: ${{ github.head_ref }}"
+            echo "::notice::Release PRs are not built and tested"
+            echo "run-checks=false" >> $GITHUB_OUTPUT
+          elif [[ "${{ steps.paths-filter.outputs.relevant }}" == "false" ]]; then
+            echo "::notice::No changes detected in paths that require build and test"
+            echo "::notice::Skipping build and test validation"
+            echo "run-checks=false" >> $GITHUB_OUTPUT
+          else
+            echo "run-checks=true" >> $GITHUB_OUTPUT
+          fi
+
+  build-and-test:
+    needs: pre-check
+    if: needs.pre-check.outputs.run-checks == 'true'
+    runs-on: ubicloud-standard-4
+    timeout-minutes: 60
+
+    services:
+      postgres:
+        image: postgres:16.14-alpine3.23
+        ports:
+          - 5432:5432
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+
+    steps:
+      - name: Check prerequisites
+        run: echo "::notice::Postgres is listening on port 5432 via PID $(lsof -i :5432)"
+      - name: Setup docker
+        uses: docker/setup-docker-action@v5
+      - name: Setup docker compose
+        uses: docker/setup-compose-action@v2
+      - name: Setup nodejs
+        uses: actions/setup-node@v6
+        with:
+          node-version: '22'
+      - name: Clone repository
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: '0'
+          fetch-tags: 'true'
+          clean: 'true'
+
+      - name: Install dependencies
+        run: yarn install
+      - name: Build services
+        run: yarn build
+
+      - name: Apply templates
+        run: yarn apply-templates
+      - name: Add placeholders to .env
+        run: |
+          sed -i 's/^\(TENANT_ID=\)$/\100000000-0000-0000-0000-000000000000/' .env
+          sed -i 's/^\(ENVIRONMENT_ID=\)$/\100000000-0000-0000-0000-000000000000/' .env
+          sed -i 's/^\(RABBITMQ_VHOST=\)$/\1fake/' .env
+          sed -i 's/^\(RABBITMQ_USER=\)$/\1fake/' .env
+          sed -i 's/^\(RABBITMQ_PASSWORD=\)$/\1fake/' .env
+          sed -i 's/^\(DEV_SERVICE_ACCOUNT_CLIENT_ID=\)$/\1fake/' .env
+          sed -i 's/^\(DEV_SERVICE_ACCOUNT_CLIENT_SECRET=\)$/\1fake/' .env
+      - name: Reset temporary databases
+        run: yarn test:reset:dbs
+
+      - name: Run tests
+        run: yarn test:ci
+
+      - name: Publish unit test results
+        uses: EnricoMi/publish-unit-test-result-action@v2
+        if: (!cancelled())
+        with:
+          junit_files: '**/junit.xml'
+      # - name: Publish test coverage report
+      #   uses: irongut/CodeCoverageSummary@v1.3.0
+      #   if: (!cancelled() && hashFiles('**/coverage/cobertura-coverage.xml') != '')
+      #   with:
+      #     filename: '**/coverage/cobertura-coverage.xml'
