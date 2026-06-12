@@ -39,12 +39,12 @@
     "util:portal-version-check": "ts-node --transpile-only scripts/package-version-check.ts",
     "util:update-mosaic-packages": "ts-node ./scripts/update-mosaic-packages.ts",
     "util:update-snippets": "mosaic generate-vscode-sql-snippets",
-    "build:media-service:prod": "yarn && wsrun -trm -p media-service -c build && yarn install --prod",
-    "build:catalog-service:prod": "yarn && wsrun -trm -p catalog-service -c build && yarn install --prod",
-    "build:entitlement-service:prod": "yarn && wsrun -trm -p entitlement-service -c build && yarn install --prod",
-    "build:vod-to-live-service:prod": "yarn && wsrun -trm -p vod-to-live-service -c build && yarn install --prod",
-    "build:media-workflows:prod": "yarn && wsrun -trm -p media-workflows -c build && pilet pack services/media/workflows",
-    "build:user-workflows:prod": "yarn && wsrun -trm -p user-workflows -c build && pilet pack services/user/workflows",
+    "build:media-service:prod": "yarn install --immutable && wsrun -trm -p media-service -c build && yarn workspaces focus --all --production",
+    "build:catalog-service:prod": "yarn install --immutable && wsrun -trm -p catalog-service -c build && yarn workspaces focus --all --production",
+    "build:entitlement-service:prod": "yarn install --immutable && wsrun -trm -p entitlement-service -c build && yarn workspaces focus --all --production",
+    "build:vod-to-live-service:prod": "yarn install --immutable && wsrun -trm -p vod-to-live-service -c build && yarn workspaces focus --all --production",
+    "build:media-workflows:prod": "yarn install --immutable && wsrun -trm -p media-workflows -c build && pilet pack services/media/workflows",
+    "build:user-workflows:prod": "yarn install --immutable && wsrun -trm -p user-workflows -c build && pilet pack services/user/workflows",
     "setup:hosting": "yarn util:load-vars ts-node ./scripts/setup-hosting.ts",
     "yarn:de-dupe": "npx yarn-deduplicate yarn.lock"
   },
@@ -125,5 +125,6 @@
     "jest": "^29",
     "jest-cli": "^29",
     "pino": "^9.14.0"
-  }
+  },
+  "packageManager": "yarn@4.8.1"
 }

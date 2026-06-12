@@ -9,6 +9,13 @@ ARG PACKAGE_BUILD_COMMAND
 FROM node:22.19-alpine AS base
 WORKDIR /checkout
 
+# Use the repo-pinned Yarn Berry (via packageManager + .yarnrc.yml yarnPath)
+# instead of the classic Yarn 1 bundled in the node image. Without this the
+# build re-resolves dependencies off the committed lockfile and drifts onto
+# versions incompatible with TypeScript 4.9.
+ENV COREPACK_ENABLE_DOWNLOAD_PROMPT=0
+RUN corepack enable
+
 # Setup safe-chain for supply chain security
 RUN npm install -g @aikidosec/safe-chain \
     && safe-chain setup-ci
