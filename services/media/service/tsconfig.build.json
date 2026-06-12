@@ -3,13 +3,6 @@
   "extends": "./tsconfig.json",
   "compilerOptions": {
     "noEmit": false,
-    // Restrict automatically-included ambient type packages to those actually
-    // used by the service. Without this, tsc auto-includes every package under
-    // node_modules/@types (e.g. the transitive @types/glob -> @types/minimatch
-    // pulled in via media-messages), which breaks the production Docker build
-    // with "TS2688: Cannot find type definition file for 'minimatch'" depending
-    // on the hoisting layout. Module types for imported packages still resolve
-    // normally via node module resolution.
     "types": ["node"]
   },
   "exclude": [
