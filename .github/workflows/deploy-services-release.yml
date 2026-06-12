@@ -299,3 +299,35 @@ jobs:
       environment-subdomain: service.prod.axinom.net
       services-to-update: catalog,channel,entitlement,media,vod-to-live
       service-definition-ids: ${{ vars.MOSAIC_PROD_SERVICE_DEFINITION_IDS }}
+
+  # --------------------------------- Copy Images to Production --------------------------------- #
+  # Copy service images from customizable-services-dev to customizable-services-prod
+  # --------------------------------------------------------------------------------------------- #
+  copy_images_to_prod:
+    name: Copy Images to Prod
+    needs: [ resolve_build_prod, prod_deploy, prod_update_hosting ]
+    uses: ./.github/workflows/templates-harbor-image-copy.yml
+    secrets:
+      docker-registry-username: ${{ secrets.HARBOR_PUSH_USERNAME }}
+      docker-registry-password: ${{ secrets.HARBOR_PUSH_PASSWORD }}
+    with:
+      copy: ${{ matrix.copy }}
+      runs-on: ubicloud-standard-2
+      source-repository: customizable-services-dev/${{ matrix.service }}-service
+      source-tag: ${{ fromJSON(needs.resolve_build_prod.outputs.tags)[matrix.service] }}
+      destination-repository: customizable-services-prod/${{ matrix.service }}-service
+      destination-tag: ${{ fromJSON(needs.resolve_build_prod.outputs.tags)[matrix.service] }}
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - service: catalog
+            copy: ${{ inputs.deploy-catalog }}
+          - service: channel
+            copy: ${{ inputs.deploy-channel }}
+          - service: entitlement
+            copy: ${{ inputs.deploy-entitlement }}
+          - service: media
+            copy: ${{ inputs.deploy-media }}
+          - service: vod-to-live
+            copy: ${{ inputs.deploy-vod-to-live }}

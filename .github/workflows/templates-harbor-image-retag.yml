@@ -1,0 +1,78 @@
+name: Harbor Re-tag Image
+description: Re-tags a Docker image in Harbor registry with a new tag
+
+inputs:
+  harbor-url:
+    description: Harbor registry URL
+    required: false
+    default: https://harbor.axinom.com
+  project:
+    description: Harbor project name
+    required: false
+    default: mosaic
+  repository:
+    description: Repository path within the project (e.g., customizable-services-dev/media-service)
+    required: true
+  source-tag:
+    description: Source image tag to re-tag
+    required: true
+  new-tag:
+    description: New tag to apply to the image
+    required: true
+  username:
+    description: Harbor registry username
+    required: true
+  password:
+    description: Harbor registry password
+    required: true
+
+runs:
+  using: composite
+  steps:
+    - name: Re-tag image in Harbor
+      shell: bash
+      run: |
+        HARBOR_URL="${{ inputs.harbor-url }}"
+        PROJECT="${{ inputs.project }}"
+        REPOSITORY="${{ inputs.repository }}"
+        # Double url-encode repository name to be compatible with Harbor API
+        REPOSITORY_URL_ENCODED=$(printf %s $(printf %s "$REPOSITORY" |jq -sRr @uri) | jq -sRr @uri)
+        SOURCE_TAG="${{ inputs.source-tag }}"
+        NEW_TAG="${{ inputs.new-tag }}"
+
+        echo "::notice::Adding tag '$NEW_TAG' to artifact with tag '$SOURCE_TAG' via Harbor API"
+
+        HTTP_STATUS=$(curl -s -o /tmp/response.json -w "%{http_code}" \
+          -X POST \
+          "${HARBOR_URL}/api/v2.0/projects/${PROJECT}/repositories/${REPOSITORY_URL_ENCODED}/artifacts/${SOURCE_TAG}/tags" \
+          -H "Content-Type: application/json" \
+          -u "${{ inputs.username }}:${{ inputs.password }}" \
+          -d "{\"name\": \"${NEW_TAG}\"}")
+
+        if [[ "$HTTP_STATUS" == "201" ]]; then
+          echo "::notice::Successfully tagged image as ${NEW_TAG}"
+        elif [[ "$HTTP_STATUS" == "409" ]]; then
+          echo "::notice::Tag ${NEW_TAG} already exists, deleting and re-creating..."
+          # Delete existing tag
+          curl -s -X DELETE \
+            "${HARBOR_URL}/api/v2.0/projects/${PROJECT}/repositories/${REPOSITORY_URL_ENCODED}/artifacts/${NEW_TAG}/tags/${NEW_TAG}" \
+            -u "${{ inputs.username }}:${{ inputs.password }}"
+          # Re-create tag
+          HTTP_STATUS=$(curl -s -o /tmp/response.json -w "%{http_code}" \
+            -X POST \
+            "${HARBOR_URL}/api/v2.0/projects/${PROJECT}/repositories/${REPOSITORY_URL_ENCODED}/artifacts/${SOURCE_TAG}/tags" \
+            -H "Content-Type: application/json" \
+            -u "${{ inputs.username }}:${{ inputs.password }}" \
+            -d "{\"name\": \"${NEW_TAG}\"}")
+          if [[ "$HTTP_STATUS" == "201" ]]; then
+            echo "::notice::Successfully re-tagged image as ${NEW_TAG}"
+          else
+            echo "::error::Failed to re-tag image. HTTP status: ${HTTP_STATUS}"
+            cat /tmp/response.json
+            exit 1
+          fi
+        else
+          echo "::error::Failed to tag image. HTTP status: ${HTTP_STATUS}"
+          cat /tmp/response.json
+          exit 1
+        fi

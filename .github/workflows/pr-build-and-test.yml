@@ -21,6 +21,11 @@ on:
       - reopened
       - ready_for_review
 
+permissions:
+  contents: read
+  actions: read
+  checks: write
+
 env:
   NODE_OPTIONS: --max-old-space-size=16384
 jobs:
@@ -36,13 +41,14 @@ jobs:
           fetch-depth: 0
       - id: paths-filter
         name: Check for affected directory paths
-        uses: dorny/paths-filter@v3
+        uses: dorny/paths-filter@v4
         with:
           filters: |
             relevant:
-              - 'services/**'
-              - 'libs/**'
-              - '.github/workflows/pr-build-and-test.yml'
+              - '!.adops/**'
+              - '!.github/**'
+              - '!.claude/**'
+              - '!infra/**'
       - id: determine
         name: Determine if affected directory paths require checking
         run: |
@@ -74,8 +80,6 @@ jobs:
           POSTGRES_PASSWORD: postgres
 
     steps:
-      - name: Check prerequisites
-        run: echo "::notice::Postgres is listening on port 5432 via PID $(lsof -i :5432)"
       - name: Setup docker
         uses: docker/setup-docker-action@v5
       - name: Setup docker compose
@@ -111,15 +115,12 @@ jobs:
         run: yarn test:reset:dbs
 
       - name: Run tests
-        run: yarn test:ci
+        run: yarn test:ci --maxWorkers=8 --colors
 
-      - name: Publish unit test results
-        uses: EnricoMi/publish-unit-test-result-action@v2
-        if: (!cancelled())
+      - name: Test Report
+        uses: dorny/test-reporter@v3
+        if: ${{ !cancelled() }}
         with:
-          junit_files: '**/junit.xml'
-      # - name: Publish test coverage report
-      #   uses: irongut/CodeCoverageSummary@v1.3.0
-      #   if: (!cancelled() && hashFiles('**/coverage/cobertura-coverage.xml') != '')
-      #   with:
-      #     filename: '**/coverage/cobertura-coverage.xml'
+          name: JEST Tests
+          path: '**/junit.xml'
+          reporter: jest-junit

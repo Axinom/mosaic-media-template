@@ -6,7 +6,7 @@ on:
       - dev
       - main
     paths:
-      - '.github/kubernetes/**'
+      - '.kubernetes/**'
     types:
       - opened
       - synchronize

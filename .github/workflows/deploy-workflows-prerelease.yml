@@ -84,15 +84,20 @@ jobs:
       service-name: ax-media-service
       hosting-service-enabled: true
 
-#  slack_notification:
-#    name: Slack Notification
-#    needs: [ channel, media ]
-#    if: github.event_name == 'schedule' || !cancelled()
-#    uses: ./.github/workflows/templates-slack-deploy-notification.yml
-#    secrets:
-#      slack_bot_token: ${{ secrets.SLACK_API_TOKEN_NAVY_CHANNELS }}
-#      slack_channel_id: ${{ vars.SLACK_CHANNEL_ID_NAVY_CB_AUTO_RELEASE }}
-#    with:
-#      deploy-type: workflow
-#      environment: cb
-#      version-file: .github/deployment-versions/workflows/cb.yaml
+  fetch_slack_thread:
+    if: github.event_name == 'schedule'
+    uses: ./.github/workflows/templates-fetch-slack-thread.yml
+
+  slack_notification:
+    name: Slack Notification
+    needs: [ channel, media, fetch_slack_thread ]
+    if: github.event_name == 'schedule' && always()
+    uses: ./.github/workflows/templates-slack-deploy-notification.yml
+    secrets:
+      slack_bot_token: ${{ secrets.SLACK_API_TOKEN_NAVY_CHANNELS }}
+      slack_channel_id: ${{ vars.SLACK_CHANNEL_ID_NAVY_CB_AUTO_RELEASE }}
+    with:
+      deploy-type: workflow
+      environment: cb
+      version-file: .github/deployment-versions/workflows/cb.yaml
+      slack-thread-id: ${{ needs.fetch_slack_thread.outputs.thread-id }}

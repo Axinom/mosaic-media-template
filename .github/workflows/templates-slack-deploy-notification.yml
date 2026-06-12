@@ -27,6 +27,11 @@ on:
         required: false
         type: string
         default: ubicloud-standard-2
+      slack-thread-id:
+        required: false
+        type: string
+        default: ''
+        description: Slack thread ID to reply to (optional)
 
 jobs:
   notify:
@@ -150,6 +155,7 @@ jobs:
           token: ${{ secrets.slack_bot_token }}
           payload: |
             channel: ${{ secrets.slack_channel_id }}
+            ${{ inputs.slack-thread-id != '' && format('thread_ts: "{0}"', inputs.slack-thread-id) || '' }}
             text: "${{ inputs.deploy-type }} deployment to ${{ inputs.environment }} completed"
             blocks:
               - type: "header"

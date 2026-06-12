@@ -58,7 +58,7 @@ jobs:
           fetch-depth: 1
 
       - name: Update image tag in manifest
-        working-directory: .github/kubernetes/${{ inputs.service-name }}/overlays/${{ inputs.environment-overlay }}
+        working-directory: .kubernetes/${{ inputs.service-name }}/overlays/${{ inputs.environment-overlay }}
         run: |
           echo "::notice::Updating image tag to: ${{ inputs.image-tag }}"
           sed -i 's/:latest/:${{ inputs.image-tag }}/g' image.yaml
@@ -77,7 +77,7 @@ jobs:
           chmod 600 ~/.kube/config
 
       - name: Deploy to kubernetes
-        working-directory: .github/kubernetes/${{ inputs.service-name }}/overlays/${{ inputs.environment-overlay }}
+        working-directory: .kubernetes/${{ inputs.service-name }}/overlays/${{ inputs.environment-overlay }}
         run: |
           echo "::notice::Deploying ${{ inputs.service-name }} to ${{ inputs.kubernetes-namespace }}"
           kubectl apply -k . -n ${{ inputs.kubernetes-namespace }}
@@ -89,21 +89,13 @@ jobs:
           echo "::notice::Deployment of ${{ inputs.service-name }} completed successfully"
 
       - name: Re-tag image with environment-latest
-        run: |
-          IMAGE_REPO="harbor.axinom.com/mosaic/customizable-services-dev/${{ inputs.image-name }}"
-          SOURCE_TAG="${IMAGE_REPO}:${{ inputs.image-tag }}"
-          LATEST_TAG="${IMAGE_REPO}:${{ inputs.environment-overlay }}-latest"
-
-          echo "::notice::Logging into Docker registry..."
-          echo "${{ secrets.docker-registry-password }}" | docker login harbor.axinom.com -u "${{ secrets.docker-registry-username }}" --password-stdin
-
-          echo "::notice::Re-tagging $SOURCE_TAG -> $LATEST_TAG"
-          docker pull "$SOURCE_TAG"
-          docker tag "$SOURCE_TAG" "$LATEST_TAG"
-          docker push "$LATEST_TAG"
-
-          docker logout harbor.axinom.com
-          echo "::notice::Image re-tagged as $LATEST_TAG"
+        uses: .github/workflows/templates-harbor-image-retag.yml
+        with:
+          repository: customizable-services-dev/${{ inputs.image-name }}
+          source-tag: ${{ inputs.image-tag }}
+          new-tag: ${{ inputs.environment-overlay }}-latest
+          username: ${{ secrets.docker-registry-username }}
+          password: ${{ secrets.docker-registry-password }}
 
       - name: Cleanup kubectl config
         if: always()
