@@ -33,7 +33,7 @@ export class WebSocketLink extends ApolloLink {
       return this.client.subscribe<FetchResult>(
         { ...operation, query: print(operation.query) },
         {
-          next: observer.next.bind(observer),
+          next: (data) => observer.next(data as FetchResult),
           complete: observer.complete.bind(observer),
           error: (err) => {
             if (err instanceof Error) {
