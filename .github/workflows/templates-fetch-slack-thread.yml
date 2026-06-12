@@ -1,0 +1,40 @@
+name: Fetch Slack Thread ID
+
+on:
+  workflow_call:
+    inputs:
+      runs-on:
+        required: false
+        type: string
+        default: ubicloud-standard-2
+    outputs:
+      thread-id:
+        description: The Slack thread ID to reply to
+        value: ${{ jobs.fetch.outputs.thread-id }}
+
+permissions:
+  actions: read
+
+jobs:
+  fetch:
+    name: Fetch Slack Thread ID
+    runs-on: ${{ inputs.runs-on }}
+    outputs:
+      thread-id: ${{ steps.read.outputs.ts }}
+    steps:
+      - name: Download daily thread artifact
+        uses: dawidd6/action-download-artifact@v9
+        with:
+          workflow: slack-daily-thread.yml
+          name: slack-daily-thread
+        continue-on-error: true
+
+      - name: Read thread ID
+        id: read
+        run: |
+          ts=''
+          if [ -f slack-thread-id.txt ]; then
+            ts="$(cat slack-thread-id.txt)"
+          fi
+          echo "ts=$ts" >> $GITHUB_OUTPUT
+          echo "::notice::Slack Thread ID: $ts"

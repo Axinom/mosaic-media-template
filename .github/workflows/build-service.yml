@@ -33,6 +33,10 @@ on:
         default: true
         description: Build vod-to-live
 
+permissions:
+  contents: read
+  actions: write
+
 jobs:
   prepare:
     name: Prepare Build
@@ -106,16 +110,21 @@ jobs:
     with:
       build-type: service
 
+  fetch_slack_thread:
+    if: github.event_name == 'schedule'
+    uses: ./.github/workflows/templates-fetch-slack-thread.yml
+
   slack_notification:
     name: Slack Notification
-    needs: [ collect_results ]
-    if: always()
+    needs: [ collect_results, fetch_slack_thread ]
+    if: github.event_name == 'schedule' && always()
     uses: ./.github/workflows/templates-slack-build-notification.yml
     secrets:
       slack_bot_token: ${{ secrets.SLACK_API_TOKEN_NAVY_CHANNELS }}
       slack_channel_id: ${{ vars.SLACK_CHANNEL_ID_NAVY_CB_AUTO_RELEASE }}
     with:
       build-type: service
+      slack-thread-id: ${{ needs.fetch_slack_thread.outputs.thread-id }}
 
   trigger_deploy:
     name: Trigger Service Deployment

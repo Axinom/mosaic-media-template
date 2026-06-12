@@ -28,6 +28,10 @@ on:
         default: true
         description: Deploy vod-to-live
 
+permissions:
+  contents: read
+  actions: read
+
 jobs:
   # ----------------------------------------- Pre-check ----------------------------------------- #
   # Check if there's a successful backend build for the same branch, and
@@ -74,7 +78,7 @@ jobs:
       docker-registry-username: ${{ secrets.HARBOR_PUSH_USERNAME }}
       docker-registry-password: ${{ secrets.HARBOR_PUSH_PASSWORD }}
     with:
-      deploy: ${{ github.event_name == 'schedule' || matrix.deploy }}
+      deploy: ${{ github.event_name == 'schedule' || github.actor == 'github-actions[bot]' || matrix.deploy }}
       runs-on: ubicloud-standard-2
       environment: Prerelease
       service-name: ${{ matrix.service }}
@@ -103,7 +107,7 @@ jobs:
   update_hosting_v2:
     name: Update Hosting Service
     needs: [ deploy ]
-    if: github.event_name == 'schedule' || !cancelled()
+    if: github.event_name == 'schedule' || github.actor == 'github-actions[bot]' || !cancelled()
     uses: ./.github/workflows/templates-update-hosting.yml
     secrets:
       managed-service-client-id: ${{ secrets.MOSAIC_CB_MANAGED_SERVICE_CLIENT_ID }}
@@ -115,14 +119,19 @@ jobs:
       services-to-update: catalog,channel,entitlement,media,vod-to-live
       service-definition-ids: ${{ vars.MOSAIC_CB_SERVICE_DEFINITION_IDS }}
 
-#  slack_notification:
-#    needs: [ deploy, update_hosting_v2 ]
-#    if: github.event_name == 'schedule' || !cancelled()
-#    uses: ./.github/workflows/templates-slack-deploy-notification.yml
-#    secrets:
-#      slack_bot_token: ${{ secrets.SLACK_API_TOKEN_NAVY_CHANNELS }}
-#      slack_channel_id: ${{ vars.SLACK_CHANNEL_ID_NAVY_CB_AUTO_RELEASE }}
-#    with:
-#      deploy-type: service
-#      environment: cb
-#      version-file: .github/deployment-versions/services/cb.yaml
+  fetch_slack_thread:
+    if: github.event_name == 'schedule' || github.actor == 'github-actions[bot]' && always()
+    uses: ./.github/workflows/templates-fetch-slack-thread.yml
+
+  slack_notification:
+    needs: [ deploy, update_hosting_v2, fetch_slack_thread ]
+    if: github.event_name == 'schedule' || github.actor == 'github-actions[bot]' && always()
+    uses: ./.github/workflows/templates-slack-deploy-notification.yml
+    secrets:
+      slack_bot_token: ${{ secrets.SLACK_API_TOKEN_NAVY_CHANNELS }}
+      slack_channel_id: ${{ vars.SLACK_CHANNEL_ID_NAVY_CB_AUTO_RELEASE }}
+    with:
+      deploy-type: service
+      environment: cb
+      version-file: .github/deployment-versions/services/cb.yaml
+      slack-thread-id: ${{ needs.fetch_slack_thread.outputs.thread-id }}

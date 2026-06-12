@@ -6,12 +6,15 @@ on:
       - dev
       - main
     paths:
-      - '.github/kubernetes/**'
+      - '.kubernetes/**'
     types:
       - opened
       - synchronize
       - reopened
       - ready_for_review
+
+permissions:
+  contents: read
 
 jobs:
   pr-infra-validate:

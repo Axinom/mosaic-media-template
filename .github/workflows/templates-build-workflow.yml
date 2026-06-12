@@ -35,6 +35,9 @@ on:
         type: string
         default: https://vtb.axinom.com/?hlsUrl=[STREAM_URL]
 
+permissions:
+  contents: read
+
 jobs:
   build_and_publish:
     if: ${{ inputs.build }}

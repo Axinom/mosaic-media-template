@@ -20,6 +20,10 @@ on:
         type: string
         default: ubicloud-standard-2
 
+permissions:
+  contents: write
+  actions: read
+
 jobs:
   collect_results:
     name: Collect Build Results
@@ -40,6 +44,7 @@ jobs:
           fetch-depth: '1'
 
       - uses: actions/download-artifact@v6
+        continue-on-error: true
         with:
           pattern: build-result-*
           path: results
@@ -68,6 +73,7 @@ jobs:
 
           echo "::notice::Updating $VERSION_FILE"
 
+          shopt -s nullglob
           for f in results/*/result.txt; do
             key=$(cut -d: -f1 < "$f")
             value=$(cut -d: -f2- < "$f" | xargs)
@@ -83,5 +89,9 @@ jobs:
           git config user.email "team-se@axinom.com"
 
           git add "${{ steps.release-info.outputs.version_file }}"
-          git commit -m "chore(${{ steps.release-info.outputs.release_type }}): bump ${{ inputs.build-type }} deployment versions for ${{ github.ref }}"
-          git push
+          if git diff --cached --quiet; then
+            echo "::notice::No version changes to commit"
+          else
+            git commit -m "chore(${{ steps.release-info.outputs.release_type }}): bump ${{ inputs.build-type }} deployment versions for ${{ github.ref }}"
+            git push
+          fi

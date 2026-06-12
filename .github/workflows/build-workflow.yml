@@ -14,6 +14,10 @@ on:
         default: true
         description: Build media
 
+permissions:
+  contents: read
+  actions: write
+
 jobs:
   build:
     name: Build Workflows
@@ -50,16 +54,21 @@ jobs:
     with:
       build-type: workflow
 
+  fetch_slack_thread:
+    if: github.event_name == 'schedule'
+    uses: ./.github/workflows/templates-fetch-slack-thread.yml
+
   slack_notification:
     name: Slack Notification
-    needs: [build, collect_results]
-    if: always()
+    needs: [build, collect_results, fetch_slack_thread]
+    if: github.event_name == 'schedule' && always()
     uses: ./.github/workflows/templates-slack-build-notification.yml
     secrets:
       slack_bot_token: ${{ secrets.SLACK_API_TOKEN_NAVY_CHANNELS }}
       slack_channel_id: ${{ vars.SLACK_CHANNEL_ID_NAVY_CB_AUTO_RELEASE }}
     with:
       build-type: workflow
+      slack-thread-id: ${{ needs.fetch_slack_thread.outputs.thread-id }}
 
   trigger_deploy:
     name: Trigger Workflow Deployment

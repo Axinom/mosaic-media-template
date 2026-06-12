@@ -35,6 +35,9 @@ on:
         type: string
         description: JSON object mapping service names to their definition IDs
 
+permissions:
+  contents: read
+
 jobs:
   update-hosting:
     name: Update Hosting Service
