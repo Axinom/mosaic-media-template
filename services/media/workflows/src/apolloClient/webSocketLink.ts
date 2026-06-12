@@ -30,10 +30,14 @@ export class WebSocketLink extends ApolloLink {
 
   public request(operation: Operation): Observable<FetchResult> {
     return new Observable((observer) => {
-      return this.client.subscribe<FetchResult>(
+      return this.client.subscribe<Record<string, unknown>, Record<string, unknown>>(
         { ...operation, query: print(operation.query) },
         {
-          next: observer.next.bind(observer),
+          next: ({ data, errors, extensions }) =>
+            // graphql-ws allows `data` to be `null`, whereas Apollo's
+            // `FetchResult` expects `undefined` when there is no data, so
+            // normalise it before forwarding to the observer.
+            observer.next({ data: data ?? undefined, errors, extensions }),
           complete: observer.complete.bind(observer),
           error: (err) => {
             if (err instanceof Error) {
