@@ -68,9 +68,6 @@ regularVariables:
   GEOIP2_DATABASE_FILE: 'GeoIP2-City.mmdb'
   GEOIP2_UPDATE_SCHEDULE: '0 0 * * *'
 
-  SERVICE_ACCOUNT_CLIENT_ID: ${__ax_hosted__.sa.client_id.catalog}
-  SERVICE_ACCOUNT_CLIENT_SECRET: ${__ax_hosted__.sa.client_secret.catalog}
-
 secureVariables:
   # GeoIP2 Secure Variables
   GEOIP2_BLOB_SAS_TOKEN: '#{GEOIP2-BLOB-SAS-TOKEN}#'
