@@ -4,7 +4,7 @@ import {
   createHttpLink,
   DefaultOptions,
   InMemoryCache,
-} from '@apollo/client';
+} from '@apollo/client/core';
 import { setContext } from '@apollo/client/link/context';
 import { Config } from '../config/index.js';
 

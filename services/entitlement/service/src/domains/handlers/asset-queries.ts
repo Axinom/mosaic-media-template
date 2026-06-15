@@ -1,4 +1,4 @@
-import { gql } from '@apollo/client';
+import { gql } from '@apollo/client/core';
 import { AssetTypeEnum } from '../../common';
 
 export const catalogQueries = {
