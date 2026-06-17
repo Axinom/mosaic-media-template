@@ -19,6 +19,22 @@ describe('IngestMovieProcessor', () => {
   const ingestItemId = 1;
   const mediaId = 2;
 
+  const videoPayload = (
+    video: Record<string, string | undefined>,
+    videoLocation: string,
+    tag: 'MAIN' | 'TRAILER',
+  ) => ({
+    tags: [tag],
+    video_location: videoLocation,
+    processing_profile: video.processing_profile?.trim() || 'DEFAULT',
+    ...(video.acquisition_profile?.trim() && {
+      acquisition_profile: video.acquisition_profile.trim(),
+    }),
+    ...(video.publishing_profile?.trim() && {
+      publishing_profile: video.publishing_profile.trim(),
+    }),
+  });
+
   const metaData = (item: StartIngestItemCommand['item']) => ({
     aggregateId: mediaId.toString(),
     ingestItemStep: {
@@ -51,11 +67,11 @@ describe('IngestMovieProcessor', () => {
       ingestItemStepId: ingestStepId,
       videoType: 'MAIN',
     },
-    messagePayload: {
-      tags: ['MAIN'],
-      video_location: 'v1',
-      video_profile: (item.data.main_video as any).profile ?? 'DEFAULT',
-    },
+    messagePayload: videoPayload(
+      item.data.main_video as Record<string, string | undefined>,
+      'v1',
+      'MAIN',
+    ),
     messagingSettings:
       VideoServiceMultiTenantMessagingSettings.EnsureVideoExists,
   });
@@ -72,11 +88,11 @@ describe('IngestMovieProcessor', () => {
       ingestItemStepId: ingestStepId,
       videoType: 'TRAILER',
     },
-    messagePayload: {
-      tags: ['TRAILER'],
-      video_location: 't1',
-      video_profile: (item.data.main_video as any).profile ?? 'DEFAULT',
-    },
+    messagePayload: videoPayload(
+      (item.data.trailers as Record<string, string | undefined>[])[0],
+      't1',
+      'TRAILER',
+    ),
     messagingSettings:
       VideoServiceMultiTenantMessagingSettings.EnsureVideoExists,
   });
@@ -93,11 +109,11 @@ describe('IngestMovieProcessor', () => {
       ingestItemStepId: ingestStepId,
       videoType: 'TRAILER',
     },
-    messagePayload: {
-      tags: ['TRAILER'],
-      video_location: 't2',
-      video_profile: (item.data.main_video as any).profile ?? 'DEFAULT',
-    },
+    messagePayload: videoPayload(
+      (item.data.trailers as Record<string, string | undefined>[])[1],
+      't2',
+      'TRAILER',
+    ),
     messagingSettings:
       VideoServiceMultiTenantMessagingSettings.EnsureVideoExists,
   });
@@ -175,31 +191,46 @@ describe('IngestMovieProcessor', () => {
         [metaData, localizationsData],
       ],
       [
-        { source: 'v1', profile: 'DEFAULT' },
+        { source: 'v1', processing_profile: 'DEFAULT' },
         null,
         [{ path: 'images\\teasers\\test2.jpg', type: 'TEASER' }],
         [],
         [metaData, videoData, teaserData],
       ],
       [
-        { source: 'v1', profile: 'DEFAULT' },
+        { source: 'v1', processing_profile: 'DEFAULT' },
         [{ source: 't1' }],
         null,
         null,
         [metaData, videoData, trailer1Data],
       ],
       [
-        { source: 'v1', profile: 'DEFAULT' },
-        [{ source: 't1', profile: 'DEFAULT' }],
+        { source: 'v1', processing_profile: 'DEFAULT' },
+        [{ source: 't1', processing_profile: 'DEFAULT' }],
         [{ path: 'images/covers/test.jpg', type: 'COVER' }],
         null,
         [metaData, videoData, trailer1Data, coverData],
       ],
       [
-        { source: 'v1', profile: 'SomeProfile' },
+        {
+          source: 'v1',
+          processing_profile: 'SomeProfile',
+          acquisition_profile: 'Main Acquisition',
+          publishing_profile: 'Main Publishing',
+        },
         [
-          { source: 't1', profile: 'SomeProfile' },
-          { source: 't2', profile: 'SomeProfile' },
+          {
+            source: 't1',
+            processing_profile: 'TrailerProfile1',
+            acquisition_profile: 'Trailer Acquisition 1',
+            publishing_profile: 'Trailer Publishing 1',
+          },
+          {
+            source: 't2',
+            processing_profile: 'TrailerProfile2',
+            acquisition_profile: 'Trailer Acquisition 2',
+            publishing_profile: 'Trailer Publishing 2',
+          },
         ],
         [
           { path: 'images/covers/test.jpg', type: 'COVER' },

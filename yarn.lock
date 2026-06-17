@@ -652,6 +652,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@axinom/mosaic-video-messages@npm:0.8.0":
+  version: 0.8.0
+  resolution: "@axinom/mosaic-video-messages@npm:0.8.0"
+  checksum: 10c0/49f7bac7973b37c8784e428d23ad50db19553947632ca8db1de58ca0caa3d0cc4ba1d0f3cf8cbddf43e545226181887f3b0a1bd9608cef3c8227c69bcde84e81
+  languageName: node
+  linkType: hard
+
 "@axinom/mosaic-video-workflow-integration@npm:0.5.0":
   version: 0.5.0
   resolution: "@axinom/mosaic-video-workflow-integration@npm:0.5.0"
@@ -13440,7 +13447,7 @@ __metadata:
     "@axinom/mosaic-messages": "npm:0.66.0"
     "@axinom/mosaic-service-common": "npm:0.68.0"
     "@axinom/mosaic-transactional-inbox-outbox": "npm:0.28.0"
-    "@axinom/mosaic-video-messages": "npm:0.7.0"
+    "@axinom/mosaic-video-messages": "npm:0.8.0"
     "@azure/storage-blob": "npm:^12.14.0"
     "@faker-js/faker": "npm:^7.6.0"
     "@graphile-contrib/pg-simplify-inflector": "npm:^6.1.0"

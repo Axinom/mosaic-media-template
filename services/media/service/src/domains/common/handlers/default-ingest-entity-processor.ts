@@ -178,6 +178,8 @@ export abstract class DefaultIngestEntityProcessor implements IngestEntityProces
       const type = 'MAIN';
       const stepId = uuid();
       const video = element.main_video as VideoIngestData;
+      const acquisitionProfile = video.acquisition_profile?.trim();
+      const publishingProfile = video.publishing_profile?.trim();
       const ingestItemStep: ingest_item_steps.Insertable = {
         id: stepId,
         type: 'VIDEO',
@@ -186,9 +188,16 @@ export abstract class DefaultIngestEntityProcessor implements IngestEntityProces
       };
       const messagePayload: EnsureVideoExistsCommand = {
         video_location: normalizeRelativePath(video.source),
-        video_profile: video.profile?.trim() || 'DEFAULT',
+        video_profile:
+          (video.processing_profile ?? video.profile)?.trim() || 'DEFAULT',
         tags: [type],
       };
+      if (acquisitionProfile) {
+        messagePayload.acquisition_profile = acquisitionProfile;
+      }
+      if (publishingProfile) {
+        messagePayload.publishing_profile = publishingProfile;
+      }
       const messageContext: VideoMessageContext = {
         ingestItemStepId: stepId,
         ingestItemId,
@@ -219,6 +228,8 @@ export abstract class DefaultIngestEntityProcessor implements IngestEntityProces
     for (const trailer of ingestibleTrailers) {
       const stepId = uuid();
       const normalizedPath = normalizeRelativePath(trailer.source);
+      const acquisitionProfile = trailer.acquisition_profile?.trim();
+      const publishingProfile = trailer.publishing_profile?.trim();
       const ingestItemStep: ingest_item_steps.Insertable = {
         id: stepId,
         type: 'VIDEO',
@@ -227,9 +238,16 @@ export abstract class DefaultIngestEntityProcessor implements IngestEntityProces
       };
       const messagePayload: EnsureVideoExistsCommand = {
         video_location: normalizedPath,
-        video_profile: trailer.profile?.trim() || 'DEFAULT',
+        video_profile:
+          (trailer.processing_profile ?? trailer.profile)?.trim() || 'DEFAULT',
         tags: [type],
       };
+      if (acquisitionProfile) {
+        messagePayload.acquisition_profile = acquisitionProfile;
+      }
+      if (publishingProfile) {
+        messagePayload.publishing_profile = publishingProfile;
+      }
       const messageContext: VideoMessageContext = {
         ingestItemStepId: stepId,
         ingestItemId,

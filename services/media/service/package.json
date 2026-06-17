@@ -55,7 +55,7 @@
     "@axinom/mosaic-messages": "0.66.0",
     "@axinom/mosaic-service-common": "0.68.0",
     "@axinom/mosaic-transactional-inbox-outbox": "0.28.0",
-    "@axinom/mosaic-video-messages": "0.7.0",
+    "@axinom/mosaic-video-messages": "0.8.0",
     "@faker-js/faker": "^7.6.0",
     "@graphile-contrib/pg-simplify-inflector": "^6.1.0",
     "ajv": "^8.18.0",

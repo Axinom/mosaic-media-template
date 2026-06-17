@@ -1867,12 +1867,12 @@ describe('ingest-validation-schema.json', () => {
       expect(isValid).toBe(true);
     });
 
-    it('Data with main video with profile and without source -> document is invalid', () => {
+    it('Data with main video with processing_profile and without source -> document is invalid', () => {
       // Arrange
       const doc = createDocument({
         title: 'avatar',
         main_video: {
-          profile: 'DEFAULT',
+          processing_profile: 'DEFAULT',
         },
       });
 
@@ -1885,7 +1885,7 @@ describe('ingest-validation-schema.json', () => {
         {
           message:
             'JSON path "document/items/0/data/main_video" must have required property \'source\' (line: 9, column: 23)',
-          schemaPath: '#/dependencies/profile/required', // TODO: Open issue: https://github.com/ajv-validator/ajv/issues/512
+          schemaPath: '#/dependencies/processing_profile/required', // TODO: Open issue: https://github.com/ajv-validator/ajv/issues/512
           type: 'JsonSchemaValidation',
         },
         {
@@ -2018,13 +2018,13 @@ describe('ingest-validation-schema.json', () => {
       },
     );
 
-    it('Data with main video with null profile -> document is invalid', () => {
+    it('Data with main video with null processing_profile -> document is invalid', () => {
       // Arrange
       const doc = createDocument({
         title: 'avatar',
         main_video: {
           source: 'valid source',
-          profile: null,
+          processing_profile: null,
         },
       });
 
@@ -2036,7 +2036,7 @@ describe('ingest-validation-schema.json', () => {
       expect(errors).toIncludeSameMembers([
         {
           message:
-            'JSON path "document/items/0/data/main_video/profile" must be string (line: 11, column: 22)',
+            'JSON path "document/items/0/data/main_video/processing_profile" must be string (line: 11, column: 33)',
           schemaPath: '#/definitions/non-empty-string/type',
           type: 'JsonSchemaValidation',
         },
@@ -2050,13 +2050,13 @@ describe('ingest-validation-schema.json', () => {
       expect(isValid).toBe(false);
     });
 
-    it('Data with main video with empty profile -> document is invalid', () => {
+    it('Data with main video with empty processing_profile -> document is invalid', () => {
       // Arrange
       const doc = createDocument({
         title: 'avatar',
         main_video: {
           source: 'valid source',
-          profile: '',
+          processing_profile: '',
         },
       });
 
@@ -2068,7 +2068,7 @@ describe('ingest-validation-schema.json', () => {
       expect(errors).toIncludeSameMembers([
         {
           message:
-            'JSON path "document/items/0/data/main_video/profile" must NOT have fewer than 1 characters (line: 11, column: 22)',
+            'JSON path "document/items/0/data/main_video/processing_profile" must NOT have fewer than 1 characters (line: 11, column: 33)',
           schemaPath: '#/definitions/non-empty-string/minLength',
           type: 'JsonSchemaValidation',
         },
@@ -2083,14 +2083,14 @@ describe('ingest-validation-schema.json', () => {
     });
 
     it.each(whitespaceValues)(
-      'Data with main video with whitespace "%s" profile -> document is invalid',
+      'Data with main video with whitespace "%s" processing_profile -> document is invalid',
       (whitespace) => {
         // Arrange
         const doc = createDocument({
           title: 'avatar',
           main_video: {
             source: 'valid source',
-            profile: whitespace,
+            processing_profile: whitespace,
           },
         });
 
@@ -2102,7 +2102,7 @@ describe('ingest-validation-schema.json', () => {
         expect(errors).toIncludeSameMembers([
           {
             message:
-              'JSON path "document/items/0/data/main_video/profile" must match pattern "^$|.*\\S.*" (line: 11, column: 22)',
+              'JSON path "document/items/0/data/main_video/processing_profile" must match pattern "^$|.*\\S.*" (line: 11, column: 33)',
             schemaPath: '#/definitions/non-empty-string/pattern',
             type: 'JsonSchemaValidation',
           },
@@ -2123,14 +2123,14 @@ describe('ingest-validation-schema.json', () => {
       'avatar.the.movie',
       'DEFAULT',
     ])(
-      'Data with main video with valid profile "%s" -> document is valid',
+      'Data with main video with valid processing_profile "%s" -> document is valid',
       (profile) => {
         // Arrange
         const doc = createDocument({
           title: 'avatar',
           main_video: {
             source: 'valid source',
-            profile,
+            processing_profile: profile,
           },
         });
 
@@ -2144,11 +2144,71 @@ describe('ingest-validation-schema.json', () => {
       },
     );
 
+    it.each(['acquisition_profile', 'publishing_profile'])(
+      'Data with main video with %s and without source -> document is invalid',
+      (profileField) => {
+        // Arrange
+        const doc = createDocument({
+          title: 'avatar',
+          main_video: {
+            [profileField]: 'DEFAULT',
+          },
+        });
+
+        // Act
+        const isValid = ajv.validate(ingestSchema, doc);
+        const errors = transformAjvErrors(ajv.errors, doc);
+
+        // Assert
+        expect(
+          errors.some(
+            (error) =>
+              error.schemaPath === `#/dependencies/${profileField}/required`,
+          ),
+        ).toBe(true);
+        expect(isValid).toBe(false);
+      },
+    );
+
+    it.each(['acquisition_profile', 'publishing_profile'])(
+      'Data with main video with invalid %s -> document is invalid',
+      (profileField) => {
+        for (const value of [null, '', ...whitespaceValues]) {
+          // Arrange
+          const doc = createDocument({
+            title: 'avatar',
+            main_video: {
+              source: 'valid source',
+              [profileField]: value,
+            },
+          });
+
+          // Act
+          const isValid = ajv.validate(ingestSchema, doc);
+          const errors = transformAjvErrors(ajv.errors, doc);
+
+          // Assert
+          expect(
+            errors.some((error) =>
+              error.message.includes(`/main_video/${profileField}"`),
+            ),
+          ).toBe(true);
+          expect(isValid).toBe(false);
+        }
+      },
+    );
+
     it.each([
       null,
       {},
       { source: 'test-videos/videos/avatar_1' },
-      { source: 'test-videos/videos/avatar_1', profile: 'DEFAULT' },
+      { source: 'test-videos/videos/avatar_1', processing_profile: 'DEFAULT' },
+      {
+        source: 'test-videos/videos/avatar_1',
+        processing_profile: 'DEFAULT',
+        acquisition_profile: 'Acquisition',
+        publishing_profile: 'Publishing',
+      },
     ])('Data with valid main_video %p -> document is valid', (main_video) => {
       // Arrange
       const doc = createDocument({ title: 'avatar', main_video });
@@ -2302,11 +2362,11 @@ describe('ingest-validation-schema.json', () => {
       },
     );
 
-    it('Data with trailer with null profile -> document is invalid', () => {
+    it('Data with trailer with null processing_profile -> document is invalid', () => {
       // Arrange
       const doc = createDocument({
         title: 'avatar',
-        trailers: [{ source: 'valid source', profile: null }],
+        trailers: [{ source: 'valid source', processing_profile: null }],
       });
 
       // Act
@@ -2317,7 +2377,7 @@ describe('ingest-validation-schema.json', () => {
       expect(errors).toIncludeSameMembers([
         {
           message:
-            'JSON path "document/items/0/data/trailers/0/profile" must be string (line: 12, column: 24)',
+            'JSON path "document/items/0/data/trailers/0/processing_profile" must be string (line: 12, column: 35)',
           schemaPath: '#/definitions/non-empty-string/type',
           type: 'JsonSchemaValidation',
         },
@@ -2331,11 +2391,11 @@ describe('ingest-validation-schema.json', () => {
       expect(isValid).toBe(false);
     });
 
-    it('Data with trailer with empty profile -> document is invalid', () => {
+    it('Data with trailer with empty processing_profile -> document is invalid', () => {
       // Arrange
       const doc = createDocument({
         title: 'avatar',
-        trailers: [{ source: 'valid source', profile: '' }],
+        trailers: [{ source: 'valid source', processing_profile: '' }],
       });
 
       // Act
@@ -2346,7 +2406,7 @@ describe('ingest-validation-schema.json', () => {
       expect(errors).toIncludeSameMembers([
         {
           message:
-            'JSON path "document/items/0/data/trailers/0/profile" must NOT have fewer than 1 characters (line: 12, column: 24)',
+            'JSON path "document/items/0/data/trailers/0/processing_profile" must NOT have fewer than 1 characters (line: 12, column: 35)',
           schemaPath: '#/definitions/non-empty-string/minLength',
           type: 'JsonSchemaValidation',
         },
@@ -2361,12 +2421,14 @@ describe('ingest-validation-schema.json', () => {
     });
 
     it.each(whitespaceValues)(
-      'Data with trailer with whitespace "%s" profile -> document is invalid',
+      'Data with trailer with whitespace "%s" processing_profile -> document is invalid',
       (whitespace) => {
         // Arrange
         const doc = createDocument({
           title: 'avatar',
-          trailers: [{ source: 'valid source', profile: whitespace }],
+          trailers: [
+            { source: 'valid source', processing_profile: whitespace },
+          ],
         });
 
         // Act
@@ -2377,7 +2439,7 @@ describe('ingest-validation-schema.json', () => {
         expect(errors).toIncludeSameMembers([
           {
             message:
-              'JSON path "document/items/0/data/trailers/0/profile" must match pattern "^$|.*\\S.*" (line: 12, column: 24)',
+              'JSON path "document/items/0/data/trailers/0/processing_profile" must match pattern "^$|.*\\S.*" (line: 12, column: 35)',
             schemaPath: '#/definitions/non-empty-string/pattern',
             type: 'JsonSchemaValidation',
           },
@@ -2398,12 +2460,12 @@ describe('ingest-validation-schema.json', () => {
       'avatar.the.movie',
       'DEFAULT',
     ])(
-      'Data with trailer with valid profile "%s" -> document is valid',
+      'Data with trailer with valid processing_profile "%s" -> document is valid',
       (profile) => {
         // Arrange
         const doc = createDocument({
           title: 'avatar',
-          trailers: [{ source: 'valid source', profile }],
+          trailers: [{ source: 'valid source', processing_profile: profile }],
         });
 
         // Act
@@ -2416,7 +2478,32 @@ describe('ingest-validation-schema.json', () => {
       },
     );
 
-    it.each([[[{}]], [[{ profile: 'DEFAULT' }]]])(
+    it.each(['acquisition_profile', 'publishing_profile'])(
+      'Data with trailer with invalid %s -> document is invalid',
+      (profileField) => {
+        for (const value of [null, '', ...whitespaceValues]) {
+          // Arrange
+          const doc = createDocument({
+            title: 'avatar',
+            trailers: [{ source: 'valid source', [profileField]: value }],
+          });
+
+          // Act
+          const isValid = ajv.validate(ingestSchema, doc);
+          const errors = transformAjvErrors(ajv.errors, doc);
+
+          // Assert
+          expect(
+            errors.some((error) =>
+              error.message.includes(`/trailers/0/${profileField}"`),
+            ),
+          ).toBe(true);
+          expect(isValid).toBe(false);
+        }
+      },
+    );
+
+    it.each([[[{}]], [[{ processing_profile: 'DEFAULT' }]]])(
       'Data with invalid trailers %j -> document is invalid',
       (trailers: any) => {
         // Arrange
@@ -2449,11 +2536,34 @@ describe('ingest-validation-schema.json', () => {
       [null],
       [[]],
       [[{ source: 'test-videos/trailers/avatar_1' }]],
-      [[{ source: 'test-videos/trailers/avatar_1', profile: 'DEFAULT' }]],
       [
         [
-          { source: 'test-videos/trailers/avatar_2', profile: 'DEFAULT' },
-          { source: 'test-videos/trailers/avatar_2', profile: 'DEFAULT' },
+          {
+            source: 'test-videos/trailers/avatar_1',
+            processing_profile: 'DEFAULT',
+          },
+        ],
+      ],
+      [
+        [
+          {
+            source: 'test-videos/trailers/avatar_1',
+            processing_profile: 'DEFAULT',
+            acquisition_profile: 'Acquisition',
+            publishing_profile: 'Publishing',
+          },
+        ],
+      ],
+      [
+        [
+          {
+            source: 'test-videos/trailers/avatar_2',
+            processing_profile: 'DEFAULT',
+          },
+          {
+            source: 'test-videos/trailers/avatar_2',
+            processing_profile: 'DEFAULT',
+          },
         ],
       ],
     ])('Data with valid trailers %j -> document is valid', (trailers) => {

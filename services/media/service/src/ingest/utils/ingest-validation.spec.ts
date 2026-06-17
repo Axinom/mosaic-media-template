@@ -89,7 +89,7 @@ describe('Ingest validation helpers', () => {
               title: 'title',
               main_video: {
                 source: 'avatar',
-                profile: 'DEFAULT',
+                processing_profile: 'DEFAULT',
               },
             },
           },
@@ -115,16 +115,16 @@ describe('Ingest validation helpers', () => {
               title: 'title',
               main_video: {
                 source: 'avatar',
-                profile: 'DEFAULT',
+                processing_profile: 'DEFAULT',
               },
               trailers: [
                 {
                   source: 'avatar1',
-                  profile: 'DEFAULT',
+                  processing_profile: 'DEFAULT',
                 },
                 {
                   source: 'trailers/avatar1',
-                  profile: 'DEFAULT',
+                  processing_profile: 'DEFAULT',
                 },
               ],
             },
@@ -151,16 +151,16 @@ describe('Ingest validation helpers', () => {
               title: 'title',
               main_video: {
                 source: 'avatar',
-                profile: 'DEFAULT',
+                processing_profile: 'DEFAULT',
               },
               trailers: [
                 {
                   source: 'avatar1',
-                  profile: 'DEFAULT',
+                  processing_profile: 'DEFAULT',
                 },
                 {
                   source: 'trailers/avatar1',
-                  profile: 'DEFAULT',
+                  processing_profile: 'DEFAULT',
                 },
               ],
             },
@@ -172,16 +172,16 @@ describe('Ingest validation helpers', () => {
               title: 'title',
               main_video: {
                 source: 'avatar1',
-                profile: 'DEFAULT',
+                processing_profile: 'DEFAULT',
               },
               trailers: [
                 {
                   source: 'avatar',
-                  profile: 'DEFAULT',
+                  processing_profile: 'DEFAULT',
                 },
                 {
                   source: 'trailers/avatar1',
-                  profile: 'DEFAULT',
+                  processing_profile: 'DEFAULT',
                 },
               ],
             },
@@ -214,11 +214,11 @@ describe('Ingest validation helpers', () => {
                 trailers: [
                   {
                     source: emptyValue,
-                    profile: 'DEFAULT',
+                    processing_profile: 'DEFAULT',
                   },
                   {
                     source: emptyValue,
-                    profile: 'DEFAULT',
+                    processing_profile: 'DEFAULT',
                   },
                 ],
               },
@@ -377,16 +377,16 @@ describe('Ingest validation helpers', () => {
               title: 'title',
               main_video: {
                 source: 'avatar',
-                profile: 'DEFAULT',
+                processing_profile: 'DEFAULT',
               },
               trailers: [
                 {
                   source: 'avatar1',
-                  profile: 'DEFAULT',
+                  processing_profile: 'DEFAULT',
                 },
                 {
                   source: 'avatar1',
-                  profile: 'DEFAULT',
+                  processing_profile: 'DEFAULT',
                 },
               ],
             },
@@ -419,16 +419,16 @@ describe('Ingest validation helpers', () => {
               title: 'title',
               main_video: {
                 source: 'avatar',
-                profile: 'DEFAULT',
+                processing_profile: 'DEFAULT',
               },
               trailers: [
                 {
                   source: 'avatar',
-                  profile: 'DEFAULT',
+                  processing_profile: 'DEFAULT',
                 },
                 {
                   source: 'avatar1',
-                  profile: 'DEFAULT',
+                  processing_profile: 'DEFAULT',
                 },
               ],
             },

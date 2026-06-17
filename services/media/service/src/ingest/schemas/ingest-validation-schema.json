@@ -120,19 +120,29 @@
     },
     "main_video": {
       "type": ["object", "null"],
-      "description": "An object describing a path to main video files and a way to process it. If empty object is defined - main video will be unassigned on media item update. If profile is defined - then source must be defined as well.",
+      "description": "An object describing a path to main video files and a way to process it. If empty object is defined - main video will be unassigned on media item update. If any profile selection is defined - then source must be defined as well.",
       "required": [],
       "dependencies": {
-        "profile": { "required": ["source"] }
+        "processing_profile": { "required": ["source"] },
+        "acquisition_profile": { "required": ["source"] },
+        "publishing_profile": { "required": ["source"] }
       },
       "properties": {
         "source": {
           "$ref": "#/definitions/non-empty-string",
           "description": "Path to video files in file storage, including video itself, audio, subtitle and closed caption files."
         },
-        "profile": {
+        "processing_profile": {
           "$ref": "#/definitions/non-empty-string",
-          "description": "Name of processing profile to be used to encode video files. If not specified - default profile will be used."
+          "description": "Name of processing profile to be used to encode video files. If not specified - default processing profile will be used."
+        },
+        "acquisition_profile": {
+          "$ref": "#/definitions/non-empty-string",
+          "description": "Name of acquisition profile to be used to ingest video files. If not specified - default acquisition profile will be used."
+        },
+        "publishing_profile": {
+          "$ref": "#/definitions/non-empty-string",
+          "description": "Name of publishing profile to be used to deliver encoded video files. If not specified - default publishing profile will be used."
         }
       }
     },
@@ -148,9 +158,17 @@
             "$ref": "#/definitions/non-empty-string",
             "description": "Path to video files in file storage, including video itself, audio, subtitle and closed caption files."
           },
-          "profile": {
+          "processing_profile": {
             "$ref": "#/definitions/non-empty-string",
             "description": "Name of processing profile to be used to encode video files."
+          },
+          "acquisition_profile": {
+            "$ref": "#/definitions/non-empty-string",
+            "description": "Name of acquisition profile to be used to ingest video files. If not specified - default acquisition profile will be used."
+          },
+          "publishing_profile": {
+            "$ref": "#/definitions/non-empty-string",
+            "description": "Name of publishing profile to be used to deliver encoded video files. If not specified - default publishing profile will be used."
           }
         }
       }
@@ -302,7 +320,7 @@
                       "examples": [
                         {
                           "source": "test-videos/videos/avatar",
-                          "profile": "DEFAULT"
+                          "processing_profile": "DEFAULT"
                         }
                       ]
                     },
@@ -313,7 +331,7 @@
                           { "source": "test-videos/trailers/avatar_1" },
                           {
                             "source": "test-videos/trailers/avatar_2",
-                            "profile": "DEFAULT"
+                            "processing_profile": "DEFAULT"
                           }
                         ]
                       ]
@@ -435,7 +453,7 @@
                           { "source": "test-videos/trailers/mandalorian_1" },
                           {
                             "source": "test-videos/trailers/mandalorian_2",
-                            "profile": "DEFAULT"
+                            "processing_profile": "DEFAULT"
                           }
                         ]
                       ]
@@ -557,7 +575,7 @@
                           { "source": "test-videos/trailers/mandalorian_s1" },
                           {
                             "source": "test-videos/trailers/mandalorian_s2",
-                            "profile": "DEFAULT"
+                            "processing_profile": "DEFAULT"
                           }
                         ]
                       ]
@@ -683,7 +701,7 @@
                       "examples": [
                         {
                           "source": "test-videos/videos/mandalorian_s2_e1",
-                          "profile": "DEFAULT"
+                          "processing_profile": "DEFAULT"
                         }
                       ]
                     },
@@ -696,7 +714,7 @@
                           },
                           {
                             "source": "test-videos/trailers/mandalorian_s2_e1_t2",
-                            "profile": "DEFAULT"
+                            "processing_profile": "DEFAULT"
                           }
                         ]
                       ]
