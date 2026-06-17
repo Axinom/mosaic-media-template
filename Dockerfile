@@ -6,7 +6,7 @@ ARG PACKAGE_ROOT
 ARG PACKAGE_BUILD_COMMAND
 
 # BASE
-FROM node:22-alpine AS base
+FROM node:22.22.3-alpine3.24@sha256:f0a08e0402831ac4097e9825704bc2dfe6d2c1333de99686a89ca649159b02c8 AS base
 WORKDIR /checkout
 
 # Use the repo-pinned Yarn Berry (via packageManager + .yarnrc.yml yarnPath)
@@ -41,7 +41,7 @@ RUN mkdir -p "$PACKAGE_ROOT/node_modules"
 RUN if [ ! -d /checkout/$PACKAGE_ROOT/migrations ]; then mkdir -p /checkout/$PACKAGE_ROOT/migrations; fi
 
 # RELEASE
-FROM node:22-alpine
+FROM node:22.22.3-alpine3.24@sha256:f0a08e0402831ac4097e9825704bc2dfe6d2c1333de99686a89ca649159b02c8
 
 ARG PACKAGE_ROOT
 ARG PACKAGE_BUILD_COMMAND
