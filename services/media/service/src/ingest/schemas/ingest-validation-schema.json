@@ -123,6 +123,7 @@
       "description": "An object describing a path to main video files and a way to process it. If empty object is defined - main video will be unassigned on media item update. If any profile selection is defined - then source must be defined as well.",
       "required": [],
       "dependencies": {
+        "profile": { "required": ["source"] },
         "processing_profile": { "required": ["source"] },
         "acquisition_profile": { "required": ["source"] },
         "publishing_profile": { "required": ["source"] }
@@ -131,6 +132,10 @@
         "source": {
           "$ref": "#/definitions/non-empty-string",
           "description": "Path to video files in file storage, including video itself, audio, subtitle and closed caption files."
+        },
+        "profile": {
+          "$ref": "#/definitions/non-empty-string",
+          "description": "Deprecated. Use processing_profile instead."
         },
         "processing_profile": {
           "$ref": "#/definitions/non-empty-string",
@@ -157,6 +162,10 @@
           "source": {
             "$ref": "#/definitions/non-empty-string",
             "description": "Path to video files in file storage, including video itself, audio, subtitle and closed caption files."
+          },
+          "profile": {
+            "$ref": "#/definitions/non-empty-string",
+            "description": "Deprecated. Use processing_profile instead."
           },
           "processing_profile": {
             "$ref": "#/definitions/non-empty-string",

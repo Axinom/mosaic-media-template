@@ -189,7 +189,7 @@ export abstract class DefaultIngestEntityProcessor implements IngestEntityProces
       const messagePayload: EnsureVideoExistsCommand = {
         video_location: normalizeRelativePath(video.source),
         video_profile:
-          (video.processing_profile ?? video.profile)?.trim() || 'DEFAULT',
+          video.processing_profile?.trim() || video.profile?.trim() || 'DEFAULT',
         tags: [type],
       };
       if (acquisitionProfile) {
@@ -239,7 +239,7 @@ export abstract class DefaultIngestEntityProcessor implements IngestEntityProces
       const messagePayload: EnsureVideoExistsCommand = {
         video_location: normalizedPath,
         video_profile:
-          (trailer.processing_profile ?? trailer.profile)?.trim() || 'DEFAULT',
+          trailer.processing_profile?.trim() || trailer.profile?.trim() || 'DEFAULT',
         tags: [type],
       };
       if (acquisitionProfile) {
