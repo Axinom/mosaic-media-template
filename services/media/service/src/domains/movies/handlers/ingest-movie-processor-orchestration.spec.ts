@@ -26,7 +26,7 @@ describe('IngestMovieProcessor', () => {
   ) => ({
     tags: [tag],
     video_location: videoLocation,
-    processing_profile: video.processing_profile?.trim() || 'DEFAULT',
+    video_profile: video.processing_profile?.trim() || 'DEFAULT',
     ...(video.acquisition_profile?.trim() && {
       acquisition_profile: video.acquisition_profile.trim(),
     }),
