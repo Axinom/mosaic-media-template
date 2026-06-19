@@ -48,6 +48,11 @@ ARG PACKAGE_BUILD_COMMAND
 
 WORKDIR "/app/$PACKAGE_ROOT"
 
+# Remove the globally-bundled npm CLI. The runtime entrypoint runs `node`
+# directly and never invokes npm, but npm vendors its own vulnerable
+# transitive deps (tar, minimatch, glob, ...) that otherwise show up in scans.
+RUN rm -rf /usr/local/lib/node_modules/npm /usr/local/bin/npm /usr/local/bin/npx
+
 COPY --from=build ["/checkout/$PACKAGE_ROOT/package.json", "./"]
 COPY --from=build ["/checkout/node_modules", "/app/node_modules/"]
 COPY --from=build ["/checkout/$PACKAGE_ROOT/node_modules", "./node_modules/"]
