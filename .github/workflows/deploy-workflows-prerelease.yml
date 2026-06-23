@@ -67,6 +67,8 @@ jobs:
       tenant-id: ${{ vars.MOSAIC_CB_SELF_TENANT_ID }}
       service-name: ax-channel-service
       hosting-service-enabled: true
+      extra-fields: '--fields.CHANNEL_MANAGEMENT_HOST cb-navy-channel.axtest.net 
+        --fields.CHANNEL_MANAGEMENT_HTTP_PROTOCOL https'
 
   media:
     name: Deploy media
@@ -87,6 +89,8 @@ jobs:
       tenant-id: ${{ vars.MOSAIC_CB_SELF_TENANT_ID }}
       service-name: ax-media-service
       hosting-service-enabled: true
+      extra-fields: '--fields.MEDIA_MANAGEMENT_HOST cb-navy-media.axtest.net 
+        --fields.MEDIA_MANAGEMENT_HTTP_PROTOCOL https'
 
   fetch_slack_thread:
     if: github.event_name == 'schedule' || github.actor == 'github-actions[bot]' && always()

@@ -25,7 +25,7 @@ jobs:
           token: ${{ secrets.SLACK_API_TOKEN_NAVY_CHANNELS }}
           payload: |
             channel: ${{ vars.SLACK_CHANNEL_ID_NAVY_CB_AUTO_RELEASE }}
-            text: "Daily Build Status - ${{ steps.date.outputs.date }}"
+            text: "Daily Build Status - ${{ steps.date.outputs.date }} [Customizable Services]"
             blocks:
               - type: header
                 text:
