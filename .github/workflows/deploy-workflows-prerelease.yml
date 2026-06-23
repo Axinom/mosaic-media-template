@@ -15,6 +15,10 @@ on:
         type: boolean
         default: true
 
+permissions:
+  contents: read
+  actions: read
+
 jobs:
   # ----------------------------------------- Pre-check ----------------------------------------- #
   # Check if there's a successful workflow build for the same branch, and
@@ -52,7 +56,7 @@ jobs:
       workflow-publish-api-key: ${{ secrets.WORKFLOW_PUBLISH_API_KEY_CB }}
       managed-workflow-publish-api-key: ${{ secrets.MANAGED_WORKFLOW_PUBLISH_API_KEY_CB }}
     with:
-      deploy: ${{ github.event_name == 'schedule' || inputs.deploy-channel }}
+      deploy: ${{ github.event_name == 'schedule' || github.actor == 'github-actions[bot]' || inputs.deploy-channel }}
       runs-on: ubicloud-standard-2
       build-run-id: ${{ needs.resolve_build.outputs.channel }}
       environment: Prerelease
@@ -72,7 +76,7 @@ jobs:
       workflow-publish-api-key: ${{ secrets.WORKFLOW_PUBLISH_API_KEY_CB }}
       managed-workflow-publish-api-key: ${{ secrets.MANAGED_WORKFLOW_PUBLISH_API_KEY_CB }}
     with:
-      deploy: ${{ github.event_name == 'schedule' || inputs.deploy-media }}
+      deploy: ${{ github.event_name == 'schedule' || github.actor == 'github-actions[bot]' || inputs.deploy-media }}
       runs-on: ubicloud-standard-2
       build-run-id: ${{ needs.resolve_build.outputs.media }}
       environment: Prerelease
@@ -84,15 +88,20 @@ jobs:
       service-name: ax-media-service
       hosting-service-enabled: true
 
-#  slack_notification:
-#    name: Slack Notification
-#    needs: [ channel, media ]
-#    if: github.event_name == 'schedule' || !cancelled()
-#    uses: ./.github/workflows/templates-slack-deploy-notification.yml
-#    secrets:
-#      slack_bot_token: ${{ secrets.SLACK_API_TOKEN_NAVY_CHANNELS }}
-#      slack_channel_id: ${{ vars.SLACK_CHANNEL_ID_NAVY_CB_AUTO_RELEASE }}
-#    with:
-#      deploy-type: workflow
-#      environment: cb
-#      version-file: .github/deployment-versions/workflows/cb.yaml
+  fetch_slack_thread:
+    if: github.event_name == 'schedule' || github.actor == 'github-actions[bot]' && always()
+    uses: ./.github/workflows/templates-fetch-slack-thread.yml
+
+  slack_notification:
+    name: Slack Notification
+    needs: [ channel, media, fetch_slack_thread ]
+    if: github.event_name == 'schedule' || github.actor == 'github-actions[bot]' && always()
+    uses: ./.github/workflows/templates-slack-deploy-notification.yml
+    secrets:
+      slack_bot_token: ${{ secrets.SLACK_API_TOKEN_NAVY_CHANNELS }}
+      slack_channel_id: ${{ vars.SLACK_CHANNEL_ID_NAVY_CB_AUTO_RELEASE }}
+    with:
+      deploy-type: workflow
+      environment: cb
+      version-file: .github/deployment-versions/workflows/cb.yaml
+      slack-thread-id: ${{ needs.fetch_slack_thread.outputs.thread-id }}

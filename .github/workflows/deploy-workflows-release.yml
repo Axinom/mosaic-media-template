@@ -19,6 +19,10 @@ on:
         type: boolean
         default: true
 
+permissions:
+  contents: read
+  actions: read
+
 jobs:
   # ----------------------------------------- Pre-check ----------------------------------------- #
   # Check if release deployment comes from a branch name starting with releases/*

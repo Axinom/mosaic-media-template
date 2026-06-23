@@ -59,6 +59,9 @@ on:
         type: string
         description: Pre-computed id that contains the date string and the run id, separated by an underscore
 
+permissions:
+  contents: read
+
 jobs:
   build_and_push:
     if: ${{ inputs.build }}

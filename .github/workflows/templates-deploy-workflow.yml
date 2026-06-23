@@ -59,6 +59,10 @@ on:
         type: string
         description: Build run ID to download artifacts from
 
+permissions:
+  contents: read
+  actions: read
+
 jobs:
   deploy:
     if: ${{ inputs.deploy }}

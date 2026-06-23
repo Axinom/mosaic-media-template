@@ -12,6 +12,9 @@ on:
       - reopened
       - ready_for_review
 
+permissions:
+  contents: read
+
 jobs:
   verify-pr-name:
     if: github.event.pull_request.draft == false # Skip draft PRs
@@ -25,15 +28,15 @@ jobs:
           dependabotUser="dependabot[bot]"
           expectedPattern="^\[AB#([0-9]+)\]"
 
-          echo "PR title: '$PR_TITLE'"
-          echo "PR user: '$PR_USER'"
+          echo "::notice::PR title: '$PR_TITLE'"
+          echo "::notice::PR user: '$PR_USER'"
 
           # Check if PR title matches expected pattern (skip for dependabot)
           if [[ "$PR_USER" != "$dependabotUser" ]] && [[ ! "$PR_TITLE" =~ $expectedPattern ]]; then
             echo "::error::Pull request title must start with '[AB#]' followed by a numeric value."
             echo "::error::Example: [AB#12345] Your pull request title"
-            echo "::error::PR title '$PR_TITLE' does not match expected pattern."
+            echo "::error::❌ PR title '$PR_TITLE' does not match expected pattern."
             exit 1
           fi
 
-          echo "PR title validation passed."
+          echo "::notice::✅ PR title validation passed."
