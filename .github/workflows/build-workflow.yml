@@ -55,7 +55,7 @@ jobs:
       build-type: workflow
 
   fetch_slack_thread:
-    if: github.event_name == 'schedule'
+    if: github.event_name == 'schedule' && always()
     uses: ./.github/workflows/templates-fetch-slack-thread.yml
 
   slack_notification:
@@ -73,7 +73,7 @@ jobs:
   trigger_deploy:
     name: Trigger Workflow Deployment
     needs: [ collect_results ]
-    if: always()
+    if: github.event_name == 'schedule' && always()
     runs-on: ubicloud-standard-2
     steps:
       - name: Trigger workflow deployment
@@ -81,11 +81,6 @@ jobs:
           GH_TOKEN: ${{ github.token }}
         run: |
           WORKFLOW="deploy-workflows-prerelease.yml"
-          
-          if [[ "${{ github.ref }}" == refs/heads/releases/* ]]; then
-            WORKFLOW="deploy-workflows-release.yml"
-          fi
-          
           gh workflow run "$WORKFLOW" \
             --repo "${{ github.repository }}" \
             --ref "${{ github.ref }}"

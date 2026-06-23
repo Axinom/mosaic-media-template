@@ -21,7 +21,7 @@ on:
         default: ubicloud-standard-2
 
 permissions:
-  contents: write
+  contents: read
   actions: read
 
 jobs:

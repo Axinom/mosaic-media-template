@@ -106,6 +106,8 @@ jobs:
       tenant-id: ${{ vars.MOSAIC_TEST_SELF_TENANT_ID }}
       service-name: ax-channel-service
       hosting-service-enabled: true
+      extra-fields: '--fields.CHANNEL_MANAGEMENT_HOST navy-channel.axtest.net
+        --fields.CHANNEL_MANAGEMENT_HTTP_PROTOCOL https'
 
   test_media:
     name: Deploy media (Test)
@@ -126,6 +128,9 @@ jobs:
       tenant-id: ${{ vars.MOSAIC_TEST_SELF_TENANT_ID }}
       service-name: ax-media-service
       hosting-service-enabled: true
+      extra-fields: '--fields.MEDIA_MANAGEMENT_HOST navy-media.axtest.net
+        --fields.MEDIA_MANAGEMENT_HTTP_PROTOCOL https
+        --fields.IS_LOCALIZATION_ENABLED true'
 
   # -------------------------------------- Post-check: TEST ------------------------------------- #
   # Check if all workflows were successfully deployed to TEST.
@@ -233,6 +238,8 @@ jobs:
       tenant-id: ${{ vars.MOSAIC_PROD_SELF_TENANT_ID }}
       service-name: ax-channel-service
       hosting-service-enabled: true
+      extra-fields: '--fields.CHANNEL_MANAGEMENT_HOST mosaic-ott-channel.axprod.net
+        --fields.CHANNEL_MANAGEMENT_HTTP_PROTOCOL https'
 
   prod_media:
     name: Deploy media (Prod)
@@ -253,3 +260,6 @@ jobs:
       tenant-id: ${{ vars.MOSAIC_PROD_SELF_TENANT_ID }}
       service-name: ax-media-service
       hosting-service-enabled: true
+      extra-fields: '--fields.MEDIA_MANAGEMENT_HOST mosaic-ott-media.axprod.net
+        --fields.MEDIA_MANAGEMENT_HTTP_PROTOCOL https
+        --fields.IS_LOCALIZATION_ENABLED true'
