@@ -73,7 +73,7 @@ describe('UpdateMetadataHandler', () => {
         external_id: 'externalId',
         data: {
           title: 'title',
-          trailers: [{ source: 'test', profile: 'DEFAULT' }],
+          trailers: [{ source: 'test', processing_profile: 'DEFAULT' }],
         },
       },
     }).run(ctx.ownerPool);

@@ -30,13 +30,13 @@
         ],
         "main_video": {
           "source": " test-videos/videos/avatar",
-          "profile": "DEFAULT "
+          "processing_profile": "DEFAULT "
         },
         "trailers": [
           { "source": "test-videos/trailers/avatar_1 " },
           {
             "source": " test-videos/trailers/avatar_2",
-            "profile": " DEFAULT"
+            "processing_profile": " DEFAULT"
           }
         ],
         "images": [
@@ -76,13 +76,13 @@
         ],
         "main_video": {
           "source": " test-videos/videos/mandalorian_s2_e1",
-          "profile": "DEFAULT"
+          "processing_profile": "DEFAULT"
         },
         "trailers": [
           { "source": "test-videos/trailers/mandalorian_s2_e1_t1" },
           {
             "source": "test-videos/trailers/mandalorian_s2_e1_t2",
-            "profile": "DEFAULT"
+            "processing_profile": "DEFAULT"
           }
         ],
         "images": [
@@ -122,7 +122,7 @@
           { "source": "test-videos/trailers/mandalorian_s2_t1" },
           {
             "source": "test-videos/trailers/mandalorian_s2_t2",
-            "profile": "DEFAULT"
+            "processing_profile": "DEFAULT"
           }
         ],
         "images": [
@@ -162,7 +162,7 @@
           { "source": "test-videos/trailers/mandalorian_t1" },
           {
             "source": "test-videos/trailers/mandalorian_t2",
-            "profile": "DEFAULT"
+            "processing_profile": "DEFAULT"
           }
         ],
         "images": [

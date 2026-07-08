@@ -75,7 +75,7 @@ interface ParsedCliArgs {
  * Returns a readable timestamp in current locale time, e.g. `[2021-05-13 13:02:12.685]`
  */
 const getTimestamp = (): string => {
-  const offset = new Date().getTimezoneOffset() * 60000; //offset in milliseconds
+  const offset = new Date().getTimezoneOffset() * 60000; // offset in milliseconds
   const localISOTime = new Date(Date.now() - offset)
     .toISOString()
     .slice(0, -1)
@@ -112,7 +112,9 @@ const getNonCommonProperties = (params: {
   const main_video = params.mainVideo
     ? {
         source: params.mainVideo,
-        profile: faker.helpers.arrayElement(params.processingProfiles ?? []),
+        processing_profile: faker.helpers.arrayElement(
+          params.processingProfiles ?? [],
+        ),
       }
     : undefined;
   const parentInfo = faker.helpers.arrayElement(params.parentInfo ?? []);
@@ -198,7 +200,8 @@ const generateIngestItem = (
         trailers.length > 0
           ? trailers.map((path) => ({
               source: path,
-              profile: faker.helpers.arrayElement(processingProfiles),
+              processing_profile:
+                faker.helpers.arrayElement(processingProfiles),
             }))
           : undefined,
       images: coverPath || teaserPath ? [] : undefined,

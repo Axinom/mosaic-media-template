@@ -24,13 +24,13 @@
         ],
         "main_video": {
           "source": " test-videos/videos/avatar",
-          "profile": "DEFAULT"
+          "processing_profile": "DEFAULT"
         },
         "trailers": [
           { "source": "test-videos/trailers/avatar_1 " },
           {
             "source": " test-videos/trailers/avatar_2",
-            "profile": "DEFAULT"
+            "processing_profile": "DEFAULT"
           }
         ]
       }

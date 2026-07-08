@@ -50,7 +50,7 @@ describe('IngestMovieProcessor', () => {
         external_id: 'externalId',
         data: {
           title: 'title',
-          trailers: [{ source: 'test', profile: 'DEFAULT' }],
+          trailers: [{ source: 'test', processing_profile: 'DEFAULT' }],
         },
       },
     }).run(ctx.ownerPool);
@@ -109,7 +109,7 @@ describe('IngestMovieProcessor', () => {
                 title: 'title',
                 trailers: allTrailersToIngest.map((trailer) => ({
                   source: trailer,
-                  profile: 'DEFAULT',
+                  processing_profile: 'DEFAULT',
                 })),
               },
             },
