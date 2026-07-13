@@ -46,14 +46,14 @@
     "util:define-func-migration": "yarn mosaic generate-define-func-migration"
   },
   "dependencies": {
-    "@axinom/mosaic-db-common": "0.56.0",
-    "@axinom/mosaic-graphql-common": "0.32.0",
-    "@axinom/mosaic-id-guard": "0.47.0",
-    "@axinom/mosaic-id-utils": "0.26.0",
-    "@axinom/mosaic-message-bus": "0.49.0",
-    "@axinom/mosaic-service-common": "0.68.0",
-    "@axinom/mosaic-transactional-inbox-outbox": "0.28.0",
-    "@axinom/mosaic-video-messages": "0.7.0",
+    "@axinom/mosaic-db-common": "0.58.0",
+    "@axinom/mosaic-graphql-common": "0.34.0",
+    "@axinom/mosaic-id-guard": "0.49.0",
+    "@axinom/mosaic-id-utils": "0.28.0",
+    "@axinom/mosaic-message-bus": "0.51.0",
+    "@axinom/mosaic-service-common": "0.70.0",
+    "@axinom/mosaic-transactional-inbox-outbox": "0.30.0",
+    "@axinom/mosaic-video-messages": "0.8.1",
     "@graphile-contrib/pg-simplify-inflector": "^6.1.0",
     "ajv": "^8.18.0",
     "ajv-formats": "^3.0.1",
@@ -87,7 +87,7 @@
     "zapatos": "^3.6.0"
   },
   "devDependencies": {
-    "@axinom/mosaic-cli": "0.55.0",
+    "@axinom/mosaic-cli": "0.57.0",
     "@graphql-codegen/cli": "^4.0.1",
     "@graphql-codegen/typescript": "^2.7.3",
     "@graphql-codegen/typescript-graphql-request": "^4.5.5",

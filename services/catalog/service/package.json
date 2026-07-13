@@ -41,14 +41,14 @@
     "util:define-func-migration": "yarn mosaic generate-define-func-migration"
   },
   "dependencies": {
-    "@axinom/mosaic-db-common": "0.56.0",
-    "@axinom/mosaic-graphql-common": "0.32.0",
-    "@axinom/mosaic-id-guard": "0.47.0",
-    "@axinom/mosaic-message-bus": "0.49.0",
-    "@axinom/mosaic-message-bus-abstractions": "0.24.2",
-    "@axinom/mosaic-messages": "0.66.0",
-    "@axinom/mosaic-service-common": "0.68.0",
-    "@axinom/mosaic-transactional-inbox-outbox": "0.28.0",
+    "@axinom/mosaic-db-common": "0.58.0",
+    "@axinom/mosaic-graphql-common": "0.34.0",
+    "@axinom/mosaic-id-guard": "0.49.0",
+    "@axinom/mosaic-message-bus": "0.51.0",
+    "@axinom/mosaic-message-bus-abstractions": "0.24.4",
+    "@axinom/mosaic-messages": "0.68.0",
+    "@axinom/mosaic-service-common": "0.70.0",
+    "@axinom/mosaic-transactional-inbox-outbox": "0.30.0",
     "@graphile-contrib/pg-simplify-inflector": "^6.1.0",
     "add": "^2.0.6",
     "dotenv": "^8.6.0",
@@ -70,7 +70,7 @@
     "zapatos": "^3.6.0"
   },
   "devDependencies": {
-    "@axinom/mosaic-cli": "0.55.0",
+    "@axinom/mosaic-cli": "0.57.0",
     "@types/express": "^4.17.14",
     "@types/jest": "^29.4.1",
     "@types/pg": "^8.6.5",
