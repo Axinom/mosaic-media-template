@@ -101,7 +101,7 @@ jobs:
       environment: Test
       workflow-name: channel
       artifact-pattern: "channel-workflows"
-      publish-base-url: https://frontends.${{ vars.MOSAIC_TEST_SERVICE_SUB_DOMAIN }}
+      publish-base-url: https://frontends.service.test.axinom.net
       environment-id: ${{ vars.MOSAIC_TEST_SELF_ENVIRONMENT_ID }}
       tenant-id: ${{ vars.MOSAIC_TEST_SELF_TENANT_ID }}
       service-name: ax-channel-service
@@ -123,7 +123,7 @@ jobs:
       environment: Test
       workflow-name: media
       artifact-pattern: "media-workflows"
-      publish-base-url: https://frontends.${{ vars.MOSAIC_TEST_SERVICE_SUB_DOMAIN }}
+      publish-base-url: https://frontends.service.test.axinom.net
       environment-id: ${{ vars.MOSAIC_TEST_SELF_ENVIRONMENT_ID }}
       tenant-id: ${{ vars.MOSAIC_TEST_SELF_TENANT_ID }}
       service-name: ax-media-service
@@ -233,7 +233,7 @@ jobs:
       environment: Production
       workflow-name: channel
       artifact-pattern: "channel-workflows"
-      publish-base-url: https://frontends.${{ vars.MOSAIC_PROD_SERVICE_SUB_DOMAIN }}
+      publish-base-url: https://frontends.service.eu.axinom.net
       environment-id: ${{ vars.MOSAIC_PROD_SELF_ENVIRONMENT_ID }}
       tenant-id: ${{ vars.MOSAIC_PROD_SELF_TENANT_ID }}
       service-name: ax-channel-service
@@ -255,7 +255,7 @@ jobs:
       environment: Production
       workflow-name: media
       artifact-pattern: "media-workflows"
-      publish-base-url: https://frontends.${{ vars.MOSAIC_PROD_SERVICE_SUB_DOMAIN }}
+      publish-base-url: https://frontends.service.eu.axinom.net
       environment-id: ${{ vars.MOSAIC_PROD_SELF_ENVIRONMENT_ID }}
       tenant-id: ${{ vars.MOSAIC_PROD_SELF_TENANT_ID }}
       service-name: ax-media-service
