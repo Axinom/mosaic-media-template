@@ -102,8 +102,8 @@ jobs:
       workflow-name: channel
       artifact-pattern: "channel-workflows"
       publish-base-url: https://frontends.service.test.axinom.net
-      environment-id: ${{ vars.MOSAIC_TEST_SELF_ENVIRONMENT_ID }}
-      tenant-id: ${{ vars.MOSAIC_TEST_SELF_TENANT_ID }}
+      environment-id: 29dc7321-c584-48f2-a9f4-bb6540934e8c
+      tenant-id: dd91b4fd-7b9e-4f3b-854f-1baa882c0bf0
       service-name: ax-channel-service
       hosting-service-enabled: true
       extra-fields: '--fields.CHANNEL_MANAGEMENT_HOST navy-channel.axtest.net
@@ -124,8 +124,8 @@ jobs:
       workflow-name: media
       artifact-pattern: "media-workflows"
       publish-base-url: https://frontends.service.test.axinom.net
-      environment-id: ${{ vars.MOSAIC_TEST_SELF_ENVIRONMENT_ID }}
-      tenant-id: ${{ vars.MOSAIC_TEST_SELF_TENANT_ID }}
+      environment-id: 29dc7321-c584-48f2-a9f4-bb6540934e8c
+      tenant-id: dd91b4fd-7b9e-4f3b-854f-1baa882c0bf0
       service-name: ax-media-service
       hosting-service-enabled: true
       extra-fields: '--fields.MEDIA_MANAGEMENT_HOST navy-media.axtest.net
@@ -234,8 +234,8 @@ jobs:
       workflow-name: channel
       artifact-pattern: "channel-workflows"
       publish-base-url: https://frontends.service.eu.axinom.net
-      environment-id: ${{ vars.MOSAIC_PROD_SELF_ENVIRONMENT_ID }}
-      tenant-id: ${{ vars.MOSAIC_PROD_SELF_TENANT_ID }}
+      environment-id: 900c8d55-31d4-43ba-a73a-3f2289a7b2cc
+      tenant-id: 13d99de7-b726-45f8-a03d-7935e116b97f
       service-name: ax-channel-service
       hosting-service-enabled: true
       extra-fields: '--fields.CHANNEL_MANAGEMENT_HOST mosaic-ott-channel.axprod.net
@@ -256,8 +256,8 @@ jobs:
       workflow-name: media
       artifact-pattern: "media-workflows"
       publish-base-url: https://frontends.service.eu.axinom.net
-      environment-id: ${{ vars.MOSAIC_PROD_SELF_ENVIRONMENT_ID }}
-      tenant-id: ${{ vars.MOSAIC_PROD_SELF_TENANT_ID }}
+      environment-id: 900c8d55-31d4-43ba-a73a-3f2289a7b2cc
+      tenant-id: 13d99de7-b726-45f8-a03d-7935e116b97f
       service-name: ax-media-service
       hosting-service-enabled: true
       extra-fields: '--fields.MEDIA_MANAGEMENT_HOST mosaic-ott-media.axprod.net
