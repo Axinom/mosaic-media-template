@@ -413,10 +413,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@axinom/mosaic-core@npm:^0.4.35-rc.2":
-  version: 0.4.35-rc.2
-  resolution: "@axinom/mosaic-core@npm:0.4.35-rc.2"
-  checksum: 10c0/f04984e51fb0cfd151b360b6a298fd5c5cdf60ee59a053ca72fd61aff07ba6ab7bd9694852d7924db9c12ed9355470a639e8f7952bfe211c2024f1b26d935ac8
+"@axinom/mosaic-core@npm:^0.4.35-rc.3":
+  version: 0.4.35-rc.3
+  resolution: "@axinom/mosaic-core@npm:0.4.35-rc.3"
+  checksum: 10c0/1fada5eb70bf315fb6b0bbd410e97274bfe3c1ebd5230f4ab07e21379b3f68bcd95a14e245f7ac85cc67137a98943cc101d2a6b6bb2ba2ad364d3505d53ab4d4
   languageName: node
   linkType: hard
 
@@ -621,11 +621,11 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@axinom/mosaic-ui@npm:0.73.0-rc.2":
-  version: 0.73.0-rc.2
-  resolution: "@axinom/mosaic-ui@npm:0.73.0-rc.2"
+"@axinom/mosaic-ui@npm:0.73.0-rc.3":
+  version: 0.73.0-rc.3
+  resolution: "@axinom/mosaic-ui@npm:0.73.0-rc.3"
   dependencies:
-    "@axinom/mosaic-core": "npm:^0.4.35-rc.2"
+    "@axinom/mosaic-core": "npm:^0.4.35-rc.3"
     "@faker-js/faker": "npm:^7.4.0"
     "@geoffcox/react-splitter": "npm:^2.1.2"
     "@mui/base": "npm:5.0.0-beta.40"
@@ -648,7 +648,7 @@ __metadata:
     react: ">=17.0.1"
     react-dom: ">=17.0.1"
     react-router-dom: ">=5.2.0"
-  checksum: 10c0/49196c2b4a000ab62c82831dd56315748032bd1071fc9329e24f1708fa959ba0a9e42398fdc5a57e83917268f8494590f479ecf20416173661ba75a1f746ab66
+  checksum: 10c0/972240e716b51747e2c95eee8fbfdddf1193406c2c59f51da03c0fc24375456ef0eba98f8a0c65a22ffe9753bdac765ed130c6f26d887348190e34cd9b1bafc8
   languageName: node
   linkType: hard
 
@@ -7428,7 +7428,7 @@ __metadata:
     "@apollo/client": "npm:^3.7.10"
     "@axinom/mosaic-managed-workflow-integration": "npm:0.32.0"
     "@axinom/mosaic-portal": "npm:0.48.0"
-    "@axinom/mosaic-ui": "npm:0.73.0-rc.2"
+    "@axinom/mosaic-ui": "npm:0.73.0-rc.3"
     "@axinom/mosaic-video-workflow-integration": "npm:0.6.1"
     "@graphql-codegen/cli": "npm:^4.0.1"
     "@graphql-codegen/typescript": "npm:^2.7.3"
@@ -13598,7 +13598,7 @@ __metadata:
     "@axinom/mosaic-graphql-codegen-plugins": "npm:0.10.0"
     "@axinom/mosaic-managed-workflow-integration": "npm:0.32.0"
     "@axinom/mosaic-portal": "npm:0.48.0"
-    "@axinom/mosaic-ui": "npm:0.73.0-rc.2"
+    "@axinom/mosaic-ui": "npm:0.73.0-rc.3"
     "@axinom/mosaic-video-workflow-integration": "npm:0.6.1"
     "@graphql-codegen/cli": "npm:^4.0.1"
     "@graphql-codegen/typescript": "npm:^2.7.3"
