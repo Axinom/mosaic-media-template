@@ -413,6 +413,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@axinom/mosaic-core@npm:^0.4.35-rc.2":
+  version: 0.4.35-rc.2
+  resolution: "@axinom/mosaic-core@npm:0.4.35-rc.2"
+  checksum: 10c0/f04984e51fb0cfd151b360b6a298fd5c5cdf60ee59a053ca72fd61aff07ba6ab7bd9694852d7924db9c12ed9355470a639e8f7952bfe211c2024f1b26d935ac8
+  languageName: node
+  linkType: hard
+
 "@axinom/mosaic-db-common@npm:0.56.0, @axinom/mosaic-db-common@npm:^0.56.0":
   version: 0.56.0
   resolution: "@axinom/mosaic-db-common@npm:0.56.0"
@@ -429,15 +436,15 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@axinom/mosaic-graphql-codegen-plugins@npm:0.8.0":
-  version: 0.8.0
-  resolution: "@axinom/mosaic-graphql-codegen-plugins@npm:0.8.0"
+"@axinom/mosaic-graphql-codegen-plugins@npm:0.10.0":
+  version: 0.10.0
+  resolution: "@axinom/mosaic-graphql-codegen-plugins@npm:0.10.0"
   dependencies:
     change-case-all: "npm:^2.1.0"
     handlebars: "npm:^4.7.7"
   peerDependencies:
     graphql: ^0.12.0 || ^0.13.0 || ^14.0.0 || ^15.0.0
-  checksum: 10c0/696837c04ae67cbd149d95834e599db87da96a8b5a0bd0a199bb6a549b77921d3b111300a6a47672a6a4694dace57f36c872c483651b6d48f6018d45450dff58
+  checksum: 10c0/a3fd67497c4ebd023fd3c8336a8f26e61fb3cccfa897e064344200e8f71abda1912d986938636334a9bf58d7979c5154ddb1db167f8c0abeef0c1e0aeaeddaa2
   languageName: node
   linkType: hard
 
@@ -519,15 +526,15 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@axinom/mosaic-managed-workflow-integration@npm:0.30.0":
-  version: 0.30.0
-  resolution: "@axinom/mosaic-managed-workflow-integration@npm:0.30.0"
+"@axinom/mosaic-managed-workflow-integration@npm:0.32.0":
+  version: 0.32.0
+  resolution: "@axinom/mosaic-managed-workflow-integration@npm:0.32.0"
   peerDependencies:
     "@axinom/mosaic-portal": "*"
     "@axinom/mosaic-ui": "*"
     react: ">=17.0.1"
     react-dom: ">=17.0.1"
-  checksum: 10c0/0ee1d1da8da425aafcac9548522c905f31320b0909055424a5aa195fa99891df7462cf24d064f37ecf97d9289a6c0bc24505727ed04a8bfe92d4d47162a3c37d
+  checksum: 10c0/2bbcaab50404dd6f17c4a3a1f616a2924340baa7920bfd281cfa105c9119f494ccc7b54345256aceacdd675e7ed70ca8464eb08677c67d277483efdc6cf55aca
   languageName: node
   linkType: hard
 
@@ -565,10 +572,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@axinom/mosaic-portal@npm:0.46.0":
-  version: 0.46.0
-  resolution: "@axinom/mosaic-portal@npm:0.46.0"
-  checksum: 10c0/98d0558bad30c2ae1752fb05bc8d0eb457033745155b834564708924acc92d4ec4625d9c4c62760f8ccff1672520b82aca7135a2ac6f20ff2a7f2ffaca233388
+"@axinom/mosaic-portal@npm:0.48.0":
+  version: 0.48.0
+  resolution: "@axinom/mosaic-portal@npm:0.48.0"
+  checksum: 10c0/3acbc477f645ae4ecc30c17fcf4f3d5eadb37702c4b26c7388cde3863e7ed1f4c49f42f65c0b3e2a92b168cf6173c24d189ceef5a6ed68c9631ccdbbff01551f
   languageName: node
   linkType: hard
 
@@ -614,11 +621,11 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@axinom/mosaic-ui@npm:0.70.0":
-  version: 0.70.0
-  resolution: "@axinom/mosaic-ui@npm:0.70.0"
+"@axinom/mosaic-ui@npm:0.73.0-rc.2":
+  version: 0.73.0-rc.2
+  resolution: "@axinom/mosaic-ui@npm:0.73.0-rc.2"
   dependencies:
-    "@axinom/mosaic-core": "npm:^0.4.32"
+    "@axinom/mosaic-core": "npm:^0.4.35-rc.2"
     "@faker-js/faker": "npm:^7.4.0"
     "@geoffcox/react-splitter": "npm:^2.1.2"
     "@mui/base": "npm:5.0.0-beta.40"
@@ -641,7 +648,7 @@ __metadata:
     react: ">=17.0.1"
     react-dom: ">=17.0.1"
     react-router-dom: ">=5.2.0"
-  checksum: 10c0/f722f69850d1b6666105571bd7a30d53a7f3bec4e1c8720ef3cc1d2e85e5b5d0373ecf15e1be7a693b52697d46f943d92e50724e4b35c0f04b38f418a83b6fdb
+  checksum: 10c0/49196c2b4a000ab62c82831dd56315748032bd1071fc9329e24f1708fa959ba0a9e42398fdc5a57e83917268f8494590f479ecf20416173661ba75a1f746ab66
   languageName: node
   linkType: hard
 
@@ -659,15 +666,15 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@axinom/mosaic-video-workflow-integration@npm:0.5.0":
-  version: 0.5.0
-  resolution: "@axinom/mosaic-video-workflow-integration@npm:0.5.0"
+"@axinom/mosaic-video-workflow-integration@npm:0.6.1":
+  version: 0.6.1
+  resolution: "@axinom/mosaic-video-workflow-integration@npm:0.6.1"
   peerDependencies:
     "@axinom/mosaic-portal": "*"
     "@axinom/mosaic-ui": "*"
     react: ">=17.0.1"
     react-dom: ">=17.0.1"
-  checksum: 10c0/e28d4201b1ca620ef2d91bfa868bc72fe4d55adb08b8804c728ac67846299e91bbab0da09de992a89274a2e2aba7ace9b90c4413365c6c7dfd61bf278713053b
+  checksum: 10c0/c4b9569ec5ebccf62c53f92cbf56d3415613b0659a88cd8040438e7f4a0075b9c72503a054ce0e74abde04ab076f49068da65a7b4863ba43d1ebd72a0d33ae96
   languageName: node
   linkType: hard
 
@@ -7419,10 +7426,10 @@ __metadata:
   resolution: "channel-workflows@workspace:services/channel/workflows"
   dependencies:
     "@apollo/client": "npm:^3.7.10"
-    "@axinom/mosaic-managed-workflow-integration": "npm:0.30.0"
-    "@axinom/mosaic-portal": "npm:0.46.0"
-    "@axinom/mosaic-ui": "npm:0.70.0"
-    "@axinom/mosaic-video-workflow-integration": "npm:0.5.0"
+    "@axinom/mosaic-managed-workflow-integration": "npm:0.32.0"
+    "@axinom/mosaic-portal": "npm:0.48.0"
+    "@axinom/mosaic-ui": "npm:0.73.0-rc.2"
+    "@axinom/mosaic-video-workflow-integration": "npm:0.6.1"
     "@graphql-codegen/cli": "npm:^4.0.1"
     "@graphql-codegen/typescript": "npm:^2.7.3"
     "@graphql-codegen/typescript-operations": "npm:^2.5.3"
@@ -13588,11 +13595,11 @@ __metadata:
   resolution: "media-workflows@workspace:services/media/workflows"
   dependencies:
     "@apollo/client": "npm:^3.7.10"
-    "@axinom/mosaic-graphql-codegen-plugins": "npm:0.8.0"
-    "@axinom/mosaic-managed-workflow-integration": "npm:0.30.0"
-    "@axinom/mosaic-portal": "npm:0.46.0"
-    "@axinom/mosaic-ui": "npm:0.70.0"
-    "@axinom/mosaic-video-workflow-integration": "npm:0.5.0"
+    "@axinom/mosaic-graphql-codegen-plugins": "npm:0.10.0"
+    "@axinom/mosaic-managed-workflow-integration": "npm:0.32.0"
+    "@axinom/mosaic-portal": "npm:0.48.0"
+    "@axinom/mosaic-ui": "npm:0.73.0-rc.2"
+    "@axinom/mosaic-video-workflow-integration": "npm:0.6.1"
     "@graphql-codegen/cli": "npm:^4.0.1"
     "@graphql-codegen/typescript": "npm:^2.7.3"
     "@graphql-codegen/typescript-operations": "npm:^2.5.3"
