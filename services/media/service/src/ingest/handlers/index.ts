@@ -12,5 +12,7 @@ export * from './upsert-localization-source-entity-failed-handler';
 export * from './upsert-localization-source-entity-finished-handler';
 export * from './video-already-existed-handler';
 export * from './video-creation-started-handler';
+export * from './video-encoding-failed-handler';
+export * from './video-encoding-finished-handler';
 export * from './video-failed-handler';
 export * from './video-succeeded-handler';
