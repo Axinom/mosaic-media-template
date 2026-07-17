@@ -54,4 +54,30 @@ export class VideoEncodingFinishedHandler extends MediaGuardedTransactionalInbox
       code: CommonErrors.IngestError.code,
     });
   }
+
+  override async handleErrorMessage(
+    error: Error,
+    { payload }: TypedTransactionalMessage<VideoEncodingFinishedEvent>,
+    ownerClient: ClientBase,
+    retry: boolean,
+  ): Promise<void> {
+    if (retry) {
+      return;
+    }
+
+    const step = await findLatestVideoIngestItemStep(
+      payload.video_id,
+      ownerClient,
+    );
+
+    if (!step) {
+      return;
+    }
+
+    await update(
+      'ingest_item_steps',
+      { status: 'ERROR', response_message: error.message },
+      { id: step.id },
+    ).run(ownerClient);
+  }
 }

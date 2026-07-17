@@ -153,4 +153,49 @@ describe('VideoEncodingFinishedHandler', () => {
       expect(error).toMatchObject(testErrorInfo);
     });
   });
+
+  describe('handleErrorMessage', () => {
+    it('message failed on all retries -> step updated', async () => {
+      // Arrange
+      const payload: VideoEncodingFinishedEvent = {
+        video_id: videoId,
+        source_location: 'test-source',
+      };
+      // mapError makes sure this error is appropriate
+      const error = new Error('Handled and mapped message');
+
+      // Act
+      await ctx.executeOwnerSql(user, async (dbCtx) =>
+        handler.handleErrorMessage(error, createMessage(payload), dbCtx, false),
+      );
+
+      // Assert
+      const step = await selectOne('ingest_item_steps', {
+        id: step1.id,
+      }).run(ctx.ownerPool);
+      expect(step?.response_message).toEqual(error.message);
+      expect(step?.status).toBe('ERROR');
+    });
+
+    it('message will be retried -> step not updated', async () => {
+      // Arrange
+      const payload: VideoEncodingFinishedEvent = {
+        video_id: videoId,
+        source_location: 'test-source',
+      };
+      const error = new Error('Handled and mapped message');
+
+      // Act
+      await ctx.executeOwnerSql(user, async (dbCtx) =>
+        handler.handleErrorMessage(error, createMessage(payload), dbCtx, true),
+      );
+
+      // Assert
+      const step = await selectOne('ingest_item_steps', {
+        id: step1.id,
+      }).run(ctx.ownerPool);
+      expect(step?.status).toBe('ERROR');
+      expect(step?.response_message).toBe('A previous encoding attempt failed.');
+    });
+  });
 });
