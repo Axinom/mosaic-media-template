@@ -110,6 +110,8 @@ import {
   UpsertLocalizationSourceEntityFinishedHandler,
   VideoAlreadyExistedHandler,
   VideoCreationStartedHandler,
+  VideoEncodingFailedHandler,
+  VideoEncodingFinishedHandler,
   VideoFailedHandler,
 } from '../ingest';
 import {
@@ -328,6 +330,8 @@ const registerTransactionalInboxHandlers = (
     new VideoAlreadyExistedHandler(ingestProcessors, config),
     new VideoCreationStartedHandler(ingestProcessors, config),
     new VideoFailedHandler(config),
+    new VideoEncodingFinishedHandler(config),
+    new VideoEncodingFailedHandler(config),
     new ImageAlreadyExistedHandler(ingestProcessors, config),
     new ImageCreatedHandler(ingestProcessors, config),
     new ImageFailedHandler(config),
@@ -408,6 +412,8 @@ const registerRabbitMqMessaging = async (
         VideoServiceMultiTenantMessagingSettings.EnsureVideoExistsAlreadyExisted,
         VideoServiceMultiTenantMessagingSettings.EnsureVideoExistsCreationStarted,
         VideoServiceMultiTenantMessagingSettings.EnsureVideoExistsFailed,
+        VideoServiceMultiTenantMessagingSettings.VideoEncodingFinished,
+        VideoServiceMultiTenantMessagingSettings.VideoEncodingFailed,
         ImageServiceMultiTenantMessagingSettings.EnsureImageExistsAlreadyExisted,
         ImageServiceMultiTenantMessagingSettings.EnsureImageExistsImageCreated,
         ImageServiceMultiTenantMessagingSettings.EnsureImageExistsFailed,
@@ -435,6 +441,10 @@ const registerRabbitMqMessaging = async (
           case VideoServiceMultiTenantMessagingSettings
             .EnsureVideoExistsCreationStarted.messageType:
           case VideoServiceMultiTenantMessagingSettings.EnsureVideoExistsFailed
+            .messageType:
+          case VideoServiceMultiTenantMessagingSettings.VideoEncodingFinished
+            .messageType:
+          case VideoServiceMultiTenantMessagingSettings.VideoEncodingFailed
             .messageType:
           case ImageServiceMultiTenantMessagingSettings
             .EnsureImageExistsAlreadyExisted.messageType:
@@ -492,6 +502,14 @@ const registerRabbitMqMessaging = async (
     ).subscribeForEvent(() => inboxWriter),
     new RascalTransactionalConfigBuilder(
       VideoServiceMultiTenantMessagingSettings.EnsureVideoExistsFailed,
+      config,
+    ).subscribeForEvent(() => inboxWriter),
+    new RascalTransactionalConfigBuilder(
+      VideoServiceMultiTenantMessagingSettings.VideoEncodingFinished,
+      config,
+    ).subscribeForEvent(() => inboxWriter),
+    new RascalTransactionalConfigBuilder(
+      VideoServiceMultiTenantMessagingSettings.VideoEncodingFailed,
       config,
     ).subscribeForEvent(() => inboxWriter),
     new RascalTransactionalConfigBuilder(
