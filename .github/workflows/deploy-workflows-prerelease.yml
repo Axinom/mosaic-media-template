@@ -62,7 +62,7 @@ jobs:
       environment: Prerelease
       workflow-name: channel
       artifact-pattern: "channel-workflows"
-      publish-base-url: https://frontends.${{ vars.MOSAIC_CB_SERVICE_SUB_DOMAIN }}
+      publish-base-url: https://frontends.service.cb.axinom.net
       environment-id: ${{ vars.MOSAIC_CB_SELF_ENVIRONMENT_ID }}
       tenant-id: ${{ vars.MOSAIC_CB_SELF_TENANT_ID }}
       service-name: ax-channel-service
@@ -84,7 +84,7 @@ jobs:
       environment: Prerelease
       workflow-name: media
       artifact-pattern: "media-workflows"
-      publish-base-url: https://frontends.${{ vars.MOSAIC_CB_SERVICE_SUB_DOMAIN }}
+      publish-base-url: https://frontends.service.cb.axinom.net
       environment-id: ${{ vars.MOSAIC_CB_SELF_ENVIRONMENT_ID }}
       tenant-id: ${{ vars.MOSAIC_CB_SELF_TENANT_ID }}
       service-name: ax-media-service
