@@ -9,8 +9,9 @@ on:
         type: choice
         description: Library Target
         options:
-          - prerelease
           - next
+          - prerelease
+        default: next
 
       build-catalog:
         type: boolean
@@ -48,7 +49,7 @@ jobs:
         id: tags
         run: |
           DATE_TAG=$(date -u +%Y.%m.%d-%H.%M.%S)
-          COMPOSITE_ID="${DATE_TAG}_${{ github.run_id }}_${{ inputs.library-target || 'prerelease' }}"
+          COMPOSITE_ID="${DATE_TAG}_${{ github.run_id }}_${{ case(github.event_name == 'schedule', 'prerelease', inputs.library-target) }}"
           echo "composite_id=${COMPOSITE_ID}" >> "$GITHUB_OUTPUT"
           echo "::notice::Composite tag: ${COMPOSITE_ID}"
 

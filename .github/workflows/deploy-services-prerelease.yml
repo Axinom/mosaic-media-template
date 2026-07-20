@@ -112,12 +112,21 @@ jobs:
     secrets:
       managed-service-client-id: ${{ secrets.MOSAIC_CB_MANAGED_SERVICE_CLIENT_ID }}
       managed-service-client-secret: ${{ secrets.MOSAIC_CB_MANAGED_SERVICE_CLIENT_SECRET }}
+      entitlement-drm-license-communication-key: ${{ secrets.MOSAIC_CB_ENTITLEMENT_DRM_LICENSE_COMMUNICATION_KEY }}
+      entitlement-drm-license-communication-key-id: ${{ secrets.MOSAIC_CB_ENTITLEMENT_DRM_LICENSE_COMMUNICATION_KEY_ID }}
+      entitlement-entitlement-webhook-secret: ${{ secrets.MOSAIC_CB_ENTITLEMENT_ENTITLEMENT_WEBHOOK_SECRET }}
+      entitlement-geolite2-license-key: ${{ secrets.MOSAIC_CB_ENTITLEMENT_GEOLITE2_LICENSE_KEY }}
+      vod2live-api-key: ${{ secrets.MOSAIC_CB_VOD2LIVE_API_KEY }}
+      vod2live-azure-storage-connection: ${{ secrets.MOSAIC_CB_VOD2LIVE_AZURE_STORAGE_CONNECTION }}
+      vod2live-key-service-management-key: ${{ secrets.MOSAIC_CB_VOD2LIVE_KEY_SERVICE_MANAGEMENT_KEY }}
     with:
       runs-on: ubicloud-standard-2
       environment: Prerelease
       environment-subdomain: service.cb.axinom.net
-      services-to-update: catalog,channel,entitlement,media,vod-to-live
-      service-definition-ids: ${{ vars.MOSAIC_CB_SERVICE_DEFINITION_IDS }}
+      services-to-update: catalog,entitlement,media
+      service-definition-id-catalog: 09a35c0b-3223-42e2-8a14-b4b8eb269fc0
+      service-definition-id-entitlement: 9f70aff1-c9f7-4de4-832b-e5aa03e7624d
+      service-definition-id-media: 32db51f2-28a0-43fc-b588-e2e78b9ac77b
 
   fetch_slack_thread:
     if: github.event_name == 'schedule' || github.actor == 'github-actions[bot]' && always()

@@ -1,0 +1,52 @@
+name: Slack Daily Summary
+
+# Consolidated daily Slack notification for the CB auto-release flow.
+#
+# Runs after the two build pipelines (build-service, build-workflow) and the two
+# deploy pipelines (deploy-services-prerelease, deploy-workflows-prerelease) have
+# completed for the day. It posts a single summary message and then four threaded
+# replies:
+#   1. services built       2. workflows built
+#   3. services deployed     4. workflows deployed
+#
+# The build crons run at 03:35/03:55 UTC and trigger their deployments; this runs
+# at 06:00 UTC (weekdays) to give the whole chain time to finish.
+
+on:
+  schedule:
+    - cron: '0 6 * * 1-5'
+  workflow_dispatch:
+
+permissions:
+  actions: read
+  contents: read
+
+jobs:
+  summary:
+    name: Post Daily Release Summary
+    runs-on: ubicloud-standard-2
+    steps:
+      - name: Clone repository
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 1
+          fetch-tags: 'false'
+
+      - name: Setup Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: '3.12'
+
+      - name: Install dependencies
+        run: pip install requests
+
+      - name: Post summary and build/deploy thread replies
+        working-directory: .github/scripts
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          SLACK_API_TOKEN: ${{ secrets.SLACK_API_TOKEN_NAVY_CHANNELS }}
+        run: |
+          python3 daily-release-summary.py \
+            --repo "${{ github.repository }}" \
+            --branch master \
+            --slack-channel-id "${{ vars.SLACK_CHANNEL_ID_NAVY_CB_AUTO_RELEASE }}"

@@ -9,6 +9,27 @@ on:
       managed-service-client-secret:
         required: true
         description: Client secret for managed service account authentication
+      entitlement-drm-license-communication-key:
+        required: false
+        description: DRM license communication key for entitlement service
+      entitlement-drm-license-communication-key-id:
+        required: false
+        description: DRM license communication key ID for entitlement service
+      entitlement-entitlement-webhook-secret:
+        required: false
+        description: Entitlement webhook secret for entitlement service
+      entitlement-geolite2-license-key:
+        required: false
+        description: GeoLite2 license key for entitlement service
+      vod2live-api-key:
+        required: false
+        description: API key for VOD-to-live service
+      vod2live-azure-storage-connection:
+        required: false
+        description: Azure storage connection string for VOD-to-live service
+      vod2live-key-service-management-key:
+        required: false
+        description: Key service management key for VOD-to-live service
     inputs:
       runs-on:
         required: true
@@ -30,10 +51,54 @@ on:
         required: true
         type: string
         description: Comma-separated list of services to update (e.g., "media,catalog,entitlement")
-      service-definition-ids:
-        required: true
+      service-definition-id-catalog:
+        required: false
         type: string
-        description: JSON object mapping service names to their definition IDs
+        description: Service definition ID for the catalog service
+      service-definition-id-channel:
+        required: false
+        type: string
+        description: Service definition ID for the channel service
+      service-definition-id-entitlement:
+        required: false
+        type: string
+        description: Service definition ID for the entitlement service
+      service-definition-id-media:
+        required: false
+        type: string
+        description: Service definition ID for the media service
+      service-definition-id-vod-to-live:
+        required: false
+        type: string
+        description: Service definition ID for the VOD-to-live service
+      geolite2-download-url:
+        required: false
+        type: string
+        description: Download URL for the GeoLite2 database
+      drm-key-seed-id:
+        required: false
+        type: string
+        description: DRM key seed ID
+      virtual-channel-management-api-base-url:
+        required: false
+        type: string
+        description: Base URL for the virtual channel management API
+      virtual-channel-origin-base-url:
+        required: false
+        type: string
+        description: Base URL for the virtual channel origin
+      azure-blob-container-name:
+        required: false
+        type: string
+        description: Azure Blob Storage container name
+      key-service-api-base-url:
+        required: false
+        type: string
+        description: Base URL for the key service API
+      key-service-tenant-id:
+        required: false
+        type: string
+        description: Tenant ID for the key service
 
 permissions:
   contents: read
@@ -49,42 +114,32 @@ jobs:
         with:
           fetch-depth: 1
 
-      - name: Install jq
-        run: |
-          if ! command -v jq &> /dev/null; then
-            sudo apt-get update && sudo apt-get install -y jq
-          fi
-
       - name: Replace tokens in GraphQL files
-        working-directory: ${{ inputs.gql-manifest-directory }}
+        uses: cschleiden/replace-tokens@v1
+        with:
+          files: '["${{ inputs.gql-manifest-directory }}/*.graphql"]'
         env:
-          MANAGED_SERVICE_CLIENT_ID: ${{ secrets.managed-service-client-id }}
-          MANAGED_SERVICE_CLIENT_SECRET: ${{ secrets.managed-service-client-secret }}
-          SERVICE_DEFINITION_IDS: ${{ inputs.service-definition-ids }}
-        run: |
-          echo "::notice::Replacing tokens in GraphQL manifest files"
-
-          # Replace managed service credentials in id.get-token.graphql
-          sed -i "s/#{managed-service-client-id}#/$MANAGED_SERVICE_CLIENT_ID/g" id.get-token.graphql
-          sed -i "s/#{managed-service-client-secret}#/$MANAGED_SERVICE_CLIENT_SECRET/g" id.get-token.graphql
-
-          # Replace service definition IDs in service manifests
-          for service in $(echo "${{ inputs.services-to-update }}" | tr ',' ' '); do
-            manifest_file="${service}.create-axinom-service-deployment-manifest.graphql"
-            if [ -f "$manifest_file" ]; then
-              # Get the service definition ID from JSON input
-              # Convert service name to camelCase for the key (e.g., media -> serviceDefinitionIdMedia)
-              service_key="serviceDefinitionId$(echo "$service" | sed -r 's/(^|-)([a-z])/\U\2/g')"
-              definition_id=$(echo "$SERVICE_DEFINITION_IDS" | jq -r ".[\"$service_key\"] // empty")
-
-              if [ -n "$definition_id" ]; then
-                sed -i "s/#{$service_key}#/$definition_id/g" "$manifest_file"
-                echo "::notice::Replaced token in $manifest_file with definition ID: $definition_id"
-              else
-                echo "::warning::No service definition ID found for $service_key"
-              fi
-            fi
-          done
+          managed-service-client-id: ${{ secrets.managed-service-client-id }}
+          managed-service-client-secret: ${{ secrets.managed-service-client-secret }}
+          drm-license-communication-key: ${{ secrets.entitlement-drm-license-communication-key }}
+          drm-license-communication-key-id: ${{ secrets.entitlement-drm-license-communication-key-id }}
+          entitlement-webhook-secret: ${{ secrets.entitlement-entitlement-webhook-secret }}
+          geolite2-license-key: ${{ secrets.entitlement-geolite2-license-key }}
+          api-key: ${{ secrets.vod2live-api-key }}
+          azure-storage-connection: ${{ secrets.vod2live-azure-storage-connection }}
+          key-service-management-key: ${{ secrets.vod2live-key-service-management-key }}
+          geoLite2DownloadUrl: ${{ inputs.geolite2-download-url }}
+          drmKeySeedId: ${{ inputs.drm-key-seed-id }}
+          virtualChannelManagementApiBaseUrl: ${{ inputs.virtual-channel-management-api-base-url }}
+          virtualChannelOriginBaseUrl: ${{ inputs.virtual-channel-origin-base-url }}
+          azureBlobContainerName: ${{ inputs.azure-blob-container-name }}
+          keyServiceApiBaseUrl: ${{ inputs.key-service-api-base-url }}
+          keyServiceTenantId: ${{ inputs.key-service-tenant-id }}
+          serviceDefinitionIdCatalog: ${{ inputs.service-definition-id-catalog }}
+          serviceDefinitionIdChannel: ${{ inputs.service-definition-id-channel }}
+          serviceDefinitionIdEntitlement: ${{ inputs.service-definition-id-entitlement }}
+          serviceDefinitionIdMedia: ${{ inputs.service-definition-id-media }}
+          serviceDefinitionIdVodToLive: ${{ inputs.service-definition-id-vod-to-live }}
 
       - name: Get token from ID service
         id: get-token

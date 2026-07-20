@@ -146,18 +146,36 @@ jobs:
   # --------------------------------- Update Hosting Service: TEST ------------------------------ #
   test_update_hosting:
     name: Update Hosting Service (Test)
-    needs: [ test_deploy ]
-    if: always() && !contains(needs.*.result, 'failure')
+    needs: [ resolve_build_test, approve_test_deploy, test_deploy ]
+    if: success() && !contains(needs.*.result, 'failure')
     uses: ./.github/workflows/templates-update-hosting.yml
     secrets:
       managed-service-client-id: ${{ secrets.MOSAIC_TEST_MANAGED_SERVICE_CLIENT_ID }}
       managed-service-client-secret: ${{ secrets.MOSAIC_TEST_MANAGED_SERVICE_CLIENT_SECRET }}
+      entitlement-drm-license-communication-key: ${{ secrets.MOSAIC_TEST_ENTITLEMENT_DRM_LICENSE_COMMUNICATION_KEY }}
+      entitlement-drm-license-communication-key-id: ${{ secrets.MOSAIC_TEST_ENTITLEMENT_DRM_LICENSE_COMMUNICATION_KEY_ID }}
+      entitlement-entitlement-webhook-secret: ${{ secrets.MOSAIC_TEST_ENTITLEMENT_ENTITLEMENT_WEBHOOK_SECRET }}
+      entitlement-geolite2-license-key: ${{ secrets.MOSAIC_TEST_ENTITLEMENT_GEOLITE2_LICENSE_KEY }}
+      vod2live-api-key: ${{ secrets.MOSAIC_TEST_VOD2LIVE_API_KEY }}
+      vod2live-azure-storage-connection: ${{ secrets.MOSAIC_TEST_VOD2LIVE_AZURE_STORAGE_CONNECTION }}
+      vod2live-key-service-management-key: ${{ secrets.MOSAIC_TEST_VOD2LIVE_KEY_SERVICE_MANAGEMENT_KEY }}
     with:
       runs-on: ubicloud-standard-2
       environment: Test
       environment-subdomain: service.test.axinom.net
       services-to-update: catalog,channel,entitlement,media,vod-to-live
-      service-definition-ids: ${{ vars.MOSAIC_TEST_SERVICE_DEFINITION_IDS }}
+      service-definition-id-catalog: 1b5c0b32-550e-4e6c-8728-7d07a6ba22b9
+      service-definition-id-channel: c237b32c-94a2-4985-820f-53a05d21d1f7
+      service-definition-id-entitlement: b6bea17f-a41c-4fe7-9836-e45b52b46659
+      service-definition-id-media: bd7de7ce-5ea1-4cc8-b61b-c0405f6a3752
+      service-definition-id-vod-to-live: 0a3d74b7-e427-49e5-a938-918912be628a
+      geolite2-download-url: "https://mosaick8sprod.blob.core.windows.net/geolite/downloads/geolite-latest.tar.gz"
+      drm-key-seed-id: 6e451fb3-93e0-47fb-add4-aed000a97f16
+      virtual-channel-management-api-base-url: "https://navy-streaming-api.axtest.net"
+      virtual-channel-origin-base-url: "https://navy-streaming-origin.axtest.net"
+      azure-blob-container-name: "vod-to-live"
+      key-service-api-base-url: "https://key-server-management.axprod.net"
+      key-service-tenant-id: "45e207ff-796a-4108-93b3-8ac4c81b8da1"
 
   # -------------------------------------- Post-check: TEST ------------------------------------- #
   # Check if all services were successfully deployed to TEST.
@@ -291,18 +309,36 @@ jobs:
   # ------------------------------- Update Hosting Service: PRODUCTION -------------------------- #
   prod_update_hosting:
     name: Update Hosting Service (Prod)
-    needs: [ prod_deploy ]
-    if: always() && !contains(needs.*.result, 'failure')
+    needs: [ resolve_build_prod, approve_prod_deploy, prod_deploy ]
+    if: success() && !contains(needs.*.result, 'failure')
     uses: ./.github/workflows/templates-update-hosting.yml
     secrets:
       managed-service-client-id: ${{ secrets.MOSAIC_PROD_MANAGED_SERVICE_CLIENT_ID }}
       managed-service-client-secret: ${{ secrets.MOSAIC_PROD_MANAGED_SERVICE_CLIENT_SECRET }}
+      entitlement-drm-license-communication-key: ${{ secrets.MOSAIC_PROD_ENTITLEMENT_DRM_LICENSE_COMMUNICATION_KEY }}
+      entitlement-drm-license-communication-key-id: ${{ secrets.MOSAIC_PROD_ENTITLEMENT_DRM_LICENSE_COMMUNICATION_KEY_ID }}
+      entitlement-entitlement-webhook-secret: ${{ secrets.MOSAIC_PROD_ENTITLEMENT_ENTITLEMENT_WEBHOOK_SECRET }}
+      entitlement-geolite2-license-key: ${{ secrets.MOSAIC_PROD_ENTITLEMENT_GEOLITE2_LICENSE_KEY }}
+      vod2live-api-key: ${{ secrets.MOSAIC_PROD_VOD2LIVE_API_KEY }}
+      vod2live-azure-storage-connection: ${{ secrets.MOSAIC_PROD_VOD2LIVE_AZURE_STORAGE_CONNECTION }}
+      vod2live-key-service-management-key: ${{ secrets.MOSAIC_PROD_VOD2LIVE_KEY_SERVICE_MANAGEMENT_KEY }}
     with:
       runs-on: ubicloud-standard-2
       environment: Production
       environment-subdomain: service.prod.axinom.net
       services-to-update: catalog,channel,entitlement,media,vod-to-live
-      service-definition-ids: ${{ vars.MOSAIC_PROD_SERVICE_DEFINITION_IDS }}
+      service-definition-id-catalog: 519559b7-063c-415a-90bf-7013486af61f
+      service-definition-id-channel: 293f9b7e-366d-44e0-9737-26fa922dbf90
+      service-definition-id-entitlement: 692740ef-3d48-4fa8-8da2-64f02a0d76e5
+      service-definition-id-media: 74d52b22-5c71-4441-b5e6-4e2a81b7d83c
+      service-definition-id-vod-to-live: 14ab72df-006b-4530-a787-2a6786f2436f
+      geolite2-download-url: "https://mosaick8sprod.blob.core.windows.net/geolite/downloads/geolite-latest.tar.gz"
+      drm-key-seed-id: 6e451fb3-93e0-47fb-add4-aed000a97f16
+      virtual-channel-management-api-base-url: "https://mosaic-streaming-api.axprod.net"
+      virtual-channel-origin-base-url: "https://mosaic-streaming-origin.axprod.net"
+      azure-blob-container-name: "vod-to-live"
+      key-service-api-base-url: "https://key-server-management.axprod.net"
+      key-service-tenant-id: "45e207ff-796a-4108-93b3-8ac4c81b8da1"
 
   # --------------------------------- Copy Images to Production --------------------------------- #
   # Copy service images from customizable-services-dev to customizable-services-prod
