@@ -123,7 +123,7 @@ jobs:
       runs-on: ubicloud-standard-2
       environment: Prerelease
       environment-subdomain: service.cb.axinom.net
-      services-to-update: catalog,channel,entitlement,media,vod-to-live
+      services-to-update: catalog,entitlement,media
       service-definition-id-catalog: 09a35c0b-3223-42e2-8a14-b4b8eb269fc0
       service-definition-id-entitlement: 9f70aff1-c9f7-4de4-832b-e5aa03e7624d
       service-definition-id-media: 32db51f2-28a0-43fc-b588-e2e78b9ac77b
