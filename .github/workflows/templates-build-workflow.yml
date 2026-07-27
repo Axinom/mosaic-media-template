@@ -47,9 +47,13 @@ jobs:
       - id: metadata
         run: |
           DATE=$(date -u +%Y.%m.%d-%H.%M.%S)
+          # Compact, semver-safe timestamp (no dots / leading-zero segments) used to
+          # make the pilet package version unique per build so the feed accepts it.
+          VERSION_SUFFIX=$(date -u +%Y%m%d-%H%M)
           BRANCH_NAME="${GITHUB_HEAD_REF:-$GITHUB_REF_NAME}"
           BRANCH_NAME_SAFE="${BRANCH_NAME//\//_}"
           echo "date=$DATE" >> "$GITHUB_OUTPUT"
+          echo "version-suffix=$VERSION_SUFFIX" >> "$GITHUB_OUTPUT"
           echo "branch=$BRANCH_NAME_SAFE" >> "$GITHUB_OUTPUT"
 
       - uses: actions/checkout@v6
@@ -60,9 +64,25 @@ jobs:
         with:
           node-version: '22.x'
 
-      - run: |
-          yarn --immutable
-          yarn run ${{ inputs.service-build-command }}
+      - name: Make pilet version unique
+        working-directory: ${{ inputs.service-directory-path }}
+        run: |
+          # Edit the version field of THIS pilet's package.json only (scoped via
+          # working-directory). npm pkg set is a plain field write - no version bump
+          # or git machinery - mirroring what the Azure DevOps pipeline did. pilet
+          # pack then emits <name>-<version>.tgz so the archive is uniquely named.
+          CURRENT_VERSION=$(npm pkg get version | jq -r 'to_entries[0].value' | xargs)
+          UNIQUE_VERSION="${CURRENT_VERSION}-${{ steps.metadata.outputs.version-suffix }}"
+
+          echo "::notice::Setting pilet version to ${UNIQUE_VERSION}"
+          npm pkg set "version=${UNIQUE_VERSION}"
+
+          echo "Workflow version output:-"
+          npm pkg get version
+
+      - run: yarn install
+
+      - run: yarn run ${{ inputs.service-build-command }}
         env:
           DASH_URL_TEMPLATE: ${{ inputs.dash-url-template }}
           HLS_URL_TEMPLATE: ${{ inputs.hls-url-template }}
