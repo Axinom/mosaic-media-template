@@ -80,7 +80,7 @@ jobs:
           echo "Workflow version output:-"
           npm pkg get version
 
-      - run: yarn install
+      - run: yarn install --immutable
 
       - run: yarn run ${{ inputs.service-build-command }}
         env:
