@@ -50,45 +50,45 @@ jobs:
           path: results
           merge-multiple: false
 
-      - name: Determine version file and release type
+      - name: Determine version files and release type
         id: release-info
         run: |
-          VERSION_FILE=""
+          VERSION_FILES=""
           RELEASE_TYPE=""
 
           if [[ "${{ github.ref }}" == refs/heads/releases/* ]]; then
-            VERSION_FILE=".github/deployment-versions/${{ inputs.build-type }}s/test.yaml"
+            VERSION_FILES=".github/deployment-versions/${{ inputs.build-type }}s/test.yaml .github/deployment-versions/${{ inputs.build-type }}s/prod.yaml"
             RELEASE_TYPE="release"
           else
-            VERSION_FILE=".github/deployment-versions/${{ inputs.build-type }}s/cb.yaml"
+            VERSION_FILES=".github/deployment-versions/${{ inputs.build-type }}s/cb.yaml"
             RELEASE_TYPE="prerelease"
           fi
 
-          echo "version_file=$VERSION_FILE" >> "$GITHUB_OUTPUT"
+          echo "version_files=$VERSION_FILES" >> "$GITHUB_OUTPUT"
           echo "release_type=$RELEASE_TYPE" >> "$GITHUB_OUTPUT"
 
-      - name: Merge results into version file
+      - name: Merge results into version files
         run: |
-          VERSION_FILE="${{ steps.release-info.outputs.version_file }}"
-
-          echo "::notice::Updating $VERSION_FILE"
-
           shopt -s nullglob
-          for f in results/*/result.txt; do
-            key=$(cut -d: -f1 < "$f")
-            value=$(cut -d: -f2- < "$f" | xargs)
-            yq -i ".[\"$key\"] = \"$value\"" "$VERSION_FILE"
+          for VERSION_FILE in ${{ steps.release-info.outputs.version_files }}; do
+            echo "::notice::Updating $VERSION_FILE"
+
+            for f in results/*/result.txt; do
+              key=$(cut -d: -f1 < "$f")
+              value=$(cut -d: -f2- < "$f" | xargs)
+              yq -i ".[\"$key\"] = \"$value\"" "$VERSION_FILE"
+            done
           done
 
           echo "::notice::Diff check for versions"
-          git diff "$VERSION_FILE"
+          git diff ${{ steps.release-info.outputs.version_files }}
 
       - name: Commit and push changes
         run: |
           git config user.name "GitHub App - Mosaic GitHub Automations"
           git config user.email "team-se@axinom.com"
 
-          git add "${{ steps.release-info.outputs.version_file }}"
+          git add ${{ steps.release-info.outputs.version_files }}
           if git diff --cached --quiet; then
             echo "::notice::No version changes to commit"
           else
