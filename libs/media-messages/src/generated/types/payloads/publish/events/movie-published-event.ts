@@ -1,7 +1,7 @@
-import { Image } from '../types/image';
-import { License } from '../types/license';
-import { MovieLocalization } from '../types/movie-localization';
-import { Video } from '../types/video';
+import type { Image } from '../types/image';
+import type { License } from '../types/license';
+import type { MovieLocalization } from '../types/movie-localization';
+import type { Video } from '../types/video';
 /**
  * Definition of the movie publish format.
  */

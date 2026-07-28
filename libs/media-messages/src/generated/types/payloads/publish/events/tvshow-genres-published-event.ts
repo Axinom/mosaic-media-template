@@ -1,4 +1,4 @@
-import { TvshowGenre } from '../types/tvshow-genre';
+import type { TvshowGenre } from '../types/tvshow-genre';
 /**
  * Definition of the TV show genre publish format.
  */

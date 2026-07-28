@@ -1,4 +1,4 @@
-import { RelationType } from './relation-type';
+import type { RelationType } from './relation-type';
 /**
  * Related item metadata.
  */

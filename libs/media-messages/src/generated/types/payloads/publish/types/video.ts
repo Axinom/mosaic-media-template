@@ -1,7 +1,7 @@
-import { CuePoint } from './cue-point';
-import { Format } from './format';
-import { VideoStream } from './video-stream';
-import { VideoUsageType } from './video-usage-type';
+import type { CuePoint } from './cue-point';
+import type { Format } from './format';
+import type { VideoStream } from './video-stream';
+import type { VideoUsageType } from './video-usage-type';
 /**
  * Video metadata.
  */

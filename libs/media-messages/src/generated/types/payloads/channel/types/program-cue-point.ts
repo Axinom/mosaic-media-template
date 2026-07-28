@@ -1,4 +1,4 @@
-import { CuePointSchedule } from './cue-point-schedule';
+import type { CuePointSchedule } from './cue-point-schedule';
 /**
  * Cue point for an insert in a program.
  */

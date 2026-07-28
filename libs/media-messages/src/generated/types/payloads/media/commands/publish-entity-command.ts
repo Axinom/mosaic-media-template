@@ -1,4 +1,4 @@
-import { PublishOptions } from '../types/publish-options';
+import type { PublishOptions } from '../types/publish-options';
 /**
  * Command to publish an entity.
  */

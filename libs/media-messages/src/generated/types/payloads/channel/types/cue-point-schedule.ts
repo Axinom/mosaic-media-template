@@ -1,5 +1,5 @@
-import { CuePointScheduleType } from './cue-point-schedule-type';
-import { DetailedVideo } from './detailed-video';
+import type { CuePointScheduleType } from './cue-point-schedule-type';
+import type { DetailedVideo } from './detailed-video';
 /**
  * Schedule item for a cue point.
  */
