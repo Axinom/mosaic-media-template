@@ -1,4 +1,4 @@
-import { MessagingSettings } from '@axinom/mosaic-message-bus-abstractions';
+import type { MessagingSettings } from '@axinom/mosaic-message-bus-abstractions';
 
 export class PublishServiceMessagingSettings implements MessagingSettings {
   /**

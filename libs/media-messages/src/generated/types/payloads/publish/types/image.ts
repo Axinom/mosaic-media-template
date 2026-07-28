@@ -1,4 +1,4 @@
-import { ImageType } from './image-type';
+import type { ImageType } from './image-type';
 /**
  * Asset image metadata.
  */
