@@ -60,73 +60,26 @@ jobs:
     runs-on: ${{ inputs.runs-on }}
     steps:
       - name: Copy image in Harbor
+        env:
+          DOCKER_REGISTRY_USERNAME: ${{ secrets.docker-registry-username }}
+          DOCKER_REGISTRY_PASSWORD: ${{ secrets.docker-registry-password }}
         run: |
           HARBOR_URL="${{ inputs.harbor-url }}"
-          SOURCE_PROJECT="${{ inputs.source-project }}"
-          SOURCE_REPOSITORY="${{ inputs.source-repository }}"
-          SOURCE_TAG="${{ inputs.source-tag }}"
-          DEST_PROJECT="${{ inputs.destination-project }}"
-          DEST_REPOSITORY="${{ inputs.destination-repository }}"
-          DEST_TAG="${{ inputs.destination-tag }}"
+          # Strip the scheme (https://) to get the registry host used in image references
+          REGISTRY_HOST="${HARBOR_URL#*://}"
 
-          # URL-encode repository names (double encode for Harbor API compatibility)
-          DEST_REPO_ENCODED=$(printf %s $(printf %s "$DEST_REPOSITORY" | jq -sRr @uri) | jq -sRr @uri)
+          SOURCE_IMAGE="${REGISTRY_HOST}/${{ inputs.source-project }}/${{ inputs.source-repository }}:${{ inputs.source-tag }}"
+          DEST_IMAGE="${REGISTRY_HOST}/${{ inputs.destination-project }}/${{ inputs.destination-repository }}:${{ inputs.destination-tag }}"
 
-          # Build the source reference in format: project/repository:tag
-          SOURCE_REF="${SOURCE_PROJECT}/${SOURCE_REPOSITORY}:${SOURCE_TAG}"
-          # URL-encode the source reference
-          SOURCE_REF_ENCODED=$(printf %s "$SOURCE_REF" | jq -sRr @uri)
+          echo "::notice::Copying image from '${SOURCE_IMAGE}' to '${DEST_IMAGE}'"
 
-          echo "::notice::Copying artifact from '${SOURCE_REF}' to '${DEST_PROJECT}/${DEST_REPOSITORY}:${DEST_TAG}'"
+          echo "${DOCKER_REGISTRY_PASSWORD}" | docker login "${REGISTRY_HOST}" -u "${DOCKER_REGISTRY_USERNAME}" --password-stdin
 
-          # Copy the artifact to destination repository
-          HTTP_STATUS=$(curl -s -o /tmp/response.json -w "%{http_code}" \
-            -X POST \
-            "${HARBOR_URL}/api/v2.0/projects/${DEST_PROJECT}/repositories/${DEST_REPO_ENCODED}/artifacts?from=${SOURCE_REF_ENCODED}" \
-            -H "Content-Type: application/json" \
-            -u "${{ secrets.docker-registry-username }}:${{ secrets.docker-registry-password }}")
+          # Pull the source image, re-tag it for the destination repository, and push
+          docker pull "${SOURCE_IMAGE}"
+          docker tag "${SOURCE_IMAGE}" "${DEST_IMAGE}"
+          docker push "${DEST_IMAGE}"
 
-          if [[ "$HTTP_STATUS" == "201" ]]; then
-            echo "::notice::Successfully copied artifact to ${DEST_PROJECT}/${DEST_REPOSITORY}"
-          elif [[ "$HTTP_STATUS" == "409" ]]; then
-            echo "::notice::Artifact already exists in destination repository"
-          else
-            echo "::error::Failed to copy artifact. HTTP status: ${HTTP_STATUS}"
-            cat /tmp/response.json
-            exit 1
-          fi
+          docker logout "${REGISTRY_HOST}"
 
-          # Now tag the copied artifact with the destination tag
-          # Get the digest of the copied artifact
-          ARTIFACT_DIGEST=$(curl -s \
-            "${HARBOR_URL}/api/v2.0/projects/${DEST_PROJECT}/repositories/${DEST_REPO_ENCODED}/artifacts?q=tags%3D${SOURCE_TAG}&with_tag=true" \
-            -u "${{ secrets.docker-registry-username }}:${{ secrets.docker-registry-password }}" | jq -r '.[0].digest // empty')
-
-          if [[ -z "$ARTIFACT_DIGEST" ]]; then
-            # Try to get by reference directly
-            ARTIFACT_DIGEST=$(curl -s \
-              "${HARBOR_URL}/api/v2.0/projects/${DEST_PROJECT}/repositories/${DEST_REPO_ENCODED}/artifacts/${SOURCE_TAG}" \
-              -u "${{ secrets.docker-registry-username }}:${{ secrets.docker-registry-password }}" | jq -r '.digest // empty')
-          fi
-
-          if [[ -n "$ARTIFACT_DIGEST" && "$DEST_TAG" != "$SOURCE_TAG" ]]; then
-            echo "::notice::Adding tag '${DEST_TAG}' to copied artifact"
-
-            HTTP_STATUS=$(curl -s -o /tmp/response.json -w "%{http_code}" \
-              -X POST \
-              "${HARBOR_URL}/api/v2.0/projects/${DEST_PROJECT}/repositories/${DEST_REPO_ENCODED}/artifacts/${ARTIFACT_DIGEST}/tags" \
-              -H "Content-Type: application/json" \
-              -u "${{ secrets.docker-registry-username }}:${{ secrets.docker-registry-password }}" \
-              -d "{\"name\": \"${DEST_TAG}\"}")
-
-            if [[ "$HTTP_STATUS" == "201" ]]; then
-              echo "::notice::Successfully tagged artifact as ${DEST_TAG}"
-            elif [[ "$HTTP_STATUS" == "409" ]]; then
-              echo "::notice::Tag ${DEST_TAG} already exists"
-            else
-              echo "::warning::Failed to add tag ${DEST_TAG}. HTTP status: ${HTTP_STATUS}"
-              cat /tmp/response.json
-            fi
-          fi
-
-          echo "::notice::Image copy completed: ${DEST_PROJECT}/${DEST_REPOSITORY}:${DEST_TAG}"
+          echo "::notice::Image copy completed: ${DEST_IMAGE}"
