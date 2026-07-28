@@ -53,7 +53,7 @@
     "@axinom/mosaic-messages": "0.68.0",
     "@axinom/mosaic-service-common": "0.70.0",
     "@axinom/mosaic-transactional-inbox-outbox": "0.30.0",
-    "@axinom/mosaic-video-messages": "0.8.1",
+    "@axinom/mosaic-video-messages": "0.8.3",
     "@graphile-contrib/pg-simplify-inflector": "^6.1.0",
     "dotenv": "^8.6.0",
     "env-cmd": "^10.1.0",
