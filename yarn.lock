@@ -568,10 +568,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@axinom/mosaic-portal@npm:0.48.0":
-  version: 0.48.0
-  resolution: "@axinom/mosaic-portal@npm:0.48.0"
-  checksum: 10c0/3acbc477f645ae4ecc30c17fcf4f3d5eadb37702c4b26c7388cde3863e7ed1f4c49f42f65c0b3e2a92b168cf6173c24d189ceef5a6ed68c9631ccdbbff01551f
+"@axinom/mosaic-portal@npm:0.48.1":
+  version: 0.48.1
+  resolution: "@axinom/mosaic-portal@npm:0.48.1"
+  checksum: 10c0/71d40b13db1e60ce0c4977e27bf79d7bd2f9219290603b65f8dd5828c56af538e7e59306af4ffcdb68cd90b9cd5a582b3aefc15ceb5d2b23a106b0d5e4aa2656
   languageName: node
   linkType: hard
 
@@ -649,22 +649,22 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@axinom/mosaic-video-messages@npm:0.8.1":
-  version: 0.8.1
-  resolution: "@axinom/mosaic-video-messages@npm:0.8.1"
-  checksum: 10c0/381dcb706df2f3df2264bb69cd2a7743d76c062beec8303dd63180251befc45eaea68cc42ab75fe63f55c8878ca94d93611cca41e9657969cbe928302e8ba9d1
+"@axinom/mosaic-video-messages@npm:0.8.3":
+  version: 0.8.3
+  resolution: "@axinom/mosaic-video-messages@npm:0.8.3"
+  checksum: 10c0/dffa9954ae4e193f894484840d0b6c228e371c8d2b3de75babb11d9544f34dddc25412bf9ac527db1c12367008c78eb5bc85317a4d403e125661f081334645d8
   languageName: node
   linkType: hard
 
-"@axinom/mosaic-video-workflow-integration@npm:0.6.1":
-  version: 0.6.1
-  resolution: "@axinom/mosaic-video-workflow-integration@npm:0.6.1"
+"@axinom/mosaic-video-workflow-integration@npm:0.6.3":
+  version: 0.6.3
+  resolution: "@axinom/mosaic-video-workflow-integration@npm:0.6.3"
   peerDependencies:
     "@axinom/mosaic-portal": "*"
     "@axinom/mosaic-ui": "*"
     react: ">=17.0.1"
     react-dom: ">=17.0.1"
-  checksum: 10c0/c4b9569ec5ebccf62c53f92cbf56d3415613b0659a88cd8040438e7f4a0075b9c72503a054ce0e74abde04ab076f49068da65a7b4863ba43d1ebd72a0d33ae96
+  checksum: 10c0/227b7b3022769b324718cea9ff14736ddc9de44490dc2b03e9979c3695849e1308ca065b37e0408b1f0e6a9df6c16c63b8e150ef11ab0cf0bf208309933d6bde
   languageName: node
   linkType: hard
 
@@ -7372,7 +7372,7 @@ __metadata:
     "@axinom/mosaic-messages": "npm:0.68.0"
     "@axinom/mosaic-service-common": "npm:0.70.0"
     "@axinom/mosaic-transactional-inbox-outbox": "npm:0.30.0"
-    "@axinom/mosaic-video-messages": "npm:0.8.1"
+    "@axinom/mosaic-video-messages": "npm:0.8.3"
     "@graphile-contrib/pg-simplify-inflector": "npm:^6.1.0"
     "@graphql-codegen/cli": "npm:^4.0.1"
     "@graphql-codegen/typescript": "npm:^2.7.3"
@@ -7426,9 +7426,9 @@ __metadata:
   dependencies:
     "@apollo/client": "npm:^3.7.10"
     "@axinom/mosaic-managed-workflow-integration": "npm:0.32.0"
-    "@axinom/mosaic-portal": "npm:0.48.0"
+    "@axinom/mosaic-portal": "npm:0.48.1"
     "@axinom/mosaic-ui": "npm:0.72.6"
-    "@axinom/mosaic-video-workflow-integration": "npm:0.6.1"
+    "@axinom/mosaic-video-workflow-integration": "npm:0.6.3"
     "@graphql-codegen/cli": "npm:^4.0.1"
     "@graphql-codegen/typescript": "npm:^2.7.3"
     "@graphql-codegen/typescript-operations": "npm:^2.5.3"
@@ -8979,7 +8979,7 @@ __metadata:
     "@axinom/mosaic-message-bus": "npm:0.51.0"
     "@axinom/mosaic-service-common": "npm:0.70.0"
     "@axinom/mosaic-transactional-inbox-outbox": "npm:0.30.0"
-    "@axinom/mosaic-video-messages": "npm:0.8.1"
+    "@axinom/mosaic-video-messages": "npm:0.8.3"
     "@graphile-contrib/pg-simplify-inflector": "npm:^6.1.0"
     "@graphql-codegen/cli": "npm:^4.0.1"
     "@graphql-codegen/typescript": "npm:^2.7.3"
@@ -13453,7 +13453,7 @@ __metadata:
     "@axinom/mosaic-messages": "npm:0.68.0"
     "@axinom/mosaic-service-common": "npm:0.70.0"
     "@axinom/mosaic-transactional-inbox-outbox": "npm:0.30.0"
-    "@axinom/mosaic-video-messages": "npm:0.8.1"
+    "@axinom/mosaic-video-messages": "npm:0.8.3"
     "@azure/storage-blob": "npm:^12.14.0"
     "@faker-js/faker": "npm:^7.6.0"
     "@graphile-contrib/pg-simplify-inflector": "npm:^6.1.0"
@@ -13596,9 +13596,9 @@ __metadata:
     "@apollo/client": "npm:^3.7.10"
     "@axinom/mosaic-graphql-codegen-plugins": "npm:0.10.0"
     "@axinom/mosaic-managed-workflow-integration": "npm:0.32.0"
-    "@axinom/mosaic-portal": "npm:0.48.0"
+    "@axinom/mosaic-portal": "npm:0.48.1"
     "@axinom/mosaic-ui": "npm:0.72.6"
-    "@axinom/mosaic-video-workflow-integration": "npm:0.6.1"
+    "@axinom/mosaic-video-workflow-integration": "npm:0.6.3"
     "@graphql-codegen/cli": "npm:^4.0.1"
     "@graphql-codegen/typescript": "npm:^2.7.3"
     "@graphql-codegen/typescript-operations": "npm:^2.5.3"

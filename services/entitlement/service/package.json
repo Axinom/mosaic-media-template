@@ -53,7 +53,7 @@
     "@axinom/mosaic-message-bus": "0.51.0",
     "@axinom/mosaic-service-common": "0.70.0",
     "@axinom/mosaic-transactional-inbox-outbox": "0.30.0",
-    "@axinom/mosaic-video-messages": "0.8.1",
+    "@axinom/mosaic-video-messages": "0.8.3",
     "@graphile-contrib/pg-simplify-inflector": "^6.1.0",
     "ajv": "^8.18.0",
     "ajv-formats": "^3.0.1",
