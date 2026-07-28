@@ -123,6 +123,16 @@
           "bindingKey": "ax-video-service.*.*.video.ensure_exists_failed",
           "destination": "media-service:inbox"
         },
+        "ax-video-service.*.*.video.encoding_finished": {
+          "source": "event",
+          "bindingKey": "ax-video-service.*.*.video.encoding_finished",
+          "destination": "media-service:inbox"
+        },
+        "ax-video-service.*.*.video.encoding_failed": {
+          "source": "event",
+          "bindingKey": "ax-video-service.*.*.video.encoding_failed",
+          "destination": "media-service:inbox"
+        },
         "retry:ax-image-service:inbox": {
           "source": "retry",
           "bindingKey": "ax-image-service:inbox.#",
