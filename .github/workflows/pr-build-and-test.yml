@@ -53,14 +53,15 @@ jobs:
         name: Determine if affected directory paths require checking
         run: |
           if [[ "${{ github.head_ref }}" == releases/* ]]; then
-            echo "::notice::Source Branch: ${{ github.head_ref }}"
-            echo "::notice::Release PRs are not built and tested"
+            echo "::notice::🌿 Source Branch: ${{ github.head_ref }}"
+            echo "::notice::⏭️ Release PRs are not built and tested"
             echo "run-checks=false" >> $GITHUB_OUTPUT
           elif [[ "${{ steps.paths-filter.outputs.relevant }}" == "false" ]]; then
-            echo "::notice::No changes detected in paths that require build and test"
-            echo "::notice::Skipping build and test validation"
+            echo "::notice::📂 No changes detected in paths that require build and test"
+            echo "::notice::⏭️ Skipping build and test validation"
             echo "run-checks=false" >> $GITHUB_OUTPUT
           else
+            echo "::notice::🚀 Relevant changes detected, running build and test validation"
             echo "run-checks=true" >> $GITHUB_OUTPUT
           fi
 
@@ -124,3 +125,34 @@ jobs:
           name: JEST Tests
           path: '**/junit.xml'
           reporter: jest-junit
+
+  #
+  # Why this job exists.
+  #
+  # This is the single required status check for the default branch protection ruleset. It always runs
+  # (even for draft PRs, where `pre-check` is skipped) so the check is always reported and never blocks
+  # a PR by staying pending.
+  #
+  # It fails only when a preceding job explicitly failed. A skipped `build-and-test` (release PRs, or
+  # PRs that touch no relevant paths) is a pass.
+  #
+  pr-verify-build-and-test:
+    needs:
+      - pre-check
+      - build-and-test
+    if: always()
+    runs-on: ubicloud-standard-2
+    steps:
+      - name: Determine overall status
+        run: |
+          echo "::notice::pre-check: ${{ needs.pre-check.result }}"
+          echo "::notice::build-and-test: ${{ needs.build-and-test.result }}"
+          if [[ "${{ needs.pre-check.result }}" == "failure" ]]; then
+            echo "::error::❌ PR pre check failed"
+            exit 1
+          fi
+          if [[ "${{ needs.build-and-test.result }}" == "failure" ]]; then
+            echo "::error::❌ PR Build and Test failed"
+            exit 1
+          fi
+          echo "::notice::✅ No preceding jobs failed"
