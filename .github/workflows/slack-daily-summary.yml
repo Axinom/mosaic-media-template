@@ -48,5 +48,5 @@ jobs:
         run: |
           python3 daily-release-summary.py \
             --repo "${{ github.repository }}" \
-            --branch master \
+            --branch "${{ github.ref_name }}" \
             --slack-channel-id "${{ vars.SLACK_CHANNEL_ID_NAVY_CB_AUTO_RELEASE }}"
