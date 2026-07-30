@@ -16,7 +16,7 @@ permissions:
   contents: read
 
 jobs:
-  verify-pr-name:
+  pr-verify-name:
     if: github.event.pull_request.draft == false # Skip draft PRs
     runs-on: ubicloud-standard-2
     steps:
