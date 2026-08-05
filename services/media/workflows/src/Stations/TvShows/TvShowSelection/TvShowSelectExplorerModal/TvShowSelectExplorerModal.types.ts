@@ -3,5 +3,6 @@ import { TvShowSelectionExplorerProps } from '../../TvShowExplorerBase/TvShowExp
 export interface UseTvShowSelectExplorerModalOptions {
   title?: string;
   excludeItems?: number[];
+  allowBulkSelect?: boolean;
   onSelection: TvShowSelectionExplorerProps['onSelection'];
 }

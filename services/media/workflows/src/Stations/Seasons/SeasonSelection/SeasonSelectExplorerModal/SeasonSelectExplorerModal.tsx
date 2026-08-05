@@ -6,6 +6,7 @@ import { UseSeasonSelectExplorerModalOptions } from './SeasonSelectExplorerModal
 export const useSeasonSelectExplorerModal = ({
   excludeItems,
   title = 'Select Season',
+  allowBulkSelect = true,
   onSelection,
 }: UseSeasonSelectExplorerModalOptions): UseModalResult =>
   useModal(({ closeModal }) => (
@@ -30,7 +31,7 @@ export const useSeasonSelectExplorerModal = ({
           onClick: closeModal,
         },
       ]}
-      allowBulkSelect={true}
+      allowBulkSelect={allowBulkSelect}
       enableSelectAll={false}
     />
   ));

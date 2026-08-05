@@ -3,5 +3,6 @@ import { SeasonSelectionExplorerProps } from '../../SeasonExplorerBase/SeasonExp
 export interface UseSeasonSelectExplorerModalOptions {
   title?: string;
   excludeItems?: number[];
+  allowBulkSelect?: boolean;
   onSelection: SeasonSelectionExplorerProps['onSelection'];
 }

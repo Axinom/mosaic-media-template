@@ -9,6 +9,7 @@ import { useSeasonSelectExplorerModal } from '../SeasonSelectExplorerModal/Seaso
 
 interface UseSeasonDataListDataEntryOptions {
   excludeItems: SeasonData[];
+  allowBulkSelect?: boolean;
 }
 
 interface UseSeasonDataListDataEntryResult {
@@ -32,6 +33,7 @@ export const useSeasonDataListDataEntry = (
         closeModal,
       } = useSeasonSelectExplorerModal({
         excludeItems: options.excludeItems.map((item) => item.id),
+        allowBulkSelect: options.allowBulkSelect,
         onSelection: (selection) => {
           if (selection.mode === 'SINGLE_ITEMS') {
             const items = selection.items;
@@ -56,7 +58,7 @@ export const useSeasonDataListDataEntry = (
     };
 
     return SeasonDataListDataEntry;
-  }, [options.excludeItems]);
+  }, [options.allowBulkSelect, options.excludeItems]);
 
   return { SeasonDataListDataEntry };
 };
