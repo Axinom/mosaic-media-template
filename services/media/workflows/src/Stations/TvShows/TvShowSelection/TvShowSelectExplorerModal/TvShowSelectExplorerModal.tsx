@@ -6,6 +6,7 @@ import { UseTvShowSelectExplorerModalOptions } from './TvShowSelectExplorerModal
 export const useTvShowSelectExplorerModal = ({
   excludeItems,
   title = 'Select TV Show',
+  allowBulkSelect = true,
   onSelection,
 }: UseTvShowSelectExplorerModalOptions): UseModalResult =>
   useModal(({ closeModal }) => (
@@ -30,7 +31,7 @@ export const useTvShowSelectExplorerModal = ({
           onClick: closeModal,
         },
       ]}
-      allowBulkSelect={true}
+      allowBulkSelect={allowBulkSelect}
       enableSelectAll={false}
     />
   ));
