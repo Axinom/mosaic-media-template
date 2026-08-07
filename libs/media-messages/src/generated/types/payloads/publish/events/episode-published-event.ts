@@ -1,7 +1,7 @@
-import { EpisodeLocalization } from '../types/episode-localization';
-import { Image } from '../types/image';
-import { License } from '../types/license';
-import { Video } from '../types/video';
+import type { EpisodeLocalization } from '../types/episode-localization';
+import type { Image } from '../types/image';
+import type { License } from '../types/license';
+import type { Video } from '../types/video';
 /**
  * Definition of the TV show episode publish format.
  */

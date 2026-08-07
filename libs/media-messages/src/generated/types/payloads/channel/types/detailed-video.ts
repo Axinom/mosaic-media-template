@@ -1,4 +1,4 @@
-import { Encoding } from './encoding';
+import type { Encoding } from './encoding';
 /**
  * Video details to be used to enable live streaming.
  */

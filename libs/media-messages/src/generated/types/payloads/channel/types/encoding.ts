@@ -1,7 +1,7 @@
-import { Stream } from './stream';
-import { VideoEncodingState } from './video-encoding-state';
-import { VideoOutputFormat } from './video-output-format';
-import { VideoPreviewStatus } from './video-preview-status';
+import type { Stream } from './stream';
+import type { VideoEncodingState } from './video-encoding-state';
+import type { VideoOutputFormat } from './video-output-format';
+import type { VideoPreviewStatus } from './video-preview-status';
 /**
  * Information about specific video encoding.
  */

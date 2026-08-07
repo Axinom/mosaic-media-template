@@ -1,5 +1,5 @@
-import { Format } from './format';
-import { VideoStreamType } from './video-stream-type';
+import type { Format } from './format';
+import type { VideoStreamType } from './video-stream-type';
 /**
  * Video stream metadata
  */

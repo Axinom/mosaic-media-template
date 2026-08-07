@@ -1,4 +1,4 @@
-import { TvshowGenreLocalization } from './tvshow-genre-localization';
+import type { TvshowGenreLocalization } from './tvshow-genre-localization';
 /**
  * An individual TV show genre object.
  */

@@ -1,5 +1,5 @@
-import { StreamType } from './stream-type';
-import { VideoOutputFormat } from './video-output-format';
+import type { StreamType } from './stream-type';
+import type { VideoOutputFormat } from './video-output-format';
 /**
  * Information about the video streams for the video encoding.
  */

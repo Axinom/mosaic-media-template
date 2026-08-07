@@ -1,4 +1,4 @@
-import { MovieGenreLocalization } from './movie-genre-localization';
+import type { MovieGenreLocalization } from './movie-genre-localization';
 /**
  * An individual movie genre object.
  */

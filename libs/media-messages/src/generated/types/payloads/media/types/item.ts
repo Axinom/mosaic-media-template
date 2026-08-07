@@ -1,4 +1,4 @@
-import { IngestItemType } from './ingest-item-type';
+import type { IngestItemType } from './ingest-item-type';
 /**
  * Contents of a specific ingest item.
  */
