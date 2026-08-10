@@ -44,7 +44,7 @@ yarn db:update-schema      # Update schema dump
 
 To run a single test file:
 ```bash
-yarn jest path/to/file.spec.ts
+yarn vitest run path/to/file.spec.ts
 ```
 
 ## Architecture

@@ -3,7 +3,6 @@
     "source.fixAll.eslint": "explicit",
     "source.organizeImports": "never"
   },
-  "jestrunner.jestCommand": "yarn util:load-vars jest",
   "files.associations": {
     ".env.*": "dotenv",
     "**/pipelines/**/*.{yaml,yml}": "azure-pipelines, yaml"

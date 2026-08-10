@@ -1,3 +1,4 @@
+import { describe, expect, test } from 'vitest';
 import { getSqlStatementsWithDbName } from './db-test-helpers';
 
 describe('DB test helpers', () => {
