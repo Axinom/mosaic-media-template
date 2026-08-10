@@ -1,6 +1,5 @@
 import { rejectionOf } from '@axinom/mosaic-service-common';
 import { ClientError } from 'graphql-request';
-import 'jest-extended';
 import {
   CommonErrors,
   LOCALIZATION_CHANNEL_TYPE,
@@ -22,7 +21,7 @@ import {
 let validationResult: any = () => undefined;
 let publishResult: any = () => undefined;
 const mediaResult: any = () => undefined;
-jest.spyOn(localization, 'getSdk').mockImplementation(() => ({
+vi.spyOn(localization, 'getSdk').mockImplementation(() => ({
   PrepareEntityLocalizationsForPublishing: () => publishResult(),
   ValidateEntityLocalizations: () => validationResult(),
   MediaLocalizations: () => mediaResult(),
@@ -66,7 +65,7 @@ describe('getValidationAndLocalizations', () => {
     validationResult = () => undefined;
   });
   afterAll(async () => {
-    jest.restoreAllMocks();
+    vi.restoreAllMocks();
   });
 
   describe('channel', () => {

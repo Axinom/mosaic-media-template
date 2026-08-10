@@ -1,5 +1,4 @@
 import { AuthenticatedManagementSubject } from '@axinom/mosaic-id-guard';
-import 'jest-extended';
 import { v4 as uuid } from 'uuid';
 import { insert } from 'zapatos/db';
 import {
@@ -25,7 +24,6 @@ describe('create channel publish dto', () => {
   afterEach(async () => {
     await ctx.truncate('channels');
     await ctx.truncate('channel_images');
-    jest.restoreAllMocks();
   });
 
   afterAll(async () => {

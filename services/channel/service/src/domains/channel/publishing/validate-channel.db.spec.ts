@@ -1,12 +1,12 @@
 import { AuthenticatedManagementSubject } from '@axinom/mosaic-id-guard';
 import { rejectionOf } from '@axinom/mosaic-service-common';
-import 'jest-extended';
 import {
   ChannelLocalization,
   DetailedImage,
   DetailedVideo,
 } from 'media-messages';
 import { v4 as uuid } from 'uuid';
+import type { MockInstance } from 'vitest';
 import { PublicationStateEnum } from 'zapatos/custom';
 import { insert, selectOne } from 'zapatos/db';
 import { channels } from 'zapatos/schema';
@@ -30,9 +30,9 @@ import { validateChannel } from './validate-channel';
 describe('validateChannel', () => {
   let testContext: TestContext;
   let testUser: AuthenticatedManagementSubject;
-  let mockGetValidationAndImages: jest.SpyInstance;
-  let mockGetValidationAndVideos: jest.SpyInstance;
-  let mockGetValidationAndLocalizations: jest.SpyInstance;
+  let mockGetValidationAndImages: MockInstance;
+  let mockGetValidationAndVideos: MockInstance;
+  let mockGetValidationAndLocalizations: MockInstance;
   const createImages = (imageIds: string[]): DetailedImage[] => {
     return imageIds.map((element) => {
       return {
@@ -125,7 +125,7 @@ describe('validateChannel', () => {
   };
 
   beforeEach(async () => {
-    mockGetValidationAndImages = jest
+    mockGetValidationAndImages = vi
       .spyOn(getValidationAndImages, 'getValidationAndImages')
       .mockImplementation(
         async (
@@ -144,7 +144,7 @@ describe('validateChannel', () => {
         },
       );
 
-    mockGetValidationAndVideos = jest
+    mockGetValidationAndVideos = vi
       .spyOn(getValidationAndVideos, 'getValidationAndVideos')
       .mockImplementation(
         async (
@@ -166,15 +166,16 @@ describe('validateChannel', () => {
         },
       );
 
-    jest
-      .spyOn(isManagedServiceEnabled, 'isManagedServiceEnabled')
-      .mockImplementation(
-        async (_serviceId, _idServiceBaseUrl, _authToken): Promise<boolean> => {
-          return true;
-        },
-      );
+    vi.spyOn(
+      isManagedServiceEnabled,
+      'isManagedServiceEnabled',
+    ).mockImplementation(
+      async (_serviceId, _idServiceBaseUrl, _authToken): Promise<boolean> => {
+        return true;
+      },
+    );
 
-    mockGetValidationAndLocalizations = jest
+    mockGetValidationAndLocalizations = vi
       .spyOn(
         getValidationAndLocalizations,
         'getChannelValidationAndLocalizations',
@@ -209,7 +210,6 @@ describe('validateChannel', () => {
 
   afterEach(async () => {
     await testContext.truncate('channels');
-    jest.clearAllMocks();
   });
 
   it('error is thrown if channel not found in db', async () => {
