@@ -1,5 +1,3 @@
- 
-import 'jest-extended';
 import { deletes, insert, update } from 'zapatos/db';
 import { tvshow_genres } from 'zapatos/schema';
 import { setIsLocalizationEnabledDbFunction } from '../../common';

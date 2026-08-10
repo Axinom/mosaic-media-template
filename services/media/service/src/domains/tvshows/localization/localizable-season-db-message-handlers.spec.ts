@@ -1,3 +1,49 @@
+const { serviceAccountToken } = vi.hoisted(() => ({
+  serviceAccountToken: 'SERVICE_ACCOUNT_TOKEN',
+}));
+
+vi.mock('@axinom/mosaic-id-link-be', async () => {
+  const originalModule = await vi.importActual<
+    typeof import('@axinom/mosaic-id-link-be')
+  >('@axinom/mosaic-id-link-be');
+  return {
+    ...originalModule,
+    getServiceAccountToken: vi.fn(() =>
+      Promise.resolve<TokenResult>({
+        accessToken: serviceAccountToken,
+        expiresInSeconds: 600,
+        tokenType: SubjectType.ServiceAccount,
+      }),
+    ),
+    generateLongLivedToken: vi.fn(() =>
+      Promise.resolve<TokenResult>({
+        accessToken: serviceAccountToken,
+        expiresInSeconds: 600,
+        tokenType: SubjectType.ServiceAccount,
+      }),
+    ),
+  };
+});
+
+const tvshowSelectResult = vi.hoisted(() => ({
+  value: (() => undefined) as () => unknown,
+}));
+
+vi.mock('zapatos/db', async () => {
+  return {
+    ...((await vi.importActual<typeof import('zapatos/db')>(
+      'zapatos/db',
+    )) as object),
+    selectOne: vi.fn().mockImplementation(() => {
+      return {
+        run: vi.fn().mockImplementation(() => {
+          return tvshowSelectResult.value();
+        }),
+      } satisfies Partial<SQLFragment> as unknown as SQLFragment;
+    }),
+  };
+});
+
 import { optional } from '@axinom/mosaic-db-common';
 import { SubjectType } from '@axinom/mosaic-id-guard';
 import { TokenResult } from '@axinom/mosaic-id-link-be';
@@ -12,8 +58,7 @@ import {
   StoreOutboxMessage,
   TypedTransactionalMessage,
 } from '@axinom/mosaic-transactional-inbox-outbox';
-import { stub } from 'jest-auto-stub';
-import 'jest-extended';
+
 import { ClientBase } from 'pg';
 import { PublicationConfig } from 'rascal';
 import { SQLFragment } from 'zapatos/db';
@@ -26,43 +71,6 @@ import {
   LocalizableSeasonDeletedDbMessageHandler,
   LocalizableSeasonUpdatedDbMessageHandler,
 } from './localizable-season-db-message-handlers';
-
-const serviceAccountToken = 'SERVICE_ACCOUNT_TOKEN';
-jest.mock('@axinom/mosaic-id-link-be', () => {
-  const originalModule = jest.requireActual('@axinom/mosaic-id-link-be');
-  return {
-    __esModule: true,
-    ...originalModule,
-    getServiceAccountToken: jest.fn(() =>
-      Promise.resolve<TokenResult>({
-        accessToken: serviceAccountToken,
-        expiresInSeconds: 600,
-        tokenType: SubjectType.ServiceAccount,
-      }),
-    ),
-    generateLongLivedToken: jest.fn(() =>
-      Promise.resolve<TokenResult>({
-        accessToken: serviceAccountToken,
-        expiresInSeconds: 600,
-        tokenType: SubjectType.ServiceAccount,
-      }),
-    ),
-  };
-});
-
-let tvshowSelectResult: () => unknown = () => undefined;
-jest.mock('zapatos/db', () => {
-  return {
-    ...jest.requireActual('zapatos/db'),
-    selectOne: jest.fn().mockImplementation(() => {
-      return stub<SQLFragment>({
-        run: jest.fn().mockImplementation(() => {
-          return tvshowSelectResult();
-        }),
-      });
-    }),
-  };
-});
 
 describe('Localizable Season DB trigger events', () => {
   let messages: {
@@ -80,13 +88,19 @@ describe('Localizable Season DB trigger events', () => {
     payload: LocalizableSeasonDbEvent,
     messageContext?: unknown,
   ) =>
-    stub<TypedTransactionalMessage<LocalizableSeasonDbEvent>>({
+    ({
       payload,
       ...optional(messageContext, () => ({ metadata: { messageContext } })),
-    });
+    }) satisfies Partial<
+      Omit<TypedTransactionalMessage<LocalizableSeasonDbEvent>, 'metadata'>
+    > & {
+      metadata?: Partial<
+        TypedTransactionalMessage<LocalizableSeasonDbEvent>['metadata']
+      >;
+    } as unknown as TypedTransactionalMessage<LocalizableSeasonDbEvent>;
 
   beforeAll(() => {
-    storeOutboxMessage = jest.fn(
+    storeOutboxMessage = vi.fn(
       async (_aggregateId, messagingSettings, message, _client, data) => {
         messages.push({
           payload: message as
@@ -103,8 +117,7 @@ describe('Localizable Season DB trigger events', () => {
 
   afterEach(async () => {
     messages = [];
-    tvshowSelectResult = () => undefined;
-    jest.restoreAllMocks();
+    tvshowSelectResult.value = () => undefined;
   });
 
   describe('LocalizableSeasonCreatedDbMessageHandler', () => {
@@ -126,7 +139,10 @@ describe('Localizable Season DB trigger events', () => {
       };
 
       // Act
-      await handler.handleMessage(createMessage(payload), stub<ClientBase>());
+      await handler.handleMessage(
+        createMessage(payload),
+        {} satisfies Partial<ClientBase> as unknown as ClientBase,
+      );
 
       // Assert
       expect(messages).toEqual([
@@ -161,10 +177,13 @@ describe('Localizable Season DB trigger events', () => {
         tvshow_id: 3,
         description: 'Test Description',
       };
-      tvshowSelectResult = () => ({ title: 'The Title of the TV Show' });
+      tvshowSelectResult.value = () => ({ title: 'The Title of the TV Show' });
 
       // Act
-      await handler.handleMessage(createMessage(payload), stub<ClientBase>());
+      await handler.handleMessage(
+        createMessage(payload),
+        {} satisfies Partial<ClientBase> as unknown as ClientBase,
+      );
 
       // Assert
       expect(messages).toEqual([
@@ -209,10 +228,13 @@ describe('Localizable Season DB trigger events', () => {
         index: 2,
         tvshow_id: 3,
       };
-      tvshowSelectResult = () => ({ title: 'The Title of the TV Show' });
+      tvshowSelectResult.value = () => ({ title: 'The Title of the TV Show' });
 
       // Act
-      await handler.handleMessage(createMessage(payload), stub<ClientBase>());
+      await handler.handleMessage(
+        createMessage(payload),
+        {} satisfies Partial<ClientBase> as unknown as ClientBase,
+      );
 
       // Assert
       expect(messages).toEqual([
@@ -252,7 +274,7 @@ describe('Localizable Season DB trigger events', () => {
       // Act
       await handler.handleMessage(
         createMessage(payload, context),
-        stub<ClientBase>(),
+        {} satisfies Partial<ClientBase> as unknown as ClientBase,
       );
 
       // Assert
@@ -301,7 +323,10 @@ describe('Localizable Season DB trigger events', () => {
       };
 
       // Act
-      await handler.handleMessage(createMessage(payload), stub<ClientBase>());
+      await handler.handleMessage(
+        createMessage(payload),
+        {} satisfies Partial<ClientBase> as unknown as ClientBase,
+      );
 
       // Assert
       expect(messages).toEqual([

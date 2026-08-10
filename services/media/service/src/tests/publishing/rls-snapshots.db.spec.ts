@@ -4,7 +4,6 @@ import {
 } from '@axinom/mosaic-db-common';
 import { AuthenticatedManagementSubject } from '@axinom/mosaic-id-guard';
 import { rejectionOf } from '@axinom/mosaic-service-common';
-import 'jest-extended';
 import { EntityTypeEnum } from 'zapatos/custom';
 import {
   all,

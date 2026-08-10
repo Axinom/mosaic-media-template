@@ -7,8 +7,7 @@ import {
   StoreOutboxMessage,
   TypedTransactionalMessage,
 } from '@axinom/mosaic-transactional-inbox-outbox';
-import { stub } from 'jest-auto-stub';
-import 'jest-extended';
+
 import { UnpublishEntityCommand } from 'media-messages';
 import { all, insert, select, update } from 'zapatos/db';
 import { movies, snapshots } from 'zapatos/schema';
@@ -31,17 +30,23 @@ describe('UnpublishEntityHandler', () => {
   let timestampBeforeTest: Date;
 
   const createMessage = (payload: UnpublishEntityCommand) =>
-    stub<TypedTransactionalMessage<UnpublishEntityCommand>>({
+    ({
       payload,
       metadata: {
         authToken:
           'some token value which is not used because we are substituting getPgSettings method and using a stub user',
       },
-    });
+    }) satisfies Partial<
+      Omit<TypedTransactionalMessage<UnpublishEntityCommand>, 'metadata'>
+    > & {
+      metadata?: Partial<
+        TypedTransactionalMessage<UnpublishEntityCommand>['metadata']
+      >;
+    } as unknown as TypedTransactionalMessage<UnpublishEntityCommand>;
 
   beforeAll(async () => {
     ctx = await createTestContext();
-    const storeOutboxMessage: StoreOutboxMessage = jest.fn(
+    const storeOutboxMessage: StoreOutboxMessage = vi.fn(
       async (_aggregateId, { messageType }, payload, _client, optionalData) => {
         const { envelopeOverrides, options } = optionalData || {};
         messages.push({
@@ -87,7 +92,6 @@ describe('UnpublishEntityHandler', () => {
 
   afterAll(async () => {
     await ctx.dispose();
-    jest.restoreAllMocks();
   });
 
   describe('handleMessage', () => {

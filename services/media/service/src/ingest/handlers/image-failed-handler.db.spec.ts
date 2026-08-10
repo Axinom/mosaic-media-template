@@ -2,8 +2,7 @@ import { AuthenticatedManagementSubject } from '@axinom/mosaic-id-guard';
 import { EnsureImageExistsFailedEvent } from '@axinom/mosaic-messages';
 import { MosaicError } from '@axinom/mosaic-service-common';
 import { TypedTransactionalMessage } from '@axinom/mosaic-transactional-inbox-outbox';
-import { stub } from 'jest-auto-stub';
-import 'jest-extended';
+
 import { randomUUID } from 'node:crypto';
 import { insert, selectOne } from 'zapatos/db';
 import {
@@ -31,12 +30,18 @@ describe('ImageFailedHandler', () => {
     payload: EnsureImageExistsFailedEvent,
     messageContext: unknown,
   ) =>
-    stub<TypedTransactionalMessage<EnsureImageExistsFailedEvent>>({
+    ({
       payload,
       metadata: {
         messageContext,
       },
-    });
+    }) satisfies Partial<
+      Omit<TypedTransactionalMessage<EnsureImageExistsFailedEvent>, 'metadata'>
+    > & {
+      metadata?: Partial<
+        TypedTransactionalMessage<EnsureImageExistsFailedEvent>['metadata']
+      >;
+    } as unknown as TypedTransactionalMessage<EnsureImageExistsFailedEvent>;
 
   beforeAll(async () => {
     ctx = await createTestContext();
@@ -85,7 +90,6 @@ describe('ImageFailedHandler', () => {
 
   afterAll(async () => {
     await ctx.dispose();
-    jest.restoreAllMocks();
   });
 
   describe('handleMessage', () => {

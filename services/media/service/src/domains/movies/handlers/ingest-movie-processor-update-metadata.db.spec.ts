@@ -6,7 +6,6 @@ import {
   difference,
   rejectionOf,
 } from '@axinom/mosaic-service-common';
-import 'jest-extended';
 import { MediaEntityType, UpdateMetadataCommand } from 'media-messages';
 import { all, conditions as c, insert, select, update } from 'zapatos/db';
 import { ColumnForTable, movies, movies_images } from 'zapatos/schema';
@@ -41,7 +40,7 @@ describe('IngestMovieProcessor', () => {
   afterEach(async () => {
     await ctx.truncate('movies');
     await ctx.truncate('movie_genres');
-    jest.restoreAllMocks();
+    vi.restoreAllMocks();
   });
 
   afterAll(async () => {
@@ -68,7 +67,10 @@ describe('IngestMovieProcessor', () => {
       'message with missing regular properties -> original values are retained',
       async (ingestItemId) => {
         // Arrange
-        const spy = jest.spyOn<any, any>(processor, 'clearIngestCorrelationId');
+        const spy = vi.spyOn(
+          processor as unknown as { clearIngestCorrelationId: () => void },
+          'clearIngestCorrelationId',
+        );
         const body = createMessageBody(movie1, {
           title: 'Entity1',
         });

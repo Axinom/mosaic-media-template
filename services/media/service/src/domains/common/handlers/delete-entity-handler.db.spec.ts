@@ -3,8 +3,7 @@ import {
   StoreOutboxMessage,
   TypedTransactionalMessage,
 } from '@axinom/mosaic-transactional-inbox-outbox';
-import { stub } from 'jest-auto-stub';
-import 'jest-extended';
+
 import { DeleteEntityCommand } from 'media-messages';
 import { all, insert, select } from 'zapatos/db';
 import { movies } from 'zapatos/schema';
@@ -25,12 +24,19 @@ describe('Delete Entity Handler', () => {
   let messages: unknown[] = [];
 
   const createMessage = (payload: DeleteEntityCommand) =>
-    stub<TypedTransactionalMessage<DeleteEntityCommand>>({
+    ({
       payload,
-    });
+      metadata: { authToken: 'test-token' },
+    }) satisfies Partial<
+      Omit<TypedTransactionalMessage<DeleteEntityCommand>, 'metadata'>
+    > & {
+      metadata?: Partial<
+        TypedTransactionalMessage<DeleteEntityCommand>['metadata']
+      >;
+    } as unknown as TypedTransactionalMessage<DeleteEntityCommand>;
 
   beforeAll(async () => {
-    const storeOutboxMessage: StoreOutboxMessage = jest.fn(
+    const storeOutboxMessage: StoreOutboxMessage = vi.fn(
       async (_aggregateId, _messagingSettings, message) => {
         messages.push(message);
       },
@@ -65,7 +71,6 @@ describe('Delete Entity Handler', () => {
 
   afterAll(async () => {
     await ctx.dispose();
-    jest.restoreAllMocks();
   });
 
   test('Make sure the sent item IDs are deleted', async () => {

@@ -1,5 +1,4 @@
 import { AuthenticatedManagementSubject } from '@axinom/mosaic-id-guard';
-import 'jest-extended';
 import { IngestItem } from 'media-messages';
 import { all, insert, JSONOnlyColsForTable, select } from 'zapatos/db';
 import {
