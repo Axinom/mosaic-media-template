@@ -93,19 +93,31 @@ const maxRetryCount = 50;
 let currentRetry = 0;
 let activeClient: Client | null = null;
 
+let activeGeneration = 0;
+
+const endClient = async (client: Client | null): Promise<void> => {
+  if (client) {
+    await client.end();
+  }
+};
+
 /**
  * During cases when connection with database is interrupted - errors can occur
  * from multiple places, which can result in multiple reconnection attempts and
  * end up with more than one client listening to notifications for a single
  * service instance. For this reason, each time a connection is established -
  * attempt to close other possible open connection.
+ *
+ * Bumping the generation also invalidates a start that is still connecting and
+ * any retry that is waiting to reconnect.
  */
 const closeActiveClient = async (): Promise<void> => {
-  if (activeClient) {
-    await activeClient.end();
-    activeClient = null;
-  }
+  activeGeneration++;
+  const client = activeClient;
+  activeClient = null;
+  await endClient(client);
 };
+
 /**
  * Every time a message is received for localizable entities - we try to keep
  * the used locales up-to-date. This includes updating the `app_public.locales`
@@ -120,7 +132,14 @@ export const startLocalesInsertedListener = async (
   config: Config,
   logger: Logger,
 ): Promise<void> => {
+  const generation = ++activeGeneration;
+  const previousClient = activeClient;
+  activeClient = null;
+
   const handleError = async (e: unknown): Promise<void> => {
+    if (generation !== activeGeneration) {
+      return;
+    }
     currentRetry++;
     const error = ensureError(e);
     if (currentRetry > maxRetryCount) {
@@ -131,30 +150,43 @@ export const startLocalesInsertedListener = async (
       `Listener database connection error occurred. Attempting to reconnect. (${currentRetry}/${maxRetryCount})`,
     );
     await sleep(currentRetry * 1000);
+    if (generation !== activeGeneration) {
+      return;
+    }
     await startLocalesInsertedListener(config, logger);
   };
 
   try {
-    closeActiveClient();
+    await endClient(previousClient);
     const client = new Client(config.dbOwnerConnectionString);
 
-    client.on('error', async (e) => {
-      await handleError(e);
+    client.on('error', (e) => {
+      void handleError(e);
     });
 
     client.on('notification', async (msg) => {
-      if (msg.channel === MOSAIC_LOCALE_NOTIFY) {
+      if (msg.channel !== MOSAIC_LOCALE_NOTIFY) {
+        return;
+      }
+      try {
         await loadInMemoryLocales(client, logger);
+      } catch (e) {
+        logger.error(
+          ensureError(e),
+          'Unable to reload the in-memory locales after a locales notification.',
+        );
       }
     });
 
     await client.connect();
+    if (generation !== activeGeneration) {
+      await client.end();
+      return;
+    }
     activeClient = client;
     currentRetry = 0;
 
-    // Intentionally not using await to keep the connection open.
-    // Must use explicit client without Pool to do this.
-    client.query(`LISTEN ${MOSAIC_LOCALE_NOTIFY};`);
+    await client.query(`LISTEN ${MOSAIC_LOCALE_NOTIFY};`);
   } catch (e) {
     await handleError(e);
   }
