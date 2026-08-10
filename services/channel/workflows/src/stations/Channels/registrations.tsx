@@ -2,7 +2,10 @@ import { registerLocalizationEntryPoints } from '@axinom/mosaic-managed-workflow
 import { PiletApi } from '@axinom/mosaic-portal';
 import * as React from 'react';
 import { setGetProviders } from '../../externals/getProviders';
-import { Extensions, ExtensionsProvider } from '../../externals/piralExtensions';
+import {
+  Extensions,
+  ExtensionsProvider,
+} from '../../externals/piralExtensions';
 import {
   channelDetailsStationResolverRegistration,
   programDetailsStationResolverRegistration,

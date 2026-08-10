@@ -55,7 +55,6 @@ export const PlaylistDetailsForm: React.FC<PlaylistDetailsFormProps> = ({
       formData: PlaylistDetailsFormData,
       initialData: DetailsProps<PlaylistDetailsFormData>['initialData'],
     ): Promise<void> => {
-       
       const { ...updateDto } = getFormDiff(formData, initialData.data);
       const patch: PlaylistPatch = {
         ...updateDto,
