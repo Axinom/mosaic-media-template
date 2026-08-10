@@ -22,4 +22,4 @@ export const publishNowNotification = ({
       </p>
     ),
     options: { type: 'success' },
-  } as const);
+  }) as const;

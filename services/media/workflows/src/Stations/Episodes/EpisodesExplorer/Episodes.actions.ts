@@ -65,7 +65,8 @@ export function useEpisodesActions(): {
           break;
       }
       if (response?.data) {
-        const count = response.data.createEpisodeSnapshots?.affectedIds?.length ?? 0;
+        const count =
+          response.data.createEpisodeSnapshots?.affectedIds?.length ?? 0;
         showNotification(bulkSnapshotCreateNotification(count));
       }
     },
