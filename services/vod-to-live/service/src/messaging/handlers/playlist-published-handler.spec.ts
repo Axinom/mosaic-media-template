@@ -1,8 +1,10 @@
 import { Broker, MessageInfo } from '@axinom/mosaic-message-bus';
 import { MessagingSettings } from '@axinom/mosaic-message-bus-abstractions';
-import { stub } from 'jest-auto-stub';
+
 import { DetailedVideo, PlaylistPublishedEvent } from 'media-messages';
 import { v4 as uuid } from 'uuid';
+import type { MockInstance } from 'vitest';
+import { vi } from 'vitest';
 import { Config, DAY_IN_SECONDS, SECOND_IN_MILLISECONDS } from '../../common';
 import { AzureStorage, KeyServiceApi } from '../../domains';
 import * as cpixGeneration from '../../domains/cpix/generator/generate-cpix-settings';
@@ -10,34 +12,38 @@ import { createTestVideo } from '../../tests';
 import { PlaylistPublishedHandler } from './playlist-published-handler';
 
 describe('PlaylistPublishedHandler', () => {
-  let createEncryptionCpix: jest.SpyInstance;
-  let createDecryptionCpix: jest.SpyInstance;
+  let createEncryptionCpix: MockInstance;
+  let createDecryptionCpix: MockInstance;
   let cpixSettingsVideos: DetailedVideo[] = [];
   let messages: { messageType: string; message: any }[] = [];
-  const mockedKeyServiceApi = stub<KeyServiceApi>({});
-  const mockedAzureStorage = stub<AzureStorage>({
+  const mockedKeyServiceApi =
+    {} satisfies Partial<KeyServiceApi> as unknown as KeyServiceApi;
+  const mockedAzureStorage = {
     getFileContent: async () => getFileContentResult(),
-  });
+  } satisfies Partial<AzureStorage> as unknown as AzureStorage;
   let getFileContentResult: any = () => undefined;
 
-  const mockedBroker = stub<Broker>({
-    publish: (
-      _id: string,
-      { messageType }: MessagingSettings,
-      message: unknown,
-    ) => {
-      messages.push({ messageType, message });
-    },
-  });
+  const mockedBroker = {
+    publish: vi.fn<Broker['publish']>(
+      async (
+        _id: string,
+        { messageType }: MessagingSettings,
+        message: unknown,
+      ) => {
+        messages.push({ messageType, message });
+        return {} as Awaited<ReturnType<Broker['publish']>>;
+      },
+    ),
+  } satisfies Partial<Broker> as unknown as Broker;
 
-  const mockedConfig = stub<Config>({
+  const mockedConfig = {
     environment: 'test',
     serviceId: 'test-vod-to-live',
     logLevel: 'DEBUG',
     catchUpDurationInMinutes: 60,
-  });
+  } satisfies Partial<Config> as unknown as Config;
   beforeEach(async () => {
-    createEncryptionCpix = jest
+    createEncryptionCpix = vi
       .spyOn(cpixGeneration, 'createEncryptionCpix')
       .mockImplementation(
         async (
@@ -59,7 +65,7 @@ describe('PlaylistPublishedHandler', () => {
         },
       );
 
-    createDecryptionCpix = jest
+    createDecryptionCpix = vi
       .spyOn(cpixGeneration, 'createDecryptionCpix')
       .mockImplementation(
         async (
@@ -91,7 +97,7 @@ describe('PlaylistPublishedHandler', () => {
   afterEach(() => {
     messages = [];
     cpixSettingsVideos = [];
-    jest.clearAllMocks();
+    vi.restoreAllMocks();
   });
   it.each([true, false])(
     'drm settings are generated from the channel placeholder video and videos in playlist',
@@ -155,12 +161,16 @@ describe('PlaylistPublishedHandler', () => {
           },
         ],
       };
-      const messageInfo = stub<MessageInfo<PlaylistPublishedEvent>>({
+      const messageInfo = {
         envelope: {
           auth_token: 'no-token',
           payload,
         },
-      });
+      } satisfies Partial<
+        Omit<MessageInfo<PlaylistPublishedEvent>, 'envelope'>
+      > & {
+        envelope: Partial<MessageInfo<PlaylistPublishedEvent>['envelope']>;
+      } as unknown as MessageInfo<PlaylistPublishedEvent>;
       // Act
       await handler.onMessage(payload, messageInfo);
 

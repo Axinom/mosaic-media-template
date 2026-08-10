@@ -158,7 +158,8 @@ export class VirtualChannelApi {
       });
       return result.data;
     } catch (error) {
-      const axiosErrorResponse = (error as AxiosError<{ detail?: string }>)?.response;
+      const axiosErrorResponse = (error as AxiosError<{ detail?: string }>)
+        ?.response;
       const errorCode = axiosErrorResponse?.status;
       if (errorCode === 404) {
         return {
@@ -188,7 +189,8 @@ export class VirtualChannelApi {
       );
       return result.data;
     } catch (error) {
-      const axiosErrorResponse = (error as AxiosError<{ detail?: string }>)?.response;
+      const axiosErrorResponse = (error as AxiosError<{ detail?: string }>)
+        ?.response;
       const errorCode = axiosErrorResponse?.status;
       if (errorCode === 404) {
         return (
@@ -268,7 +270,8 @@ export class VirtualChannelApi {
       );
       return result.data;
     } catch (error) {
-      const axiosErrorResponse = (error as AxiosError<{ detail?: string }>)?.response;
+      const axiosErrorResponse = (error as AxiosError<{ detail?: string }>)
+        ?.response;
       const errorCode = axiosErrorResponse?.status;
       if (errorCode === 404) {
         return {
