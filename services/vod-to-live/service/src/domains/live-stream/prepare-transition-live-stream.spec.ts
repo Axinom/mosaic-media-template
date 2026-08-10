@@ -1,4 +1,3 @@
-import { stub } from 'jest-auto-stub';
 import { v4 as uuid } from 'uuid';
 import { MINUTE_IN_MILLISECONDS } from '../../common';
 import { VirtualChannelApi } from '../virtual-channel';
@@ -24,7 +23,7 @@ describe('prepareTransitionLiveStream', () => {
   </smil>`;
 
   let getPlaylistTransitionsResult: any = () => undefined;
-  const mockedVirtualChannelApi = stub<VirtualChannelApi>({
+  const mockedVirtualChannelApi = {
     getPlaylistTransitions: async () => getPlaylistTransitionsResult(),
 
     putTransition: async (channelId: string, transition: string) => {
@@ -38,12 +37,11 @@ describe('prepareTransitionLiveStream', () => {
       deletedTransitions.push({ channelId, transition });
       return 'Transition Deleted!';
     },
-  });
+  } satisfies Partial<VirtualChannelApi> as unknown as VirtualChannelApi;
 
   afterEach(() => {
     createdTransitions = [];
     deletedTransitions = [];
-    jest.clearAllMocks();
   });
 
   it('existing playlist transition for future dates are deleted and new transition is created', async () => {

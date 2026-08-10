@@ -1,18 +1,23 @@
+import { vi } from 'vitest';
+
+vi.mock('axios', () => ({
+  default: {
+    delete: vi.fn(() => {
+      return Promise.resolve({
+        data: 'Virtual Channel Deleted!',
+      });
+    }),
+  },
+}));
+
 import axios from 'axios';
-import { stub } from 'jest-auto-stub';
 import { v4 as uuid } from 'uuid';
 import { createTestVideo } from '../../tests';
 import { AzureStorage } from '../azure';
 import { KeyServiceApi } from '../key-service';
 import { VirtualChannelApi } from '../virtual-channel';
 import { deleteChannelLiveStream } from './delete-channel-live-stream';
-jest.mock('axios', () => ({
-  delete: jest.fn(() => {
-    return Promise.resolve({
-      data: 'Virtual Channel Deleted!',
-    });
-  }),
-}));
+
 describe('deleteChannelLiveStream', () => {
   let deletedFolders: string[] = [];
   let deletedContentKeys: string[] = [];
@@ -41,7 +46,7 @@ describe('deleteChannelLiveStream', () => {
         key_id: isDrmProtected ? mockContentKeyId : undefined,
       });
     };
-    return stub<AzureStorage>({
+    return {
       getFileContent: async () => getFileContentResult(),
       deleteFolder: async (
         relativeFilePath: string,
@@ -49,25 +54,24 @@ describe('deleteChannelLiveStream', () => {
         deletedFolders.push(relativeFilePath);
         return [];
       },
-    });
+    } satisfies Partial<AzureStorage> as unknown as AzureStorage;
   };
 
-  const mockedKeyServiceApi = stub<KeyServiceApi>({
+  const mockedKeyServiceApi = {
     deleteContentKey: async (contentKeyId: string): Promise<void> => {
       deletedContentKeys.push(contentKeyId);
     },
-  });
+  } satisfies Partial<KeyServiceApi> as unknown as KeyServiceApi;
   const virtualChannelApi = new VirtualChannelApi('');
 
   beforeEach(() => {
     deletedFolders = [];
     deletedContentKeys = [];
-    jest.clearAllMocks();
   });
 
   it('channel metadata is removed from Azure Storage, Virtual Channel is deleted and DRM content key is deleted', async () => {
     // Arrange
-    const mockedAxios = jest.mocked(axios);
+    const mockedAxios = vi.mocked(axios);
     // Act
     await deleteChannelLiveStream(
       channelId,
@@ -85,7 +89,7 @@ describe('deleteChannelLiveStream', () => {
 
   it('on channel deletion the DRM key is not removed if DRM is disabled', async () => {
     // Arrange
-    const mockedAxios = jest.mocked(axios);
+    const mockedAxios = vi.mocked(axios);
     // Act
     await deleteChannelLiveStream(
       channelId,

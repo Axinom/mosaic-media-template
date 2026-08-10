@@ -1,5 +1,5 @@
-/* eslint-disable jest/no-conditional-expect */
-import { stub } from 'jest-auto-stub';
+/* eslint-disable vitest/no-conditional-expect */
+
 import {
   CuePointSchedule,
   CuePointScheduleType,
@@ -28,13 +28,10 @@ import { PlaylistSmilGenerator } from './playlist-smil-generator';
 import { videoToSmilParallelReferences } from './utils';
 
 describe('PlaylistSmilGenerator', () => {
-  const mockConfig = stub<Config>({
+  const mockConfig = {
     prolongPlaylistTo24Hours: false,
     catchUpDurationInMinutes: 0,
-  });
-  afterEach(() => {
-    jest.clearAllMocks();
-  });
+  } satisfies Partial<Config> as unknown as Config;
   const createCuePointWithSchedules = (
     type: 'PRE' | 'MID' | 'POST',
     timeInSeconds?: number | null | undefined,
@@ -961,10 +958,10 @@ describe('PlaylistSmilGenerator', () => {
         };
         const generator = new PlaylistSmilGenerator(
           createTestCpixSettings(isDrmProtected),
-          stub<Config>({
+          {
             prolongPlaylistTo24Hours: true,
             catchUpDurationInMinutes: 0,
-          }),
+          } satisfies Partial<Config> as unknown as Config,
           createTestVideo(true, uuid(), placeholderVideoDurationInSeconds),
         );
         // Act
@@ -1017,10 +1014,10 @@ describe('PlaylistSmilGenerator', () => {
         };
         const generator = new PlaylistSmilGenerator(
           createTestCpixSettings(isDrmProtected),
-          stub<Config>({
+          {
             prolongPlaylistTo24Hours: true,
             catchUpDurationInMinutes: 0,
-          }),
+          } satisfies Partial<Config> as unknown as Config,
           createTestVideo(true, uuid(), placeholderVideoDurationInSeconds),
         );
         // Act
@@ -1078,10 +1075,10 @@ describe('PlaylistSmilGenerator', () => {
         };
         const generator = new PlaylistSmilGenerator(
           createTestCpixSettings(isDrmProtected),
-          stub<Config>({
+          {
             prolongPlaylistTo24Hours: true,
             catchUpDurationInMinutes: catchUpDurationInMinutes,
-          }),
+          } satisfies Partial<Config> as unknown as Config,
           createTestVideo(true, uuid(), placeholderVideoDurationInSeconds),
         );
         // Act

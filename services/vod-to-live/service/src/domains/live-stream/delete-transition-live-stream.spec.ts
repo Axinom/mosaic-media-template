@@ -1,7 +1,7 @@
-/* eslint-disable jest/no-conditional-expect */
+/* eslint-disable vitest/no-conditional-expect */
 import { Broker } from '@axinom/mosaic-message-bus';
 import { MessagingSettings } from '@axinom/mosaic-message-bus-abstractions';
-import { stub } from 'jest-auto-stub';
+
 import { VodToLiveServiceMessagingSettings } from 'media-messages';
 import { v4 as uuid } from 'uuid';
 import { MINUTE_IN_MILLISECONDS } from '../../common';
@@ -23,12 +23,17 @@ describe('deleteTransitionLiveStream', () => {
     transition: string;
   }[] = [];
 
-  const mockedStorage = stub<AzureStorage>({
+  const mockedStorage = {
     getFileContent: async () => getFileContentResult(),
     createFile: async (relativeFilePath: string, fileContent: string) => {
       savedFiles.push({ relativeFilePath, fileContent });
+      return true;
     },
-  });
+    deleteFolder: vi.fn<AzureStorage['deleteFolder']>().mockResolvedValue([]),
+    getFileSasUrl: vi
+      .fn<AzureStorage['getFileSasUrl']>()
+      .mockResolvedValue('https://example.test/decryption.cpix'),
+  } satisfies Partial<AzureStorage> as unknown as AzureStorage;
 
   let getFileContentResult: any = () => undefined;
 
@@ -57,14 +62,14 @@ describe('deleteTransitionLiveStream', () => {
     });
   };
 
-  const mockedKeyServiceApi = stub<KeyServiceApi>({
+  const mockedKeyServiceApi = {
     postSpekeRequest: async (): Promise<string> => {
       return '<mocked speke response!>';
     },
-  });
+  } satisfies Partial<KeyServiceApi> as unknown as KeyServiceApi;
 
   let channelHasPlaylistTransitionsResult: any = () => undefined;
-  const mockedVirtualChannelApi = stub<VirtualChannelApi>({
+  const mockedVirtualChannelApi = {
     getPlaylistTransitions: async () => {
       return [
         {
@@ -96,22 +101,24 @@ describe('deleteTransitionLiveStream', () => {
       deletedTransitions.push({ channelId, transition });
       return 'Transition was deleted !';
     },
-  });
+  } satisfies Partial<VirtualChannelApi> as unknown as VirtualChannelApi;
 
-  const mockedBroker = stub<Broker>({
-    publish: (
-      _id: string,
-      { messageType }: MessagingSettings,
-      message: unknown,
-    ) => {
-      messages.push({ messageType, message });
-    },
-  });
+  const mockedBroker = {
+    publish: vi.fn<Broker['publish']>(
+      async (
+        _id: string,
+        { messageType }: MessagingSettings,
+        message: unknown,
+      ) => {
+        messages.push({ messageType, message });
+        return {} as Awaited<ReturnType<Broker['publish']>>;
+      },
+    ),
+  } satisfies Partial<Broker> as unknown as Broker;
   beforeEach(() => {
     messages = [];
     savedFiles = [];
     deletedTransitions = [];
-    jest.clearAllMocks();
   });
 
   it('all playlist transitions are deleted', async () => {
