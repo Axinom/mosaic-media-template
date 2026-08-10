@@ -116,13 +116,13 @@ jobs:
         run: yarn test:reset:dbs
 
       - name: Run tests
-        run: yarn test:ci --maxWorkers=8 --colors
+        run: yarn test:ci
 
       - name: Test Report
         uses: dorny/test-reporter@v3
         if: ${{ !cancelled() }}
         with:
-          name: JEST Tests
+          name: Test Results
           path: '**/junit.xml'
           reporter: jest-junit
 

@@ -18,6 +18,10 @@ release-package
 # Jest
 coverage
 
+# Vitest
+coverage-vitest
+vitest-report
+
 # JUnit Report
 junit.xml
 
@@ -51,3 +55,7 @@ ingest-gen
 
 # Temporary Data Dumps
 data-dump/
+
+# Local AI migration artifacts
+/.claude/skills/
+VITEST_MIGRATION_PLAN.md
