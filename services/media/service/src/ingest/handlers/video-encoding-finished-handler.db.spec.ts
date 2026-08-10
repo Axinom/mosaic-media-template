@@ -2,8 +2,6 @@ import { AuthenticatedManagementSubject } from '@axinom/mosaic-id-guard';
 import { MosaicError } from '@axinom/mosaic-service-common';
 import { TypedTransactionalMessage } from '@axinom/mosaic-transactional-inbox-outbox';
 import { VideoEncodingFinishedEvent } from '@axinom/mosaic-video-messages';
-import { stub } from 'jest-auto-stub';
-import 'jest-extended';
 import { randomUUID } from 'node:crypto';
 import { insert, selectOne } from 'zapatos/db';
 import {
@@ -29,10 +27,16 @@ describe('VideoEncodingFinishedHandler', () => {
   const videoId = randomUUID();
 
   const createMessage = (payload: VideoEncodingFinishedEvent) =>
-    stub<TypedTransactionalMessage<VideoEncodingFinishedEvent>>({
+    ({
       payload,
       metadata: {},
-    });
+    }) satisfies Partial<
+      Omit<TypedTransactionalMessage<VideoEncodingFinishedEvent>, 'metadata'>
+    > & {
+      metadata?: Partial<
+        TypedTransactionalMessage<VideoEncodingFinishedEvent>['metadata']
+      >;
+    } as unknown as TypedTransactionalMessage<VideoEncodingFinishedEvent>;
 
   beforeAll(async () => {
     ctx = await createTestContext();
@@ -81,7 +85,6 @@ describe('VideoEncodingFinishedHandler', () => {
 
   afterAll(async () => {
     await ctx.dispose();
-    jest.restoreAllMocks();
   });
 
   describe('handleMessage', () => {
@@ -122,7 +125,9 @@ describe('VideoEncodingFinishedHandler', () => {
         id: step1.id,
       }).run(ctx.ownerPool);
       expect(step?.status).toBe('ERROR');
-      expect(step?.response_message).toBe('A previous encoding attempt failed.');
+      expect(step?.response_message).toBe(
+        'A previous encoding attempt failed.',
+      );
     });
   });
 
@@ -195,7 +200,9 @@ describe('VideoEncodingFinishedHandler', () => {
         id: step1.id,
       }).run(ctx.ownerPool);
       expect(step?.status).toBe('ERROR');
-      expect(step?.response_message).toBe('A previous encoding attempt failed.');
+      expect(step?.response_message).toBe(
+        'A previous encoding attempt failed.',
+      );
     });
   });
 });

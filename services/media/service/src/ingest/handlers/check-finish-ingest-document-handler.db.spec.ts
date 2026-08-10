@@ -1,11 +1,22 @@
+import type * as MosaicServiceCommon from '@axinom/mosaic-service-common';
+
+vi.mock('@axinom/mosaic-service-common', async () => {
+  const original = await vi.importActual<typeof MosaicServiceCommon>(
+    '@axinom/mosaic-service-common',
+  );
+  return {
+    ...original,
+    sleep: vi.fn(),
+  };
+});
+
 import { AuthenticatedManagementSubject } from '@axinom/mosaic-id-guard';
 import { assertNotFalsy, MosaicError } from '@axinom/mosaic-service-common';
 import {
   StoreInboxMessage,
   TypedTransactionalMessage,
 } from '@axinom/mosaic-transactional-inbox-outbox';
-import { stub } from 'jest-auto-stub';
-import 'jest-extended';
+
 import { CheckFinishIngestDocumentCommand } from 'media-messages';
 import { IngestItemStatusEnum } from 'zapatos/custom';
 import { insert, selectOne, update } from 'zapatos/db';
@@ -17,13 +28,6 @@ import {
   ITestContext,
 } from '../../tests/test-utils';
 import { CheckFinishIngestDocumentHandler } from './check-finish-ingest-document-handler';
-jest.mock('@axinom/mosaic-service-common', () => {
-  const original = jest.requireActual('@axinom/mosaic-service-common');
-  return {
-    ...original,
-    sleep: jest.fn(),
-  };
-});
 
 describe('Check Finish Ingest Document Handler', () => {
   let ctx: ITestContext;
@@ -35,13 +39,23 @@ describe('Check Finish Ingest Document Handler', () => {
   let messages: unknown[] = [];
 
   const createMessage = (payload: CheckFinishIngestDocumentCommand) =>
-    stub<TypedTransactionalMessage<CheckFinishIngestDocumentCommand>>({
+    ({
       payload,
-    });
+      metadata: { authToken: 'test-token' },
+    }) satisfies Partial<
+      Omit<
+        TypedTransactionalMessage<CheckFinishIngestDocumentCommand>,
+        'metadata'
+      >
+    > & {
+      metadata?: Partial<
+        TypedTransactionalMessage<CheckFinishIngestDocumentCommand>['metadata']
+      >;
+    } as unknown as TypedTransactionalMessage<CheckFinishIngestDocumentCommand>;
 
   beforeAll(async () => {
     ctx = await createTestContext();
-    const storeInboxMessage: StoreInboxMessage = jest.fn(
+    const storeInboxMessage: StoreInboxMessage = vi.fn(
       async (_aggregateId, _messagingSettings, message) => {
         messages.push(message as CheckFinishIngestDocumentCommand);
       },
@@ -105,7 +119,6 @@ describe('Check Finish Ingest Document Handler', () => {
 
   afterAll(async () => {
     await ctx.dispose();
-    jest.restoreAllMocks();
   });
 
   describe('handleMessage', () => {

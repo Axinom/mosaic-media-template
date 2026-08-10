@@ -1,4 +1,3 @@
-import 'jest-extended';
 import { deletes, insert, selectExactlyOne, update } from 'zapatos/db';
 import { movies_images, movies_licenses_countries } from 'zapatos/schema';
 import { createTestContext, ITestContext } from '../test-utils';

@@ -1,5 +1,4 @@
 import { AuthenticatedManagementSubject } from '@axinom/mosaic-id-guard';
-import 'jest-extended';
 import { insert, select } from 'zapatos/db';
 import { movies, movies_images } from 'zapatos/schema';
 import {

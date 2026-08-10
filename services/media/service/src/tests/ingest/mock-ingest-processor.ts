@@ -1,5 +1,5 @@
 import { MessagingSettings } from '@axinom/mosaic-message-bus-abstractions';
-import { stub } from 'jest-auto-stub';
+
 import { IngestItem, StartIngestItemCommand } from 'media-messages';
 import { IngestItemTypeEnum } from 'zapatos/custom';
 import { Queryable } from 'zapatos/db';
@@ -30,17 +30,19 @@ export class MockIngestProcessor implements IngestEntityProcessor {
     return [
       {
         aggregateId: 'unit-test-id',
-        messagingSettings: stub<MessagingSettings>(),
+        messagingSettings:
+          {} satisfies Partial<MessagingSettings> as unknown as MessagingSettings,
         messagePayload: {},
         messageContext: {},
-        ingestItemStep: stub<ingest_item_steps.Insertable>(),
+        ingestItemStep:
+          {} satisfies Partial<ingest_item_steps.Insertable> as unknown as ingest_item_steps.Insertable,
       },
     ];
   }
 
   public async updateMetadata(): Promise<void> {}
-   
+
   public async processImage(): Promise<void> {}
-   
+
   public async processVideo(): Promise<void> {}
 }

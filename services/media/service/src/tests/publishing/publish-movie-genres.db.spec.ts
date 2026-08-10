@@ -1,6 +1,5 @@
 import { toBeUuid } from '@axinom/mosaic-service-common';
 import { StoreInboxMessage } from '@axinom/mosaic-transactional-inbox-outbox';
-import 'jest-extended';
 import {
   MediaServiceMessagingSettings,
   PublishEntityCommand,
@@ -25,7 +24,7 @@ describe('Create Movie Genres snapshot endpoint', () => {
   }[] = [];
 
   beforeAll(async () => {
-    const storeInboxMessage: StoreInboxMessage = jest.fn(
+    const storeInboxMessage: StoreInboxMessage = vi.fn(
       async (_aggregateId, { messageType }, payload) => {
         messages.push({
           payload: payload as PublishEntityCommand,
@@ -42,16 +41,15 @@ describe('Create Movie Genres snapshot endpoint', () => {
       title: 'Valid Genre',
       sort_order: 1,
     }).run(ctx.ownerPool);
-    jest
-      .spyOn(tokenHelpers, 'getLongLivedToken')
-      .mockImplementation(async () => 'test-long-lived-token');
+    vi.spyOn(tokenHelpers, 'getLongLivedToken').mockImplementation(
+      async () => 'test-long-lived-token',
+    );
   });
 
   afterEach(async () => {
     await ctx.truncate('movie_genres');
     await ctx.truncate('snapshots');
     messages = [];
-    jest.restoreAllMocks();
   });
 
   afterAll(async () => {
@@ -200,11 +198,11 @@ describe('Create Movie Genres snapshot endpoint', () => {
 
     it('error thrown -> error received, message not sent and snapshot not created', async () => {
       // Arrange
-      jest
-        .spyOn(snapshotHelpers, 'createListSnapshot')
-        .mockImplementation(async () => {
+      vi.spyOn(snapshotHelpers, 'createListSnapshot').mockImplementation(
+        async () => {
           throw new Error('Unexpected Error happened!');
-        });
+        },
+      );
 
       // Act
       const resp = await ctx.runGqlQuery(

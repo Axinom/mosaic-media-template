@@ -1,5 +1,4 @@
 import { StoreInboxMessage } from '@axinom/mosaic-transactional-inbox-outbox';
-import 'jest-extended';
 import {
   DeleteEntityCommand,
   MediaServiceMessagingSettings,
@@ -37,16 +36,16 @@ describe('Tvshows Bulk Delete endpoint', () => {
   };
 
   beforeAll(async () => {
-    const storeInboxMessage: StoreInboxMessage = jest.fn(
+    const storeInboxMessage: StoreInboxMessage = vi.fn(
       async (_aggregateId, { messageType }, payload) => {
         messages.push({ payload: payload as DeleteEntityCommand, messageType });
       },
     );
     ctx = await createTestContext({}, undefined, storeInboxMessage);
     defaultRequestContext = createTestRequestContext(ctx.config.serviceId);
-    jest
-      .spyOn(tokenHelpers, 'getLongLivedToken')
-      .mockImplementation(async () => 'test-long-lived-token');
+    vi.spyOn(tokenHelpers, 'getLongLivedToken').mockImplementation(
+      async () => 'test-long-lived-token',
+    );
   });
 
   beforeEach(async () => {

@@ -1,6 +1,5 @@
 import Ajv from 'ajv';
 import addFormats from 'ajv-formats';
-import 'jest-extended';
 import { IngestDocument } from 'media-messages';
 import { transformAjvErrors } from '../../common';
 import * as ingestSchema from '../../ingest/schemas/ingest-validation-schema.json';

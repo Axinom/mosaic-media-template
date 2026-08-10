@@ -1,4 +1,4 @@
-import 'jest-extended';
+import type { MockInstance } from 'vitest';
 import { MovieGenreLocalization } from 'media-messages';
 import { insert } from 'zapatos/db';
 import { movie_genres } from 'zapatos/schema';
@@ -30,7 +30,6 @@ describe('publishingMovieGenresProcessor', () => {
 
   afterEach(async () => {
     await ctx.truncate('movie_genres');
-    jest.restoreAllMocks();
   });
 
   afterAll(async () => {
@@ -38,10 +37,12 @@ describe('publishingMovieGenresProcessor', () => {
   });
 
   describe('aggregator', () => {
-    let localizationsSpy: jest.SpyInstance;
+    let localizationsSpy: MockInstance<
+      typeof localizationMetadata.getMovieGenreLocalizationsMetadata
+    >;
 
     beforeEach(async () => {
-      localizationsSpy = jest
+      localizationsSpy = vi
         .spyOn(localizationMetadata, 'getMovieGenreLocalizationsMetadata')
         .mockImplementation(async () => ({
           result: [],

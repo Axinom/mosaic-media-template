@@ -1,3 +1,7 @@
+vi.mock('../../common/utils/token-utils', () => ({
+  requestServiceAccountToken: vi.fn(),
+}));
+
 import { AuthenticatedManagementSubject } from '@axinom/mosaic-id-guard';
 import {
   LocalizeEntityCommand,
@@ -8,8 +12,7 @@ import {
   StoreOutboxMessage,
   TypedTransactionalMessage,
 } from '@axinom/mosaic-transactional-inbox-outbox';
-import { stub } from 'jest-auto-stub';
-import 'jest-extended';
+
 import { IngestItem } from 'media-messages';
 import { v4 as uuid } from 'uuid';
 import { insert, selectOne } from 'zapatos/db';
@@ -29,10 +32,6 @@ import {
   UpsertLocalizationSourceEntityFinishedHandler,
 } from './upsert-localization-source-entity-finished-handler';
 
-jest.mock('../../common/utils/token-utils', () => ({
-  requestServiceAccountToken: jest.fn(),
-}));
-
 describe('UpsertLocalizationSourceEntityFinishedHandler', () => {
   let ctx: ITestContext;
   let handler: UpsertLocalizationSourceEntityFinishedHandler;
@@ -46,18 +45,25 @@ describe('UpsertLocalizationSourceEntityFinishedHandler', () => {
     payload: UpsertLocalizationSourceEntityFinishedEvent,
     messageContext: unknown,
   ) =>
-    stub<
-      TypedTransactionalMessage<UpsertLocalizationSourceEntityFinishedEvent>
-    >({
+    ({
       payload,
       metadata: {
         messageContext,
       },
-    });
+    }) satisfies Partial<
+      Omit<
+        TypedTransactionalMessage<UpsertLocalizationSourceEntityFinishedEvent>,
+        'metadata'
+      >
+    > & {
+      metadata?: Partial<
+        TypedTransactionalMessage<UpsertLocalizationSourceEntityFinishedEvent>['metadata']
+      >;
+    } as unknown as TypedTransactionalMessage<UpsertLocalizationSourceEntityFinishedEvent>;
 
   beforeAll(async () => {
     ctx = await createTestContext();
-    const storeOutboxMessage: StoreOutboxMessage = jest.fn(
+    const storeOutboxMessage: StoreOutboxMessage = vi.fn(
       async (_aggregateId, _messagingSettings, payload) => {
         payloads.push(payload as LocalizeEntityCommand);
       },
@@ -128,7 +134,6 @@ describe('UpsertLocalizationSourceEntityFinishedHandler', () => {
 
   afterAll(async () => {
     await ctx.dispose();
-    jest.restoreAllMocks();
   });
 
   describe('handleMessage', () => {

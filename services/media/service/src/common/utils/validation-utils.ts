@@ -30,7 +30,8 @@ export const transformAjvErrors = <
 
   return errors.map((error) => {
     const lineNumber = sourceMap.pointers[error.instancePath].value.line + 1;
-    const columnNumber = sourceMap.pointers[error.instancePath].value.column + 1;
+    const columnNumber =
+      sourceMap.pointers[error.instancePath].value.column + 1;
     const allowedValues = (error.params?.allowedValues ?? []).join(', ');
     const valuesText = allowedValues.length > 0 ? `: ${allowedValues}` : '';
     return {

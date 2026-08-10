@@ -1,4 +1,3 @@
-import 'jest-extended';
 import { insert, selectExactlyOne, update } from 'zapatos/db';
 import { movies, snapshots } from 'zapatos/schema';
 import { createTestContext, ITestContext } from '../test-utils';

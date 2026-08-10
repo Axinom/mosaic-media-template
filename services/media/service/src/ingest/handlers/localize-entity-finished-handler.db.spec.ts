@@ -2,8 +2,7 @@ import { AuthenticatedManagementSubject } from '@axinom/mosaic-id-guard';
 import { LocalizeEntityFinishedEvent } from '@axinom/mosaic-messages';
 import { MosaicError } from '@axinom/mosaic-service-common';
 import { TypedTransactionalMessage } from '@axinom/mosaic-transactional-inbox-outbox';
-import { stub } from 'jest-auto-stub';
-import 'jest-extended';
+
 import { randomUUID } from 'node:crypto';
 import { insert, selectOne } from 'zapatos/db';
 import {
@@ -31,12 +30,18 @@ describe('LocalizeEntityFinishedHandler', () => {
     payload: LocalizeEntityFinishedEvent,
     messageContext: unknown,
   ) =>
-    stub<TypedTransactionalMessage<LocalizeEntityFinishedEvent>>({
+    ({
       payload,
       metadata: {
         messageContext,
       },
-    });
+    }) satisfies Partial<
+      Omit<TypedTransactionalMessage<LocalizeEntityFinishedEvent>, 'metadata'>
+    > & {
+      metadata?: Partial<
+        TypedTransactionalMessage<LocalizeEntityFinishedEvent>['metadata']
+      >;
+    } as unknown as TypedTransactionalMessage<LocalizeEntityFinishedEvent>;
 
   beforeAll(async () => {
     ctx = await createTestContext();
@@ -85,7 +90,6 @@ describe('LocalizeEntityFinishedHandler', () => {
 
   afterAll(async () => {
     await ctx.dispose();
-    jest.restoreAllMocks();
   });
 
   describe('handleMessage', () => {

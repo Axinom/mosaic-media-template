@@ -1,4 +1,4 @@
-import 'jest-extended';
+import type { MockInstance } from 'vitest';
 import { insert } from 'zapatos/db';
 import { tvshow_genres } from 'zapatos/schema';
 import {
@@ -31,7 +31,6 @@ describe('publishingTvshowGenresProcessor', () => {
 
   afterEach(async () => {
     await ctx.truncate('tvshow_genres');
-    jest.restoreAllMocks();
   });
 
   afterAll(async () => {
@@ -39,9 +38,11 @@ describe('publishingTvshowGenresProcessor', () => {
   });
 
   describe('aggregator', () => {
-    let localizationsSpy: jest.SpyInstance;
+    let localizationsSpy: MockInstance<
+      typeof localizationMetadata.getTvshowGenreLocalizationsMetadata
+    >;
     beforeEach(async () => {
-      localizationsSpy = jest
+      localizationsSpy = vi
         .spyOn(localizationMetadata, 'getTvshowGenreLocalizationsMetadata')
         .mockImplementation(async () => ({
           result: [],
