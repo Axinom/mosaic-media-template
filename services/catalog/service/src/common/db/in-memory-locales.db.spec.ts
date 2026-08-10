@@ -413,5 +413,73 @@ describe('inMemoryLocales', () => {
           'Listener database connection error occurred. Attempting to reconnect. (1/50)',
       });
     });
+
+    it('Listener client closed while the LISTEN query is in flight -> no unhandled rejection', async () => {
+      // Arrange
+      const rejections: unknown[] = [];
+      const onUnhandledRejection = (reason: unknown): void => {
+        rejections.push(reason);
+      };
+      process.on('unhandledRejection', onUnhandledRejection);
+
+      try {
+        // Act
+        await startLocalesInsertedListener(ctx.config, logger);
+        // Closing the client right away leaves the `LISTEN` query in flight,
+        // which pg rejects with an `Connection terminated` error.
+        await exportedForTesting.closeActiveClient();
+        await sleep(100); // unhandled rejections are reported on a later tick
+
+        // Assert
+        expect(rejections).toEqual([]);
+        expect(errorSpy).toHaveBeenCalledTimes(0);
+      } finally {
+        process.off('unhandledRejection', onUnhandledRejection);
+      }
+    });
+
+    it('Listener closed while the client is still connecting -> connecting client is discarded', async () => {
+      // Act
+      // Intentionally not awaited: the client is still connecting, so it is not
+      // the active client yet and can only be discarded via its generation.
+      const startPromise = startLocalesInsertedListener(ctx.config, logger);
+      await exportedForTesting.closeActiveClient();
+      await startPromise;
+      await sleep(100);
+
+      // Assert
+      expect(exportedForTesting.getActiveClient()).toBeNull();
+      const [{ listeners }] = await sql<SQL, { listeners: number }[]>`
+        select count(*)::int as listeners from pg_stat_activity
+        where datname = current_database() and query ilike 'listen%'`.run(
+        ctx.ownerPool,
+      );
+      expect(listeners).toBe(0);
+      expect(errorSpy).toHaveBeenCalledTimes(0);
+    });
+
+    it('Listener restarted while a reconnect is pending -> stale retry does not replace the new client', async () => {
+      // Arrange
+      await startLocalesInsertedListener(ctx.config, logger);
+      // Schedules a reconnect attempt in one second.
+      (exportedForTesting.getActiveClient() as Client).emit(
+        'error',
+        new Error('Test error'),
+      );
+
+      // Act
+      await startLocalesInsertedListener(ctx.config, logger);
+      const client = exportedForTesting.getActiveClient();
+      await sleep(1500); // the stale retry would have reconnected by now
+
+      // Assert
+      expect(exportedForTesting.getActiveClient()).toBe(client);
+      const expectedLocales = await populateLocales();
+      await sleep(1000); // notification processing can take a little bit of time
+      expect(exportedForTesting.getInMemoryLocales()).toIncludeSameMembers(
+        expectedLocales,
+      );
+      expect(errorSpy).toHaveBeenCalledTimes(1);
+    });
   });
 });
