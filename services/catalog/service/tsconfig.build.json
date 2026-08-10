@@ -11,6 +11,6 @@
     "scripts",
     "**/tests",
     "**/*spec.ts",
-    "jest.*"
+    "vitest.*"
   ]
 }

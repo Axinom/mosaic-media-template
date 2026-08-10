@@ -48,12 +48,12 @@ const createMockRequest = (overrides: Dict<any>): Request =>
     headers: {},
     ip: '',
     ...overrides,
-  } as Request);
+  }) as Request;
 
 const createMockResponse = (): Response =>
   ({
     locals: {},
-  } as Response);
+  }) as Response;
 
 const runGqlQuery = async function (
   this: ITestContext,
@@ -134,10 +134,9 @@ export interface ITestContext {
 export const createTestContext = async (
   configOverrides: Dict<string> = {},
 ): Promise<ITestContext> => {
-  // This is needed if tests are running from monorepo context instead of project context, e.g. using Jest Runner extension
+  // Normalize process.cwd() because tests may start at the monorepo root.
   process.chdir(resolve(__dirname, '../../../'));
 
-  // TODO: Check expect.getState().testPath filename for .db.spec. convention, throw an error if it does not match. https://github.com/facebook/jest/issues/9901
   const config = createTestConfig(configOverrides, expect.getState().testPath);
 
   const settings = await getMigrationSettings(config);

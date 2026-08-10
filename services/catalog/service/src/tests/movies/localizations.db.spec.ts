@@ -1,5 +1,4 @@
 import gql from 'graphql-tag';
-import 'jest-extended';
 import { insert } from 'zapatos/db';
 import {
   DEFAULT_LOCALE_TAG,

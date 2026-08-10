@@ -3,7 +3,7 @@ import {
   getFirstMockResult,
 } from '@axinom/mosaic-service-common';
 import gql from 'graphql-tag';
-import 'jest-extended';
+import type { MockInstance } from 'vitest';
 import { insert } from 'zapatos/db';
 import { CommonErrors, DEFAULT_LOCALE_TAG } from '../../../common';
 import { createTestContext, ITestContext } from '../../../tests/test-utils';
@@ -18,8 +18,8 @@ const EPISODE_REQUEST = gql`
 
 describe('ExtendEpisodeQueryWithCountryCodePlugin', () => {
   let ctx: ITestContext;
-  let errorOverride: jest.SpyInstance;
-  let debugOverride: jest.SpyInstance;
+  let errorOverride: MockInstance;
+  let debugOverride: MockInstance;
   const episodeId = 'episode-1';
   const seasonId = 'season-1';
   const tvshowId = 'season-1';
@@ -38,17 +38,17 @@ describe('ExtendEpisodeQueryWithCountryCodePlugin', () => {
   });
 
   beforeEach(async () => {
-    errorOverride = await jest
+    errorOverride = vi
       .spyOn(console, 'error')
       .mockImplementation((obj) => JSON.parse(obj));
-    debugOverride = await jest
+    debugOverride = vi
       .spyOn(console, 'debug')
       .mockImplementation((obj) => JSON.parse(obj));
   });
 
   afterEach(async () => {
     await ctx?.truncate('episode_licenses');
-    jest.restoreAllMocks();
+    vi.restoreAllMocks();
   });
 
   afterAll(async () => {
