@@ -65,7 +65,8 @@ export function useTvShowsActions(): {
           break;
       }
       if (response?.data) {
-        const count = response.data.createTvShowSnapshots?.affectedIds?.length ?? 0;
+        const count =
+          response.data.createTvShowSnapshots?.affectedIds?.length ?? 0;
         showNotification(bulkSnapshotCreateNotification(count));
       }
     },

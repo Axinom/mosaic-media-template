@@ -16,4 +16,4 @@ export const snapshotCreateNotification = ({
       </p>
     ),
     options: { type: 'success' },
-  } as const);
+  }) as const;

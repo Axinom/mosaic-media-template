@@ -74,7 +74,7 @@ export function useCollectionsActions(): {
     actionType: PageHeaderActionType.Context,
     icon: IconName.Snapshot,
     reloadData: true,
-    showStartedNotification: false
+    showStartedNotification: false,
   };
 
   const publishNowBulkAction: ExplorerBulkAction<CollectionData> = {
@@ -107,7 +107,7 @@ export function useCollectionsActions(): {
     confirmationMode: 'Simple',
     icon: IconName.Publish,
     reloadData: true,
-    showStartedNotification: false
+    showStartedNotification: false,
   };
 
   const unpublishNowBulkAction: ExplorerBulkAction<CollectionData> = {
@@ -140,7 +140,7 @@ export function useCollectionsActions(): {
     confirmationMode: 'Simple',
     icon: IconName.Unpublish,
     reloadData: true,
-    showStartedNotification: false
+    showStartedNotification: false,
   };
 
   const deleteBulkAction: ExplorerBulkAction<CollectionData> = {
