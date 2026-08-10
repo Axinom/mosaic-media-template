@@ -25,7 +25,7 @@ describe('unpublishPlaylist', () => {
     messageType: string;
     message: PlaylistUnpublishedEvent;
   }[] = [];
-  const storeOutboxMessage: StoreOutboxMessage = jest.fn(
+  const storeOutboxMessage: StoreOutboxMessage = vi.fn(
     async (_aggregateId, { messageType }: { messageType: string }, message) => {
       messages.push({
         messageType,
@@ -84,7 +84,6 @@ describe('unpublishPlaylist', () => {
     await testContext.truncate('playlists');
     await testContext.truncate('channels');
     messages = [];
-    jest.clearAllMocks();
   });
 
   it('error is thrown, if playlist was not found', async () => {

@@ -1,6 +1,7 @@
 // This config is used by vscode to provide proper IDE support for all typescript files in project, including tests and scripts. Inherited by tsconfig.build.json
 {
   "compilerOptions": {
+    "types": ["vitest/globals", "node"],
     "strict": true,
     "noImplicitReturns": true,
     "noFallthroughCasesInSwitch": true,
@@ -16,8 +17,5 @@
     "sourceMap": true,
     "preserveWatchOutput": true
   },
-  "exclude": [
-    "node_modules",
-    "dist"
-  ]
+  "exclude": ["node_modules", "dist", "vitest.config.mts"]
 }

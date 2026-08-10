@@ -1,6 +1,5 @@
 import { rejectionOf } from '@axinom/mosaic-service-common';
 import { ClientError } from 'graphql-request';
-import 'jest-extended';
 import { CommonErrors } from '../../../common';
 import * as video from '../../../generated/graphql/video';
 import { createValidationError, createValidationWarning } from '../../models';
@@ -11,7 +10,7 @@ import {
 } from './get-validation-and-videos';
 
 let result: any = () => undefined;
-jest.spyOn(video, 'getSdk').mockImplementation(() => ({
+vi.spyOn(video, 'getSdk').mockImplementation(() => ({
   GetVideos: () => result(),
 }));
 

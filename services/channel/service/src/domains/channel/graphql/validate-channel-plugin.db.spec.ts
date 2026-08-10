@@ -1,8 +1,7 @@
 import { AuthenticatedManagementSubject } from '@axinom/mosaic-id-guard';
 import { assertNotFalsy, MosaicError } from '@axinom/mosaic-service-common';
 import gql from 'graphql-tag';
-import { stub } from 'jest-auto-stub';
-import 'jest-extended';
+
 import { ChannelPublishedEvent } from 'media-messages';
 import { CommonErrors } from '../../../common';
 import { PublishValidationResult } from '../../../publishing';
@@ -48,7 +47,7 @@ describe('query validateChannel', () => {
   });
 
   afterEach(async () => {
-    jest.restoreAllMocks();
+    vi.restoreAllMocks();
   });
 
   afterAll(async () => {
@@ -57,7 +56,7 @@ describe('query validateChannel', () => {
 
   it('returns an error in the GraphQL response if validation throws an error', async () => {
     // Arrange
-    jest.spyOn(validation, 'validateChannel').mockImplementation(async () => {
+    vi.spyOn(validation, 'validateChannel').mockImplementation(async () => {
       throw new MosaicError(CommonErrors.ChannelNotFound);
     });
 
@@ -78,9 +77,7 @@ describe('query validateChannel', () => {
 
   it('succeeds with issues', async () => {
     // Arrange
-    const validationResult = stub<
-      PublishValidationResult<ChannelPublishedEvent>
-    >({
+    const validationResult = {
       validations: [
         {
           message: 'not_important_in_this_case',
@@ -90,10 +87,12 @@ describe('query validateChannel', () => {
       ],
       validationStatus: 'ERRORS',
       publishHash: 'some_hash_value',
-    });
-    jest
-      .spyOn(validation, 'validateChannel')
-      .mockImplementation(async () => validationResult);
+    } satisfies Partial<
+      PublishValidationResult<ChannelPublishedEvent>
+    > as unknown as PublishValidationResult<ChannelPublishedEvent>;
+    vi.spyOn(validation, 'validateChannel').mockImplementation(
+      async () => validationResult,
+    );
 
     // Act
     const resp = await ctx.runGqlQuery(
@@ -114,17 +113,17 @@ describe('query validateChannel', () => {
 
   it('succeeds without issues', async () => {
     // Arrange
-    const validationResult = stub<
-      PublishValidationResult<ChannelPublishedEvent>
-    >({
+    const validationResult = {
       validations: [],
       validationStatus: 'OK',
       publishHash:
         '6c0bf2cb8cc32fc82b7a71af7c7dad28779425bad247a61a9bf708787a44e22a',
-    });
-    jest
-      .spyOn(validation, 'validateChannel')
-      .mockImplementation(async () => validationResult);
+    } satisfies Partial<
+      PublishValidationResult<ChannelPublishedEvent>
+    > as unknown as PublishValidationResult<ChannelPublishedEvent>;
+    vi.spyOn(validation, 'validateChannel').mockImplementation(
+      async () => validationResult,
+    );
 
     // Act
     const resp = await ctx.runGqlQuery(

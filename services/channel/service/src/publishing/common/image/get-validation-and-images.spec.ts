@@ -1,13 +1,12 @@
 import { rejectionOf } from '@axinom/mosaic-service-common';
 import { ClientError } from 'graphql-request';
-import 'jest-extended';
 import { CommonErrors } from '../../../common';
 import * as image from '../../../generated/graphql/image';
 import { createValidationWarning } from '../../models';
 import { getValidationAndImages, GqlImage } from './get-validation-and-images';
 
 let result: any = () => undefined;
-jest.spyOn(image, 'getSdk').mockImplementation(() => ({
+vi.spyOn(image, 'getSdk').mockImplementation(() => ({
   GetImages: () => result(),
 }));
 
@@ -20,7 +19,7 @@ describe('getValidationAndImages', () => {
     return { data: { images: { nodes } } };
   };
   afterAll(async () => {
-    jest.restoreAllMocks();
+    vi.restoreAllMocks();
   });
 
   it('Empty input array -> empty result array with validation warning', async () => {
