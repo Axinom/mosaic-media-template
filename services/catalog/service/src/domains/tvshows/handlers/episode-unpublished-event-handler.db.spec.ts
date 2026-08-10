@@ -1,6 +1,5 @@
 import { createOffsetDate } from '@axinom/mosaic-service-common';
 import { TypedTransactionalMessage } from '@axinom/mosaic-transactional-inbox-outbox';
-import 'jest-extended';
 import { EpisodeUnpublishedEvent } from 'media-messages';
 import { all, count, insert, selectOne } from 'zapatos/db';
 import { DEFAULT_LOCALE_TAG } from '../../../common';
@@ -22,7 +21,6 @@ describe('EpisodePublishEventHandler', () => {
 
   afterAll(async () => {
     await ctx?.dispose();
-    jest.restoreAllMocks();
   });
 
   describe('handleMessage', () => {

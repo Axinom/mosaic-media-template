@@ -3,14 +3,14 @@ import * as dotenv from 'dotenv';
 import { join, resolve } from 'path';
 import { Config, getFullConfig } from '../../common';
 
-// This is needed if tests are running from monorepo context instead of project context, e.g. using Jest Runner extension
+// Resolve service paths consistently when tests start at the monorepo root.
 export const TEST_EXEC_ROOT = join(__dirname, '..', '..', '..');
 
 export const createTestConfig = (
   overrides: Dict<string> = {},
   testFilePath?: string,
 ): Config => {
-  // TODO: Done to support debugging. Review in-code config load when this issue is resolved: https://github.com/firsttris/vscode-jest-runner/issues/166
+  // Load monorepo environment values before the service-specific `.env` file.
   process.chdir(resolve(__dirname, '../../../../../../'));
   dotenv.config();
   process.chdir(TEST_EXEC_ROOT);

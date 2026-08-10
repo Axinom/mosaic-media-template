@@ -3,8 +3,8 @@ import {
   Logger,
   sleep,
 } from '@axinom/mosaic-service-common';
-import 'jest-extended';
 import { Client } from 'pg';
+import type { MockInstance } from 'vitest';
 import { all, insert, select, SQL, sql } from 'zapatos/db';
 import { createTestContext, ITestContext } from '../../tests/test-utils';
 import { DEFAULT_LOCALE_TAG } from '../constants';
@@ -323,21 +323,20 @@ describe('inMemoryLocales', () => {
   });
 
   describe('startLocalesInsertedListener', () => {
-    let errorSpy: jest.SpyInstance;
-    let logSpy: jest.SpyInstance;
+    let errorSpy: MockInstance;
+    let logSpy: MockInstance;
 
     beforeEach(async () => {
-      errorSpy = jest
+      errorSpy = vi
         .spyOn(console, 'error')
         .mockImplementation((obj) => JSON.parse(obj));
-      logSpy = jest
+      logSpy = vi
         .spyOn(console, 'log')
         .mockImplementation((obj) => JSON.parse(obj));
     });
 
     afterEach(async () => {
       await exportedForTesting.closeActiveClient();
-      jest.clearAllMocks();
     });
 
     it('Insert of locales after the listener stared -> in-memory locales array updated', async () => {

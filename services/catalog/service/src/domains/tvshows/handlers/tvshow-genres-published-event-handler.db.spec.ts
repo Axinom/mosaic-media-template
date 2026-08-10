@@ -1,4 +1,3 @@
-import 'jest-extended';
 import { all, insert, select, selectOne } from 'zapatos/db';
 import { tvshow_genre } from 'zapatos/schema';
 import { DEFAULT_LOCALE_TAG } from '../../../common';
@@ -24,7 +23,6 @@ describe('TvshowGenrePublishEventHandler', () => {
 
   afterAll(async () => {
     await ctx?.dispose();
-    jest.restoreAllMocks();
   });
 
   describe('handleMessage', () => {

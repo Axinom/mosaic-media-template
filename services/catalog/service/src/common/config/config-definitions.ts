@@ -50,4 +50,6 @@ export type Config = ValueObject<ReturnType<typeof getConfigDefinitions>>;
 /**
  * The Database related Configuration type
  */
-export type DbConfig = ValueObject<ReturnType<typeof getBasicDbConfigDefinitions>>;
+export type DbConfig = ValueObject<
+  ReturnType<typeof getBasicDbConfigDefinitions>
+>;
