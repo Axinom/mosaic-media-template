@@ -33,8 +33,8 @@
   ],
   "dependencies": {
     "@apollo/client": "^3.7.10",
-    "@axinom/mosaic-managed-workflow-integration": "0.32.0",
-    "@axinom/mosaic-ui": "0.72.6",
+    "@axinom/mosaic-managed-workflow-integration": "0.33.0",
+    "@axinom/mosaic-ui": "0.73.0",
     "@axinom/mosaic-video-workflow-integration": "0.6.3",
     "clsx": "^1.2.1",
     "env-cmd": "^10.1.0",
@@ -47,7 +47,7 @@
     "yup": "^0.32.11"
   },
   "devDependencies": {
-    "@axinom/mosaic-portal": "0.48.1",
+    "@axinom/mosaic-portal": "0.49.0",
     "@graphql-codegen/cli": "^4.0.1",
     "@graphql-codegen/typescript": "^2.7.3",
     "@graphql-codegen/typescript-operations": "^2.5.3",
