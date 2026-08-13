@@ -1,0 +1,11 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+commonAnnotations:
+  axinom.com/platform: mosaic
+  mosaic.axinom.com/service: default-handler
+commonLabels:
+  axinom.com/platform: mosaic
+  mosaic.axinom.com/service: default-handler
+resources:
+  - snippets-filter.yaml
+  - http-route.yaml

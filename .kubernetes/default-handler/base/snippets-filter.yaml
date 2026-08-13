@@ -1,0 +1,20 @@
+---
+# Intercepts every request matched by the default-handler HTTPRoute and answers
+# it directly from NGINX - no backend is ever contacted.
+# Requires the `snippetsFilters` feature to be enabled on NGINX Gateway Fabric
+# (helm value `nginxGateway.snippetsFilters.enable=true`).
+apiVersion: gateway.nginx.org/v1alpha1
+kind: SnippetsFilter
+metadata:
+  name: default-handler-not-found
+spec:
+  snippets:
+    - context: http.server.location
+      # `return 404;` without a body makes NGINX serve its own built-in 404
+      # error page (text/html). Swap for the JSON variant below if a
+      # machine-readable body is preferred.
+      #
+      #   default_type application/json;
+      #   return 404 '{"error":"not_found","message":"The requested URL is not routed by this gateway.","request_url":"$scheme://$host$request_uri"}';
+      value: |
+        return 404;
