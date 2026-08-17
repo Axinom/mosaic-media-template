@@ -119,21 +119,21 @@ jobs:
         with:
           files: '["${{ inputs.gql-manifest-directory }}/*.graphql"]'
         env:
-          managed-service-client-id: ${{ secrets.managed-service-client-id }}
-          managed-service-client-secret: ${{ secrets.managed-service-client-secret }}
-          drm-license-communication-key: ${{ secrets.entitlement-drm-license-communication-key }}
-          drm-license-communication-key-id: ${{ secrets.entitlement-drm-license-communication-key-id }}
-          entitlement-webhook-secret: ${{ secrets.entitlement-entitlement-webhook-secret }}
-          geolite2-license-key: ${{ secrets.entitlement-geolite2-license-key }}
-          api-key: ${{ secrets.vod2live-api-key }}
-          azure-storage-connection: ${{ secrets.vod2live-azure-storage-connection }}
-          key-service-management-key: ${{ secrets.vod2live-key-service-management-key }}
+          managedServiceClientId: ${{ secrets.managed-service-client-id }}
+          managedServiceClientSecret: ${{ secrets.managed-service-client-secret }}
+          drmLicenseCommunicationKey: ${{ secrets.entitlement-drm-license-communication-key }}
+          drmLicenseCommunicationKeyId: ${{ secrets.entitlement-drm-license-communication-key-id }}
+          entitlementWebhookSecret: ${{ secrets.entitlement-entitlement-webhook-secret }}
+          geolite2LicenseKey: ${{ secrets.entitlement-geolite2-license-key }}
           geoLite2DownloadUrl: ${{ inputs.geolite2-download-url }}
           drmKeySeedId: ${{ inputs.drm-key-seed-id }}
           virtualChannelManagementApiBaseUrl: ${{ inputs.virtual-channel-management-api-base-url }}
           virtualChannelOriginBaseUrl: ${{ inputs.virtual-channel-origin-base-url }}
           azureBlobContainerName: ${{ inputs.azure-blob-container-name }}
           keyServiceApiBaseUrl: ${{ inputs.key-service-api-base-url }}
+          storageAccountConnectionString: ${{ secrets.vod2live-azure-storage-connection }}
+          apiKey: ${{ secrets.vod2live-api-key }}
+          keyServiceManagementKey: ${{ secrets.vod2live-key-service-management-key }}
           keyServiceTenantId: ${{ inputs.key-service-tenant-id }}
           serviceDefinitionIdCatalog: ${{ inputs.service-definition-id-catalog }}
           serviceDefinitionIdChannel: ${{ inputs.service-definition-id-channel }}

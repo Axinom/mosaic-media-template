@@ -1,8 +1,8 @@
 mutation GetManagedServiceAccountToken {
   authenticateManagedServiceAccount(
     input: {
-      clientId: "#{managed-service-client-id}#"
-      clientSecret: "#{managed-service-client-secret}#"
+      clientId: "#{managedServiceClientId}#"
+      clientSecret: "#{managedServiceClientSecret}#"
     }
   ) {
     accessToken
