@@ -29,8 +29,8 @@ mutation CreateAxinomServiceConfigEntitlement {
             RABBITMQ_VHOST: "${__ax_hosted__.rmq.vhost}"
             RABBITMQ_USER: "${__ax_hosted__.rmq.username}"
             RABBITMQ_PASSWORD: "${__ax_hosted__.rmq.password}"
-            DRM_LICENSE_COMMUNICATION_KEY: "#{drm-license-communication-key}#"
-            DRM_LICENSE_COMMUNICATION_KEY_ID: "#{drm-license-communication-key-id}#"
+            DRM_LICENSE_COMMUNICATION_KEY: "#{drmLicenseCommunicationKey}#"
+            DRM_LICENSE_COMMUNICATION_KEY_ID: "#{drmLicenseCommunicationKeyId}#"
             GEOLITE2_LICENSE_KEY: "DownloadFromStorageAcc-NoLicenseNeeded"
             MAXMIND_ACCOUNT_ID: "DownloadFromStorageAcc-NoMaxmindAccountNeeded"
           }

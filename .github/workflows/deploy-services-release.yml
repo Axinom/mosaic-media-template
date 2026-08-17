@@ -173,7 +173,7 @@ jobs:
       drm-key-seed-id: 6e451fb3-93e0-47fb-add4-aed000a97f16
       virtual-channel-management-api-base-url: "https://navy-streaming-api.axtest.net"
       virtual-channel-origin-base-url: "https://navy-streaming-origin.axtest.net"
-      azure-blob-container-name: "vod-to-live"
+      azure-blob-container-name: "vod2live"
       key-service-api-base-url: "https://key-server-management.axprod.net"
       key-service-tenant-id: "45e207ff-796a-4108-93b3-8ac4c81b8da1"
 
