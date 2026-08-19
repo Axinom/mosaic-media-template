@@ -195,7 +195,9 @@ export const EpisodeExplorer: React.FC<EpisodeExplorerProps> = (props) => {
       {
         label: 'Unpublish',
         onActionSelected: async () => {
-          const response = await unpublishEpisodeMutation({ variables: { id } });
+          const response = await unpublishEpisodeMutation({
+            variables: { id },
+          });
           if (!response.data) return response.errors;
           showNotification(unpublishNotification());
           history.push('/episodes');

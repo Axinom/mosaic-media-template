@@ -1,4 +1,3 @@
-import 'jest-extended';
 import { CollectionLocalization } from 'media-messages';
 import { insert, update } from 'zapatos/db';
 import { collections } from 'zapatos/schema';
@@ -35,7 +34,6 @@ describe('publishingCollectionProcessor', () => {
     await ctx.truncate('seasons');
     await ctx.truncate('episodes');
     await ctx.truncate('collections');
-    jest.restoreAllMocks();
   });
 
   afterAll(async () => {
@@ -45,18 +43,19 @@ describe('publishingCollectionProcessor', () => {
   describe('aggregator', () => {
     it('minimal collection -> valid result', async () => {
       // Arrange
-      jest
-        .spyOn(imageMetadata, 'getImagesMetadata')
-        .mockImplementation(async () => ({
+      vi.spyOn(imageMetadata, 'getImagesMetadata').mockImplementation(
+        async () => ({
           result: [],
           validation: [],
-        }));
-      jest
-        .spyOn(localizationMetadata, 'getCollectionLocalizationsMetadata')
-        .mockImplementation(async () => ({
-          result: undefined,
-          validation: [],
-        }));
+        }),
+      );
+      vi.spyOn(
+        localizationMetadata,
+        'getCollectionLocalizationsMetadata',
+      ).mockImplementation(async () => ({
+        result: undefined,
+        validation: [],
+      }));
 
       // Act
       const result = await publishingCollectionProcessor.aggregator(
@@ -169,12 +168,12 @@ describe('publishingCollectionProcessor', () => {
         message: `test image error`,
         severity: 'ERROR',
       };
-      jest
-        .spyOn(imageMetadata, 'getImagesMetadata')
-        .mockImplementation(async () => ({
+      vi.spyOn(imageMetadata, 'getImagesMetadata').mockImplementation(
+        async () => ({
           result: [image],
           validation: [imageError, imageWarning],
-        }));
+        }),
+      );
       const localizationWarning: SnapshotValidationResult = {
         context: 'LOCALIZATION',
         message: `test localization warning`,
@@ -203,12 +202,13 @@ describe('publishingCollectionProcessor', () => {
           is_default_locale: false,
         },
       ];
-      jest
-        .spyOn(localizationMetadata, 'getCollectionLocalizationsMetadata')
-        .mockImplementation(async () => ({
-          result: localizations,
-          validation: [localizationWarning],
-        }));
+      vi.spyOn(
+        localizationMetadata,
+        'getCollectionLocalizationsMetadata',
+      ).mockImplementation(async () => ({
+        result: localizations,
+        validation: [localizationWarning],
+      }));
 
       // Act
       const result = await publishingCollectionProcessor.aggregator(

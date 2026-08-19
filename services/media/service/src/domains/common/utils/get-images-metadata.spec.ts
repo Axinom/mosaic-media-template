@@ -1,5 +1,4 @@
 import { rejectionOf } from '@axinom/mosaic-service-common';
-import 'jest-extended';
 import { CommonErrors } from '../../../common';
 import * as image from '../../../generated/graphql/image';
 import { GetImagesQuery } from '../../../generated/graphql/image';
@@ -8,7 +7,7 @@ import { getImagesMetadata } from './get-images-metadata';
 type GqlImage = NonNullable<GetImagesQuery['images']>['nodes'][0];
 
 let result: any = () => undefined;
-jest.spyOn(image, 'getSdk').mockImplementation(() => ({
+vi.spyOn(image, 'getSdk').mockImplementation(() => ({
   GetImages: () => result(),
 }));
 
@@ -22,7 +21,7 @@ describe('getImagesMetadata', () => {
   };
 
   afterAll(async () => {
-    jest.restoreAllMocks();
+    vi.restoreAllMocks();
   });
 
   it('Empty input array -> empty result array', async () => {

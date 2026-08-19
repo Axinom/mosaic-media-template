@@ -15,7 +15,7 @@ import {
   StartIngestCommand,
 } from 'media-messages';
 import { Build } from 'postgraphile';
-import { Stream } from 'stream';
+import { Stream } from 'node:stream';
 import { insert, IsolationLevel } from 'zapatos/db';
 import {
   CommonErrors,

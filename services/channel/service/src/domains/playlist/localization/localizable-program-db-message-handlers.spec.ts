@@ -1,5 +1,29 @@
-import { SubjectType } from '@axinom/mosaic-id-guard';
-import { TokenResult } from '@axinom/mosaic-id-link-be';
+import type * as MosaicIdGuard from '@axinom/mosaic-id-guard';
+
+const { serviceAccountToken } = vi.hoisted(() => ({
+  serviceAccountToken: 'SERVICE_ACCOUNT_TOKEN',
+}));
+
+vi.mock('@axinom/mosaic-id-link-be', async () => {
+  const originalModule = await vi.importActual<typeof MosaicIdLinkBe>(
+    '@axinom/mosaic-id-link-be',
+  );
+  const { SubjectType } = await vi.importActual<typeof MosaicIdGuard>(
+    '@axinom/mosaic-id-guard',
+  );
+  return {
+    ...originalModule,
+    getServiceAccountToken: vi.fn(() =>
+      Promise.resolve<MosaicIdLinkBe.TokenResult>({
+        accessToken: serviceAccountToken,
+        expiresInSeconds: 600,
+        tokenType: SubjectType.ManagedServiceAccount,
+      }),
+    ),
+  };
+});
+
+import type * as MosaicIdLinkBe from '@axinom/mosaic-id-link-be';
 import { MessageEnvelopeOverrides } from '@axinom/mosaic-message-bus';
 import { MessagingSettings } from '@axinom/mosaic-message-bus-abstractions';
 import {
@@ -11,8 +35,6 @@ import {
   StoreOutboxMessage,
   TypedTransactionalMessage,
 } from '@axinom/mosaic-transactional-inbox-outbox';
-import { stub } from 'jest-auto-stub';
-import 'jest-extended';
 import { ClientBase } from 'pg';
 import { PublicationConfig } from 'rascal';
 import { Config, LOCALIZATION_PROGRAM_TYPE } from '../../../common';
@@ -42,22 +64,6 @@ class TestLocalizableProgramUpdatedDbMessageHandler extends LocalizableProgramUp
   }
 }
 
-const serviceAccountToken = 'SERVICE_ACCOUNT_TOKEN';
-jest.mock('@axinom/mosaic-id-link-be', () => {
-  const originalModule = jest.requireActual('@axinom/mosaic-id-link-be');
-  return {
-    __esModule: true,
-    ...originalModule,
-    getServiceAccountToken: jest.fn(() =>
-      Promise.resolve<TokenResult>({
-        accessToken: serviceAccountToken,
-        expiresInSeconds: 600,
-        tokenType: SubjectType.ManagedServiceAccount,
-      }),
-    ),
-  };
-});
-
 describe('Localizable Program DB trigger events', () => {
   let messages: {
     payload:
@@ -71,12 +77,12 @@ describe('Localizable Program DB trigger events', () => {
   let config: Config;
 
   const createMessage = (payload: LocalizableProgramDbEvent) =>
-    stub<TypedTransactionalMessage<LocalizableProgramDbEvent>>({
-      payload,
-    });
+    ({ payload }) satisfies Partial<
+      TypedTransactionalMessage<LocalizableProgramDbEvent>
+    > as TypedTransactionalMessage<LocalizableProgramDbEvent>;
 
   beforeAll(() => {
-    storeOutboxMessage = jest.fn(
+    storeOutboxMessage = vi.fn(
       async (_aggregateId, messagingSettings, message, _client, data) => {
         messages.push({
           payload: message as
@@ -93,10 +99,6 @@ describe('Localizable Program DB trigger events', () => {
 
   afterEach(async () => {
     messages = [];
-  });
-
-  afterAll(async () => {
-    jest.restoreAllMocks();
   });
 
   describe('LocalizableProgramCreatedDbMessageHandler', () => {
@@ -117,7 +119,10 @@ describe('Localizable Program DB trigger events', () => {
       };
 
       // Act
-      await handler.handleMessage(createMessage(payload), stub<ClientBase>());
+      await handler.handleMessage(
+        createMessage(payload),
+        {} satisfies Partial<ClientBase> as ClientBase,
+      );
 
       // Assert
       expect(messages).toEqual([
@@ -163,7 +168,10 @@ describe('Localizable Program DB trigger events', () => {
       };
 
       // Act
-      await handler.handleMessage(createMessage(payload), stub<ClientBase>());
+      await handler.handleMessage(
+        createMessage(payload),
+        {} satisfies Partial<ClientBase> as ClientBase,
+      );
 
       // Assert
       expect(messages).toEqual([
@@ -198,7 +206,10 @@ describe('Localizable Program DB trigger events', () => {
       };
 
       // Act
-      await handler.handleMessage(createMessage(payload), stub<ClientBase>());
+      await handler.handleMessage(
+        createMessage(payload),
+        {} satisfies Partial<ClientBase> as ClientBase,
+      );
 
       // Assert
       expect(messages).toEqual([
@@ -243,7 +254,10 @@ describe('Localizable Program DB trigger events', () => {
       };
 
       // Act
-      await handler.handleMessage(createMessage(payload), stub<ClientBase>());
+      await handler.handleMessage(
+        createMessage(payload),
+        {} satisfies Partial<ClientBase> as ClientBase,
+      );
 
       // Assert
       expect(messages).toEqual([

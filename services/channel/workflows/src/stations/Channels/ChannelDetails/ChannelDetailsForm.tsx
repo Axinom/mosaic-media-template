@@ -52,7 +52,6 @@ export const ChannelDetailsForm: React.FC<ChannelDetailsFormProps> = ({
       formData: ChannelDetailsFormData,
       initialData: DetailsProps<ChannelDetailsFormData>['initialData'],
     ): Promise<void> => {
-       
       const { ...updateDto } = getFormDiff(formData, initialData.data);
       const patch: ChannelPatch = {
         ...updateDto,

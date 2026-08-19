@@ -1,10 +1,10 @@
 import js from '@eslint/js';
 import tsPlugin from '@typescript-eslint/eslint-plugin';
 import eslintConfigPrettier from 'eslint-config-prettier/flat';
-import jestPlugin from 'eslint-plugin-jest';
 import reactPlugin from 'eslint-plugin-react';
 import reactHooksPlugin from 'eslint-plugin-react-hooks';
 import unusedImports from 'eslint-plugin-unused-imports';
+import vitestPlugin from '@vitest/eslint-plugin';
 import globals from 'globals';
 
 export default [
@@ -24,8 +24,6 @@ export default [
   ...tsPlugin.configs['flat/recommended'],
   reactPlugin.configs.flat.recommended,
   reactHooksPlugin.configs['recommended-latest'],
-  jestPlugin.configs['flat/recommended'],
-  jestPlugin.configs['flat/style'],
 
   // Project-wide config
   {
@@ -41,7 +39,6 @@ export default [
       globals: {
         ...globals.browser,
         ...globals.node,
-        ...globals.jest,
         ...globals.es2021,
       },
     },
@@ -65,23 +62,19 @@ export default [
         'error',
         {
           types: {
-            Array:
-              'Use a typed array instead, e.g. string[] or Array<string>',
+            Array: 'Use a typed array instead, e.g. string[] or Array<string>',
           },
         },
       ],
       'no-return-await': 'warn',
       'no-trailing-spaces': ['error', { ignoreComments: true }],
       'no-fallthrough': 'error',
-      'jest/valid-expect': ['error', { maxArgs: 2 }],
-      'jest/require-top-level-describe': 'error',
       '@typescript-eslint/no-unused-vars': 'off',
       'unused-imports/no-unused-imports': 'warn',
       'unused-imports/no-unused-vars': [
         'warn',
         { argsIgnorePattern: '^_', ignoreRestSiblings: true },
       ],
-      'jest/no-commented-out-tests': 'warn',
       '@typescript-eslint/no-explicit-any': 'warn',
       'no-console': 'warn',
       '@typescript-eslint/explicit-module-boundary-types': 'warn',
@@ -96,10 +89,17 @@ export default [
     },
   },
 
-  // Unit tests — relaxed rules
+  // Unit tests — relaxed rules, plus Vitest-specific test-structure linting
   {
     files: ['**/*.{spec,test}.{ts,tsx}', '**/tests/**'],
+    plugins: {
+      vitest: vitestPlugin,
+    },
     rules: {
+      ...vitestPlugin.configs.recommended.rules,
+      'vitest/valid-expect': ['error', { maxArgs: 2 }],
+      'vitest/require-top-level-describe': 'error',
+      'vitest/no-commented-out-tests': 'warn',
       'no-console': 'off',
       '@typescript-eslint/no-non-null-assertion': 'off',
       '@typescript-eslint/no-explicit-any': 'off',

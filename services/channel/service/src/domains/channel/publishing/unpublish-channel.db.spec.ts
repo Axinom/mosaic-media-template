@@ -25,7 +25,7 @@ describe('unpublishChannel', () => {
     messageType: string;
     message: ChannelUnpublishedEvent;
   }[] = [];
-  const storeOutboxMessage: StoreOutboxMessage = jest.fn(
+  const storeOutboxMessage: StoreOutboxMessage = vi.fn(
     async (_aggregateId, { messageType }: { messageType: string }, message) => {
       messages.push({
         messageType,
@@ -62,7 +62,6 @@ describe('unpublishChannel', () => {
   afterEach(async () => {
     await testContext.truncate('channels');
     messages = [];
-    jest.clearAllMocks();
   });
 
   it('error is thrown, if channel was not found', async () => {

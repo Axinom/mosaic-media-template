@@ -5,8 +5,7 @@ import {
   rejectionOf,
 } from '@axinom/mosaic-service-common';
 import { StoreOutboxMessage } from '@axinom/mosaic-transactional-inbox-outbox';
-import { stub } from 'jest-auto-stub';
-import 'jest-extended';
+
 import { PublishServiceMessagingSettings } from 'media-messages';
 import { SnapshotStateEnum } from 'zapatos/custom';
 import { insert, select, selectExactlyOne, update } from 'zapatos/db';
@@ -34,9 +33,9 @@ describe('SnapshotWrapper', () => {
   let user: AuthenticatedManagementSubject;
   const authToken = 'does-not-matter-as-request-is-mocked';
   const messageType = 'test:queue';
-  const mockMessagingSettings = stub<PublishServiceMessagingSettings>({
+  const mockMessagingSettings = {
     messageType,
-  });
+  } satisfies Partial<PublishServiceMessagingSettings> as unknown as PublishServiceMessagingSettings;
   const messages: unknown[] = [];
   let timestampBeforeTest: Date;
   const getAggregator = (result = {}) => {
@@ -49,7 +48,7 @@ describe('SnapshotWrapper', () => {
   beforeAll(async () => {
     ctx = await createTestContext();
     user = createTestUser(ctx.config.serviceId);
-    storeOutboxMessage = jest.fn(
+    storeOutboxMessage = vi.fn(
       async (_aggregateId, { messageType }, payload, _client, optionalData) => {
         const { envelopeOverrides, options } = optionalData || {};
         messages.push({
@@ -79,7 +78,6 @@ describe('SnapshotWrapper', () => {
   afterEach(async () => {
     await ctx.truncate('movies');
     await ctx.truncate('snapshots');
-    jest.restoreAllMocks();
     messages.length = 0;
   });
 
@@ -90,12 +88,12 @@ describe('SnapshotWrapper', () => {
   describe('prepareAndValidate', () => {
     it('no metadata -> valid result', async () => {
       // Arrange
-      const processor = stub<EntityPublishingProcessor>({
+      const processor = {
         type: 'movies',
         aggregator: getAggregator(),
         validationSchema: testAllowAllSchema,
         validator: async () => [],
-      });
+      } satisfies Partial<EntityPublishingProcessor> as unknown as EntityPublishingProcessor;
 
       // Act
       await ctx.executeGqlSql(user, async (ct) => {
@@ -180,12 +178,12 @@ describe('SnapshotWrapper', () => {
           },
         ],
       };
-      const processor = stub<EntityPublishingProcessor>({
+      const processor = {
         type: 'movies',
         aggregator: getAggregator(json),
         validationSchema: testAllowAllSchema,
         validator: async () => [],
-      });
+      } satisfies Partial<EntityPublishingProcessor> as unknown as EntityPublishingProcessor;
 
       // Act
       await ctx.executeGqlSql(user, async (ct) => {
@@ -237,12 +235,12 @@ describe('SnapshotWrapper', () => {
         message: `test stream warning`,
         severity: 'WARNING',
       };
-      const processor = stub<EntityPublishingProcessor>({
+      const processor = {
         type: 'movies',
         aggregator: getAggregator(json),
         validationSchema: testAllowAllSchema,
         validator: async () => [warn],
-      });
+      } satisfies Partial<EntityPublishingProcessor> as unknown as EntityPublishingProcessor;
 
       // Act
       await ctx.executeGqlSql(user, async (ct) => {
@@ -300,12 +298,12 @@ describe('SnapshotWrapper', () => {
         message: `test stream warning`,
         severity: 'ERROR',
       };
-      const processor = stub<EntityPublishingProcessor>({
+      const processor = {
         type: 'movies',
         aggregator: getAggregator(json),
         validationSchema: testAllowAllSchema,
         validator: async () => [err],
-      });
+      } satisfies Partial<EntityPublishingProcessor> as unknown as EntityPublishingProcessor;
 
       // Act
       await ctx.executeGqlSql(user, async (ct) => {
@@ -371,12 +369,12 @@ describe('SnapshotWrapper', () => {
         { snapshot_state: state as SnapshotStateEnum },
         { id: snapshot1.id },
       ).run(ctx.ownerPool);
-      const processor = stub<EntityPublishingProcessor>({
+      const processor = {
         type: 'movies',
         aggregator: getAggregator(json),
         validationSchema: testAllowAllSchema,
         validator: async () => [],
-      });
+      } satisfies Partial<EntityPublishingProcessor> as unknown as EntityPublishingProcessor;
 
       // Act
       await ctx.executeGqlSql(user, async (ct) => {
@@ -400,12 +398,12 @@ describe('SnapshotWrapper', () => {
     it('snapshot that does not exist -> error thrown', async () => {
       // Arrange
       const invalidId = snapshot1.id + 10;
-      const processor = stub<EntityPublishingProcessor>({
+      const processor = {
         type: 'movies',
         aggregator: getAggregator(),
         validationSchema: testAllowAllSchema,
         validator: async () => [],
-      });
+      } satisfies Partial<EntityPublishingProcessor> as unknown as EntityPublishingProcessor;
 
       // Act
       const error = await ctx.executeGqlSql(user, async (ct) => {

@@ -56,12 +56,12 @@ const createMockRequest = (overrides: Dict<any>): Request =>
     headers: {},
     socket: {},
     ...overrides,
-  } as Request);
+  }) as Request;
 
 const createMockResponse = (): Response =>
   ({
     locals: {},
-  } as Response);
+  }) as Response;
 
 const runGqlQuery = async function (
   this: TestContext,
@@ -162,7 +162,6 @@ export const createTestContext = async (
   configOverrides: Dict<string> = {},
   storeOutboxMsg?: StoreOutboxMessage,
 ): Promise<TestContext> => {
-  // TODO: Check expect.getState().testPath filename for .db.spec. convention, throw an error if it does not match. https://github.com/facebook/jest/issues/9901
   const config = createTestConfig(configOverrides, expect.getState().testPath);
 
   const logger = new Logger({ config, context: 'TestContext' });
@@ -197,7 +196,7 @@ export const createTestContext = async (
   }) as LoginPgPool;
   loginPool.label = 'Login';
 
-  const storeOutboxMessage = storeOutboxMsg ?? jest.fn();
+  const storeOutboxMessage = storeOutboxMsg ?? vi.fn();
 
   const options = buildPostgraphileOptions(
     config,

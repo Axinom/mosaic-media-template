@@ -1,15 +1,46 @@
+import type { MockInstance } from 'vitest';
+import { vi } from 'vitest';
+import type {
+  GraphQLRequestContext,
+  GraphQLResponse,
+} from 'graphql-request/dist/types';
+
+// mock the sdk to return values to be tested, emulating catalog response
+let catalogCall: any = () => undefined;
+vi.mock('../../generated/graphql/catalog');
+const catalogStub = {
+  GetEpisodeMainVideo: () => catalogCall(),
+  GetMovieMainVideo: () => catalogCall(),
+  GetChannelVideo: () => catalogCall(),
+} satisfies Partial<CatalogSdk> as unknown as CatalogSdk;
+const catalogMock = vi.mocked(getCatalogSdk);
+catalogMock.mockReturnValue(catalogStub);
+
+let countryCode: string | undefined = 'LK';
+// Mock maxmind-country. Which is used in entitlement-endpoint.
+vi.mock('maxmind', () => {
+  const mockReader = {
+    get: vi.fn((_ip: string) => {
+      if (!countryCode) {
+        return undefined;
+      }
+      return { country: { iso_code: countryCode } };
+    }),
+  };
+
+  return {
+    default: {
+      open: vi.fn(async () => mockReader),
+    },
+  };
+});
+
 import {
   getFirstMockResult,
   MosaicErrors,
 } from '@axinom/mosaic-service-common';
 import { ClientError } from 'graphql-request';
-import {
-  GraphQLRequestContext,
-  GraphQLResponse,
-} from 'graphql-request/dist/types';
 import gql from 'graphql-tag';
-import { stub } from 'jest-auto-stub';
-import 'jest-extended';
 import { v4 as uuid } from 'uuid';
 import { CommonErrors } from '../../common';
 import {
@@ -24,37 +55,6 @@ import {
 } from '../../tests/test-utils';
 import { getPolicy } from './entitlement-endpoint/entitlement-message-generation';
 
-// mock the sdk to return values to be tested, emulating catalog response
-let catalogCall: any = () => undefined;
-jest.mock('../../generated/graphql/catalog');
-const catalogStub = stub<CatalogSdk>({
-  GetEpisodeMainVideo: () => catalogCall(),
-  GetMovieMainVideo: () => catalogCall(),
-  GetChannelVideo: () => catalogCall(),
-});
-const catalogMock = getCatalogSdk as jest.MockedFunction<typeof getCatalogSdk>;
-catalogMock.mockReturnValue(catalogStub);
-
-let countryCode: string | undefined = 'LK';
-// Mock maxmind-country. Which is used in entitlement-endpoint.
-jest.mock('maxmind', () => {
-  const mockReader = {
-    get: jest.fn((_ip: string) => {
-      if (!countryCode) {
-        return undefined;
-      }
-      return { country: { iso_code: countryCode } };
-    }),
-  };
-
-  return {
-    __esModule: true,
-    default: {
-      open: jest.fn(async () => mockReader),
-    },
-  };
-});
-
 const ENTITLEMENT_REQUEST = gql`
   query Entitlement($input: EntitlementInput) {
     entitlement(input: $input) {
@@ -66,9 +66,9 @@ const ENTITLEMENT_REQUEST = gql`
 describe('EntitlementEndpointPlugin', () => {
   let ctx: ITestContext;
   let ipTestCtx: ITestContext;
-  let errorOverride: jest.SpyInstance;
-  let warnOverride: jest.SpyInstance;
-  let debugOverride: jest.SpyInstance;
+  let errorOverride: MockInstance;
+  let warnOverride: MockInstance;
+  let debugOverride: MockInstance;
   let expectedJwtPayload: (persistence: boolean, keyIds?: string[]) => unknown;
   const jwtRegex =
     /([A-Za-z0-9]{36,})\.([A-Za-z0-9]{100,})\.([A-Za-z0-9-_]{40,})/gi;
@@ -170,20 +170,20 @@ describe('EntitlementEndpointPlugin', () => {
   });
 
   beforeEach(async () => {
-    errorOverride = jest
+    errorOverride = vi
       .spyOn(console, 'error')
       .mockImplementation((obj) => JSON.parse(obj));
-    warnOverride = jest
+    warnOverride = vi
       .spyOn(console, 'warn')
       .mockImplementation((obj) => JSON.parse(obj));
-    debugOverride = jest
+    debugOverride = vi
       .spyOn(console, 'debug')
       .mockImplementation((obj) => JSON.parse(obj));
     catalogCall = () => undefined;
   });
 
   afterEach(async () => {
-    jest.clearAllMocks();
+    vi.restoreAllMocks();
   });
 
   afterAll(async () => {
@@ -705,8 +705,10 @@ describe('EntitlementEndpointPlugin', () => {
         ];
         catalogCall = () => {
           throw new ClientError(
-            stub<GraphQLResponse>({ errors }),
-            stub<GraphQLRequestContext>({}),
+            {
+              errors,
+            } satisfies Partial<GraphQLResponse> as unknown as GraphQLResponse,
+            {} satisfies Partial<GraphQLRequestContext> as unknown as GraphQLRequestContext,
           );
         };
 
@@ -758,8 +760,10 @@ describe('EntitlementEndpointPlugin', () => {
         ];
         catalogCall = () => {
           throw new ClientError(
-            stub<GraphQLResponse>({ errors }),
-            stub<GraphQLRequestContext>({}),
+            {
+              errors,
+            } satisfies Partial<GraphQLResponse> as unknown as GraphQLResponse,
+            {} satisfies Partial<GraphQLRequestContext> as unknown as GraphQLRequestContext,
           );
         };
 

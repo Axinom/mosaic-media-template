@@ -1,9 +1,10 @@
+import { describe, expect, it } from 'vitest';
 import { ProgramFormData } from '../ProgramManagement.types';
 import {
   getCuePointScheduleNodesField,
   moveCpsNode,
   rearrangeArray,
-} from './ProgramManagementFormContent';
+} from './ProgramManagementFormContent.utils';
 
 describe('ProgramManagementForm', () => {
   describe('getCuePointScheduleNodesField', () => {

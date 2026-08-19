@@ -1,4 +1,3 @@
-import 'jest-extended';
 import { buildDisplayTitle } from './build-display-title';
 
 describe('buildDisplayTitle', () => {

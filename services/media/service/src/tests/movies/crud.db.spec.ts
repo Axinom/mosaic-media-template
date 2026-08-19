@@ -5,7 +5,6 @@ import {
   MosaicErrors,
   toBeIso8601Strict,
 } from '@axinom/mosaic-service-common';
-import 'jest-extended';
 import { all, insert, select, update } from 'zapatos/db';
 import { movies } from 'zapatos/schema';
 import {

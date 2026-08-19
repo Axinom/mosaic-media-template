@@ -265,7 +265,6 @@ function createUpdateDto(
   currentValues: CollectionDetailsFormData,
   initialValues?: CollectionDetailsFormData | null,
 ): CollectionDetailsFormData {
-   
   const { tags, ...rest } = getFormDiff(currentValues, initialValues);
   return rest;
 }

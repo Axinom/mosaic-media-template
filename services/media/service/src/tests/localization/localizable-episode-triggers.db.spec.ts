@@ -1,5 +1,3 @@
- 
-import 'jest-extended';
 import { EpisodeImageTypeEnum } from 'zapatos/custom';
 import { deletes, insert, update } from 'zapatos/db';
 import { episodes } from 'zapatos/schema';

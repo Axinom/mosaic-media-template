@@ -1,4 +1,3 @@
-import 'jest-extended';
 import { MovieLocalization } from 'media-messages';
 import { insert, update } from 'zapatos/db';
 import { movies } from 'zapatos/schema';
@@ -33,7 +32,6 @@ describe('publishingMovieProcessor', () => {
   afterEach(async () => {
     await ctx.truncate('movies');
     await ctx.truncate('movie_genres');
-    jest.restoreAllMocks();
   });
 
   afterAll(async () => {
@@ -43,24 +41,25 @@ describe('publishingMovieProcessor', () => {
   describe('aggregator', () => {
     it('minimal movie -> valid result', async () => {
       // Arrange
-      jest
-        .spyOn(videoMetadata, 'getVideosMetadata')
-        .mockImplementation(async () => ({
+      vi.spyOn(videoMetadata, 'getVideosMetadata').mockImplementation(
+        async () => ({
           result: [],
           validation: [],
-        }));
-      jest
-        .spyOn(imageMetadata, 'getImagesMetadata')
-        .mockImplementation(async () => ({
+        }),
+      );
+      vi.spyOn(imageMetadata, 'getImagesMetadata').mockImplementation(
+        async () => ({
           result: [],
           validation: [],
-        }));
-      jest
-        .spyOn(localizationMetadata, 'getMovieLocalizationsMetadata')
-        .mockImplementation(async () => ({
-          result: undefined,
-          validation: [],
-        }));
+        }),
+      );
+      vi.spyOn(
+        localizationMetadata,
+        'getMovieLocalizationsMetadata',
+      ).mockImplementation(async () => ({
+        result: undefined,
+        validation: [],
+      }));
 
       // Act
       const result = await publishingMovieProcessor.aggregator(
@@ -203,12 +202,12 @@ describe('publishingMovieProcessor', () => {
         message: `test stream error`,
         severity: 'ERROR',
       };
-      jest
-        .spyOn(videoMetadata, 'getVideosMetadata')
-        .mockImplementation(async () => ({
+      vi.spyOn(videoMetadata, 'getVideosMetadata').mockImplementation(
+        async () => ({
           result: [video],
           validation: [videoError, videoWarning],
-        }));
+        }),
+      );
 
       const image: PublishImage = {
         width: 111,
@@ -227,12 +226,12 @@ describe('publishingMovieProcessor', () => {
         message: `test image error`,
         severity: 'ERROR',
       };
-      jest
-        .spyOn(imageMetadata, 'getImagesMetadata')
-        .mockImplementation(async () => ({
+      vi.spyOn(imageMetadata, 'getImagesMetadata').mockImplementation(
+        async () => ({
           result: [image],
           validation: [imageError, imageWarning],
-        }));
+        }),
+      );
       const localizationWarning: SnapshotValidationResult = {
         context: 'LOCALIZATION',
         message: `test localization warning`,
@@ -261,12 +260,13 @@ describe('publishingMovieProcessor', () => {
           is_default_locale: false,
         },
       ];
-      jest
-        .spyOn(localizationMetadata, 'getMovieLocalizationsMetadata')
-        .mockImplementation(async () => ({
-          result: localizations,
-          validation: [localizationWarning],
-        }));
+      vi.spyOn(
+        localizationMetadata,
+        'getMovieLocalizationsMetadata',
+      ).mockImplementation(async () => ({
+        result: localizations,
+        validation: [localizationWarning],
+      }));
 
       // Act
       const result = await publishingMovieProcessor.aggregator(

@@ -65,7 +65,8 @@ export function useMoviesActions(): {
           break;
       }
       if (response?.data) {
-        const count = response.data.createMovieSnapshots?.affectedIds?.length ?? 0;
+        const count =
+          response.data.createMovieSnapshots?.affectedIds?.length ?? 0;
         showNotification(bulkSnapshotCreateNotification(count));
       }
     },

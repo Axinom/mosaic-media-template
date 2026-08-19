@@ -65,7 +65,8 @@ export function useSeasonsActions(): {
           break;
       }
       if (response?.data) {
-        const count = response.data.createSeasonSnapshots?.affectedIds?.length ?? 0;
+        const count =
+          response.data.createSeasonSnapshots?.affectedIds?.length ?? 0;
         showNotification(bulkSnapshotCreateNotification(count));
       }
     },

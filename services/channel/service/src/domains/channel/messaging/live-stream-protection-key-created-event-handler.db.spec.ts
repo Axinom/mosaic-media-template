@@ -30,7 +30,6 @@ describe('LiveStreamProtectionKeyCreatedEventHandler', () => {
 
   afterAll(async () => {
     await ctx?.dispose();
-    jest.restoreAllMocks();
   });
 
   describe('handleMessage', () => {

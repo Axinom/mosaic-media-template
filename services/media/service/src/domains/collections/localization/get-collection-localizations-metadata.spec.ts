@@ -1,5 +1,4 @@
 import { rejectionOf } from '@axinom/mosaic-service-common';
-import 'jest-extended';
 import { CommonErrors, Config } from '../../../common';
 import * as localization from '../../../generated/graphql/localization';
 import {
@@ -15,7 +14,7 @@ import {
 
 let validationResult: any = () => undefined;
 let publishResult: any = () => undefined;
-jest.spyOn(localization, 'getSdk').mockImplementation(() => ({
+vi.spyOn(localization, 'getSdk').mockImplementation(() => ({
   PrepareEntityLocalizationsForPublishing: () => publishResult(),
   ValidateEntityLocalizations: () => validationResult(),
 }));
@@ -62,7 +61,7 @@ describe('getCollectionLocalizationsMetadata', () => {
     validationResult = () => undefined;
   });
   afterAll(async () => {
-    jest.restoreAllMocks();
+    vi.restoreAllMocks();
   });
 
   it('Validation returns an error -> returned localizations is undefined, returned validations are formatted', async () => {

@@ -1,8 +1,10 @@
 import { Broker, MessageInfo } from '@axinom/mosaic-message-bus';
 import { MessagingSettings } from '@axinom/mosaic-message-bus-abstractions';
-import { stub } from 'jest-auto-stub';
+
 import { ChannelPublishedEvent, DetailedVideo } from 'media-messages';
 import { v4 as uuid } from 'uuid';
+import type { MockInstance } from 'vitest';
+import { vi } from 'vitest';
 import { Config } from '../../common';
 import { AzureStorage, KeyServiceApi } from '../../domains';
 import * as cpixGeneration from '../../domains/cpix/generator/generate-cpix-settings';
@@ -10,24 +12,29 @@ import { createTestVideo } from '../../tests';
 import { ChannelPublishedHandler } from './channel-published-handler';
 
 describe('ChannelPublishedHandler', () => {
-  let createDecryptionCpix: jest.SpyInstance;
+  let createDecryptionCpix: MockInstance;
   let cpixSettingsVideos: DetailedVideo[] = [];
   let messages: { messageType: string; message: any }[] = [];
-  const mockedKeyServiceApi = stub<KeyServiceApi>({});
-  const mockedAzureStorage = stub<AzureStorage>({});
-  const mockedBroker = stub<Broker>({
-    publish: (
-      _id: string,
-      { messageType }: MessagingSettings,
-      message: unknown,
-    ) => {
-      messages.push({ messageType, message });
-    },
-  });
+  const mockedKeyServiceApi =
+    {} satisfies Partial<KeyServiceApi> as unknown as KeyServiceApi;
+  const mockedAzureStorage =
+    {} satisfies Partial<AzureStorage> as unknown as AzureStorage;
+  const mockedBroker = {
+    publish: vi.fn<Broker['publish']>(
+      async (
+        _id: string,
+        { messageType }: MessagingSettings,
+        message: unknown,
+      ) => {
+        messages.push({ messageType, message });
+        return {} as Awaited<ReturnType<Broker['publish']>>;
+      },
+    ),
+  } satisfies Partial<Broker> as unknown as Broker;
 
-  const mockedConfig = stub<Config>({});
+  const mockedConfig = {} satisfies Partial<Config> as unknown as Config;
   beforeEach(async () => {
-    createDecryptionCpix = jest
+    createDecryptionCpix = vi
       .spyOn(cpixGeneration, 'createDecryptionCpix')
       .mockImplementation(
         async (
@@ -59,7 +66,7 @@ describe('ChannelPublishedHandler', () => {
   afterEach(() => {
     messages = [];
     cpixSettingsVideos = [];
-    jest.clearAllMocks();
+    vi.restoreAllMocks();
   });
   it.each([true, false])(
     'drm settings are generated from the placeholder video',
@@ -85,12 +92,16 @@ describe('ChannelPublishedHandler', () => {
           },
         ],
       };
-      const messageInfo = stub<MessageInfo<ChannelPublishedEvent>>({
+      const messageInfo = {
         envelope: {
           auth_token: 'no-token',
           payload,
         },
-      });
+      } satisfies Partial<
+        Omit<MessageInfo<ChannelPublishedEvent>, 'envelope'>
+      > & {
+        envelope: Partial<MessageInfo<ChannelPublishedEvent>['envelope']>;
+      } as unknown as MessageInfo<ChannelPublishedEvent>;
       // Act
       await handler.onMessage(payload, messageInfo);
 

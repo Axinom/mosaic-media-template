@@ -1,5 +1,4 @@
 import { AuthenticatedManagementSubject } from '@axinom/mosaic-id-guard';
-import 'jest-extended';
 import { v4 as uuid } from 'uuid';
 import { CuePointScheduleTypeEnum } from 'zapatos/custom';
 import { insert } from 'zapatos/db';
@@ -129,7 +128,6 @@ describe('create playlist publish dto', () => {
     await ctx.truncate('program_cue_points');
     await ctx.truncate('programs');
     await ctx.truncate('playlists');
-    jest.restoreAllMocks();
   });
 
   afterAll(async () => {

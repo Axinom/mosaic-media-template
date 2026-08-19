@@ -12,8 +12,7 @@ import {
   TypedTransactionalMessage,
 } from '@axinom/mosaic-transactional-inbox-outbox';
 import { VideoServiceMultiTenantMessagingSettings } from '@axinom/mosaic-video-messages';
-import { stub } from 'jest-auto-stub';
-import 'jest-extended';
+
 import {
   IngestItem,
   MediaServiceMessagingSettings,
@@ -60,16 +59,22 @@ describe('Start Ingest Item Handler', () => {
   };
 
   const createMessage = (payload: StartIngestItemCommand) =>
-    stub<TypedTransactionalMessage<StartIngestItemCommand>>({
+    ({
       payload,
       metadata: {
         authToken: 'test',
       },
-    });
+    }) satisfies Partial<
+      Omit<TypedTransactionalMessage<StartIngestItemCommand>, 'metadata'>
+    > & {
+      metadata?: Partial<
+        TypedTransactionalMessage<StartIngestItemCommand>['metadata']
+      >;
+    } as unknown as TypedTransactionalMessage<StartIngestItemCommand>;
 
   beforeAll(async () => {
     ctx = await createTestContext();
-    const storeOutboxMessage: StoreOutboxMessage = jest.fn(
+    const storeOutboxMessage: StoreOutboxMessage = vi.fn(
       async (
         _aggregateId,
         messagingSettings,
@@ -89,7 +94,7 @@ describe('Start Ingest Item Handler', () => {
         });
       },
     );
-    const storeInboxMessage: StoreInboxMessage = jest.fn(
+    const storeInboxMessage: StoreInboxMessage = vi.fn(
       async (
         _aggregateId,
         messagingSettings,
@@ -151,7 +156,6 @@ describe('Start Ingest Item Handler', () => {
 
   afterAll(async () => {
     await ctx.dispose();
-    jest.restoreAllMocks();
   });
 
   describe('handleMessage', () => {
@@ -162,9 +166,9 @@ describe('Start Ingest Item Handler', () => {
         1,
         MediaServiceMessagingSettings.UpdateMetadata,
       );
-      jest
-        .spyOn(processor, 'getOrchestrationData')
-        .mockImplementation(() => [mockItem]);
+      vi.spyOn(processor, 'getOrchestrationData').mockImplementation(() => [
+        mockItem,
+      ]);
 
       const payload: StartIngestItemCommand = {
         ingest_item_id: item1.id,
@@ -222,9 +226,10 @@ describe('Start Ingest Item Handler', () => {
         2,
         VideoServiceMultiTenantMessagingSettings.EnsureVideoExists,
       );
-      jest
-        .spyOn(processor, 'getOrchestrationData')
-        .mockImplementation(() => [mockItem, mockItem2]);
+      vi.spyOn(processor, 'getOrchestrationData').mockImplementation(() => [
+        mockItem,
+        mockItem2,
+      ]);
 
       const payload: StartIngestItemCommand = {
         ingest_item_id: item1.id,
@@ -308,9 +313,11 @@ describe('Start Ingest Item Handler', () => {
           sub_type: 'TEST',
         },
       };
-      jest
-        .spyOn(processor, 'getOrchestrationData')
-        .mockImplementation(() => [mockItem, mockItem2, mockItem3]);
+      vi.spyOn(processor, 'getOrchestrationData').mockImplementation(() => [
+        mockItem,
+        mockItem2,
+        mockItem3,
+      ]);
 
       const payload: StartIngestItemCommand = {
         ingest_item_id: item1.id,

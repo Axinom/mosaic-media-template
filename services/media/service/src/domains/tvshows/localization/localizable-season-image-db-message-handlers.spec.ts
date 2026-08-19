@@ -1,3 +1,30 @@
+const { serviceAccountToken } = vi.hoisted(() => ({
+  serviceAccountToken: 'SERVICE_ACCOUNT_TOKEN',
+}));
+
+vi.mock('@axinom/mosaic-id-link-be', async () => {
+  const originalModule = await vi.importActual<
+    typeof import('@axinom/mosaic-id-link-be')
+  >('@axinom/mosaic-id-link-be');
+  return {
+    ...originalModule,
+    getServiceAccountToken: vi.fn(() =>
+      Promise.resolve<TokenResult>({
+        accessToken: serviceAccountToken,
+        expiresInSeconds: 600,
+        tokenType: SubjectType.ServiceAccount,
+      }),
+    ),
+    generateLongLivedToken: vi.fn(() =>
+      Promise.resolve<TokenResult>({
+        accessToken: serviceAccountToken,
+        expiresInSeconds: 600,
+        tokenType: SubjectType.ServiceAccount,
+      }),
+    ),
+  };
+});
+
 import { optional } from '@axinom/mosaic-db-common';
 import { SubjectType } from '@axinom/mosaic-id-guard';
 import { TokenResult } from '@axinom/mosaic-id-link-be';
@@ -12,8 +39,7 @@ import {
   StoreOutboxMessage,
   TypedTransactionalMessage,
 } from '@axinom/mosaic-transactional-inbox-outbox';
-import { stub } from 'jest-auto-stub';
-import 'jest-extended';
+
 import { ClientBase } from 'pg';
 import { PublicationConfig } from 'rascal';
 import { Config } from '../../../common';
@@ -25,29 +51,6 @@ import {
   LocalizableSeasonImageDeletedDbMessageHandler,
   LocalizableSeasonImageUpdatedDbMessageHandler,
 } from './localizable-season-image-db-message-handlers';
-
-const serviceAccountToken = 'SERVICE_ACCOUNT_TOKEN';
-jest.mock('@axinom/mosaic-id-link-be', () => {
-  const originalModule = jest.requireActual('@axinom/mosaic-id-link-be');
-  return {
-    __esModule: true,
-    ...originalModule,
-    getServiceAccountToken: jest.fn(() =>
-      Promise.resolve<TokenResult>({
-        accessToken: serviceAccountToken,
-        expiresInSeconds: 600,
-        tokenType: SubjectType.ServiceAccount,
-      }),
-    ),
-    generateLongLivedToken: jest.fn(() =>
-      Promise.resolve<TokenResult>({
-        accessToken: serviceAccountToken,
-        expiresInSeconds: 600,
-        tokenType: SubjectType.ServiceAccount,
-      }),
-    ),
-  };
-});
 
 describe('Localizable Season Image DB trigger events', () => {
   let messages: {
@@ -65,13 +68,19 @@ describe('Localizable Season Image DB trigger events', () => {
     payload: LocalizableSeasonImageDbEvent,
     messageContext?: unknown,
   ) =>
-    stub<TypedTransactionalMessage<LocalizableSeasonImageDbEvent>>({
+    ({
       payload,
       ...optional(messageContext, () => ({ metadata: { messageContext } })),
-    });
+    }) satisfies Partial<
+      Omit<TypedTransactionalMessage<LocalizableSeasonImageDbEvent>, 'metadata'>
+    > & {
+      metadata?: Partial<
+        TypedTransactionalMessage<LocalizableSeasonImageDbEvent>['metadata']
+      >;
+    } as unknown as TypedTransactionalMessage<LocalizableSeasonImageDbEvent>;
 
   beforeAll(() => {
-    storeOutboxMessage = jest.fn(
+    storeOutboxMessage = vi.fn(
       async (_aggregateId, messagingSettings, message, _client, data) => {
         messages.push({
           payload: message as
@@ -88,10 +97,6 @@ describe('Localizable Season Image DB trigger events', () => {
 
   afterEach(async () => {
     messages = [];
-  });
-
-  afterAll(async () => {
-    jest.restoreAllMocks();
   });
 
   describe('LocalizableSeasonImageCreatedDbMessageHandler', () => {
@@ -113,7 +118,10 @@ describe('Localizable Season Image DB trigger events', () => {
       };
 
       // Act
-      await handler.handleMessage(createMessage(payload), stub<ClientBase>());
+      await handler.handleMessage(
+        createMessage(payload),
+        {} satisfies Partial<ClientBase> as unknown as ClientBase,
+      );
 
       // Assert
       expect(messages).toEqual([
@@ -147,7 +155,10 @@ describe('Localizable Season Image DB trigger events', () => {
       };
 
       // Act
-      await handler.handleMessage(createMessage(payload), stub<ClientBase>());
+      await handler.handleMessage(
+        createMessage(payload),
+        {} satisfies Partial<ClientBase> as unknown as ClientBase,
+      );
 
       // Assert
       expect(messages).toEqual([]);
@@ -173,7 +184,10 @@ describe('Localizable Season Image DB trigger events', () => {
       };
 
       // Act
-      await handler.handleMessage(createMessage(payload), stub<ClientBase>());
+      await handler.handleMessage(
+        createMessage(payload),
+        {} satisfies Partial<ClientBase> as unknown as ClientBase,
+      );
 
       // Assert
       expect(messages).toEqual([
@@ -207,7 +221,10 @@ describe('Localizable Season Image DB trigger events', () => {
       };
 
       // Act
-      await handler.handleMessage(createMessage(payload), stub<ClientBase>());
+      await handler.handleMessage(
+        createMessage(payload),
+        {} satisfies Partial<ClientBase> as unknown as ClientBase,
+      );
 
       // Assert
       expect(messages).toEqual([]);
@@ -227,7 +244,7 @@ describe('Localizable Season Image DB trigger events', () => {
       // Act
       await handler.handleMessage(
         createMessage(payload, context),
-        stub<ClientBase>(),
+        {} satisfies Partial<ClientBase> as unknown as ClientBase,
       );
 
       // Assert
@@ -273,12 +290,15 @@ describe('Localizable Season Image DB trigger events', () => {
         image_type: 'COVER',
       };
 
-      jest
-        .spyOn(handler, 'seasonIsDeleted')
-        .mockImplementation(async () => false);
+      vi.spyOn(handler, 'seasonIsDeleted').mockImplementation(
+        async () => false,
+      );
 
       // Act
-      await handler.handleMessage(createMessage(payload), stub<ClientBase>());
+      await handler.handleMessage(
+        createMessage(payload),
+        {} satisfies Partial<ClientBase> as unknown as ClientBase,
+      );
 
       // Assert
       expect(messages).toEqual([
@@ -311,12 +331,13 @@ describe('Localizable Season Image DB trigger events', () => {
         image_type: 'COVER',
       };
 
-      jest
-        .spyOn(handler, 'seasonIsDeleted')
-        .mockImplementation(async () => true);
+      vi.spyOn(handler, 'seasonIsDeleted').mockImplementation(async () => true);
 
       // Act
-      await handler.handleMessage(createMessage(payload), stub<ClientBase>());
+      await handler.handleMessage(
+        createMessage(payload),
+        {} satisfies Partial<ClientBase> as unknown as ClientBase,
+      );
 
       // Assert
       expect(messages).toEqual([]);
@@ -330,12 +351,15 @@ describe('Localizable Season Image DB trigger events', () => {
         image_type: 'TEASER',
       };
 
-      jest
-        .spyOn(handler, 'seasonIsDeleted')
-        .mockImplementation(async () => false);
+      vi.spyOn(handler, 'seasonIsDeleted').mockImplementation(
+        async () => false,
+      );
 
       // Act
-      await handler.handleMessage(createMessage(payload), stub<ClientBase>());
+      await handler.handleMessage(
+        createMessage(payload),
+        {} satisfies Partial<ClientBase> as unknown as ClientBase,
+      );
 
       // Assert
       expect(messages).toEqual([]);

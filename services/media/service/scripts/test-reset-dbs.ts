@@ -7,7 +7,7 @@ import {
   recreateTestDbTemplate,
 } from '../../../../scripts/helpers';
 import { getMigrationSettings } from '../src/common';
-import { createTestConfig } from '../src/tests/test-utils';
+import { createTestConfig } from '../src/tests/test-utils/test-config';
 
 async function main(): Promise<void> {
   //Find all test files which rely on test databases using *.db.spec.* file naming convention

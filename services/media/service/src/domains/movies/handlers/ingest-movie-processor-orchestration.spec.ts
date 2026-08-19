@@ -1,18 +1,20 @@
+const { ingestStepId } = vi.hoisted(() => ({
+  ingestStepId: '849c11f1-c188-4950-9743-442c45c5c8e5',
+}));
+
+vi.mock('uuid', () => ({
+  v4: () => ingestStepId,
+}));
+
 import { UNKNOWN_AGGREGATE_ID } from '@axinom/mosaic-message-bus';
 import { ImageServiceMultiTenantMessagingSettings } from '@axinom/mosaic-messages';
 import { VideoServiceMultiTenantMessagingSettings } from '@axinom/mosaic-video-messages';
-import 'jest-extended';
 import {
   MediaServiceMessagingSettings,
   StartIngestItemCommand,
 } from 'media-messages';
 import { createTestConfig } from '../../../tests/test-utils';
 import { IngestMovieProcessor } from './ingest-movie-processor';
-
-const ingestStepId = '849c11f1-c188-4950-9743-442c45c5c8e5';
-jest.mock('uuid', () => ({
-  v4: () => ingestStepId,
-}));
 
 describe('IngestMovieProcessor', () => {
   let processor: IngestMovieProcessor;
@@ -169,10 +171,6 @@ describe('IngestMovieProcessor', () => {
   beforeAll(async () => {
     const config = createTestConfig();
     processor = new IngestMovieProcessor(config);
-  });
-
-  afterAll(async () => {
-    jest.restoreAllMocks();
   });
 
   describe('getOrchestrationData', () => {

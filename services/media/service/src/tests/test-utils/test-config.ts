@@ -11,11 +11,11 @@ export const createTestConfig = (
   overrides: Dict<string> = {},
   testFilePath?: string,
 ): Config => {
-  // TODO: Done to support debugging. Review in-code config load when this issue is resolved: https://github.com/firsttris/vscode-jest-runner/issues/166
+  // Load monorepo environment values before the service-specific `.env` file.
   process.chdir(resolve(__dirname, '../../../../../../'));
   dotenv.config();
 
-  // This is needed if tests are running from monorepo context instead of project context, e.g. using Jest Runner extension
+  // Normalize process.cwd() to the service root before loading its environment.
   process.chdir(resolve(__dirname, '../../../'));
   dotenv.config();
 

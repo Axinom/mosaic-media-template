@@ -5,33 +5,6 @@ The goal is to minimize resolutions and remove them when no longer needed.
 
 ## Active Resolutions
 
-### jest
-
-- **Forced version**: `^29`
-- **Reason**: Consistency — ensures all workspace packages and transitive dependencies resolve to the same Jest 29.x version, preventing version mismatches across the monorepo.
-- **Parent packages**: All 5 workspace services, `@axinom/mosaic-graphql-common`, `@axinom/mosaic-service-common`, `jest-auto-stub`
-- **Date added**: 2023-04-18
-- **Commit**: `296f757c` — *"chore: bump dependencies, update jest config node bumps for build pipelines"*
-- **Can be removed when**: All consumers naturally depend on Jest 29.x (unlikely to be needed since `jest-auto-stub@1.0.8` still depends on `jest@^26.6.3`)
-
-### jest-cli
-
-- **Forced version**: `^29`
-- **Reason**: Consistency — keeps `jest-cli` aligned with the `jest` resolution above. `jest-cli` is a direct dependency of `jest`, so this ensures the CLI matches the test runner version.
-- **Parent packages**: `jest`
-- **Date added**: 2023-04-18
-- **Commit**: `296f757c` — *"chore: bump dependencies, update jest config node bumps for build pipelines"*
-- **Can be removed when**: The `jest` resolution is removed
-
-### @types/jest
-
-- **Forced version**: `^29`
-- **Reason**: Consistency — ensures all workspace packages share the same `@types/jest` major version to avoid type conflicts between Jest 29 type definitions.
-- **Parent packages**: All 5 workspace services, `jest-auto-stub`
-- **Date added**: 2023-04-18
-- **Commit**: `296f757c` — *"chore: bump dependencies, update jest config node bumps for build pipelines"*
-- **Can be removed when**: The `jest` resolution is removed
-
 ### jsonpath-plus
 
 - **Forced version**: `^10.2.0`
@@ -101,7 +74,7 @@ not dismissed and not passively "waiting for upstream".
 - **Vulnerability**: Missing buffer bounds check in `v3`/`v5`/`v6` when `buf` is provided (medium severity)
 - **Current versions**: 8.3.2, 9.0.1
 - **Patched in**: 11.1.1 (major version jump)
-- **Why deferred**: The bug only affects `v3`/`v5`/`v6` generation when an explicit output `buf` is passed; all consumers (`@axinom/mosaic-message-bus`, `@axinom/mosaic-service-common`, `@azure/core-http`, `rascal`, `pg-transactional-outbox`, `jest-junit`) pin `uuid@^8.3.2` / `^9.0.x` and use `v4` (random), which is unaffected. uuid <11 is also deprecated, so we do want to move off it — but reaching 11.x means coordinating upstream (`@axinom/mosaic-*` ranges) rather than passively waiting, so it is tracked as future work.
+- **Why deferred**: The bug only affects `v3`/`v5`/`v6` generation when an explicit output `buf` is passed; all consumers (`@axinom/mosaic-message-bus`, `@axinom/mosaic-service-common`, `@azure/core-http`, `rascal`, `pg-transactional-outbox`) pin `uuid@^8.3.2` / `^9.0.x` and use `v4` (random), which is unaffected. uuid <11 is also deprecated, so we do want to move off it — but reaching 11.x means coordinating upstream (`@axinom/mosaic-*` ranges) rather than passively waiting, so it is tracked as future work.
 - **Date**: 2026-06-09
 - **Next step / done when**: Bump the `@axinom/mosaic-*` libraries (and other consumers) so they accept `uuid@^11`, then drop any need for a resolution. Until then the alert stays open.
 

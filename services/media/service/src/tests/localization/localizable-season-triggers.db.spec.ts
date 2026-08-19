@@ -1,5 +1,3 @@
- 
-import 'jest-extended';
 import { SeasonImageTypeEnum } from 'zapatos/custom';
 import { deletes, insert, update } from 'zapatos/db';
 import { seasons } from 'zapatos/schema';

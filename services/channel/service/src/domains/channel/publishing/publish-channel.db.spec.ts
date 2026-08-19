@@ -1,6 +1,5 @@
 import { rejectionOf } from '@axinom/mosaic-service-common';
 import { StoreOutboxMessage } from '@axinom/mosaic-transactional-inbox-outbox';
-import 'jest-extended';
 import {
   ChannelLocalization,
   ChannelPublishedEvent,
@@ -38,7 +37,7 @@ describe('publishChannel', () => {
     messageType: string;
     message: ChannelPublishedEvent;
   }[] = [];
-  const storeOutboxMessage: StoreOutboxMessage = jest.fn(
+  const storeOutboxMessage: StoreOutboxMessage = vi.fn(
     async (_aggregateId, { messageType }, message) => {
       messages.push({
         messageType,
@@ -139,28 +138,26 @@ describe('publishChannel', () => {
   };
 
   beforeEach(async () => {
-    jest
-      .spyOn(
-        getValidationAndLocalizations,
-        'getChannelValidationAndLocalizations',
-      )
-      .mockImplementation(
-        async (
-          _localizationServiceBaseUrl,
-          _authToken,
-          _entityId,
-          _entityType,
-          _serviceId,
-        ): Promise<{
-          localizations: ChannelLocalization[];
-          validations: [];
-        }> => {
-          return {
-            localizations: createLocalizations(),
-            validations: [],
-          };
-        },
-      );
+    vi.spyOn(
+      getValidationAndLocalizations,
+      'getChannelValidationAndLocalizations',
+    ).mockImplementation(
+      async (
+        _localizationServiceBaseUrl,
+        _authToken,
+        _entityId,
+        _entityType,
+        _serviceId,
+      ): Promise<{
+        localizations: ChannelLocalization[];
+        validations: [];
+      }> => {
+        return {
+          localizations: createLocalizations(),
+          validations: [],
+        };
+      },
+    );
   });
 
   beforeAll(async () => {
@@ -174,7 +171,6 @@ describe('publishChannel', () => {
   afterEach(async () => {
     await testContext.truncate('channels');
     messages = [];
-    jest.clearAllMocks();
   });
 
   it('error is thrown, if channel was not found', async () => {
@@ -219,33 +215,31 @@ describe('publishChannel', () => {
         ])[0],
         localizations: createLocalizations(),
       });
-      jest
-        .spyOn(validateChannelExports, 'validateChannel')
-        .mockImplementation(
-          async (
-            _id,
-            _authToken,
-            _gqlClient,
-            _config,
-          ): Promise<PublishValidationResult<ChannelPublishedEvent>> => {
-            return {
-              publishHash,
-              publishPayload: {
-                content_id: 'channel-00bd4941-d335-4494-b4a4-249c32cef438',
-                is_drm_protected: false,
-                images: [],
-                placeholder_video: createVideos([
-                  '907597ec-77d7-48a0-aaee-d8bb9d733eea',
-                ])[0],
-                localizations: createLocalizations(),
-              },
-              validations: [
-                createValidationError('Entity failed validation.', 'METADATA'),
-              ],
-              validationStatus: 'ERRORS',
-            };
-          },
-        );
+      vi.spyOn(validateChannelExports, 'validateChannel').mockImplementation(
+        async (
+          _id,
+          _authToken,
+          _gqlClient,
+          _config,
+        ): Promise<PublishValidationResult<ChannelPublishedEvent>> => {
+          return {
+            publishHash,
+            publishPayload: {
+              content_id: 'channel-00bd4941-d335-4494-b4a4-249c32cef438',
+              is_drm_protected: false,
+              images: [],
+              placeholder_video: createVideos([
+                '907597ec-77d7-48a0-aaee-d8bb9d733eea',
+              ])[0],
+              localizations: createLocalizations(),
+            },
+            validations: [
+              createValidationError('Entity failed validation.', 'METADATA'),
+            ],
+            validationStatus: 'ERRORS',
+          };
+        },
+      );
 
       // Act & Assert
       const error = await testContext.executeOwnerSql(testUser, async (txn) =>
@@ -331,37 +325,35 @@ describe('publishChannel', () => {
         localizations: createLocalizations(),
       };
       const publishHash = hasher.hash(expectedPublishedPayload);
-      jest
-        .spyOn(validateChannelExports, 'validateChannel')
-        .mockImplementation(
-          async (
-            id,
-            _authToken,
-            _gqlClient,
-            _config,
-          ): Promise<PublishValidationResult<ChannelPublishedEvent>> => {
-            return {
-              publishHash,
-              publishPayload: {
-                content_id: `channel-${id}`,
-                is_drm_protected: false,
-                images: [],
-                placeholder_video: createVideos([
-                  '907597ec-77d7-48a0-aaee-d8bb9d733eea',
-                ])[0],
-                localizations: createLocalizations(),
-              },
-              validations: [
-                createValidationWarning('This is a test warning.', 'METADATA'),
-                createValidationWarning(
-                  'This is another test warning.',
-                  'METADATA',
-                ),
-              ],
-              validationStatus: 'WARNINGS',
-            };
-          },
-        );
+      vi.spyOn(validateChannelExports, 'validateChannel').mockImplementation(
+        async (
+          id,
+          _authToken,
+          _gqlClient,
+          _config,
+        ): Promise<PublishValidationResult<ChannelPublishedEvent>> => {
+          return {
+            publishHash,
+            publishPayload: {
+              content_id: `channel-${id}`,
+              is_drm_protected: false,
+              images: [],
+              placeholder_video: createVideos([
+                '907597ec-77d7-48a0-aaee-d8bb9d733eea',
+              ])[0],
+              localizations: createLocalizations(),
+            },
+            validations: [
+              createValidationWarning('This is a test warning.', 'METADATA'),
+              createValidationWarning(
+                'This is another test warning.',
+                'METADATA',
+              ),
+            ],
+            validationStatus: 'WARNINGS',
+          };
+        },
+      );
 
       // Act
       await testContext.executeOwnerSql(testUser, async (txn) =>
@@ -411,31 +403,29 @@ describe('publishChannel', () => {
       localizations: createLocalizations(),
     };
     const publishHash = hasher.hash(expectedPublishedPayload);
-    jest
-      .spyOn(validateChannelExports, 'validateChannel')
-      .mockImplementation(
-        async (
-          id,
-          _authToken,
-          _gqlClient,
-          _config,
-        ): Promise<PublishValidationResult<ChannelPublishedEvent>> => {
-          return {
-            publishHash,
-            publishPayload: {
-              content_id: `channel-${id}`,
-              is_drm_protected: false,
-              images: [],
-              placeholder_video: createVideos([
-                '907597ec-77d7-48a0-aaee-d8bb9d733eea',
-              ])[0],
-              localizations: createLocalizations(),
-            },
-            validations: [],
-            validationStatus: 'OK',
-          };
-        },
-      );
+    vi.spyOn(validateChannelExports, 'validateChannel').mockImplementation(
+      async (
+        id,
+        _authToken,
+        _gqlClient,
+        _config,
+      ): Promise<PublishValidationResult<ChannelPublishedEvent>> => {
+        return {
+          publishHash,
+          publishPayload: {
+            content_id: `channel-${id}`,
+            is_drm_protected: false,
+            images: [],
+            placeholder_video: createVideos([
+              '907597ec-77d7-48a0-aaee-d8bb9d733eea',
+            ])[0],
+            localizations: createLocalizations(),
+          },
+          validations: [],
+          validationStatus: 'OK',
+        };
+      },
+    );
 
     // Act
     await testContext.executeOwnerSql(testUser, async (txn) =>
@@ -481,38 +471,36 @@ describe('publishChannel', () => {
       localizations: createLocalizations(),
     };
     const publishHash = hasher.hash(expectedPublishedPayload);
-    jest
-      .spyOn(validateChannelExports, 'validateChannel')
-      .mockImplementation(
-        async (
-          id,
-          _authToken,
-          _gqlClient,
-          _config,
-        ): Promise<PublishValidationResult<ChannelPublishedEvent>> => {
-          return {
-            publishHash,
-            publishPayload: {
-              content_id: `channel-${id}`,
-              is_drm_protected: false,
-              images: [
-                {
-                  height: 100,
-                  id: imageId,
-                  path: `test/${imageId}/image.png`,
-                  type: 'test_cover',
-                  width: 100,
-                  alt_text: 'Some alt text',
-                },
-              ],
-              placeholder_video: createVideos([videoId])[0],
-              localizations: createLocalizations(),
-            },
-            validations: [],
-            validationStatus: 'OK',
-          };
-        },
-      );
+    vi.spyOn(validateChannelExports, 'validateChannel').mockImplementation(
+      async (
+        id,
+        _authToken,
+        _gqlClient,
+        _config,
+      ): Promise<PublishValidationResult<ChannelPublishedEvent>> => {
+        return {
+          publishHash,
+          publishPayload: {
+            content_id: `channel-${id}`,
+            is_drm_protected: false,
+            images: [
+              {
+                height: 100,
+                id: imageId,
+                path: `test/${imageId}/image.png`,
+                type: 'test_cover',
+                width: 100,
+                alt_text: 'Some alt text',
+              },
+            ],
+            placeholder_video: createVideos([videoId])[0],
+            localizations: createLocalizations(),
+          },
+          validations: [],
+          validationStatus: 'OK',
+        };
+      },
+    );
 
     // Act
     await testContext.executeOwnerSql(testUser, async (txn) =>
