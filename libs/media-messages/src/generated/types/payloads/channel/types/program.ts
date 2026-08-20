@@ -1,7 +1,7 @@
-import { DetailedImage } from './detailed-image';
-import { DetailedVideo } from './detailed-video';
-import { ProgramCuePoint } from './program-cue-point';
-import { ProgramLocalization } from './program-localization';
+import type { DetailedImage } from './detailed-image';
+import type { DetailedVideo } from './detailed-video';
+import type { ProgramCuePoint } from './program-cue-point';
+import type { ProgramLocalization } from './program-localization';
 /**
  * Video program.
  */

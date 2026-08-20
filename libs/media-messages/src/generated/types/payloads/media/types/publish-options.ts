@@ -1,4 +1,4 @@
-import { PublishActionType } from './publish-action-type';
+import type { PublishActionType } from './publish-action-type';
 /**
  * Snapshot publish options.
  */

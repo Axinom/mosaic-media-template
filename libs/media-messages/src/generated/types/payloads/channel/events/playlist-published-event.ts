@@ -1,4 +1,4 @@
-import { Program } from '../types/program';
+import type { Program } from '../types/program';
 /**
  * Publish format for playlist.
  */

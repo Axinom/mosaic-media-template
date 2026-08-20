@@ -1,4 +1,4 @@
-import { MovieGenre } from '../types/movie-genre';
+import type { MovieGenre } from '../types/movie-genre';
 /**
  * Definition of the movie genre publish format.
  */

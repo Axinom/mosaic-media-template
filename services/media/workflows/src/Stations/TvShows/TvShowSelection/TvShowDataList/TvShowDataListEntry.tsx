@@ -9,6 +9,7 @@ import { useTvShowSelectExplorerModal } from '../TvShowSelectExplorerModal/TvSho
 
 interface UseTvShowDataListDataEntryOptions {
   excludeItems: TvShowData[];
+  allowBulkSelect?: boolean;
 }
 
 interface UseTvShowDataListDataEntryResult {
@@ -32,6 +33,7 @@ export const useTvShowDataListDataEntry = (
         closeModal,
       } = useTvShowSelectExplorerModal({
         excludeItems: options.excludeItems.map((item) => item.id),
+        allowBulkSelect: options.allowBulkSelect,
         onSelection: (selection) => {
           if (selection.mode === 'SINGLE_ITEMS') {
             const items = selection.items;
@@ -56,7 +58,7 @@ export const useTvShowDataListDataEntry = (
     };
 
     return TvShowDataListDataEntry;
-  }, [options.excludeItems]);
+  }, [options.allowBulkSelect, options.excludeItems]);
 
   return { TvShowDataListDataEntry };
 };

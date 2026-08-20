@@ -28,6 +28,7 @@ export const TvShowDataList: React.FC<TvShowDataListProps> = ({
 }) => {
   const { TvShowDataListDataEntry } = useTvShowDataListDataEntry({
     excludeItems: value,
+    allowBulkSelect: maxItems !== 1, // Bulk Selection should be disabled if we can only select one item
   });
 
   const handleUnassign = useCallback(

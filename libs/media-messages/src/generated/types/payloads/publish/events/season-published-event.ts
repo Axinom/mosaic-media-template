@@ -1,7 +1,7 @@
-import { Image } from '../types/image';
-import { License } from '../types/license';
-import { SeasonLocalization } from '../types/season-localization';
-import { Video } from '../types/video';
+import type { Image } from '../types/image';
+import type { License } from '../types/license';
+import type { SeasonLocalization } from '../types/season-localization';
+import type { Video } from '../types/video';
 /**
  * Definition of the TV show season publish format.
  */

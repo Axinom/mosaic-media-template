@@ -1,6 +1,6 @@
-import { ChannelLocalization } from '../types/channel-localization';
-import { DetailedImage } from '../types/detailed-image';
-import { DetailedVideo } from '../types/detailed-video';
+import type { ChannelLocalization } from '../types/channel-localization';
+import type { DetailedImage } from '../types/detailed-image';
+import type { DetailedVideo } from '../types/detailed-video';
 /**
  * Publish format for channel.
  */

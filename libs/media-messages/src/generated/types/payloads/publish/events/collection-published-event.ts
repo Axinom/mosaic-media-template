@@ -1,6 +1,6 @@
-import { CollectionLocalization } from '../types/collection-localization';
-import { Image } from '../types/image';
-import { RelatedItem } from '../types/related-item';
+import type { CollectionLocalization } from '../types/collection-localization';
+import type { Image } from '../types/image';
+import type { RelatedItem } from '../types/related-item';
 /**
  * Definition of the collection publish format.
  */
