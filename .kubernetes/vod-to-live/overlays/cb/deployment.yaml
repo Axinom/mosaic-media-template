@@ -49,7 +49,10 @@ spec:
             - name: VIRTUAL_CHANNEL_ORIGIN_BASE_URL
               value: 'https://cb-navy-streaming-origin.axtest.net'
             - name: AZURE_STORAGE_CONNECTION
-              value: '-'
+              valueFrom:
+                secretKeyRef:
+                  name: key-vault-vod-to-live
+                  key: storage-account-connection-string
             - name: AZURE_BLOB_CONTAINER_NAME
               value: 'vod2live'
             - name: VIRTUAL_CHANNEL_MANAGEMENT_API_KEY
