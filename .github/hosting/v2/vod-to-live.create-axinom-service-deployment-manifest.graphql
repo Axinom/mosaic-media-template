@@ -52,11 +52,11 @@ mutation CreateVodServiceManifest {
           }
 
           secureVariables: {
-            VIRTUAL_CHANNEL_MANAGEMENT_API_KEY: "#{api-key}#"
+            VIRTUAL_CHANNEL_MANAGEMENT_API_KEY: "#{apiKey}#"
 
-            AZURE_STORAGE_CONNECTION: "#{azure-storage-connection}#"
+            AZURE_STORAGE_CONNECTION: "#{storageAccountConnectionString}#"
 
-            KEY_SERVICE_MANAGEMENT_KEY: "#{key-service-management-key}#"
+            KEY_SERVICE_MANAGEMENT_KEY: "#{keyServiceManagementKey}#"
             DRM_KEY_SEED_ID: "#{drmKeySeedId}#"
           }
 

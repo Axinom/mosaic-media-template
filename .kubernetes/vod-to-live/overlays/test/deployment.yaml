@@ -52,7 +52,7 @@ spec:
               valueFrom:
                 secretKeyRef:
                   name: key-vault-vod-to-live
-                  key: azure-storage-connection
+                  key: storage-account-connection-string
             - name: AZURE_BLOB_CONTAINER_NAME
               value: 'vod2live'
             - name: VIRTUAL_CHANNEL_MANAGEMENT_API_KEY
