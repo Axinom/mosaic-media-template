@@ -17,7 +17,7 @@ spec:
             - name: RABBITMQ_VHOST
               value: wv6ypvgnbca9op5fkz5xah5p_ecc5zfwhykx6c5ohthlz28mxm
             - name: RABBITMQ_HOST
-              value: rabbitmq.cb.axinom.net
+              value: rabbitmq.test.axinom.net
             - name: RABBITMQ_PORT
               value: '5671'
             - name: RABBITMQ_USER
@@ -49,7 +49,10 @@ spec:
             - name: VIRTUAL_CHANNEL_ORIGIN_BASE_URL
               value: 'https://cb-navy-streaming-origin.axtest.net'
             - name: AZURE_STORAGE_CONNECTION
-              value: '-'
+              valueFrom:
+                secretKeyRef:
+                  name: key-vault-vod-to-live
+                  key: azure-storage-connection
             - name: AZURE_BLOB_CONTAINER_NAME
               value: 'vod2live'
             - name: VIRTUAL_CHANNEL_MANAGEMENT_API_KEY
@@ -58,10 +61,7 @@ spec:
                   name: key-vault-vod-to-live
                   key: api-key
             - name: PRE_PUBLISHING_WEBHOOK_SECRET
-              valueFrom:
-                secretKeyRef:
-                  name: key-vault-vod-to-live
-                  key: pre-publishing-webhook-secret
+              value: ''
             - name: SERVICE_ACCOUNT_CLIENT_ID
               valueFrom:
                 secretKeyRef:
@@ -74,3 +74,5 @@ spec:
                   key: service-account-client-secret
             - name: ID_SERVICE_AUTH_BASE_URL
               value: https://id.service.test.axinom.net
+            - name: SECURE_LOGGING_MODE
+              value: UNSAFE_DEBUG_UNSAFE
