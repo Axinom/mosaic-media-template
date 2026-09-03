@@ -2921,7 +2921,7 @@ export type PlaylistsQueryVariables = Exact<{
 }>;
 
 
-export type PlaylistsQuery = { __typename?: 'Query', filtered?: { __typename?: 'PlaylistsConnection', totalCount: number, pageInfo: { __typename?: 'PageInfo', hasNextPage: boolean, endCursor?: any | null }, nodes: Array<{ __typename?: 'Playlist', id: any, startDateTime: any, calculatedDurationInSeconds: number, createdDate: any, updatedDate: any, publicationState: PublicationState, publishedDate?: any | null, programs: { __typename?: 'ProgramsConnection', totalCount: number } }> } | null, nonFiltered?: { __typename?: 'PlaylistsConnection', totalCount: number } | null };
+export type PlaylistsQuery = { __typename?: 'Query', filtered?: { __typename?: 'PlaylistsConnection', totalCount: number, pageInfo: { __typename?: 'PageInfo', hasNextPage: boolean, endCursor?: any | null }, nodes: Array<{ __typename?: 'Playlist', id: any, startDateTime: any, calculatedDurationInSeconds: number, title: string, createdDate: any, updatedDate: any, publicationState: PublicationState, publishedDate?: any | null, programs: { __typename?: 'ProgramsConnection', totalCount: number } }> } | null, nonFiltered?: { __typename?: 'PlaylistsConnection', totalCount: number } | null };
 
 export type ProgramQueryVariables = Exact<{
   id: Scalars['UUID'];
@@ -3726,6 +3726,7 @@ export const PlaylistsDocument = gql`
       id
       startDateTime
       calculatedDurationInSeconds
+      title
       programs {
         totalCount
       }
