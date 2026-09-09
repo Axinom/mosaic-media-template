@@ -5,21 +5,42 @@ metadata:
 spec:
   template:
     spec:
+      volumes:
+        # additional CA bundle for AWS Aurora load testing.
+        - name: aws-ca-certs
+          configMap:
+            name: aws-rds-globa-ca-bundle
+            defaultMode: 420
+            items:
+              - key: global-bundle.pem
+                path: global-bundle.pem
+        # ---------------------- end ----------------------
       containers:
         - name: app
+          volumeMounts:
+            # additional CA bundle for AWS Aurora load testing.
+            - name: aws-ca-certs
+              mountPath: /etc/axinom/tls/extra-ca-certs/global-bundle.pem
+              subPath: global-bundle.pem
+              readOnly: true
+            # ---------------------- end ----------------------
           env:
+            # additional CA bundle for AWS Aurora load testing.
+            - name: NODE_EXTRA_CA_CERTS
+              value: /etc/axinom/tls/extra-ca-certs/global-bundle.pem
+            # ---------------------- end ----------------------
             - name: NODE_ENV
               value: test
             - name: LOG_LEVEL
               value: DEBUG
             - name: POSTGRESQL_HOST
-              value: mosaic-dev-ubi-pub.pgr9c261pwk62k1qyvf5j62vn5.postgres.ubicloud.com
+              value: mosaic-dev.global-gpgfdwb2acto.global.rds.amazonaws.com
             - name: POSTGRESQL_PORT
               value: '5432'
             - name: POSTGRESQL_USER_SUFFIX
               value: ''
             - name: PGSSLMODE
-              value: verify-ca
+              value: require
             - name: DATABASE_NAME
               valueFrom:
                 secretKeyRef:
