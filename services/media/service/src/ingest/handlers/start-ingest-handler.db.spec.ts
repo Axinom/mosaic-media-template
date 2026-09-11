@@ -5,8 +5,7 @@ import {
   StoreInboxMessage,
   TypedTransactionalMessage,
 } from '@axinom/mosaic-transactional-inbox-outbox';
-import { stub } from 'jest-auto-stub';
-import 'jest-extended';
+
 import {
   IngestItem,
   StartIngestCommand,
@@ -31,9 +30,16 @@ describe('Start Ingest Handler', () => {
   const processor = new MockIngestProcessor();
 
   const createMessage = (payload: StartIngestCommand) =>
-    stub<TypedTransactionalMessage<StartIngestCommand>>({
+    ({
       payload,
-    });
+      metadata: { authToken: 'test-token' },
+    }) satisfies Partial<
+      Omit<TypedTransactionalMessage<StartIngestCommand>, 'metadata'>
+    > & {
+      metadata?: Partial<
+        TypedTransactionalMessage<StartIngestCommand>['metadata']
+      >;
+    } as unknown as TypedTransactionalMessage<StartIngestCommand>;
 
   const createDoc = async (
     items: IngestItem[],
@@ -52,7 +58,7 @@ describe('Start Ingest Handler', () => {
 
   beforeAll(async () => {
     ctx = await createTestContext();
-    const storeInboxMessage: StoreInboxMessage = jest.fn(
+    const storeInboxMessage: StoreInboxMessage = vi.fn(
       async (_aggregateId, _messagingSettings, message) => {
         messages.push(message as StartIngestItemCommand);
       },
@@ -73,13 +79,13 @@ describe('Start Ingest Handler', () => {
 
   afterAll(async () => {
     await ctx.dispose();
-    jest.restoreAllMocks();
+    vi.restoreAllMocks();
   });
 
   describe('handleMessage', () => {
     it('message with 1 new movie -> ingest item created and message sent', async () => {
       // Arrange
-      jest.spyOn(processor, 'initializeMedia').mockImplementation(async () => ({
+      vi.spyOn(processor, 'initializeMedia').mockImplementation(async () => ({
         createdMedia: [
           {
             external_id: 'test1_external_id',
@@ -160,7 +166,7 @@ describe('Start Ingest Handler', () => {
 
     it('message with 2 new entities -> ingest items created and messages sent', async () => {
       // Arrange
-      jest.spyOn(processor, 'initializeMedia').mockImplementation(async () => ({
+      vi.spyOn(processor, 'initializeMedia').mockImplementation(async () => ({
         createdMedia: [
           {
             external_id: 'test1_external_id',

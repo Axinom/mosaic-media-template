@@ -1,6 +1,5 @@
 import { toBeUuid } from '@axinom/mosaic-service-common';
 import { StoreInboxMessage } from '@axinom/mosaic-transactional-inbox-outbox';
-import 'jest-extended';
 import {
   MediaServiceMessagingSettings,
   UnpublishEntityCommand,
@@ -25,7 +24,7 @@ describe('Snapshot Unpublish endpoint', () => {
   }[] = [];
 
   beforeAll(async () => {
-    const storeInboxMessage: StoreInboxMessage = jest.fn(
+    const storeInboxMessage: StoreInboxMessage = vi.fn(
       async (_aggregateId, { messageType }, payload) => {
         messages.push({
           payload: payload as UnpublishEntityCommand,
@@ -35,9 +34,9 @@ describe('Snapshot Unpublish endpoint', () => {
     );
     ctx = await createTestContext({}, undefined, storeInboxMessage);
     defaultRequestContext = createTestRequestContext(ctx.config.serviceId);
-    jest
-      .spyOn(tokenHelpers, 'getLongLivedToken')
-      .mockImplementation(async () => 'test-long-lived-token');
+    vi.spyOn(tokenHelpers, 'getLongLivedToken').mockImplementation(
+      async () => 'test-long-lived-token',
+    );
   });
 
   beforeEach(async () => {

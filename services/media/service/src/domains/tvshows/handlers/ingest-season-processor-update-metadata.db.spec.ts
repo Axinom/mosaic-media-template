@@ -1,5 +1,4 @@
 import { AuthenticatedManagementSubject } from '@axinom/mosaic-id-guard';
-import 'jest-extended';
 import { MediaEntityType, UpdateMetadataCommand } from 'media-messages';
 import { all, insert, select } from 'zapatos/db';
 import { seasons } from 'zapatos/schema';
@@ -35,7 +34,6 @@ describe('IngestSeasonProcessor', () => {
 
   afterAll(async () => {
     await ctx.dispose();
-    jest.restoreAllMocks();
   });
 
   const createMessageBody = (

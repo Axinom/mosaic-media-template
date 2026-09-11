@@ -1,5 +1,3 @@
- 
-import 'jest-extended';
 import { MovieImageTypeEnum } from 'zapatos/custom';
 import { deletes, insert, update } from 'zapatos/db';
 import { movies } from 'zapatos/schema';

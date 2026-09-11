@@ -8,12 +8,9 @@ import { getMosaicLocaleSetting } from './get-mosaic-locale-setting';
 import * as m from './in-memory-locales';
 
 const createMockRequest = (headers: Record<string, unknown>): Request =>
-  ({ headers } as Request);
+  ({ headers }) as Request;
 
 describe('getMosaicLocaleSetting', () => {
-  afterEach(() => {
-    jest.clearAllMocks();
-  });
   it('No supported locales and no header specified -> setting with selected default returned', async () => {
     // Arrange
     const req = createMockRequest({});

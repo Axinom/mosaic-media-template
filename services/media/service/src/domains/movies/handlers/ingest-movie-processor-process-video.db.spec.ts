@@ -1,5 +1,4 @@
 import { AuthenticatedManagementSubject } from '@axinom/mosaic-id-guard';
-import 'jest-extended';
 import { VideoMessageContext } from 'media-messages';
 import { all, insert, select, selectExactlyOne, update } from 'zapatos/db';
 import { ingest_items, movies } from 'zapatos/schema';

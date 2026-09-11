@@ -24,7 +24,6 @@ describe('PlaylistPublishEventHandler', () => {
   afterAll(async () => {
     await ctx?.truncate('channel');
     await ctx?.dispose();
-    jest.restoreAllMocks();
   });
 
   describe('onMessage', () => {

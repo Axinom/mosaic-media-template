@@ -12,9 +12,7 @@ import { useNotification } from '../../../Util/Notifications/NotificationContext
 import { publishNowNotification } from '../../../Util/Notifications/PublishNowNotification';
 import { unpublishNotification } from '../../../Util/Notifications/UnpublishNotification';
 
-export function useCollectionDetailsActions(
-  id: number,
-): {
+export function useCollectionDetailsActions(id: number): {
   readonly actions: ActionData[];
 } {
   const history = useHistory();

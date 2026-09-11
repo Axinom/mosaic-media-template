@@ -1,6 +1,5 @@
 import { rejectionOf } from '@axinom/mosaic-service-common';
 import { StoreOutboxMessage } from '@axinom/mosaic-transactional-inbox-outbox';
-import 'jest-extended';
 import {
   ChannelServiceMessagingSettings,
   PlaylistPublishedEvent,
@@ -31,7 +30,7 @@ describe('publishPlaylist', () => {
     messageType: string;
     message: PlaylistPublishedEvent;
   }[] = [];
-  const storeOutboxMessage: StoreOutboxMessage = jest.fn(
+  const storeOutboxMessage: StoreOutboxMessage = vi.fn(
     async (_aggregateId, { messageType }, message) => {
       messages.push({
         messageType,
@@ -93,13 +92,14 @@ describe('publishPlaylist', () => {
   };
 
   beforeEach(async () => {
-    jest
-      .spyOn(isManagedServiceEnabled, 'isManagedServiceEnabled')
-      .mockImplementation(
-        async (_serviceId, _idServiceBaseUrl, _authToken): Promise<boolean> => {
-          return true;
-        },
-      );
+    vi.spyOn(
+      isManagedServiceEnabled,
+      'isManagedServiceEnabled',
+    ).mockImplementation(
+      async (_serviceId, _idServiceBaseUrl, _authToken): Promise<boolean> => {
+        return true;
+      },
+    );
   });
 
   beforeAll(async () => {
@@ -114,7 +114,6 @@ describe('publishPlaylist', () => {
     await testContext.truncate('playlists');
     await testContext.truncate('channels');
     messages = [];
-    jest.clearAllMocks();
   });
 
   it('error is thrown, if playlist was not found', async () => {
@@ -152,23 +151,21 @@ describe('publishPlaylist', () => {
       programs: [],
     };
     const publishHash = hasher.hash(expectedPublishedPayload);
-    jest
-      .spyOn(validatePlaylistExports, 'validatePlaylist')
-      .mockImplementation(
-        async (
-          _id,
-          _authToken,
-          _gqlClient,
-          _config,
-        ): Promise<PublishValidationResult<PlaylistPublishedEvent>> => {
-          return {
-            publishHash,
-            publishPayload: expectedPublishedPayload,
-            validations: [],
-            validationStatus: 'OK',
-          };
-        },
-      );
+    vi.spyOn(validatePlaylistExports, 'validatePlaylist').mockImplementation(
+      async (
+        _id,
+        _authToken,
+        _gqlClient,
+        _config,
+      ): Promise<PublishValidationResult<PlaylistPublishedEvent>> => {
+        return {
+          publishHash,
+          publishPayload: expectedPublishedPayload,
+          validations: [],
+          validationStatus: 'OK',
+        };
+      },
+    );
 
     // Act
     await testContext.executeOwnerSql(testUser, async (txn) => {

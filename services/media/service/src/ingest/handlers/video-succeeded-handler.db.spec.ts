@@ -2,8 +2,7 @@ import { AuthenticatedManagementSubject } from '@axinom/mosaic-id-guard';
 import { MosaicError } from '@axinom/mosaic-service-common';
 import { TypedTransactionalMessage } from '@axinom/mosaic-transactional-inbox-outbox';
 import { EnsureVideoExistsCreationStartedEvent } from '@axinom/mosaic-video-messages';
-import { stub } from 'jest-auto-stub';
-import 'jest-extended';
+
 import { v4 as uuid } from 'uuid';
 import { insert, selectOne } from 'zapatos/db';
 import {
@@ -33,12 +32,21 @@ describe('VideoSucceededHandler', () => {
     payload: EnsureVideoExistsCreationStartedEvent,
     messageContext: unknown,
   ) =>
-    stub<TypedTransactionalMessage<EnsureVideoExistsCreationStartedEvent>>({
+    ({
       payload,
       metadata: {
         messageContext,
       },
-    });
+    }) satisfies Partial<
+      Omit<
+        TypedTransactionalMessage<EnsureVideoExistsCreationStartedEvent>,
+        'metadata'
+      >
+    > & {
+      metadata?: Partial<
+        TypedTransactionalMessage<EnsureVideoExistsCreationStartedEvent>['metadata']
+      >;
+    } as unknown as TypedTransactionalMessage<EnsureVideoExistsCreationStartedEvent>;
 
   beforeAll(async () => {
     ctx = await createTestContext();
@@ -90,7 +98,6 @@ describe('VideoSucceededHandler', () => {
 
   afterAll(async () => {
     await ctx.dispose();
-    jest.restoreAllMocks();
   });
 
   describe('handleMessage', () => {

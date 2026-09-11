@@ -3,7 +3,7 @@ import {
   getFirstMockResult,
 } from '@axinom/mosaic-service-common';
 import gql from 'graphql-tag';
-import 'jest-extended';
+import type { MockInstance } from 'vitest';
 import { insert } from 'zapatos/db';
 import { CommonErrors, DEFAULT_LOCALE_TAG } from '../../../common';
 import { createTestContext, ITestContext } from '../../../tests/test-utils';
@@ -18,8 +18,8 @@ const MOVIE_REQUEST = gql`
 
 describe('ExtendMovieQueryWithCountryCodePlugin', () => {
   let ctx: ITestContext;
-  let errorOverride: jest.SpyInstance;
-  let debugOverride: jest.SpyInstance;
+  let errorOverride: MockInstance;
+  let debugOverride: MockInstance;
   const movieId = 'movie-1';
 
   beforeAll(async () => {
@@ -34,17 +34,17 @@ describe('ExtendMovieQueryWithCountryCodePlugin', () => {
   });
 
   beforeEach(async () => {
-    errorOverride = await jest
+    errorOverride = vi
       .spyOn(console, 'error')
       .mockImplementation((obj) => JSON.parse(obj));
-    debugOverride = await jest
+    debugOverride = vi
       .spyOn(console, 'debug')
       .mockImplementation((obj) => JSON.parse(obj));
   });
 
   afterEach(async () => {
     await ctx?.truncate('movie_licenses');
-    jest.restoreAllMocks();
+    vi.restoreAllMocks();
   });
 
   afterAll(async () => {

@@ -1,5 +1,4 @@
 import { AuthenticatedManagementSubject } from '@axinom/mosaic-id-guard';
-import 'jest-extended';
 import { insert, select, update } from 'zapatos/db';
 import { movies, snapshots } from 'zapatos/schema';
 import {
@@ -48,7 +47,6 @@ describe('snapshot-utils', () => {
   afterEach(async () => {
     await ctx.truncate('movies');
     await ctx.truncate('snapshots');
-    jest.restoreAllMocks();
   });
 
   afterAll(async () => {

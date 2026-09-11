@@ -2,8 +2,7 @@ import { AuthenticatedManagementSubject } from '@axinom/mosaic-id-guard';
 import { UpsertLocalizationSourceEntityFailedEvent } from '@axinom/mosaic-messages';
 import { MosaicError } from '@axinom/mosaic-service-common';
 import { TypedTransactionalMessage } from '@axinom/mosaic-transactional-inbox-outbox';
-import { stub } from 'jest-auto-stub';
-import 'jest-extended';
+
 import { IngestItem } from 'media-messages';
 import { v4 as uuid } from 'uuid';
 import { insert, selectOne } from 'zapatos/db';
@@ -32,12 +31,21 @@ describe('UpsertLocalizationSourceEntityFailedHandler', () => {
     payload: UpsertLocalizationSourceEntityFailedEvent,
     messageContext: unknown,
   ) =>
-    stub<TypedTransactionalMessage<UpsertLocalizationSourceEntityFailedEvent>>({
+    ({
       payload,
       metadata: {
         messageContext,
       },
-    });
+    }) satisfies Partial<
+      Omit<
+        TypedTransactionalMessage<UpsertLocalizationSourceEntityFailedEvent>,
+        'metadata'
+      >
+    > & {
+      metadata?: Partial<
+        TypedTransactionalMessage<UpsertLocalizationSourceEntityFailedEvent>['metadata']
+      >;
+    } as unknown as TypedTransactionalMessage<UpsertLocalizationSourceEntityFailedEvent>;
 
   beforeAll(async () => {
     ctx = await createTestContext();
@@ -87,7 +95,6 @@ describe('UpsertLocalizationSourceEntityFailedHandler', () => {
 
   afterAll(async () => {
     await ctx.dispose();
-    jest.restoreAllMocks();
   });
 
   describe('handleMessage', () => {

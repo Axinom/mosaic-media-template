@@ -1,4 +1,3 @@
-import { stub } from 'jest-auto-stub';
 import { PublishServiceMessagingSettings } from 'media-messages';
 import { EntityPublishingProcessor } from '../../publishing';
 
@@ -20,10 +19,10 @@ export const mockPublishingProcessor: EntityPublishingProcessor = {
     { context: 'METADATA', severity: 'WARNING', message: 'mock message' },
   ],
   validationSchema: testAllowAllSchema,
-  publishMessagingSettings: stub<PublishServiceMessagingSettings>({
+  publishMessagingSettings: {
     messageType: 'mock-publish',
-  }),
-  unpublishMessagingSettings: stub<PublishServiceMessagingSettings>({
+  } satisfies Partial<PublishServiceMessagingSettings> as unknown as PublishServiceMessagingSettings,
+  unpublishMessagingSettings: {
     messageType: 'mock-unpublish',
-  }),
+  } satisfies Partial<PublishServiceMessagingSettings> as unknown as PublishServiceMessagingSettings,
 };

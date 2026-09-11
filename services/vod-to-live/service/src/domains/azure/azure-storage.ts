@@ -146,7 +146,9 @@ export class AzureStorage {
     return new Promise((resolve, reject) => {
       const chunks: Uint8Array[] = [];
       readableStream.on('data', (data) => {
-        chunks.push(new Uint8Array(data instanceof Buffer ? data : Buffer.from(data)));
+        chunks.push(
+          new Uint8Array(data instanceof Buffer ? data : Buffer.from(data)),
+        );
       });
       readableStream.on('end', () => {
         resolve(Buffer.concat(chunks));

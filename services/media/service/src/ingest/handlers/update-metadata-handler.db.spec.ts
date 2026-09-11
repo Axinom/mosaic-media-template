@@ -1,8 +1,7 @@
 import { AuthenticatedManagementSubject } from '@axinom/mosaic-id-guard';
 import { MosaicError } from '@axinom/mosaic-service-common';
 import { TypedTransactionalMessage } from '@axinom/mosaic-transactional-inbox-outbox';
-import { stub } from 'jest-auto-stub';
-import 'jest-extended';
+
 import { IngestItem, UpdateMetadataCommand } from 'media-messages';
 import { randomUUID } from 'node:crypto';
 import { v4 as uuid } from 'uuid';
@@ -35,18 +34,24 @@ describe('UpdateMetadataHandler', () => {
     payload: UpdateMetadataCommand,
     messageContext: unknown,
   ) =>
-    stub<TypedTransactionalMessage<UpdateMetadataCommand>>({
+    ({
       payload,
       metadata: {
         messageContext,
       },
-    });
+    }) satisfies Partial<
+      Omit<TypedTransactionalMessage<UpdateMetadataCommand>, 'metadata'>
+    > & {
+      metadata?: Partial<
+        TypedTransactionalMessage<UpdateMetadataCommand>['metadata']
+      >;
+    } as unknown as TypedTransactionalMessage<UpdateMetadataCommand>;
 
   beforeAll(async () => {
     ctx = await createTestContext();
     user = createTestUser(ctx.config.serviceId);
     processor = new MockIngestProcessor();
-    processor.updateMetadata = jest.fn();
+    processor.updateMetadata = vi.fn();
     handler = new UpdateMetadataHandler([processor], ctx.config);
   });
 
@@ -87,7 +92,6 @@ describe('UpdateMetadataHandler', () => {
 
   afterEach(async () => {
     await ctx.truncate('ingest_documents');
-    jest.restoreAllMocks();
   });
 
   afterAll(async () => {
@@ -193,9 +197,11 @@ describe('UpdateMetadataHandler', () => {
   describe('handleErrorMessage', () => {
     it('message failed on all retries -> step updated', async () => {
       // Arrange
-      const payload: UpdateMetadataCommand = stub<UpdateMetadataCommand>({
+      const payload: UpdateMetadataCommand = {
         item: { type: 'MOVIE' },
-      });
+      } satisfies Partial<Omit<UpdateMetadataCommand, 'item'>> & {
+        item: Partial<UpdateMetadataCommand['item']>;
+      } as unknown as UpdateMetadataCommand;
       const context = {
         ingestItemStepId: step1.id,
         ingestItemId: item1.id,
@@ -222,9 +228,11 @@ describe('UpdateMetadataHandler', () => {
     });
     it('message for metadata with localizations failed on all retries -> both Localizations and Metadata steps updated', async () => {
       // Arrange
-      const payload: UpdateMetadataCommand = stub<UpdateMetadataCommand>({
+      const payload: UpdateMetadataCommand = {
         item: { type: 'MOVIE' },
-      });
+      } satisfies Partial<Omit<UpdateMetadataCommand, 'item'>> & {
+        item: Partial<UpdateMetadataCommand['item']>;
+      } as unknown as UpdateMetadataCommand;
       const context = {
         ingestItemStepId: step1.id,
         ingestItemId: item1.id,

@@ -1,7 +1,19 @@
+import type * as MosaicServiceCommon from '@axinom/mosaic-service-common';
+import { vi } from 'vitest';
+
+vi.mock('@axinom/mosaic-service-common', async () => {
+  const original = await vi.importActual<typeof MosaicServiceCommon>(
+    '@axinom/mosaic-service-common',
+  );
+  return {
+    ...original,
+    sleep: vi.fn(),
+  };
+});
+
 import { Broker, MessageInfo } from '@axinom/mosaic-message-bus';
 import { MessagingSettings } from '@axinom/mosaic-message-bus-abstractions';
 import { sleep } from '@axinom/mosaic-service-common';
-import { stub } from 'jest-auto-stub';
 import {
   CheckChannelJobStatusCommand,
   VodToLiveServiceMessagingSettings,
@@ -16,34 +28,30 @@ import {
 } from '../../domains';
 import { CheckChannelJobStatusHandler } from './check-channel-job-status-handler';
 
-jest.mock('@axinom/mosaic-service-common', () => {
-  const original = jest.requireActual('@axinom/mosaic-service-common');
-  return {
-    ...original,
-    sleep: jest.fn(),
-  };
-});
 describe('CheckChannelJobStatusHandler', () => {
   let messages: { messageType: string; message: any }[] = [];
 
-  const mockedBroker = stub<Broker>({
-    publish: (
-      _id: string,
-      { messageType }: MessagingSettings,
-      message: unknown,
-    ) => {
-      messages.push({ messageType, message });
-    },
-  });
+  const mockedBroker = {
+    publish: vi.fn<Broker['publish']>(
+      async (
+        _id: string,
+        { messageType }: MessagingSettings,
+        message: unknown,
+      ) => {
+        messages.push({ messageType, message });
+        return {} as Awaited<ReturnType<Broker['publish']>>;
+      },
+    ),
+  } satisfies Partial<Broker> as unknown as Broker;
 
-  const mockedConfig = stub<Config>({
+  const mockedConfig = {
     environment: 'test',
     serviceId: 'test-vod-to-live',
     logLevel: 'DEBUG',
 
     virtualChannelOriginBaseUrl: 'https://axinom-test-origin.com/',
     channelProcessingWaitTimeInSeconds: 10,
-  });
+  } satisfies Partial<Config> as unknown as Config;
   let getChannelStatusResult = (): ChannelStatusResponse => {
     return {
       status: 'Pending',
@@ -51,10 +59,10 @@ describe('CheckChannelJobStatusHandler', () => {
       details: [],
     };
   };
-  const mockedVirtualChannelApi = stub<VirtualChannelApi>({
+  const mockedVirtualChannelApi = {
     getChannelStatus: async (): Promise<ChannelStatusResponse> =>
       getChannelStatusResult(),
-  });
+  } satisfies Partial<VirtualChannelApi> as unknown as VirtualChannelApi;
   const handler = new CheckChannelJobStatusHandler(
     mockedConfig,
     mockedVirtualChannelApi,
@@ -62,13 +70,12 @@ describe('CheckChannelJobStatusHandler', () => {
   );
 
   beforeAll(() => {
-    (sleep as jest.Mock<any, any>).mockImplementation(async () => {
+    vi.mocked(sleep).mockImplementation(async () => {
       return;
     });
   });
   afterEach(() => {
     messages = [];
-    jest.clearAllMocks();
   });
 
   it.each(['Pending', 'In Progress'])(
@@ -86,12 +93,18 @@ describe('CheckChannelJobStatusHandler', () => {
         channel_id: uuid(),
         seconds_elapsed_while_waiting: 0,
       };
-      const messageInfo = stub<MessageInfo<CheckChannelJobStatusCommand>>({
+      const messageInfo = {
         envelope: {
           auth_token: 'no-token',
           payload,
         },
-      });
+      } satisfies Partial<
+        Omit<MessageInfo<CheckChannelJobStatusCommand>, 'envelope'>
+      > & {
+        envelope: Partial<
+          MessageInfo<CheckChannelJobStatusCommand>['envelope']
+        >;
+      } as unknown as MessageInfo<CheckChannelJobStatusCommand>;
       // Act
       await handler.onMessage(payload, messageInfo);
       // Assert
@@ -122,12 +135,16 @@ describe('CheckChannelJobStatusHandler', () => {
       channel_id: uuid(),
       seconds_elapsed_while_waiting: 0,
     };
-    const messageInfo = stub<MessageInfo<CheckChannelJobStatusCommand>>({
+    const messageInfo = {
       envelope: {
         auth_token: 'no-token',
         payload,
       },
-    });
+    } satisfies Partial<
+      Omit<MessageInfo<CheckChannelJobStatusCommand>, 'envelope'>
+    > & {
+      envelope: Partial<MessageInfo<CheckChannelJobStatusCommand>['envelope']>;
+    } as unknown as MessageInfo<CheckChannelJobStatusCommand>;
     // Act
     await handler.onMessage(payload, messageInfo);
     // Assert
@@ -180,12 +197,16 @@ describe('CheckChannelJobStatusHandler', () => {
       channel_id: uuid(),
       seconds_elapsed_while_waiting: 0,
     };
-    const messageInfo = stub<MessageInfo<CheckChannelJobStatusCommand>>({
+    const messageInfo = {
       envelope: {
         auth_token: 'no-token',
         payload,
       },
-    });
+    } satisfies Partial<
+      Omit<MessageInfo<CheckChannelJobStatusCommand>, 'envelope'>
+    > & {
+      envelope: Partial<MessageInfo<CheckChannelJobStatusCommand>['envelope']>;
+    } as unknown as MessageInfo<CheckChannelJobStatusCommand>;
     // Act
     await handler.onMessage(payload, messageInfo);
     // Assert
@@ -219,12 +240,18 @@ describe('CheckChannelJobStatusHandler', () => {
         channel_id: uuid(),
         seconds_elapsed_while_waiting: secondsWithoutProgress,
       };
-      const messageInfo = stub<MessageInfo<CheckChannelJobStatusCommand>>({
+      const messageInfo = {
         envelope: {
           auth_token: 'no-token',
           payload,
         },
-      });
+      } satisfies Partial<
+        Omit<MessageInfo<CheckChannelJobStatusCommand>, 'envelope'>
+      > & {
+        envelope: Partial<
+          MessageInfo<CheckChannelJobStatusCommand>['envelope']
+        >;
+      } as unknown as MessageInfo<CheckChannelJobStatusCommand>;
       // Act
       await handler.onMessage(payload, messageInfo);
       // Assert

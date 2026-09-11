@@ -1,6 +1,6 @@
 import { Broker } from '@axinom/mosaic-message-bus';
 import { MessagingSettings } from '@axinom/mosaic-message-bus-abstractions';
-import { stub } from 'jest-auto-stub';
+
 import {
   ChannelPublishedEvent,
   VodToLiveServiceMessagingSettings,
@@ -76,7 +76,7 @@ describe('prepareChannelLiveStream', () => {
       ),
     };
   };
-  const mockedKeyServiceApi = stub<KeyServiceApi>({
+  const mockedKeyServiceApi = {
     postSpekeRequest: async (): Promise<string> => {
       return '<mocked SpekeV2 response!>';
     },
@@ -95,9 +95,9 @@ describe('prepareChannelLiveStream', () => {
         CreationMethod: 1,
       };
     },
-  });
+  } satisfies Partial<KeyServiceApi> as unknown as KeyServiceApi;
   // SMIL representing Channel with none-DRM protected content
-  const mockedStorage = stub<AzureStorage>({
+  const mockedStorage = {
     getFileContent: async () => {
       return JSON.stringify({
         description: null,
@@ -123,20 +123,23 @@ describe('prepareChannelLiveStream', () => {
       filesStoredInStorage.push({ relativeFilePath, fileContent });
       return true;
     },
-  });
-  const mockedBroker = stub<Broker>({
-    publish: (
-      _id: string,
-      { messageType }: MessagingSettings,
-      message: unknown,
-    ) => {
-      messages.push({ messageType, message });
-    },
-  });
+  } satisfies Partial<AzureStorage> as unknown as AzureStorage;
+  const mockedBroker = {
+    publish: vi.fn<Broker['publish']>(
+      async (
+        _id: string,
+        { messageType }: MessagingSettings,
+        message: unknown,
+      ) => {
+        messages.push({ messageType, message });
+        return {} as Awaited<ReturnType<Broker['publish']>>;
+      },
+    ),
+  } satisfies Partial<Broker> as unknown as Broker;
 
   let channelHasPlaylistTransitionsResult: any = () => undefined;
   let getChannelsResult: any = () => undefined;
-  const mockedVirtualChannelApi = stub<VirtualChannelApi>({
+  const mockedVirtualChannelApi = {
     channelHasPlaylistTransitions: async () =>
       channelHasPlaylistTransitionsResult(),
     getChannels: async () => getChannelsResult(),
@@ -147,14 +150,13 @@ describe('prepareChannelLiveStream', () => {
         status_url: '',
       };
     },
-  });
+  } satisfies Partial<VirtualChannelApi> as unknown as VirtualChannelApi;
 
   afterEach(() => {
     messages = [];
     filesStoredInStorage = [];
     createdVirtualChannels = [];
     createdContentKeys = [];
-    jest.clearAllMocks();
   });
 
   it('if virtual channel with DRM does not exist -> it will be created', async () => {

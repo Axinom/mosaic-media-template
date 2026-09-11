@@ -23,7 +23,6 @@ import { generateProgram } from '../helpers';
 import { useCalculatedTimes, useOpenItems } from '../hooks';
 import { Program } from '../Program/Program';
 import {
-  CpsNodes,
   CuePointAction,
   CuePointSelect,
   FastProviderData,
@@ -33,11 +32,15 @@ import {
   ProgramFormData,
   ProgramManagementFormData,
   ScheduleAction,
-  ScheduleReorderActionData,
 } from '../ProgramManagement.types';
 import { ProgramManagementContext } from '../ProgramManagementProvider/ProgramManagementProvider';
 import { ScheduleVideoExplorer } from '../VideoScheduleExplorer/VideoScheduleExplorer';
 import classes from './ProgramManagementFormContent.module.scss';
+import {
+  getCuePointScheduleNodesField,
+  moveCpsNode,
+  rearrangeArray,
+} from './ProgramManagementFormContent.utils';
 
 type NewSchedule = Pick<
   CuePointSchedule,
@@ -377,88 +380,4 @@ export const ProgramManagementFormContent: React.FC<{
       />
     </div>
   );
-};
-
-/**
- * Returns the path to the cue point schedule nodes form field
- * `programs.nodes[${programIndex}].programCuePoints.nodes[${cuePontIndex}].cuePointSchedules.nodes`
- */
-export const getCuePointScheduleNodesField = (
-  programIndex: number,
-  cuePontIndex: number,
-): string =>
-  `programs.nodes[${programIndex}].programCuePoints.nodes[${cuePontIndex}].cuePointSchedules.nodes`;
-
-/**
- * Moves cue point schedule node to another cue point schedule
- * and updates the sort indexes of affected cue point schedules.
- * @returns
- */
-export const moveCpsNode = (
-  program: ProgramFormData,
-  changes: Pick<ScheduleAction, 'cuePointIndex' | 'scheduleIndex'> &
-    ScheduleReorderActionData,
-): {
-  sourceCspNodes: CpsNodes;
-  destinationCpsNodes: CpsNodes;
-  destinationCpsIndex: number;
-} => {
-  const { cuePointIndex, scheduleIndex, newPosition, newCuePointId } = changes;
-
-  const cuePoint = program.programCuePoints.nodes[cuePointIndex];
-  const cuePointSchedules = [...cuePoint.cuePointSchedules.nodes];
-
-  const newCuePointIndex = program.programCuePoints.nodes.findIndex(
-    (cp) => cp.id === newCuePointId,
-  );
-  const newCuePoint = program.programCuePoints.nodes[newCuePointIndex];
-  const newCuePointSchedules = [...newCuePoint.cuePointSchedules.nodes];
-
-  // remove schedule from source cue point
-  const removedNodes = cuePointSchedules.splice(scheduleIndex, 1);
-
-  // add schedule to destination cue pont in the specified position
-  newCuePointSchedules.splice(newPosition, 0, ...removedNodes);
-
-  const updateSortIndex = (
-    schedules: CpsNodes,
-    targetIndex: number,
-  ): CpsNodes =>
-    schedules.map((schedule, idx) => ({
-      ...schedule,
-      sortIndex: idx,
-      programCuePointId:
-        targetIndex === cuePointIndex ? cuePoint.id : newCuePoint.id,
-    }));
-
-  return {
-    sourceCspNodes: updateSortIndex(cuePointSchedules, cuePointIndex),
-    destinationCpsNodes: updateSortIndex(
-      newCuePointSchedules,
-      newCuePointIndex,
-    ),
-    destinationCpsIndex: newCuePointIndex,
-  };
-};
-
-/**
- * Rearranges array items and updates the sortIndex property of each item.
- * @param array An array of items with a `sortIndex` property
- * @param currentIndex Current index of the item to be moved
- * @param newIndex New index of the item to be moved
- * @returns A new array with updated `sortIndex` properties
- */
-export const rearrangeArray = <T extends { sortIndex: number }>(
-  array: T[],
-  currentIndex: number,
-  newIndex: number,
-): T[] => {
-  const items = [...array];
-  const removedItem = items.splice(currentIndex, 1);
-  items.splice(newIndex, 0, ...removedItem);
-
-  return items.map((s, idx) => ({
-    ...s,
-    sortIndex: idx,
-  }));
 };

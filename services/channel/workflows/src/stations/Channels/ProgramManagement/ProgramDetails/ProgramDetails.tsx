@@ -54,7 +54,6 @@ export const ProgramDetails: React.FC = () => {
       formData: ProgramDetailsFormData,
       initialData: DetailsProps<ProgramDetailsFormData>['initialData'],
     ): Promise<void> => {
-       
       const { ...updateDto } = getFormDiff(formData, initialData.data);
       const patch: ProgramPatch = {
         ...updateDto,

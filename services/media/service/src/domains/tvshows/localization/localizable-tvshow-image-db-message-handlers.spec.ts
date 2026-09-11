@@ -1,5 +1,31 @@
+const { serviceAccountToken } = vi.hoisted(() => ({
+  serviceAccountToken: 'SERVICE_ACCOUNT_TOKEN',
+}));
+
+vi.mock('@axinom/mosaic-id-link-be', async () => {
+  const originalModule = await vi.importActual<
+    typeof import('@axinom/mosaic-id-link-be')
+  >('@axinom/mosaic-id-link-be');
+  return {
+    ...originalModule,
+    getServiceAccountToken: vi.fn(() =>
+      Promise.resolve<TokenResult>({
+        accessToken: serviceAccountToken,
+        expiresInSeconds: 600,
+        tokenType: 'ServiceAccount',
+      }),
+    ),
+    generateLongLivedToken: vi.fn(() =>
+      Promise.resolve<TokenResult>({
+        accessToken: serviceAccountToken,
+        expiresInSeconds: 600,
+        tokenType: 'ServiceAccount',
+      }),
+    ),
+  };
+});
+
 import { optional } from '@axinom/mosaic-db-common';
-import { SubjectType } from '@axinom/mosaic-id-guard';
 import { TokenResult } from '@axinom/mosaic-id-link-be';
 import { MessageEnvelopeOverrides } from '@axinom/mosaic-message-bus';
 import { MessagingSettings } from '@axinom/mosaic-message-bus-abstractions';
@@ -12,8 +38,7 @@ import {
   StoreOutboxMessage,
   TypedTransactionalMessage,
 } from '@axinom/mosaic-transactional-inbox-outbox';
-import { stub } from 'jest-auto-stub';
-import 'jest-extended';
+
 import { ClientBase } from 'pg';
 import { PublicationConfig } from 'rascal';
 import { Config } from '../../../common';
@@ -25,29 +50,6 @@ import {
   LocalizableTvshowImageDeletedDbMessageHandler,
   LocalizableTvshowImageUpdatedDbMessageHandler,
 } from './localizable-tvshow-image-db-message-handlers';
-
-const serviceAccountToken = 'SERVICE_ACCOUNT_TOKEN';
-jest.mock('@axinom/mosaic-id-link-be', () => {
-  const originalModule = jest.requireActual('@axinom/mosaic-id-link-be');
-  return {
-    __esModule: true,
-    ...originalModule,
-    getServiceAccountToken: jest.fn(() =>
-      Promise.resolve<TokenResult>({
-        accessToken: serviceAccountToken,
-        expiresInSeconds: 600,
-        tokenType: SubjectType.ServiceAccount,
-      }),
-    ),
-    generateLongLivedToken: jest.fn(() =>
-      Promise.resolve<TokenResult>({
-        accessToken: serviceAccountToken,
-        expiresInSeconds: 600,
-        tokenType: SubjectType.ServiceAccount,
-      }),
-    ),
-  };
-});
 
 describe('Localizable Tvshow Image DB trigger events', () => {
   let messages: {
@@ -65,13 +67,19 @@ describe('Localizable Tvshow Image DB trigger events', () => {
     payload: LocalizableTvshowImageDbEvent,
     messageContext?: unknown,
   ) =>
-    stub<TypedTransactionalMessage<LocalizableTvshowImageDbEvent>>({
+    ({
       payload,
       ...optional(messageContext, () => ({ metadata: { messageContext } })),
-    });
+    }) satisfies Partial<
+      Omit<TypedTransactionalMessage<LocalizableTvshowImageDbEvent>, 'metadata'>
+    > & {
+      metadata?: Partial<
+        TypedTransactionalMessage<LocalizableTvshowImageDbEvent>['metadata']
+      >;
+    } as unknown as TypedTransactionalMessage<LocalizableTvshowImageDbEvent>;
 
   beforeAll(() => {
-    storeOutboxMessage = jest.fn(
+    storeOutboxMessage = vi.fn(
       async (_aggregateId, messagingSettings, message, _client, data) => {
         messages.push({
           payload: message as
@@ -88,10 +96,6 @@ describe('Localizable Tvshow Image DB trigger events', () => {
 
   afterEach(async () => {
     messages = [];
-  });
-
-  afterAll(async () => {
-    jest.restoreAllMocks();
   });
 
   describe('LocalizableTvshowImageCreatedDbMessageHandler', () => {
@@ -113,7 +117,10 @@ describe('Localizable Tvshow Image DB trigger events', () => {
       };
 
       // Act
-      await handler.handleMessage(createMessage(payload), stub<ClientBase>());
+      await handler.handleMessage(
+        createMessage(payload),
+        {} satisfies Partial<ClientBase> as unknown as ClientBase,
+      );
 
       // Assert
       expect(messages).toEqual([
@@ -147,7 +154,10 @@ describe('Localizable Tvshow Image DB trigger events', () => {
       };
 
       // Act
-      await handler.handleMessage(createMessage(payload), stub<ClientBase>());
+      await handler.handleMessage(
+        createMessage(payload),
+        {} satisfies Partial<ClientBase> as unknown as ClientBase,
+      );
 
       // Assert
       expect(messages).toEqual([]);
@@ -173,7 +183,10 @@ describe('Localizable Tvshow Image DB trigger events', () => {
       };
 
       // Act
-      await handler.handleMessage(createMessage(payload), stub<ClientBase>());
+      await handler.handleMessage(
+        createMessage(payload),
+        {} satisfies Partial<ClientBase> as unknown as ClientBase,
+      );
 
       // Assert
       expect(messages).toEqual([
@@ -207,7 +220,10 @@ describe('Localizable Tvshow Image DB trigger events', () => {
       };
 
       // Act
-      await handler.handleMessage(createMessage(payload), stub<ClientBase>());
+      await handler.handleMessage(
+        createMessage(payload),
+        {} satisfies Partial<ClientBase> as unknown as ClientBase,
+      );
 
       // Assert
       expect(messages).toEqual([]);
@@ -227,7 +243,7 @@ describe('Localizable Tvshow Image DB trigger events', () => {
       // Act
       await handler.handleMessage(
         createMessage(payload, context),
-        stub<ClientBase>(),
+        {} satisfies Partial<ClientBase> as unknown as ClientBase,
       );
 
       // Assert
@@ -273,12 +289,15 @@ describe('Localizable Tvshow Image DB trigger events', () => {
         image_type: 'COVER',
       };
 
-      jest
-        .spyOn(handler, 'tvshowIsDeleted')
-        .mockImplementation(async () => false);
+      vi.spyOn(handler, 'tvshowIsDeleted').mockImplementation(
+        async () => false,
+      );
 
       // Act
-      await handler.handleMessage(createMessage(payload), stub<ClientBase>());
+      await handler.handleMessage(
+        createMessage(payload),
+        {} satisfies Partial<ClientBase> as unknown as ClientBase,
+      );
 
       // Assert
       expect(messages).toEqual([
@@ -311,12 +330,13 @@ describe('Localizable Tvshow Image DB trigger events', () => {
         image_type: 'COVER',
       };
 
-      jest
-        .spyOn(handler, 'tvshowIsDeleted')
-        .mockImplementation(async () => true);
+      vi.spyOn(handler, 'tvshowIsDeleted').mockImplementation(async () => true);
 
       // Act
-      await handler.handleMessage(createMessage(payload), stub<ClientBase>());
+      await handler.handleMessage(
+        createMessage(payload),
+        {} satisfies Partial<ClientBase> as unknown as ClientBase,
+      );
 
       // Assert
       expect(messages).toEqual([]);
@@ -330,12 +350,15 @@ describe('Localizable Tvshow Image DB trigger events', () => {
         image_type: 'TEASER',
       };
 
-      jest
-        .spyOn(handler, 'tvshowIsDeleted')
-        .mockImplementation(async () => false);
+      vi.spyOn(handler, 'tvshowIsDeleted').mockImplementation(
+        async () => false,
+      );
 
       // Act
-      await handler.handleMessage(createMessage(payload), stub<ClientBase>());
+      await handler.handleMessage(
+        createMessage(payload),
+        {} satisfies Partial<ClientBase> as unknown as ClientBase,
+      );
 
       // Assert
       expect(messages).toEqual([]);

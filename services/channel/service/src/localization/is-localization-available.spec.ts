@@ -1,16 +1,19 @@
-import { getAuthenticatedManagementSubject } from '@axinom/mosaic-id-guard';
+vi.mock('../common/utils/token-utils', () => ({
+  requestServiceAccountToken: vi.fn(),
+}));
+
+vi.mock('@axinom/mosaic-id-guard', () => ({
+  getAuthenticatedManagementSubject: vi.fn().mockReturnValue({}),
+}));
+
+import {
+  AuthenticatedManagementSubject,
+  getAuthenticatedManagementSubject,
+} from '@axinom/mosaic-id-guard';
 import { Logger } from '@axinom/mosaic-service-common';
 import { Config } from '../common/config';
 import { requestServiceAccountToken } from '../common/utils/token-utils';
 import { updateConfigWithActualLocalizationAvailability } from './is-localization-available';
-
-jest.mock('../common/utils/token-utils', () => ({
-  requestServiceAccountToken: jest.fn(),
-}));
-
-jest.mock('@axinom/mosaic-id-guard', () => ({
-  getAuthenticatedManagementSubject: jest.fn().mockReturnValue({}),
-}));
 
 describe('localizationAvailableCheck', () => {
   let mockConfig: Config;
@@ -21,11 +24,7 @@ describe('localizationAvailableCheck', () => {
       isLocalizationEnabled: true,
     } as unknown as Config;
 
-    logger = { warn: jest.fn() } as unknown as Logger;
-  });
-
-  afterEach(() => {
-    jest.clearAllMocks();
+    logger = { warn: vi.fn() } as unknown as Logger;
   });
 
   it('keep isLocalizationEnabled as false if isLocalizationEnabled is already false', async () => {
@@ -42,11 +41,11 @@ describe('localizationAvailableCheck', () => {
 
   it('should keep isLocalizationEnabled as true if the service account has localization permission', async () => {
     // Arrange
-    (getAuthenticatedManagementSubject as jest.Mock).mockResolvedValue({
+    vi.mocked(getAuthenticatedManagementSubject).mockResolvedValue({
       permissions: {
         'ax-localization-service': ['ENTITY_DEFINITIONS_EDIT'],
       },
-    });
+    } as unknown as AuthenticatedManagementSubject);
 
     // Act
     await updateConfigWithActualLocalizationAvailability(mockConfig, logger);
@@ -59,11 +58,11 @@ describe('localizationAvailableCheck', () => {
 
   it('should set isLocalizationEnabled to false if the service account does not have localization permission', async () => {
     // Arrange
-    (getAuthenticatedManagementSubject as jest.Mock).mockResolvedValue({
+    vi.mocked(getAuthenticatedManagementSubject).mockResolvedValue({
       permissions: {
         'ax-other-service': ['SOME_PERMISSION'],
       },
-    });
+    } as unknown as AuthenticatedManagementSubject);
     // Act
     await updateConfigWithActualLocalizationAvailability(mockConfig, logger);
 
@@ -78,9 +77,7 @@ describe('localizationAvailableCheck', () => {
   it('should keep isLocalizationEnabled true if an error is thrown', async () => {
     // Arrange
     const mockError = new Error('Token parsing error');
-    (getAuthenticatedManagementSubject as jest.Mock).mockRejectedValue(
-      mockError,
-    );
+    vi.mocked(getAuthenticatedManagementSubject).mockRejectedValue(mockError);
 
     // Act
     await updateConfigWithActualLocalizationAvailability(mockConfig, logger);

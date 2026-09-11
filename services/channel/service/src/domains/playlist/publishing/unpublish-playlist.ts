@@ -1,4 +1,3 @@
- 
 import { MosaicError } from '@axinom/mosaic-service-common';
 import { StoreOutboxMessage } from '@axinom/mosaic-transactional-inbox-outbox';
 import {

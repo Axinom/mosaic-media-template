@@ -1,6 +1,5 @@
 import { AuthenticatedManagementSubject } from '@axinom/mosaic-id-guard';
 import { rejectionOf } from '@axinom/mosaic-service-common';
-import 'jest-extended';
 import { IngestItem } from 'media-messages';
 import { all, insert, JSONOnlyColsForTable, select } from 'zapatos/db';
 import {

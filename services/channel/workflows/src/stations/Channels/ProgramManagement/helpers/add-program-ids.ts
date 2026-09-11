@@ -25,7 +25,7 @@ export const addProgramIdsToCuePoints = (
   const cuePoints: ProgramCuePointPayLoad[] = [];
 
   // extract relevent program results
-   
+
   const { updatePlaylist, ...rest } =
     programResults.data as UpdatePlaylistMutation;
   const programData: ProgramData[] = Object.values(

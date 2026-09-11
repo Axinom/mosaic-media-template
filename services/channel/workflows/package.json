@@ -24,6 +24,10 @@
     "dev": "yarn start",
     "dev:full": "yarn util:load-vars pilet debug --feed '\\$MICRO_FRONTEND_SERVICE_BASE_URL/v1/pilets/\\$TENANT_ID/\\$ENVIRONMENT_ID' --port 10250",
     "codegen": "yarn util:load-vars graphql-codegen --config codegen.yml",
+    "test": "vitest run --silent",
+    "test:watch": "vitest watch",
+    "test:ui": "vitest --ui",
+    "test:cov": "vitest run --coverage",
     " -- utilities -- ": "",
     "util:load-vars": "env-cmd -f .env env-cmd -f ../../../.env cross-env-shell"
   },
@@ -52,12 +56,14 @@
     "@graphql-codegen/typescript": "^2.7.3",
     "@graphql-codegen/typescript-operations": "^2.5.3",
     "@graphql-codegen/typescript-react-apollo": "^3.3.7",
-    "@types/node": "^18.11.19",
+    "@types/node": "^22.12.0",
     "@types/react": "^17.0.50",
     "@types/react-beautiful-dnd": "^13.1.4",
     "@types/react-dom": "^17.0.17",
     "@types/react-router": "^5.1.19",
     "@types/react-router-dom": "^5.3.3",
+    "@vitest/coverage-v8": "^4.1.10",
+    "@vitest/ui": "^4.1.10",
     "autoprefixer": "^10.3.1",
     "dotenv-webpack": "^7.1.1",
     "env-cmd": "^10.1.0",
@@ -74,7 +80,8 @@
     "sass": "^1.69.5",
     "tslib": "^1.14.1",
     "typescript": "^5.8.0",
-    "typescript-plugin-css-modules": "^5.0.2"
+    "typescript-plugin-css-modules": "^5.0.2",
+    "vitest": "^4.1.10"
   },
   "peerDependencies": {
     "react": "*",

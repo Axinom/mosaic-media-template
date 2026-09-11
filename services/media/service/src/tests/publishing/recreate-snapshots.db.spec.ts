@@ -1,5 +1,4 @@
 import { StoreInboxMessage } from '@axinom/mosaic-transactional-inbox-outbox';
-import 'jest-extended';
 import {
   MediaServiceMessagingSettings,
   PublishEntityCommand,
@@ -26,7 +25,7 @@ describe('Recreate snapshots endpoint', () => {
     payload: PublishEntityCommand;
   }[] = [];
   beforeAll(async () => {
-    const storeInboxMessage: StoreInboxMessage = jest.fn(
+    const storeInboxMessage: StoreInboxMessage = vi.fn(
       async (_aggregateId, { messageType }, payload) => {
         messages.push({
           payload: payload as PublishEntityCommand,
@@ -36,9 +35,9 @@ describe('Recreate snapshots endpoint', () => {
     );
     ctx = await createTestContext({}, undefined, storeInboxMessage);
     defaultRequestContext = createTestRequestContext(ctx.config.serviceId);
-    jest
-      .spyOn(tokenHelpers, 'getLongLivedToken')
-      .mockImplementation(async () => 'test-long-lived-token');
+    vi.spyOn(tokenHelpers, 'getLongLivedToken').mockImplementation(
+      async () => 'test-long-lived-token',
+    );
   });
 
   const createSnapshot = async (entityId: number, type: EntityTypeEnum) => {

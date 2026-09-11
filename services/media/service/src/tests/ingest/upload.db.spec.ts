@@ -1,14 +1,29 @@
+import type * as MosaicServiceCommon from '@axinom/mosaic-service-common';
+
+// mock the long lived token call to not call the ID service
+vi.mock('../../common/utils/token-utils');
+
+// Avoid waiting for 5 seconds to re-calculate document status and counts
+vi.mock('@axinom/mosaic-service-common', async () => {
+  const original = await vi.importActual<typeof MosaicServiceCommon>(
+    '@axinom/mosaic-service-common',
+  );
+  return {
+    ...original,
+    sleep: vi.fn(),
+  };
+});
+
 import { DEFAULT_SYSTEM_USERNAME } from '@axinom/mosaic-db-common';
 import { ImageServiceMultiTenantMessagingSettings } from '@axinom/mosaic-messages';
 import { assertNotFalsy } from '@axinom/mosaic-service-common';
 import { VideoServiceMultiTenantMessagingSettings } from '@axinom/mosaic-video-messages';
 import { createReadStream, readFileSync } from 'fs';
 import Upload from 'graphql-upload/Upload.js';
-import { stub } from 'jest-auto-stub';
-import 'jest-extended';
+
 import { MediaServiceMessagingSettings } from 'media-messages';
 import { resolve } from 'path';
-import { Readable } from 'stream';
+import { Readable } from 'node:stream';
 import { all, conditions as c, insert, select } from 'zapatos/db';
 import {
   episodes,
@@ -51,21 +66,8 @@ import {
 } from '../test-utils';
 import { START_INGEST } from './gql-constants';
 
-// mock the long lived token call to not call the ID service
-jest.mock('../../common/utils/token-utils');
-const getLongLivedTokenMock = getLongLivedToken as jest.MockedFunction<
-  typeof getLongLivedToken
->;
+const getLongLivedTokenMock = vi.mocked(getLongLivedToken);
 getLongLivedTokenMock.mockReturnValue(Promise.resolve('some token'));
-
-// Avoid waiting for 5 seconds to re-calculate document status and counts
-jest.mock('@axinom/mosaic-service-common', () => {
-  const original = jest.requireActual('@axinom/mosaic-service-common');
-  return {
-    ...original,
-    sleep: jest.fn(),
-  };
-});
 
 const stringToStream = (value: string): Readable => {
   const stream = new Readable();
@@ -99,13 +101,15 @@ describe('Movies GraphQL endpoints', () => {
     payload: any,
     metadata: InboxMessageMetadata | undefined,
   ) =>
-    stub<TypedTransactionalMessage<T>>({
+    ({
       payload,
       metadata,
-    });
+    }) satisfies Partial<Omit<TypedTransactionalMessage<T>, 'metadata'>> & {
+      metadata?: Partial<TypedTransactionalMessage<T>['metadata']>;
+    } as unknown as TypedTransactionalMessage<T>;
 
   beforeAll(async () => {
-    storeOutboxMessage = jest.fn(
+    storeOutboxMessage = vi.fn(
       async (_aggregateId, { messageType }, payload, _client, optionalData) => {
         const { envelopeOverrides } = optionalData || {};
         messages.push({
@@ -118,7 +122,7 @@ describe('Movies GraphQL endpoints', () => {
         });
       },
     );
-    storeInboxMessage = jest.fn(
+    storeInboxMessage = vi.fn(
       async (_aggregateId, { messageType }, payload, _client, optionalData) => {
         const { metadata } = optionalData || {};
         messages.push({

@@ -1,6 +1,33 @@
+import type * as MosaicIdLinkBe from '@axinom/mosaic-id-link-be';
+
+const { serviceAccountToken } = vi.hoisted(() => ({
+  serviceAccountToken: 'SERVICE_ACCOUNT_TOKEN',
+}));
+
+vi.mock('@axinom/mosaic-id-link-be', async () => {
+  const originalModule = await vi.importActual<typeof MosaicIdLinkBe>(
+    '@axinom/mosaic-id-link-be',
+  );
+  return {
+    ...originalModule,
+    getServiceAccountToken: vi.fn(() =>
+      Promise.resolve<MosaicIdLinkBe.TokenResult>({
+        accessToken: serviceAccountToken,
+        expiresInSeconds: 600,
+        tokenType: 'ServiceAccount',
+      }),
+    ),
+    generateLongLivedToken: vi.fn(() =>
+      Promise.resolve<MosaicIdLinkBe.TokenResult>({
+        accessToken: serviceAccountToken,
+        expiresInSeconds: 600,
+        tokenType: 'ServiceAccount',
+      }),
+    ),
+  };
+});
+
 import { optional } from '@axinom/mosaic-db-common';
-import { SubjectType } from '@axinom/mosaic-id-guard';
-import { TokenResult } from '@axinom/mosaic-id-link-be';
 import { MessageEnvelopeOverrides } from '@axinom/mosaic-message-bus';
 import { MessagingSettings } from '@axinom/mosaic-message-bus-abstractions';
 import {
@@ -12,8 +39,6 @@ import {
   StoreOutboxMessage,
   TypedTransactionalMessage,
 } from '@axinom/mosaic-transactional-inbox-outbox';
-import { stub } from 'jest-auto-stub';
-import 'jest-extended';
 import { ClientBase } from 'pg';
 import { PublicationConfig } from 'rascal';
 import { Config } from '../../../common';
@@ -25,29 +50,6 @@ import {
   LocalizableTvshowDeletedDbMessageHandler,
   LocalizableTvshowUpdatedDbMessageHandler,
 } from './localizable-tvshow-db-message-handlers';
-
-const serviceAccountToken = 'SERVICE_ACCOUNT_TOKEN';
-jest.mock('@axinom/mosaic-id-link-be', () => {
-  const originalModule = jest.requireActual('@axinom/mosaic-id-link-be');
-  return {
-    __esModule: true,
-    ...originalModule,
-    getServiceAccountToken: jest.fn(() =>
-      Promise.resolve<TokenResult>({
-        accessToken: serviceAccountToken,
-        expiresInSeconds: 600,
-        tokenType: SubjectType.ServiceAccount,
-      }),
-    ),
-    generateLongLivedToken: jest.fn(() =>
-      Promise.resolve<TokenResult>({
-        accessToken: serviceAccountToken,
-        expiresInSeconds: 600,
-        tokenType: SubjectType.ServiceAccount,
-      }),
-    ),
-  };
-});
 
 describe('Localizable Tvshow DB trigger events', () => {
   let messages: {
@@ -65,13 +67,19 @@ describe('Localizable Tvshow DB trigger events', () => {
     payload: LocalizableTvshowDbEvent,
     messageContext?: unknown,
   ) =>
-    stub<TypedTransactionalMessage<LocalizableTvshowDbEvent>>({
+    ({
       payload,
       ...optional(messageContext, () => ({ metadata: { messageContext } })),
-    });
+    }) satisfies Partial<
+      Omit<TypedTransactionalMessage<LocalizableTvshowDbEvent>, 'metadata'>
+    > & {
+      metadata?: Partial<
+        TypedTransactionalMessage<LocalizableTvshowDbEvent>['metadata']
+      >;
+    } as unknown as TypedTransactionalMessage<LocalizableTvshowDbEvent>;
 
   beforeAll(() => {
-    storeOutboxMessage = jest.fn(
+    storeOutboxMessage = vi.fn(
       async (_aggregateId, messagingSettings, message, _client, data) => {
         messages.push({
           payload: message as
@@ -88,10 +96,6 @@ describe('Localizable Tvshow DB trigger events', () => {
 
   afterEach(async () => {
     messages = [];
-  });
-
-  afterAll(async () => {
-    jest.restoreAllMocks();
   });
 
   describe('LocalizableTvshowCreatedDbMessageHandler', () => {
@@ -113,7 +117,10 @@ describe('Localizable Tvshow DB trigger events', () => {
       };
 
       // Act
-      await handler.handleMessage(createMessage(payload), stub<ClientBase>());
+      await handler.handleMessage(
+        createMessage(payload),
+        {} satisfies Partial<ClientBase> as unknown as ClientBase,
+      );
 
       // Assert
       expect(messages).toEqual([
@@ -160,7 +167,10 @@ describe('Localizable Tvshow DB trigger events', () => {
       };
 
       // Act
-      await handler.handleMessage(createMessage(payload), stub<ClientBase>());
+      await handler.handleMessage(
+        createMessage(payload),
+        {} satisfies Partial<ClientBase> as unknown as ClientBase,
+      );
 
       // Assert
       expect(messages).toEqual([
@@ -202,7 +212,7 @@ describe('Localizable Tvshow DB trigger events', () => {
       // Act
       await handler.handleMessage(
         createMessage(payload, context),
-        stub<ClientBase>(),
+        {} satisfies Partial<ClientBase> as unknown as ClientBase,
       );
 
       // Assert
@@ -251,7 +261,10 @@ describe('Localizable Tvshow DB trigger events', () => {
       };
 
       // Act
-      await handler.handleMessage(createMessage(payload), stub<ClientBase>());
+      await handler.handleMessage(
+        createMessage(payload),
+        {} satisfies Partial<ClientBase> as unknown as ClientBase,
+      );
 
       // Assert
       expect(messages).toEqual([

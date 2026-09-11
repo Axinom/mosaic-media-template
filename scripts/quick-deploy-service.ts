@@ -438,8 +438,8 @@ function initiateDeployment(
     serviceId === 'media-service'
       ? '-p media-workflows@1.0.0'
       : serviceId === 'channel-service'
-      ? '-p channel-workflows@1.0.0'
-      : '';
+        ? '-p channel-workflows@1.0.0'
+        : '';
   const deployCommand = `yarn util:load-vars mosaic hosting service deploy -i ${serviceId} -t ${dockerImageTag} ${workflows} -m ${serviceId}-manifest-${uniqueID} -n ${serviceId}-deployment-${uniqueID}`;
 
   console.log(`\nRunning Deploy command:\n${chalk.green(deployCommand)}\n`);
@@ -466,10 +466,10 @@ function printAdminPortalURL(serviceDefinitionId: string): void {
   const adminPortalBaseUrl = idServiceAuthBaseUrl.includes('.eu.')
     ? 'https://admin.service.eu.axinom.com'
     : idServiceAuthBaseUrl.includes('.test.')
-    ? 'https://admin.service.test.axtest.net'
-    : idServiceAuthBaseUrl.includes('.cb.')
-    ? 'https://admin.service.cb.axtest.net'
-    : 'https://admin.service.dev.axtest.net';
+      ? 'https://admin.service.test.axtest.net'
+      : idServiceAuthBaseUrl.includes('.cb.')
+        ? 'https://admin.service.cb.axtest.net'
+        : 'https://admin.service.dev.axtest.net';
 
   const adminPortalURL = `${adminPortalBaseUrl}/env/${environmentId}/services/ax-hosting-service/config/customizable-services/${serviceDefinitionId}`;
 

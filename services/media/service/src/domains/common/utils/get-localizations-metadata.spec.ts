@@ -1,6 +1,5 @@
 import { rejectionOf } from '@axinom/mosaic-service-common';
 import { ClientError } from 'graphql-request';
-import 'jest-extended';
 import {
   CommonErrors,
   Config,
@@ -22,7 +21,7 @@ import {
 
 let validationResult: any = () => undefined;
 let publishResult: any = () => undefined;
-jest.spyOn(localization, 'getSdk').mockImplementation(() => ({
+vi.spyOn(localization, 'getSdk').mockImplementation(() => ({
   PrepareEntityLocalizationsForPublishing: () => publishResult(),
   ValidateEntityLocalizations: () => validationResult(),
 }));
@@ -70,7 +69,7 @@ describe('GetLocalizationsMetadata', () => {
     validationResult = () => undefined;
   });
   afterAll(async () => {
-    jest.restoreAllMocks();
+    vi.restoreAllMocks();
   });
 
   it('Empty localizations array is returned -> empty localizations array', async () => {
