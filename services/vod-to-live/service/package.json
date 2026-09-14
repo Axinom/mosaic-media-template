@@ -39,7 +39,7 @@
     "media-messages": "^0.0.1",
     "rascal": "^14.4.5",
     "url-join": "^4.0.1",
-    "xmlbuilder2": "^3.1.1"
+    "xmlbuilder2": "^4.0.3"
   },
   "devDependencies": {
     "@types/rascal": "^10.0.6",
