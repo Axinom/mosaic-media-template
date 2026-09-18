@@ -107,8 +107,8 @@ const getNonCommonProperties = (params: {
   mainVideo?: string;
   parentInfo?: { externalId: string; childCount: number }[];
 }): Dict<unknown> => {
-  const title = faker.random.words().trim();
-  const original_title = faker.random.words().trim();
+  const title = faker.word.words().trim();
+  const original_title = faker.word.words().trim();
   const main_video = params.mainVideo
     ? {
         source: params.mainVideo,
@@ -174,7 +174,7 @@ const generateIngestItem = (
   const description = faker.lorem.paragraph(5);
   const obj: IngestItem = {
     type,
-    external_id: `${ingestName}-${faker.datatype.uuid()}`,
+    external_id: `${ingestName}-${faker.string.uuid()}`,
     data: {
       ...nonCommonProperties,
       synopsis,
@@ -182,13 +182,13 @@ const generateIngestItem = (
       studio: faker.company.name(),
       released: faker.date.past().toISOString().split('T')[0],
       tags: randomArray(0, 4, () => {
-        return faker.random.word();
+        return faker.word.sample();
       }),
       cast: randomArray(0, 4, () => {
-        return faker.helpers.fake('{{name.lastName}} {{name.firstName}}');
+        return faker.helpers.fake('{{person.lastName}} {{person.firstName}}');
       }),
       production_countries: randomArray(0, 4, () => {
-        return faker.address.country();
+        return faker.location.country();
       }),
       genres: randomArray(1, 4, () => {
         return faker.helpers.arrayElement(genres);
@@ -796,12 +796,12 @@ const getLanguageTags = async (
  */
 const parseArgs = (args: CliArgs): ParsedCliArgs => {
   // Entities count calculation
-  const movies = faker.datatype.number({ min: 1, max: args.entitiesCount - 3 }); // At least one movie must be present and 3 elements are reserved for tv entities
-  const episodes = faker.datatype.number({
+  const movies = faker.number.int({ min: 1, max: args.entitiesCount - 3 }); // At least one movie must be present and 3 elements are reserved for tv entities
+  const episodes = faker.number.int({
     min: 1,
     max: args.entitiesCount - movies - 2,
   }); // At least one episode must be present and 2 elements are reserved for seasons and tvshows
-  const seasons = faker.datatype.number({
+  const seasons = faker.number.int({
     min: 1,
     max: args.entitiesCount - movies - episodes - 1,
   }); // At least one season must be present and 1 element is reserved for tvshows
@@ -817,13 +817,13 @@ const parseArgs = (args: CliArgs): ParsedCliArgs => {
     0,
     args.videosCount - movieMainVideos - episodeMainVideos,
   );
-  const episodeTrailers = episodes === 0 ? 0 : faker.datatype.number(trailers);
+  const episodeTrailers = episodes === 0 ? 0 : faker.number.int(trailers);
   const seasonTrailers =
-    seasons === 0 ? 0 : faker.datatype.number(trailers - episodeTrailers);
+    seasons === 0 ? 0 : faker.number.int(trailers - episodeTrailers);
   const tvshowTrailers =
     tvshows === 0
       ? 0
-      : faker.datatype.number(trailers - episodeTrailers - seasonTrailers);
+      : faker.number.int(trailers - episodeTrailers - seasonTrailers);
   const movieTrailers =
     trailers - episodeTrailers - seasonTrailers - tvshowTrailers;
 
