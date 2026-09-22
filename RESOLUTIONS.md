@@ -58,15 +58,6 @@ The goal is to minimize resolutions and remove them when no longer needed.
 - **Last verified**: 2026-09-14
 - **Check again when**: `@graphql-codegen/visitor-plugin-common` releases a v3+ that accepts `@graphql-tools/relay-operation-optimizer@^7`
 
-### qs@6.15.3 (held back by the 7-day npm age gate)
-
-- **Vulnerability**: array-limit bypass via bracket-key comma parsing (medium), Denial of Service via attacker-controlled `isBuffer` (medium). npm-advisory-only — GitHub Dependabot has not raised alerts for these.
-- **Current version**: 6.15.3 (the `^6.10.3` / `^6.11.0` consumers already resolve to the patched 6.16.0)
-- **Patched in**: 6.16.0
-- **Blocked by**: `express@4.22.2` and `body-parser@1.20.6` both require `qs@~6.15.1`, which caps this copy at 6.15.x. The upstream fix already exists — `express@4.22.3` requires `qs@~6.16.0` and `body-parser@1.20.8` requires `~6.16.0` — but both releases are newer than this repo's `npmMinimalAgeGate: '7d'` supply-chain gate in `.yarnrc.yml` (`express@4.22.3` published 2026-09-14, `body-parser@1.20.8` published 2026-09-08), so Yarn correctly refuses to resolve to them. **Do not bypass the age gate to fix this.**
-- **Date**: 2026-09-14
-- **Check again when**: After 2026-09-21 (when `express@4.22.3` clears the 7-day gate). Deleting the `express`, `body-parser` and `qs@~6.15.1` lockfile entries and reinstalling will then pick up the fix with no manifest changes.
-
 ### @faker-js/faker@7.6.0 (via @axinom/mosaic-ui)
 
 - **Vulnerability**: `helpers.fake` exploitable into arbitrary code execution (high)
