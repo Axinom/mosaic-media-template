@@ -58,15 +58,6 @@ The goal is to minimize resolutions and remove them when no longer needed.
 - **Last verified**: 2026-09-14
 - **Check again when**: `@graphql-codegen/visitor-plugin-common` releases a v3+ that accepts `@graphql-tools/relay-operation-optimizer@^7`
 
-### @faker-js/faker@7.6.0 (via @axinom/mosaic-ui)
-
-- **Vulnerability**: `helpers.fake` exploitable into arbitrary code execution (high)
-- **Current version**: 7.6.0
-- **Patched in**: 10.5.0 (major-version jump)
-- **Blocked by**: `@axinom/mosaic-ui@0.73.0` declares `@faker-js/faker@^7.4.0`, capping this copy at 7.x. `media-service` has already been migrated to `^10.5.0` (resolves to 10.6.0), so this is the only remaining vulnerable copy and it exists purely inside the Mosaic UI library. Forcing it with a resolution is not safe — it would push `@axinom/mosaic-ui` onto the v10 API, whose module renames (`name.*` → `person.*`, `datatype.*` → `number.*`/`string.*`, `random.*` → `word.*`) are breaking.
-- **Date**: 2026-09-14
-- **Check again when**: `@axinom/mosaic-ui` widens its `@faker-js/faker` range to `^10`
-
 ## Deferred (Tolerated For Now)
 
 Vulnerabilities we intend to fix eventually, but where the fix is bigger/involved
