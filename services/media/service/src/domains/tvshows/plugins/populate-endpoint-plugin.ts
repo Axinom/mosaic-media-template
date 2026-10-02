@@ -26,9 +26,9 @@ import {
 
 const generateSampleTvShow = (): tvshows.Insertable => {
   return {
-    external_id: faker.datatype.uuid(),
-    title: faker.random.words().trim() || 'The Matrix',
-    original_title: faker.random.words().trim() || 'The Matrix',
+    external_id: faker.string.uuid(),
+    title: faker.word.words().trim() || 'The Matrix',
+    original_title: faker.word.words().trim() || 'The Matrix',
     synopsis: faker.lorem.paragraph(1),
     description: faker.lorem.paragraph(5),
     studio: faker.company.name(),
@@ -37,10 +37,10 @@ const generateSampleTvShow = (): tvshows.Insertable => {
       'NOT_PUBLISHED',
       'PUBLISHED',
     ]),
-    published_user: faker.helpers.fake('{{name.lastName}}, {{name.firstName}}'),
+    published_user: faker.helpers.fake('{{person.lastName}}, {{person.firstName}}'),
     published_date: faker.date.recent(),
-    created_user: faker.helpers.fake('{{name.lastName}}, {{name.firstName}}'),
-    updated_user: faker.helpers.fake('{{name.lastName}}, {{name.firstName}}'),
+    created_user: faker.helpers.fake('{{person.lastName}}, {{person.firstName}}'),
+    updated_user: faker.helpers.fake('{{person.lastName}}, {{person.firstName}}'),
     created_date: faker.date.recent(),
     updated_date: faker.date.recent(),
   };
@@ -49,8 +49,8 @@ const generateSampleTvShow = (): tvshows.Insertable => {
 const generateSampleSeason = (tvshowId: number): seasons.Insertable => {
   return {
     tvshow_id: tvshowId,
-    index: faker.datatype.number({ min: 0, max: 15 }),
-    external_id: faker.datatype.uuid(),
+    index: faker.number.int({ min: 0, max: 15 }),
+    external_id: faker.string.uuid(),
     synopsis: faker.lorem.paragraph(1),
     description: faker.lorem.paragraph(5),
     studio: faker.company.name(),
@@ -59,10 +59,10 @@ const generateSampleSeason = (tvshowId: number): seasons.Insertable => {
       'NOT_PUBLISHED',
       'PUBLISHED',
     ]),
-    published_user: faker.helpers.fake('{{name.lastName}}, {{name.firstName}}'),
+    published_user: faker.helpers.fake('{{person.lastName}}, {{person.firstName}}'),
     published_date: faker.date.recent(),
-    created_user: faker.helpers.fake('{{name.lastName}}, {{name.firstName}}'),
-    updated_user: faker.helpers.fake('{{name.lastName}}, {{name.firstName}}'),
+    created_user: faker.helpers.fake('{{person.lastName}}, {{person.firstName}}'),
+    updated_user: faker.helpers.fake('{{person.lastName}}, {{person.firstName}}'),
     created_date: faker.date.recent(),
     updated_date: faker.date.recent(),
   };
@@ -71,23 +71,23 @@ const generateSampleSeason = (tvshowId: number): seasons.Insertable => {
 const generateSampleEpisode = (seasonId: number): episodes.Insertable => {
   return {
     season_id: seasonId,
-    index: faker.datatype.number({ min: 0, max: 15 }),
-    external_id: faker.datatype.uuid(),
-    title: faker.random.words().trim() || 'The Matrix',
-    original_title: faker.random.words().trim() || 'The Matrix',
+    index: faker.number.int({ min: 0, max: 15 }),
+    external_id: faker.string.uuid(),
+    title: faker.word.words().trim() || 'The Matrix',
+    original_title: faker.word.words().trim() || 'The Matrix',
     synopsis: faker.lorem.paragraph(1),
     description: faker.lorem.paragraph(5),
     studio: faker.company.name(),
     released: faker.date.past(),
-    main_video_id: faker.datatype.uuid(),
+    main_video_id: faker.string.uuid(),
     publish_status: faker.helpers.arrayElement<PublishStatusEnum>([
       'NOT_PUBLISHED',
       'PUBLISHED',
     ]),
-    published_user: faker.helpers.fake('{{name.lastName}}, {{name.firstName}}'),
+    published_user: faker.helpers.fake('{{person.lastName}}, {{person.firstName}}'),
     published_date: faker.date.recent(),
-    created_user: faker.helpers.fake('{{name.lastName}}, {{name.firstName}}'),
-    updated_user: faker.helpers.fake('{{name.lastName}}, {{name.firstName}}'),
+    created_user: faker.helpers.fake('{{person.lastName}}, {{person.firstName}}'),
+    updated_user: faker.helpers.fake('{{person.lastName}}, {{person.firstName}}'),
     created_date: faker.date.recent(),
     updated_date: faker.date.recent(),
   };
@@ -98,7 +98,7 @@ const insertEpisodes = async (
   seasonId: number,
   genreIds: number[],
 ): Promise<void> => {
-  const episodesCount = faker.datatype.number({ min: 0, max: 50 });
+  const episodesCount = faker.number.int({ min: 0, max: 50 });
   if (episodesCount === 0) {
     return;
   }
@@ -125,7 +125,7 @@ const insertSeasons = async (
   tvshowId: number,
   genreIds: number[],
 ): Promise<void> => {
-  const seasonsCount = faker.datatype.number({ min: 0, max: 15 });
+  const seasonsCount = faker.number.int({ min: 0, max: 15 });
   if (seasonsCount === 0) {
     return;
   }
