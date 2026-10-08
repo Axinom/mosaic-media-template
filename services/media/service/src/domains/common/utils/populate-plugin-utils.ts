@@ -25,7 +25,7 @@ export const insertTrailers = async (
   entityName: string,
 ): Promise<void> => {
   const trailers = randomArray(0, 4, () => {
-    return faker.datatype.uuid();
+    return faker.string.uuid();
   }).map((trailerId) => ({
     [`${entityName}_id`]: entityId,
     video_id: trailerId,
@@ -45,7 +45,7 @@ export const insertTags = async (
   entityName: string,
 ): Promise<void> => {
   const tags = randomArray(0, 4, () => {
-    return faker.random.word();
+    return faker.word.sample();
   }).map((tag) => ({ [`${entityName}_id`]: entityId, name: tag }));
 
   if (tags.length === 0) {
@@ -62,7 +62,7 @@ export const insertProductionCountries = async (
   entityName: string,
 ): Promise<void> => {
   const countries = randomArray(0, 4, () => {
-    return faker.address.country();
+    return faker.location.country();
   }).map((country) => ({ [`${entityName}_id`]: entityId, name: country }));
 
   if (countries.length === 0) {
@@ -85,7 +85,7 @@ export const insertImages = async (
   }).map((type) => ({
     [`${entityName}_id`]: entityId,
     image_type: type,
-    image_id: faker.datatype.uuid(),
+    image_id: faker.string.uuid(),
   }));
 
   if (images.length === 0) {
@@ -102,7 +102,7 @@ export const insertCasts = async (
   entityName: string,
 ): Promise<void> => {
   const actors = randomArray(0, 4, () => {
-    return faker.helpers.fake('{{name.lastName}} {{name.firstName}}');
+    return faker.helpers.fake('{{person.lastName}} {{person.firstName}}');
   }).map((actor) => ({ [`${entityName}_id`]: entityId, name: actor }));
 
   if (actors.length === 0) {
@@ -149,7 +149,7 @@ export const insertLicenses = async (
   entityId: number,
   entityName: string,
 ): Promise<void> => {
-  const licensesCount = faker.datatype.number({ min: 0, max: 10 });
+  const licensesCount = faker.number.int({ min: 0, max: 10 });
   const elements = [];
   for (let i = 0; i < licensesCount; i++) {
     elements.push(generateSampleLicense(entityId, entityName));
@@ -181,8 +181,8 @@ export const generateSampleGenre = (
   return {
     title: name,
     sort_order: sortOrder,
-    created_user: faker.helpers.fake('{{name.lastName}}, {{name.firstName}}'),
-    updated_user: faker.helpers.fake('{{name.lastName}}, {{name.firstName}}'),
+    created_user: faker.helpers.fake('{{person.lastName}}, {{person.firstName}}'),
+    updated_user: faker.helpers.fake('{{person.lastName}}, {{person.firstName}}'),
     created_date: faker.date.recent(),
     updated_date: faker.date.recent(),
   };
