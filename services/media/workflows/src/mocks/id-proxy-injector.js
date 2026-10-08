@@ -31,15 +31,16 @@ async function startProxy() {
   const httpProxy = require('http-proxy');
 
   const proxyPort = process.env.ID_SERVICE_LOCAL_PROXY_PORT;
+  const target = process.env.ID_SERVICE_AUTH_BASE_URL;
 
   const proxy = httpProxy.createProxyServer();
-  const server = http.createServer((req, res) => {
+  const handleRequest = (req, res) => {
     proxy.web(
       req,
       res,
       {
         xfwd: true,
-        target: process.env.ID_SERVICE_AUTH_BASE_URL,
+        target,
         changeOrigin: true,
       },
       (error) => {
@@ -48,13 +49,33 @@ async function startProxy() {
           message: 'an exception occured while proxying, please try again.',
           details: error,
         });
+
+        // Otherwise the socket stays open and the browser hangs.
+        if (!res.headersSent) {
+          res.writeHead(502, { 'content-type': 'application/json' });
+        }
+        res.end(
+          JSON.stringify({
+            error: 'id-proxy could not reach the id service',
+            target,
+            details: error?.message ?? String(error),
+          }),
+        );
       },
     );
-  });
+  };
 
-  server.on('listening', () => {
-    console.log(`\n> id-proxy running at http://localhost:${proxyPort}`);
-  });
+  // Loopback only — `listen(port)` alone would bind every interface — but both
+  // families, since `localhost` resolves to ::1 before 127.0.0.1. A failed bind
+  // is logged, not thrown: one family is enough to work.
+  const listen = (host) =>
+    http
+      .createServer(handleRequest)
+      .on('error', (e) => console.log(`> id-proxy: no ${host} — ${e.message}`))
+      .listen(proxyPort, host);
 
-  server.listen(proxyPort);
+  listen('127.0.0.1');
+  listen('::1');
+
+  console.log(`\n> id-proxy running at http://localhost:${proxyPort}`);
 }
