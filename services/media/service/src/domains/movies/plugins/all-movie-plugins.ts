@@ -9,9 +9,11 @@ import {
 } from '../../../publishing';
 import { PopulateEndpointPlugin } from './populate-endpoint-plugin';
 import { SmartTagsPlugin } from './smart-tags-plugin';
+import { TitleSearchFilterPlugin } from './title-search-filter-plugin';
 
 export const AllMoviePlugins = makePluginByCombiningPlugins(
   SmartTagsPlugin,
+  TitleSearchFilterPlugin,
   BulkCreateSnapshotsPluginFactory('movies'),
   BulkPublishingPluginFactory('movies'),
   BulkUnpublishingPluginFactory('movies'),

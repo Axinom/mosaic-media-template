@@ -32,6 +32,7 @@ import {
 } from '../../../Util/FilterUtils';
 import { getEnumLabel } from '../../../Util/StringEnumMapper/StringEnumMapper';
 import { MovieData } from './MovieExplorer.types';
+import { applyTitleSearchFilter } from './MovieExplorer.filters.utils';
 
 export function useMoviesFilters(): {
   readonly filterOptions: FilterType<MovieData>[];
@@ -124,7 +125,7 @@ export function useMoviesFilters(): {
     filters: FilterValues<MovieData>,
     excludeItems?: number[],
   ): MovieFilter | undefined => {
-    return filterToPostGraphileFilter<MovieFilter>(filters, {
+    const filter = filterToPostGraphileFilter<MovieFilter>(filters, {
       title: 'includesInsensitive',
       originalTitle: 'includesInsensitive',
       externalId: 'includesInsensitive',
@@ -160,6 +161,7 @@ export function useMoviesFilters(): {
         isNull: !value,
       }),
     });
+    return applyTitleSearchFilter(filter);
   };
 
   return { filterOptions, transformFilters };

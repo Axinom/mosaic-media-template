@@ -8103,6 +8103,8 @@ export type MovieFilter = {
   synopsis?: InputMaybe<StringFilter>;
   /** Filter by the object’s `title` field. */
   title?: InputMaybe<StringFilter>;
+  /** Contains the specified string (case-insensitive). Matches the same movies as `title: { includesInsensitive }` but can use the title search index. */
+  titleIncludesInsensitive?: InputMaybe<Scalars['String']>;
   /** Filter by the object’s `updatedDate` field. */
   updatedDate?: InputMaybe<DatetimeFilter>;
   /** Filter by the object’s `updatedUser` field. */

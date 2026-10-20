@@ -1493,6 +1493,21 @@ END;
 $$;
 
 
+--
+-- Name: movie_ids_matching_title(text); Type: FUNCTION; Schema: app_hidden; Owner: -
+--
+
+CREATE FUNCTION app_hidden.movie_ids_matching_title(title_pattern text) RETURNS SETOF integer
+    LANGUAGE plpgsql STABLE SECURITY DEFINER
+    SET search_path TO 'pg_catalog', 'pg_temp'
+    AS $_$
+BEGIN
+  PERFORM ax_utils.user_has_permission('MOVIES_VIEW,MOVIES_EDIT,ADMIN');
+  RETURN QUERY EXECUTE 'SELECT id FROM app_public.movies WHERE title ILIKE $1' USING title_pattern;
+END;
+$_$;
+
+
 SET default_tablespace = '';
 
 SET default_table_access_method = heap;
@@ -13098,6 +13113,14 @@ GRANT ALL ON FUNCTION app_hidden.localizable_tvshow_insert() TO media_service_gq
 
 REVOKE ALL ON FUNCTION app_hidden.localizable_tvshow_update() FROM PUBLIC;
 GRANT ALL ON FUNCTION app_hidden.localizable_tvshow_update() TO media_service_gql_role;
+
+
+--
+-- Name: FUNCTION movie_ids_matching_title(title_pattern text); Type: ACL; Schema: app_hidden; Owner: -
+--
+
+REVOKE ALL ON FUNCTION app_hidden.movie_ids_matching_title(title_pattern text) FROM PUBLIC;
+GRANT ALL ON FUNCTION app_hidden.movie_ids_matching_title(title_pattern text) TO media_service_gql_role;
 
 
 --
