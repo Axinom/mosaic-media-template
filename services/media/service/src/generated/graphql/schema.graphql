@@ -3512,6 +3512,11 @@ input MovieFilter {
 
   """Negates the expression."""
   not: MovieFilter
+
+  """
+  Contains the specified string (case-insensitive). Matches the same movies as `title: { includesInsensitive }` but can use the title search index.
+  """
+  titleIncludesInsensitive: String
 }
 
 """

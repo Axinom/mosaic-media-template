@@ -1493,6 +1493,37 @@ END;
 $$;
 
 
+--
+-- Name: movie_ids_matching_title(text); Type: FUNCTION; Schema: app_hidden; Owner: -
+--
+
+CREATE FUNCTION app_hidden.movie_ids_matching_title(title_pattern text) RETURNS SETOF integer
+    LANGUAGE plpgsql STABLE SECURITY DEFINER
+    SET search_path TO 'pg_catalog', 'pg_temp'
+    AS $_$
+DECLARE
+  candidate_ids integer[];
+BEGIN
+  PERFORM ax_utils.user_has_permission('MOVIES_VIEW,MOVIES_EDIT,ADMIN');
+  -- This is a conservative check for the literal contains patterns produced by
+  -- the GraphQL filter. A fallback changes performance, never matching semantics.
+  IF title_pattern !~ '[[:alnum:]]{3}' THEN
+    RETURN NEXT NULL;
+    RETURN;
+  END IF;
+  EXECUTE 'SELECT array_agg(id) FROM (SELECT id FROM app_public.movies WHERE title ILIKE $1 LIMIT 1001) AS candidates'
+    INTO candidate_ids USING title_pattern;
+  IF candidate_ids IS NULL THEN
+    RETURN;
+  ELSIF cardinality(candidate_ids) > 1000 THEN
+    RETURN NEXT NULL;
+  ELSE
+    RETURN QUERY SELECT unnest(candidate_ids);
+  END IF;
+END;
+$_$;
+
+
 SET default_tablespace = '';
 
 SET default_table_access_method = heap;
@@ -13098,6 +13129,14 @@ GRANT ALL ON FUNCTION app_hidden.localizable_tvshow_insert() TO media_service_gq
 
 REVOKE ALL ON FUNCTION app_hidden.localizable_tvshow_update() FROM PUBLIC;
 GRANT ALL ON FUNCTION app_hidden.localizable_tvshow_update() TO media_service_gql_role;
+
+
+--
+-- Name: FUNCTION movie_ids_matching_title(title_pattern text); Type: ACL; Schema: app_hidden; Owner: -
+--
+
+REVOKE ALL ON FUNCTION app_hidden.movie_ids_matching_title(title_pattern text) FROM PUBLIC;
+GRANT ALL ON FUNCTION app_hidden.movie_ids_matching_title(title_pattern text) TO media_service_gql_role;
 
 
 --
