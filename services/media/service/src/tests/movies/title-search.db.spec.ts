@@ -629,6 +629,11 @@ describe('Movie title search filter', () => {
           `INSERT INTO app_public.movies (title)
            SELECT 'Synthetic movie ' || g FROM generate_series(1, 20000) g`,
         );
+        // Settle the fixture's GIN pending list before asserting a natural
+        // selective-search plan; scanning an unflushed list can be costlier.
+        await rootClient.query(
+          "SELECT pg_catalog.gin_clean_pending_list('app_public.idx_trgm_movies_title')",
+        );
         await rootClient.query('ANALYZE app_public.movies');
         await rootClient.query("LOAD 'auto_explain'");
         await rootClient.query('SET LOCAL auto_explain.log_min_duration = 0');
