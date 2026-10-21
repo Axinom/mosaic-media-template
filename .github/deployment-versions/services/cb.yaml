@@ -1,7 +1,7 @@
 # -------------------------------- Docker image versions/tags for CB K8s Deployments -------------------------------- #
 
-catalog: 2026.10.20-03.48.39_39366218976_prerelease
-channel: 2026.10.20-03.48.39_39366218976_prerelease
-entitlement: 2026.10.20-03.48.39_39366218976_prerelease
-media: 2026.10.20-03.48.39_39366218976_prerelease
-vod-to-live: 2026.10.20-03.48.39_39366218976_prerelease
+catalog: 2026.10.21-03.49.07_39540619226_prerelease
+channel: 2026.10.21-03.49.07_39540619226_prerelease
+entitlement: 2026.10.21-03.49.07_39540619226_prerelease
+media: 2026.10.21-03.49.07_39540619226_prerelease
+vod-to-live: 2026.10.21-03.49.07_39540619226_prerelease
