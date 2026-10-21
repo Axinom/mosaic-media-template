@@ -111,9 +111,7 @@ describe('Movie title search filter', () => {
     expect(resp.errors).toBeFalsy();
     const result = resp.data?.movies;
     return {
-      ids: result.edges.map(
-        (edge: { node: { id: number } }) => edge.node.id,
-      ),
+      ids: result.edges.map((edge: { node: { id: number } }) => edge.node.id),
       result,
     };
   };
@@ -124,7 +122,7 @@ describe('Movie title search filter', () => {
   const callCandidateFunction = async (
     permission: string,
     pattern: string,
-  ): Promise<number[]> =>
+  ): Promise<(number | null)[]> =>
     ctx.executeGqlSql(
       createTestUser(ctx.config.serviceId, {
         permissions: { [ctx.config.serviceId]: [permission] },
@@ -134,7 +132,9 @@ describe('Movie title search filter', () => {
           'SELECT app_hidden.movie_ids_matching_title($1) AS id',
           [pattern],
         );
-        return rows.map((row) => row.id as number).sort((a, b) => a - b);
+        return rows
+          .map((row) => row.id as number | null)
+          .sort((a, b) => (a ?? 0) - (b ?? 0));
       },
     );
 
@@ -202,7 +202,11 @@ describe('Movie title search filter', () => {
         'StringFilter',
       );
 
-      for (const typeName of ['StringFilter', 'TvshowFilter', 'EpisodeFilter']) {
+      for (const typeName of [
+        'StringFilter',
+        'TvshowFilter',
+        'EpisodeFilter',
+      ]) {
         const type = ctx.schema.getType(typeName) as GraphQLInputObjectType;
         expect(Object.keys(type.getFields())).not.toContain(
           'titleIncludesInsensitive',
@@ -215,9 +219,9 @@ describe('Movie title search filter', () => {
         ...Object.keys(ctx.schema.getQueryType()?.getFields() ?? {}),
         ...Object.keys(ctx.schema.getMutationType()?.getFields() ?? {}),
       ];
-      expect(
-        rootFields.filter((name) => /matchingTitle/i.test(name)),
-      ).toEqual([]);
+      expect(rootFields.filter((name) => /matchingTitle/i.test(name))).toEqual(
+        [],
+      );
     });
   });
 
@@ -383,9 +387,9 @@ describe('Movie title search filter', () => {
         defaultRequestContext,
       );
       expect(resp.errors).toBeFalsy();
-      expect(
-        resp.data?.createMovieSnapshots.affectedIds,
-      ).toIncludeSameMembers(idsOf('needleHaystack', 'needle', 'quoteNeedle'));
+      expect(resp.data?.createMovieSnapshots.affectedIds).toIncludeSameMembers(
+        idsOf('needleHaystack', 'needle', 'quoteNeedle'),
+      );
     });
 
     it('bulkEditMoviesAsync -> selects the filtered movies', async () => {
@@ -491,6 +495,119 @@ describe('Movie title search filter', () => {
     });
   });
 
+  describe('bounded candidates', () => {
+    it('exactly 1000 matches -> real IDs only, with identical GraphQL results', async () => {
+      await ctx.ownerPool.query(
+        `INSERT INTO app_public.movies (title)
+         SELECT 'Boundary title ' || g FROM generate_series(1, 1000) g`,
+      );
+      const candidates = await callCandidateFunction(
+        'MOVIES_VIEW',
+        '%boundary title%',
+      );
+      expect(candidates).toHaveLength(1000);
+      expect(candidates).not.toContain(null);
+      const actual = await queryMovies(indexed('boundary title'), {
+        first: 30,
+      });
+      const expected = await queryMovies(legacy('boundary title'), {
+        first: 30,
+      });
+      expect(actual.result).toEqual(expected.result);
+      await expect(
+        callCandidateFunction('MOVIES_VIEW', '%no-such-needle%'),
+      ).resolves.toEqual([]);
+    });
+
+    it('fallback and empty candidate sets -> NOT preserves literal and Unicode matching', async () => {
+      await ctx.ownerPool.query(
+        `INSERT INTO app_public.movies (title) VALUES ('映像化 sample'), ('Straße CAFÉ')`,
+      );
+      for (const term of [
+        'no-such-needle',
+        '映像化',
+        'CAFÉ',
+        '_',
+        '%',
+        '\\',
+        '',
+      ]) {
+        const actual = await queryMovies({ not: indexed(term) });
+        const expected = await queryMovies({ not: legacy(term) });
+        expect(actual.result).toEqual(expected.result);
+      }
+    });
+
+    it('patterns without a useful trigram -> fallback after checking permissions', async () => {
+      await expect(
+        callCandidateFunction('SETTINGS_VIEW', '%\\_%'),
+      ).rejects.toThrow('At least one of these permissions must be granted');
+      await expect(
+        callCandidateFunction('MOVIES_VIEW', '%\\_%'),
+      ).resolves.toEqual([null]);
+    });
+
+    it('broad terms -> a fallback marker instead of an unbounded ID set, with identical GraphQL results', async () => {
+      await ctx.ownerPool.query(
+        `INSERT INTO app_public.movies (title, studio)
+         SELECT 'Bounded title ' || g, CASE WHEN g <= 500 THEN 'Hidden' ELSE 'Public' END
+         FROM generate_series(1, 1001) g`,
+      );
+      await expect(
+        callCandidateFunction('MOVIES_VIEW', '%bounded title%'),
+      ).resolves.toEqual([null]);
+
+      for (const clause of [
+        (search: MovieFilter): MovieFilter => search,
+        (search: MovieFilter): MovieFilter => ({ not: search }),
+        (search: MovieFilter): MovieFilter => ({
+          or: [search, legacy('needle')],
+        }),
+      ]) {
+        const actual = await queryMovies(clause(indexed('bounded title')), {
+          first: 30,
+          orderBy: ['TITLE_ASC'],
+        });
+        const expected = await queryMovies(clause(legacy('bounded title')), {
+          first: 30,
+          orderBy: ['TITLE_ASC'],
+        });
+        expect(actual.result).toEqual(expected.result);
+      }
+
+      const bulk = await ctx.runGqlQuery(
+        BULK_EDIT_MOVIES,
+        {
+          filter: indexed('bounded title'),
+        },
+        defaultRequestContext,
+      );
+      expect(bulk.errors).toBeFalsy();
+      expect(bulk.data?.bulkEditMoviesAsync.filterMatchedIds).toHaveLength(
+        1001,
+      );
+
+      await ctx.ownerPool.query(
+        `CREATE POLICY title_search_broad_restriction ON app_public.movies AS RESTRICTIVE FOR SELECT
+         USING (studio IS DISTINCT FROM 'Hidden')`,
+      );
+      try {
+        const actual = await queryMovies(indexed('bounded title'), {
+          first: 30,
+        });
+        const expected = await queryMovies(legacy('bounded title'), {
+          first: 30,
+        });
+        expect(actual.result).toEqual(expected.result);
+        expect(actual.result.totalCount).toBe(501);
+      } finally {
+        await ctx.ownerPool.query(
+          'DROP POLICY title_search_broad_restriction ON app_public.movies',
+        );
+      }
+    });
+  });
+
   describe('trigram index without LEAKPROOF texticlike', () => {
     it('texticlike is not leakproof in this database', async () => {
       const { rows } = await rootClient.query(
@@ -527,9 +644,7 @@ describe('Movie title search filter', () => {
           'EXPLAIN SELECT id FROM app_public.movies WHERE title ILIKE $1',
           ['%needle%'],
         );
-        rowLevelSecurityPlan = rows
-          .map((row) => row['QUERY PLAN'])
-          .join('\n');
+        rowLevelSecurityPlan = rows.map((row) => row['QUERY PLAN']).join('\n');
         await rootClient.query(
           'SELECT app_hidden.movie_ids_matching_title($1)',
           ['%needle%'],
@@ -543,9 +658,7 @@ describe('Movie title search filter', () => {
       expect(rowLevelSecurityPlan).not.toContain('idx_trgm_movies_title');
       expect(
         notices.find((notice) =>
-          notice.includes(
-            'Query Text: SELECT id FROM app_public.movies WHERE title ILIKE',
-          ),
+          notice.includes('Query Text: SELECT array_agg(id) FROM'),
         ),
       ).toContain('Bitmap Index Scan on idx_trgm_movies_title');
     });

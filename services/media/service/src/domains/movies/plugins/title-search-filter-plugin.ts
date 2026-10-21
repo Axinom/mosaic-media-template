@@ -5,10 +5,11 @@ const fieldName = 'titleIncludesInsensitive';
 
 /**
  * Adds `titleIncludesInsensitive` to `MovieFilter`. It matches the same movies
- * as `title: { includesInsensitive }`, but finds them through
- * `app_hidden.movie_ids_matching_title`, which can use the trigram index on the
- * title also when row level security is enabled. The movies query still applies
- * row level security. As a filter field it can be combined with all other
+ * as `title: { includesInsensitive }`, using a bounded candidate set from
+ * `app_hidden.movie_ids_matching_title` when useful, or the original ILIKE
+ * predicate on fallback. The movies query still applies row level security.
+ * This is an opt-in optimization, not a guarantee of faster searches.
+ * As a filter field it can be combined with all other
  * filter fields, including `and`, `or`, `not` and relation filters.
  */
 export const TitleSearchFilterPlugin: Plugin = (builder) => {
@@ -47,11 +48,18 @@ export const TitleSearchFilterPlugin: Plugin = (builder) => {
         fieldValue: string;
       }): SQL => {
         const pattern = `%${escapeLikeWildcards(fieldValue)}%`;
-        return sql.query`${sourceAlias}.${sql.identifier(
+        // The helper returns either real IDs or a single NULL fallback marker.
+        // IN permits a hashed subplan here (also under OR/NOT); an array ANY
+        // expression can become a linear scan per row in those contexts.
+        // For the marker, IN is NULL and COALESCE uses the original predicate.
+        // The outer table query still applies its normal RLS policies.
+        return sql.query`COALESCE(${sourceAlias}.${sql.identifier(
           'id',
         )} IN (SELECT app_hidden.movie_ids_matching_title(${sql.value(
           pattern,
-        )}))`;
+        )})), ${sourceAlias}.${sql.identifier('title')} ILIKE ${sql.value(
+          pattern,
+        )})`;
       },
     );
 
