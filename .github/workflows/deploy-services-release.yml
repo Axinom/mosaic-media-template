@@ -279,7 +279,7 @@ jobs:
     needs: [ resolve_build_prod, approve_prod_deploy ]
     uses: ./.github/workflows/templates-deploy-service.yml
     secrets:
-      kube-config: ${{ secrets.KUBECONFIG_PRODUCTION }}
+      kube-config: ${{ secrets.KUBECONFIG_PRODUCTION_AZURE }}
       docker-registry-username: ${{ secrets.HARBOR_PUSH_USERNAME }}
       docker-registry-password: ${{ secrets.HARBOR_PUSH_PASSWORD }}
     with:
