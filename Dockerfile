@@ -6,7 +6,7 @@ ARG PACKAGE_ROOT
 ARG PACKAGE_BUILD_COMMAND
 
 # BASE
-FROM node:22-bookworm-slim AS base
+FROM node:22.23.4-alpine3.24 AS base
 WORKDIR /checkout
 
 ARG PACKAGE_ROOT
@@ -30,7 +30,7 @@ RUN mkdir -p "$PACKAGE_ROOT/node_modules"
 RUN if [ ! -d /checkout/$PACKAGE_ROOT/migrations ]; then mkdir -p /checkout/$PACKAGE_ROOT/migrations; fi
 
 # RELEASE
-FROM node:22-bookworm-slim
+FROM node:22.23.4-alpine3.24
 
 ARG PACKAGE_ROOT
 ARG PACKAGE_BUILD_COMMAND
