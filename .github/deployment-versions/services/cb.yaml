@@ -1,7 +1,7 @@
 # -------------------------------- Docker image versions/tags for CB K8s Deployments -------------------------------- #
 
-catalog: "20261029.0340"
-channel: "20261029.0340"
-entitlement: "20261029.0340"
-media: "20261029.0340"
-vod-to-live: "20261029.0340"
+catalog: "20261030.0340"
+channel: "20261030.0340"
+entitlement: "20261030.0340"
+media: "20261030.0340"
+vod-to-live: "20261030.0340"
