@@ -241,6 +241,36 @@ CREATE DOMAIN app_public.tvshow_image_type_enum AS text;
 
 
 --
+-- Name: collections_tags_name_candidates(text); Type: FUNCTION; Schema: app_hidden; Owner: -
+--
+
+CREATE FUNCTION app_hidden.collections_tags_name_candidates(pattern text) RETURNS TABLE(collection_id integer, name text)
+    LANGUAGE plpgsql STABLE SECURITY DEFINER ROWS 100
+    SET search_path TO 'pg_catalog', 'pg_temp'
+    AS $_$
+    BEGIN
+      PERFORM ax_utils.user_has_permission('COLLECTIONS_VIEW,COLLECTIONS_EDIT,ADMIN');
+      RETURN QUERY EXECUTE 'SELECT collection_id, name FROM app_public.collections_tags WHERE name ILIKE $1 AND (1=1)' USING pattern;
+    END;
+    $_$;
+
+
+--
+-- Name: collections_title_candidates(text); Type: FUNCTION; Schema: app_hidden; Owner: -
+--
+
+CREATE FUNCTION app_hidden.collections_title_candidates(pattern text) RETURNS TABLE(id integer)
+    LANGUAGE plpgsql STABLE SECURITY DEFINER ROWS 100
+    SET search_path TO 'pg_catalog', 'pg_temp'
+    AS $_$
+    BEGIN
+      PERFORM ax_utils.user_has_permission('COLLECTIONS_VIEW,COLLECTIONS_EDIT,ADMIN');
+      RETURN QUERY EXECUTE 'SELECT id FROM app_public.collections WHERE title ILIKE $1 AND (1=1)' USING pattern;
+    END;
+    $_$;
+
+
+--
 -- Name: create_active_snapshots_before_delete_trigger(text, text, text, text); Type: FUNCTION; Schema: app_hidden; Owner: -
 --
 
@@ -462,6 +492,81 @@ BEGIN
   EXECUTE 'DROP POLICY IF EXISTS snapshots_validation_' || entityType || '_authorization_delete ON app_public.snapshot_validation_results;';
 END;
 $$;
+
+
+--
+-- Name: episodes_casts_name_candidates(text); Type: FUNCTION; Schema: app_hidden; Owner: -
+--
+
+CREATE FUNCTION app_hidden.episodes_casts_name_candidates(pattern text) RETURNS TABLE(episode_id integer, name text)
+    LANGUAGE plpgsql STABLE SECURITY DEFINER ROWS 100
+    SET search_path TO 'pg_catalog', 'pg_temp'
+    AS $_$
+    BEGIN
+      PERFORM ax_utils.user_has_permission('TVSHOWS_VIEW,TVSHOWS_EDIT,ADMIN');
+      RETURN QUERY EXECUTE 'SELECT episode_id, name FROM app_public.episodes_casts WHERE name ILIKE $1 AND (1=1)' USING pattern;
+    END;
+    $_$;
+
+
+--
+-- Name: episodes_original_title_candidates(text); Type: FUNCTION; Schema: app_hidden; Owner: -
+--
+
+CREATE FUNCTION app_hidden.episodes_original_title_candidates(pattern text) RETURNS TABLE(id integer)
+    LANGUAGE plpgsql STABLE SECURITY DEFINER ROWS 100
+    SET search_path TO 'pg_catalog', 'pg_temp'
+    AS $_$
+    BEGIN
+      PERFORM ax_utils.user_has_permission('TVSHOWS_VIEW,TVSHOWS_EDIT,ADMIN');
+      RETURN QUERY EXECUTE 'SELECT id FROM app_public.episodes WHERE original_title ILIKE $1 AND (1=1)' USING pattern;
+    END;
+    $_$;
+
+
+--
+-- Name: episodes_production_countries_name_candidates(text); Type: FUNCTION; Schema: app_hidden; Owner: -
+--
+
+CREATE FUNCTION app_hidden.episodes_production_countries_name_candidates(pattern text) RETURNS TABLE(episode_id integer, name text)
+    LANGUAGE plpgsql STABLE SECURITY DEFINER ROWS 100
+    SET search_path TO 'pg_catalog', 'pg_temp'
+    AS $_$
+    BEGIN
+      PERFORM ax_utils.user_has_permission('TVSHOWS_VIEW,TVSHOWS_EDIT,ADMIN');
+      RETURN QUERY EXECUTE 'SELECT episode_id, name FROM app_public.episodes_production_countries WHERE name ILIKE $1 AND (1=1)' USING pattern;
+    END;
+    $_$;
+
+
+--
+-- Name: episodes_tags_name_candidates(text); Type: FUNCTION; Schema: app_hidden; Owner: -
+--
+
+CREATE FUNCTION app_hidden.episodes_tags_name_candidates(pattern text) RETURNS TABLE(episode_id integer, name text)
+    LANGUAGE plpgsql STABLE SECURITY DEFINER ROWS 100
+    SET search_path TO 'pg_catalog', 'pg_temp'
+    AS $_$
+    BEGIN
+      PERFORM ax_utils.user_has_permission('TVSHOWS_VIEW,TVSHOWS_EDIT,ADMIN');
+      RETURN QUERY EXECUTE 'SELECT episode_id, name FROM app_public.episodes_tags WHERE name ILIKE $1 AND (1=1)' USING pattern;
+    END;
+    $_$;
+
+
+--
+-- Name: episodes_title_candidates(text); Type: FUNCTION; Schema: app_hidden; Owner: -
+--
+
+CREATE FUNCTION app_hidden.episodes_title_candidates(pattern text) RETURNS TABLE(id integer)
+    LANGUAGE plpgsql STABLE SECURITY DEFINER ROWS 100
+    SET search_path TO 'pg_catalog', 'pg_temp'
+    AS $_$
+    BEGIN
+      PERFORM ax_utils.user_has_permission('TVSHOWS_VIEW,TVSHOWS_EDIT,ADMIN');
+      RETURN QUERY EXECUTE 'SELECT id FROM app_public.episodes WHERE title ILIKE $1 AND (1=1)' USING pattern;
+    END;
+    $_$;
 
 
 --
@@ -1493,6 +1598,81 @@ END;
 $$;
 
 
+--
+-- Name: movies_casts_name_candidates(text); Type: FUNCTION; Schema: app_hidden; Owner: -
+--
+
+CREATE FUNCTION app_hidden.movies_casts_name_candidates(pattern text) RETURNS TABLE(movie_id integer, name text)
+    LANGUAGE plpgsql STABLE SECURITY DEFINER ROWS 100
+    SET search_path TO 'pg_catalog', 'pg_temp'
+    AS $_$
+    BEGIN
+      PERFORM ax_utils.user_has_permission('MOVIES_VIEW,MOVIES_EDIT,ADMIN');
+      RETURN QUERY EXECUTE 'SELECT movie_id, name FROM app_public.movies_casts WHERE name ILIKE $1 AND (1=1)' USING pattern;
+    END;
+    $_$;
+
+
+--
+-- Name: movies_original_title_candidates(text); Type: FUNCTION; Schema: app_hidden; Owner: -
+--
+
+CREATE FUNCTION app_hidden.movies_original_title_candidates(pattern text) RETURNS TABLE(id integer)
+    LANGUAGE plpgsql STABLE SECURITY DEFINER ROWS 100
+    SET search_path TO 'pg_catalog', 'pg_temp'
+    AS $_$
+    BEGIN
+      PERFORM ax_utils.user_has_permission('MOVIES_VIEW,MOVIES_EDIT,ADMIN');
+      RETURN QUERY EXECUTE 'SELECT id FROM app_public.movies WHERE original_title ILIKE $1 AND (1=1)' USING pattern;
+    END;
+    $_$;
+
+
+--
+-- Name: movies_production_countries_name_candidates(text); Type: FUNCTION; Schema: app_hidden; Owner: -
+--
+
+CREATE FUNCTION app_hidden.movies_production_countries_name_candidates(pattern text) RETURNS TABLE(movie_id integer, name text)
+    LANGUAGE plpgsql STABLE SECURITY DEFINER ROWS 100
+    SET search_path TO 'pg_catalog', 'pg_temp'
+    AS $_$
+    BEGIN
+      PERFORM ax_utils.user_has_permission('MOVIES_VIEW,MOVIES_EDIT,ADMIN');
+      RETURN QUERY EXECUTE 'SELECT movie_id, name FROM app_public.movies_production_countries WHERE name ILIKE $1 AND (1=1)' USING pattern;
+    END;
+    $_$;
+
+
+--
+-- Name: movies_tags_name_candidates(text); Type: FUNCTION; Schema: app_hidden; Owner: -
+--
+
+CREATE FUNCTION app_hidden.movies_tags_name_candidates(pattern text) RETURNS TABLE(movie_id integer, name text)
+    LANGUAGE plpgsql STABLE SECURITY DEFINER ROWS 100
+    SET search_path TO 'pg_catalog', 'pg_temp'
+    AS $_$
+    BEGIN
+      PERFORM ax_utils.user_has_permission('MOVIES_VIEW,MOVIES_EDIT,ADMIN');
+      RETURN QUERY EXECUTE 'SELECT movie_id, name FROM app_public.movies_tags WHERE name ILIKE $1 AND (1=1)' USING pattern;
+    END;
+    $_$;
+
+
+--
+-- Name: movies_title_candidates(text); Type: FUNCTION; Schema: app_hidden; Owner: -
+--
+
+CREATE FUNCTION app_hidden.movies_title_candidates(pattern text) RETURNS TABLE(id integer)
+    LANGUAGE plpgsql STABLE SECURITY DEFINER ROWS 100
+    SET search_path TO 'pg_catalog', 'pg_temp'
+    AS $_$
+    BEGIN
+      PERFORM ax_utils.user_has_permission('MOVIES_VIEW,MOVIES_EDIT,ADMIN');
+      RETURN QUERY EXECUTE 'SELECT id FROM app_public.movies WHERE title ILIKE $1 AND (1=1)' USING pattern;
+    END;
+    $_$;
+
+
 SET default_tablespace = '';
 
 SET default_table_access_method = heap;
@@ -1718,6 +1898,51 @@ $$;
 
 
 --
+-- Name: seasons_casts_name_candidates(text); Type: FUNCTION; Schema: app_hidden; Owner: -
+--
+
+CREATE FUNCTION app_hidden.seasons_casts_name_candidates(pattern text) RETURNS TABLE(season_id integer, name text)
+    LANGUAGE plpgsql STABLE SECURITY DEFINER ROWS 100
+    SET search_path TO 'pg_catalog', 'pg_temp'
+    AS $_$
+    BEGIN
+      PERFORM ax_utils.user_has_permission('TVSHOWS_VIEW,TVSHOWS_EDIT,ADMIN');
+      RETURN QUERY EXECUTE 'SELECT season_id, name FROM app_public.seasons_casts WHERE name ILIKE $1 AND (1=1)' USING pattern;
+    END;
+    $_$;
+
+
+--
+-- Name: seasons_production_countries_name_candidates(text); Type: FUNCTION; Schema: app_hidden; Owner: -
+--
+
+CREATE FUNCTION app_hidden.seasons_production_countries_name_candidates(pattern text) RETURNS TABLE(season_id integer, name text)
+    LANGUAGE plpgsql STABLE SECURITY DEFINER ROWS 100
+    SET search_path TO 'pg_catalog', 'pg_temp'
+    AS $_$
+    BEGIN
+      PERFORM ax_utils.user_has_permission('TVSHOWS_VIEW,TVSHOWS_EDIT,ADMIN');
+      RETURN QUERY EXECUTE 'SELECT season_id, name FROM app_public.seasons_production_countries WHERE name ILIKE $1 AND (1=1)' USING pattern;
+    END;
+    $_$;
+
+
+--
+-- Name: seasons_tags_name_candidates(text); Type: FUNCTION; Schema: app_hidden; Owner: -
+--
+
+CREATE FUNCTION app_hidden.seasons_tags_name_candidates(pattern text) RETURNS TABLE(season_id integer, name text)
+    LANGUAGE plpgsql STABLE SECURITY DEFINER ROWS 100
+    SET search_path TO 'pg_catalog', 'pg_temp'
+    AS $_$
+    BEGIN
+      PERFORM ax_utils.user_has_permission('TVSHOWS_VIEW,TVSHOWS_EDIT,ADMIN');
+      RETURN QUERY EXECUTE 'SELECT season_id, name FROM app_public.seasons_tags WHERE name ILIKE $1 AND (1=1)' USING pattern;
+    END;
+    $_$;
+
+
+--
 -- Name: tg__update_publish_state(); Type: FUNCTION; Schema: app_hidden; Owner: -
 --
 
@@ -1869,6 +2094,81 @@ BEGIN
   RETURN replace(initcap(replace(input_value, '_', ' ')), ' ', '');
 END;
 $$;
+
+
+--
+-- Name: tvshows_casts_name_candidates(text); Type: FUNCTION; Schema: app_hidden; Owner: -
+--
+
+CREATE FUNCTION app_hidden.tvshows_casts_name_candidates(pattern text) RETURNS TABLE(tvshow_id integer, name text)
+    LANGUAGE plpgsql STABLE SECURITY DEFINER ROWS 100
+    SET search_path TO 'pg_catalog', 'pg_temp'
+    AS $_$
+    BEGIN
+      PERFORM ax_utils.user_has_permission('TVSHOWS_VIEW,TVSHOWS_EDIT,ADMIN');
+      RETURN QUERY EXECUTE 'SELECT tvshow_id, name FROM app_public.tvshows_casts WHERE name ILIKE $1 AND (1=1)' USING pattern;
+    END;
+    $_$;
+
+
+--
+-- Name: tvshows_original_title_candidates(text); Type: FUNCTION; Schema: app_hidden; Owner: -
+--
+
+CREATE FUNCTION app_hidden.tvshows_original_title_candidates(pattern text) RETURNS TABLE(id integer)
+    LANGUAGE plpgsql STABLE SECURITY DEFINER ROWS 100
+    SET search_path TO 'pg_catalog', 'pg_temp'
+    AS $_$
+    BEGIN
+      PERFORM ax_utils.user_has_permission('TVSHOWS_VIEW,TVSHOWS_EDIT,ADMIN');
+      RETURN QUERY EXECUTE 'SELECT id FROM app_public.tvshows WHERE original_title ILIKE $1 AND (1=1)' USING pattern;
+    END;
+    $_$;
+
+
+--
+-- Name: tvshows_production_countries_name_candidates(text); Type: FUNCTION; Schema: app_hidden; Owner: -
+--
+
+CREATE FUNCTION app_hidden.tvshows_production_countries_name_candidates(pattern text) RETURNS TABLE(tvshow_id integer, name text)
+    LANGUAGE plpgsql STABLE SECURITY DEFINER ROWS 100
+    SET search_path TO 'pg_catalog', 'pg_temp'
+    AS $_$
+    BEGIN
+      PERFORM ax_utils.user_has_permission('TVSHOWS_VIEW,TVSHOWS_EDIT,ADMIN');
+      RETURN QUERY EXECUTE 'SELECT tvshow_id, name FROM app_public.tvshows_production_countries WHERE name ILIKE $1 AND (1=1)' USING pattern;
+    END;
+    $_$;
+
+
+--
+-- Name: tvshows_tags_name_candidates(text); Type: FUNCTION; Schema: app_hidden; Owner: -
+--
+
+CREATE FUNCTION app_hidden.tvshows_tags_name_candidates(pattern text) RETURNS TABLE(tvshow_id integer, name text)
+    LANGUAGE plpgsql STABLE SECURITY DEFINER ROWS 100
+    SET search_path TO 'pg_catalog', 'pg_temp'
+    AS $_$
+    BEGIN
+      PERFORM ax_utils.user_has_permission('TVSHOWS_VIEW,TVSHOWS_EDIT,ADMIN');
+      RETURN QUERY EXECUTE 'SELECT tvshow_id, name FROM app_public.tvshows_tags WHERE name ILIKE $1 AND (1=1)' USING pattern;
+    END;
+    $_$;
+
+
+--
+-- Name: tvshows_title_candidates(text); Type: FUNCTION; Schema: app_hidden; Owner: -
+--
+
+CREATE FUNCTION app_hidden.tvshows_title_candidates(pattern text) RETURNS TABLE(id integer)
+    LANGUAGE plpgsql STABLE SECURITY DEFINER ROWS 100
+    SET search_path TO 'pg_catalog', 'pg_temp'
+    AS $_$
+    BEGIN
+      PERFORM ax_utils.user_has_permission('TVSHOWS_VIEW,TVSHOWS_EDIT,ADMIN');
+      RETURN QUERY EXECUTE 'SELECT id FROM app_public.tvshows WHERE title ILIKE $1 AND (1=1)' USING pattern;
+    END;
+    $_$;
 
 
 --
@@ -3453,6 +3753,188 @@ $$;
 
 
 --
+-- Name: create_messaging_health_monitoring(); Type: FUNCTION; Schema: ax_define; Owner: -
+--
+
+CREATE FUNCTION ax_define.create_messaging_health_monitoring() RETURNS void
+    LANGUAGE plpgsql
+    AS $_$
+BEGIN
+
+  EXECUTE 'DROP TABLE IF EXISTS app_private.messaging_health CASCADE;';
+  EXECUTE '
+  CREATE TABLE app_private.messaging_health (
+    key TEXT PRIMARY KEY,
+    success BOOLEAN
+  );';
+  
+  EXECUTE 'CREATE OR REPLACE FUNCTION app_private.messaging_health_notify()
+    RETURNS trigger
+    LANGUAGE plpgsql
+  AS $function$
+  BEGIN
+    PERFORM pg_notify(''messaging_health_handled'', row_to_json(NEW)::text);
+    RETURN NULL;
+  END;
+  $function$ ';
+
+  EXECUTE  'DROP TRIGGER IF EXISTS _500_messaging_health_trigger ON app_private.messaging_health;';
+  EXECUTE  'CREATE trigger _500_messaging_health_trigger
+              AFTER UPDATE ON app_private.messaging_health
+              FOR EACH ROW EXECUTE PROCEDURE app_private.messaging_health_notify();';
+
+END;
+$_$;
+
+
+--
+-- Name: create_trx_next_messages_function(text, text, text); Type: FUNCTION; Schema: ax_define; Owner: -
+--
+
+CREATE FUNCTION ax_define.create_trx_next_messages_function(trx_next_message_function_schema text, trx_table_schema text, trx_table_name text) RETURNS void
+    LANGUAGE plpgsql
+    AS $_$
+BEGIN
+  EXECUTE 'DROP FUNCTION IF EXISTS ' || trx_next_message_function_schema || '.next_'|| trx_table_name ||'_messages(integer, integer);';
+  EXECUTE 'CREATE OR REPLACE FUNCTION ' || trx_next_message_function_schema || '.next_'|| trx_table_name ||'_messages(
+  max_size integer, lock_ms integer)
+    RETURNS SETOF ' || trx_table_schema || '.'|| trx_table_name ||' 
+    LANGUAGE ''plpgsql''
+
+AS $BODY$
+DECLARE 
+  loop_row ' || trx_table_schema || '.'|| trx_table_name ||'%ROWTYPE;
+  message_row ' || trx_table_schema || '.'|| trx_table_name ||'%ROWTYPE;
+  ids uuid[] := ''{}'';
+BEGIN
+
+  IF max_size < 1 THEN
+    RAISE EXCEPTION ''The max_size for the next messages batch must be at least one.'' using errcode = ''MAXNR'';
+  END IF;
+
+  -- get (only) the oldest message of every segment but only return it if it is not locked
+  FOR loop_row IN
+    SELECT * FROM ' || trx_table_schema || '.'|| trx_table_name ||' m WHERE m.id in (SELECT DISTINCT ON (segment) id
+      FROM ' || trx_table_schema || '.'|| trx_table_name ||'
+      WHERE processed_at IS NULL AND abandoned_at IS NULL
+      ORDER BY segment, created_at) order by created_at
+  LOOP
+    BEGIN
+      EXIT WHEN cardinality(ids) >= max_size;
+
+      -- if the message is locked into the future, then skip it.
+      -- we skip it inside the LOOP with a CONTINUE instead of adding it as a WHERE clause to the SELECT because
+      -- we need the DISTINCT ON (segment) clause to also include such locked messages to guarantee the strict
+      -- execution order of messages belonging to the same segment.
+      IF loop_row.locked_until > NOW() THEN
+        CONTINUE;
+      END IF;
+    
+      SELECT *
+        INTO message_row
+        FROM ' || trx_table_schema || '.'|| trx_table_name ||'
+        WHERE id = loop_row.id
+        FOR NO KEY UPDATE NOWAIT; -- throw/catch error when locked
+      
+      ids := array_append(ids, message_row.id);
+    EXCEPTION 
+      WHEN lock_not_available THEN
+        CONTINUE;
+      WHEN serialization_failure THEN
+        CONTINUE;
+    END;
+  END LOOP;
+  
+  -- if max_size not reached: get the oldest parallelizable message independent of segment
+  IF cardinality(ids) < max_size THEN
+    FOR loop_row IN
+      SELECT * FROM ' || trx_table_schema || '.'|| trx_table_name ||'
+        WHERE concurrency = ''parallel'' AND processed_at IS NULL AND abandoned_at IS NULL AND locked_until < NOW() 
+          AND id NOT IN (SELECT UNNEST(ids))
+        order by created_at
+    LOOP
+      BEGIN
+        EXIT WHEN cardinality(ids) >= max_size;
+
+        SELECT *
+          INTO message_row
+          FROM ' || trx_table_schema || '.'|| trx_table_name ||'
+          WHERE id = loop_row.id
+          FOR NO KEY UPDATE NOWAIT; -- throw/catch error when locked
+
+        ids := array_append(ids, message_row.id);
+      EXCEPTION 
+        WHEN lock_not_available THEN
+          CONTINUE;
+        WHEN serialization_failure THEN
+          CONTINUE;
+      END;
+    END LOOP;
+  END IF;
+  
+  -- set a short lock value so the the workers can each process a message
+  IF cardinality(ids) > 0 THEN
+
+    RETURN QUERY 
+      UPDATE ' || trx_table_schema || '.'|| trx_table_name ||'
+        SET locked_until = clock_timestamp() + (lock_ms || '' milliseconds'')::INTERVAL, started_attempts = started_attempts + 1
+        WHERE ID = ANY(ids)
+        RETURNING *;
+
+  END IF;
+END;
+$BODY$;';
+END;
+$_$;
+
+
+--
+-- Name: create_trx_table(text, text, text[], text); Type: FUNCTION; Schema: ax_define; Owner: -
+--
+
+CREATE FUNCTION ax_define.create_trx_table(trx_schema text, trx_table_name text, additional_roles_to_grant text[], concurrency text) RETURNS void
+    LANGUAGE plpgsql
+    AS $$
+DECLARE 
+  role_ TEXT;
+BEGIN
+  EXECUTE 'DROP TABLE IF EXISTS ' || trx_schema || '.'|| trx_table_name ||' CASCADE;';
+  EXECUTE 'CREATE TABLE ' || trx_schema || '.'|| trx_table_name ||' (
+            id uuid PRIMARY KEY,
+            aggregate_type TEXT NOT NULL,
+            aggregate_id TEXT NOT NULL, 
+            message_type TEXT NOT NULL,
+            payload JSONB NOT NULL,
+            metadata JSONB,
+            created_at TIMESTAMPTZ NOT NULL DEFAULT clock_timestamp(),
+            processed_at TIMESTAMPTZ,
+            started_attempts smallint NOT NULL DEFAULT 0,
+            finished_attempts smallint NOT NULL DEFAULT 0,
+            segment TEXT,
+            locked_until TIMESTAMPTZ NOT NULL DEFAULT to_timestamp(0),
+            concurrency TEXT NOT NULL DEFAULT ''' || concurrency || ''',
+            abandoned_at TIMESTAMPTZ
+          );';
+  EXECUTE 'ALTER TABLE ' || trx_schema || '.'|| trx_table_name ||' ADD CONSTRAINT '|| trx_table_name ||'_concurrency_check
+            CHECK (concurrency IN (''sequential'', ''parallel''));';
+  
+  -- The owner role has full access - no grants needed
+  -- Grants for additional roles are given here
+  FOREACH role_ IN ARRAY additional_roles_to_grant LOOP
+    EXECUTE 'GRANT SELECT, INSERT, DELETE ON ' || trx_schema || '.'|| trx_table_name ||' TO ' || role_ || ';';
+    EXECUTE 'GRANT UPDATE (locked_until, processed_at, abandoned_at, started_attempts, finished_attempts) ON ' || trx_schema || '.'|| trx_table_name ||' TO ' || role_ || ';';
+  END LOOP;  
+
+  EXECUTE 'SELECT ax_define.define_index(''segment'', '''|| trx_table_name ||''', '''||trx_schema||''');';
+  EXECUTE 'SELECT ax_define.define_index(''created_at'', '''|| trx_table_name ||''', ''' || trx_schema || ''');';
+  EXECUTE 'SELECT ax_define.define_index(''processed_at'', '''|| trx_table_name ||''', ''' || trx_schema || ''');';
+  EXECUTE 'SELECT ax_define.define_index(''abandoned_at'', '''|| trx_table_name ||''', ''' || trx_schema || ''');';
+  EXECUTE 'SELECT ax_define.define_index(''locked_until'', '''|| trx_table_name ||''', ''' || trx_schema || ''');';
+END;
+$$;
+
+
+--
 -- Name: define_audit_date_fields_on_table(text, text); Type: FUNCTION; Schema: ax_define; Owner: -
 --
 
@@ -3585,10 +4067,59 @@ $$;
 
 
 --
--- Name: define_indexes_with_id(text, text, text, text, text); Type: FUNCTION; Schema: ax_define; Owner: -
+-- Name: define_indexed_search(text, text, text, text, text, text); Type: FUNCTION; Schema: ax_define; Owner: -
 --
 
-CREATE FUNCTION ax_define.define_indexes_with_id(fieldname text, tablename text, schemaname text, indexnameasc text DEFAULT NULL::text, indexnamedesc text DEFAULT NULL::text) RETURNS void
+CREATE FUNCTION ax_define.define_indexed_search(fieldname text, tablename text, schemaname text, readpermissions text, gqlrole text, additionalrls text DEFAULT '1=1'::text) RETURNS void
+    LANGUAGE plpgsql
+    AS $_$
+DECLARE
+  functionName text := 'app_hidden.' || tableName || '_' || fieldName || '_candidates';
+  keyColumns text;
+  keyDefinitions text;
+BEGIN
+  PERFORM ax_utils.validate_identifier_length(tableName || '_' || fieldName || '_candidates', 'The table and column names are too long for the generated candidate function name.');
+  SELECT string_agg(quote_ident(a.attname), ', ' ORDER BY k.ord),
+         string_agg(quote_ident(a.attname) || ' ' || format_type(a.atttypid, a.atttypmod), ', ' ORDER BY k.ord)
+    INTO keyColumns, keyDefinitions
+    FROM pg_index i
+    CROSS JOIN LATERAL unnest(i.indkey) WITH ORDINALITY AS k(attnum, ord)
+    JOIN pg_attribute a ON a.attrelid = i.indrelid AND a.attnum = k.attnum
+    WHERE i.indrelid = (schemaName || '.' || tableName)::regclass AND i.indisprimary;
+  IF keyColumns IS NULL THEN
+    PERFORM ax_utils.raise_error('The table "%s.%s" must have a primary key to define an indexed search.', 'SETUP', schemaName, tableName);
+  END IF;
+
+  PERFORM ax_define.drop_indexed_search(fieldName, tableName);
+  -- The function returns all matching keys. The calling query applies row level security to the final rows,
+  -- the permission and additional RLS checks here only prevent returning keys of rows the caller cannot see.
+  EXECUTE format($sql$
+    CREATE FUNCTION %1$s(pattern text) RETURNS TABLE (%2$s)
+        LANGUAGE plpgsql STABLE SECURITY DEFINER ROWS 100
+        SET search_path = pg_catalog, pg_temp
+        AS $fn$
+    BEGIN
+      PERFORM ax_utils.user_has_permission(%3$L);
+      RETURN QUERY EXECUTE %4$L USING pattern;
+    END;
+    $fn$;
+    REVOKE ALL ON FUNCTION %1$s(text) FROM PUBLIC;
+    GRANT EXECUTE ON FUNCTION %1$s(text) TO %5$s;
+  $sql$,
+    functionName,
+    keyDefinitions,
+    readPermissions,
+    format('SELECT %s FROM %s.%s WHERE %s ILIKE $1 AND (%s)', keyColumns, schemaName, tableName, fieldName, additionalRls),
+    gqlRole);
+END;
+$_$;
+
+
+--
+-- Name: define_indexes_with_id(text, text, text, text, text, text); Type: FUNCTION; Schema: ax_define; Owner: -
+--
+
+CREATE FUNCTION ax_define.define_indexes_with_id(fieldname text, tablename text, schemaname text, indexnameasc text DEFAULT NULL::text, indexnamedesc text DEFAULT NULL::text, idfieldname text DEFAULT 'id'::text) RETURNS void
     LANGUAGE plpgsql
     AS $$
 BEGIN
@@ -3597,8 +4128,8 @@ BEGIN
   PERFORM ax_utils.validate_identifier_length(indexNameAsc, 'If the auto-generated name is too long then an "indexNameAsc" argument must be provided.');
   PERFORM ax_utils.validate_identifier_length(indexNameDesc, 'If the auto-generated name is too long then an "indexNameDesc" argument must be provided.');
   PERFORM ax_define.drop_indexes_with_id(fieldName, tableName, indexNameAsc, indexNameDesc);
-  EXECUTE 'CREATE INDEX idx_' || tableName || '_' || fieldName || '_asc_with_id ON ' || schemaName || '.' || tableName || ' (' || fieldName || ' ASC, id ASC);';
-  EXECUTE 'CREATE INDEX idx_' || tableName || '_' || fieldName || '_desc_with_id ON ' || schemaName || '.' || tableName || ' (' || fieldName || ' DESC, id ASC);';
+  EXECUTE 'CREATE INDEX idx_' || tableName || '_' || fieldName || '_asc_with_id ON ' || schemaName || '.' || tableName || ' (' || fieldName || ' ASC, ' || idFieldName || ' ASC);';
+  EXECUTE 'CREATE INDEX idx_' || tableName || '_' || fieldName || '_desc_with_id ON ' || schemaName || '.' || tableName || ' (' || fieldName || ' DESC, ' || idFieldName || ' ASC);';
 END;
 $$;
 
@@ -3881,6 +4412,19 @@ BEGIN
   SELECT COALESCE(indexName, 'idx_' || tableName || '_' || fieldName) INTO indexName;
   PERFORM ax_utils.validate_identifier_length(indexName, 'If the auto-generated name is too long then an "indexName" argument must be provided.');
   EXECUTE 'DROP INDEX IF EXISTS ' || indexName || ' cascade;';
+END;
+$$;
+
+
+--
+-- Name: drop_indexed_search(text, text); Type: FUNCTION; Schema: ax_define; Owner: -
+--
+
+CREATE FUNCTION ax_define.drop_indexed_search(fieldname text, tablename text) RETURNS void
+    LANGUAGE plpgsql
+    AS $$
+BEGIN
+  EXECUTE 'DROP FUNCTION IF EXISTS app_hidden.' || tableName || '_' || fieldName || '_candidates(text);';
 END;
 $$;
 
@@ -12765,6 +13309,22 @@ GRANT USAGE ON SCHEMA public TO media_service_gql_role;
 
 
 --
+-- Name: FUNCTION collections_tags_name_candidates(pattern text); Type: ACL; Schema: app_hidden; Owner: -
+--
+
+REVOKE ALL ON FUNCTION app_hidden.collections_tags_name_candidates(pattern text) FROM PUBLIC;
+GRANT ALL ON FUNCTION app_hidden.collections_tags_name_candidates(pattern text) TO media_service_gql_role;
+
+
+--
+-- Name: FUNCTION collections_title_candidates(pattern text); Type: ACL; Schema: app_hidden; Owner: -
+--
+
+REVOKE ALL ON FUNCTION app_hidden.collections_title_candidates(pattern text) FROM PUBLIC;
+GRANT ALL ON FUNCTION app_hidden.collections_title_candidates(pattern text) TO media_service_gql_role;
+
+
+--
 -- Name: FUNCTION create_active_snapshots_before_delete_trigger(tablename text, relationtablename text, relationfkname text, entitytypename text); Type: ACL; Schema: app_hidden; Owner: -
 --
 
@@ -12802,6 +13362,46 @@ GRANT ALL ON FUNCTION app_hidden.define_snapshot_authentication(entitytype text,
 
 REVOKE ALL ON FUNCTION app_hidden.drop_snapshot_authentication(entitytype text) FROM PUBLIC;
 GRANT ALL ON FUNCTION app_hidden.drop_snapshot_authentication(entitytype text) TO media_service_gql_role;
+
+
+--
+-- Name: FUNCTION episodes_casts_name_candidates(pattern text); Type: ACL; Schema: app_hidden; Owner: -
+--
+
+REVOKE ALL ON FUNCTION app_hidden.episodes_casts_name_candidates(pattern text) FROM PUBLIC;
+GRANT ALL ON FUNCTION app_hidden.episodes_casts_name_candidates(pattern text) TO media_service_gql_role;
+
+
+--
+-- Name: FUNCTION episodes_original_title_candidates(pattern text); Type: ACL; Schema: app_hidden; Owner: -
+--
+
+REVOKE ALL ON FUNCTION app_hidden.episodes_original_title_candidates(pattern text) FROM PUBLIC;
+GRANT ALL ON FUNCTION app_hidden.episodes_original_title_candidates(pattern text) TO media_service_gql_role;
+
+
+--
+-- Name: FUNCTION episodes_production_countries_name_candidates(pattern text); Type: ACL; Schema: app_hidden; Owner: -
+--
+
+REVOKE ALL ON FUNCTION app_hidden.episodes_production_countries_name_candidates(pattern text) FROM PUBLIC;
+GRANT ALL ON FUNCTION app_hidden.episodes_production_countries_name_candidates(pattern text) TO media_service_gql_role;
+
+
+--
+-- Name: FUNCTION episodes_tags_name_candidates(pattern text); Type: ACL; Schema: app_hidden; Owner: -
+--
+
+REVOKE ALL ON FUNCTION app_hidden.episodes_tags_name_candidates(pattern text) FROM PUBLIC;
+GRANT ALL ON FUNCTION app_hidden.episodes_tags_name_candidates(pattern text) TO media_service_gql_role;
+
+
+--
+-- Name: FUNCTION episodes_title_candidates(pattern text); Type: ACL; Schema: app_hidden; Owner: -
+--
+
+REVOKE ALL ON FUNCTION app_hidden.episodes_title_candidates(pattern text) FROM PUBLIC;
+GRANT ALL ON FUNCTION app_hidden.episodes_title_candidates(pattern text) TO media_service_gql_role;
 
 
 --
@@ -13101,6 +13701,46 @@ GRANT ALL ON FUNCTION app_hidden.localizable_tvshow_update() TO media_service_gq
 
 
 --
+-- Name: FUNCTION movies_casts_name_candidates(pattern text); Type: ACL; Schema: app_hidden; Owner: -
+--
+
+REVOKE ALL ON FUNCTION app_hidden.movies_casts_name_candidates(pattern text) FROM PUBLIC;
+GRANT ALL ON FUNCTION app_hidden.movies_casts_name_candidates(pattern text) TO media_service_gql_role;
+
+
+--
+-- Name: FUNCTION movies_original_title_candidates(pattern text); Type: ACL; Schema: app_hidden; Owner: -
+--
+
+REVOKE ALL ON FUNCTION app_hidden.movies_original_title_candidates(pattern text) FROM PUBLIC;
+GRANT ALL ON FUNCTION app_hidden.movies_original_title_candidates(pattern text) TO media_service_gql_role;
+
+
+--
+-- Name: FUNCTION movies_production_countries_name_candidates(pattern text); Type: ACL; Schema: app_hidden; Owner: -
+--
+
+REVOKE ALL ON FUNCTION app_hidden.movies_production_countries_name_candidates(pattern text) FROM PUBLIC;
+GRANT ALL ON FUNCTION app_hidden.movies_production_countries_name_candidates(pattern text) TO media_service_gql_role;
+
+
+--
+-- Name: FUNCTION movies_tags_name_candidates(pattern text); Type: ACL; Schema: app_hidden; Owner: -
+--
+
+REVOKE ALL ON FUNCTION app_hidden.movies_tags_name_candidates(pattern text) FROM PUBLIC;
+GRANT ALL ON FUNCTION app_hidden.movies_tags_name_candidates(pattern text) TO media_service_gql_role;
+
+
+--
+-- Name: FUNCTION movies_title_candidates(pattern text); Type: ACL; Schema: app_hidden; Owner: -
+--
+
+REVOKE ALL ON FUNCTION app_hidden.movies_title_candidates(pattern text) FROM PUBLIC;
+GRANT ALL ON FUNCTION app_hidden.movies_title_candidates(pattern text) TO media_service_gql_role;
+
+
+--
 -- Name: TABLE inbox; Type: ACL; Schema: app_hidden; Owner: -
 --
 
@@ -13198,6 +13838,30 @@ GRANT UPDATE(finished_attempts) ON TABLE app_hidden.outbox TO media_service_gql_
 
 REVOKE ALL ON FUNCTION app_hidden.next_outbox_messages(max_size integer, lock_ms integer) FROM PUBLIC;
 GRANT ALL ON FUNCTION app_hidden.next_outbox_messages(max_size integer, lock_ms integer) TO media_service_gql_role;
+
+
+--
+-- Name: FUNCTION seasons_casts_name_candidates(pattern text); Type: ACL; Schema: app_hidden; Owner: -
+--
+
+REVOKE ALL ON FUNCTION app_hidden.seasons_casts_name_candidates(pattern text) FROM PUBLIC;
+GRANT ALL ON FUNCTION app_hidden.seasons_casts_name_candidates(pattern text) TO media_service_gql_role;
+
+
+--
+-- Name: FUNCTION seasons_production_countries_name_candidates(pattern text); Type: ACL; Schema: app_hidden; Owner: -
+--
+
+REVOKE ALL ON FUNCTION app_hidden.seasons_production_countries_name_candidates(pattern text) FROM PUBLIC;
+GRANT ALL ON FUNCTION app_hidden.seasons_production_countries_name_candidates(pattern text) TO media_service_gql_role;
+
+
+--
+-- Name: FUNCTION seasons_tags_name_candidates(pattern text); Type: ACL; Schema: app_hidden; Owner: -
+--
+
+REVOKE ALL ON FUNCTION app_hidden.seasons_tags_name_candidates(pattern text) FROM PUBLIC;
+GRANT ALL ON FUNCTION app_hidden.seasons_tags_name_candidates(pattern text) TO media_service_gql_role;
 
 
 --
@@ -13310,6 +13974,46 @@ GRANT ALL ON FUNCTION app_hidden.to_kebab_case(input_value text) TO media_servic
 
 REVOKE ALL ON FUNCTION app_hidden.to_pascal_case(input_value text) FROM PUBLIC;
 GRANT ALL ON FUNCTION app_hidden.to_pascal_case(input_value text) TO media_service_gql_role;
+
+
+--
+-- Name: FUNCTION tvshows_casts_name_candidates(pattern text); Type: ACL; Schema: app_hidden; Owner: -
+--
+
+REVOKE ALL ON FUNCTION app_hidden.tvshows_casts_name_candidates(pattern text) FROM PUBLIC;
+GRANT ALL ON FUNCTION app_hidden.tvshows_casts_name_candidates(pattern text) TO media_service_gql_role;
+
+
+--
+-- Name: FUNCTION tvshows_original_title_candidates(pattern text); Type: ACL; Schema: app_hidden; Owner: -
+--
+
+REVOKE ALL ON FUNCTION app_hidden.tvshows_original_title_candidates(pattern text) FROM PUBLIC;
+GRANT ALL ON FUNCTION app_hidden.tvshows_original_title_candidates(pattern text) TO media_service_gql_role;
+
+
+--
+-- Name: FUNCTION tvshows_production_countries_name_candidates(pattern text); Type: ACL; Schema: app_hidden; Owner: -
+--
+
+REVOKE ALL ON FUNCTION app_hidden.tvshows_production_countries_name_candidates(pattern text) FROM PUBLIC;
+GRANT ALL ON FUNCTION app_hidden.tvshows_production_countries_name_candidates(pattern text) TO media_service_gql_role;
+
+
+--
+-- Name: FUNCTION tvshows_tags_name_candidates(pattern text); Type: ACL; Schema: app_hidden; Owner: -
+--
+
+REVOKE ALL ON FUNCTION app_hidden.tvshows_tags_name_candidates(pattern text) FROM PUBLIC;
+GRANT ALL ON FUNCTION app_hidden.tvshows_tags_name_candidates(pattern text) TO media_service_gql_role;
+
+
+--
+-- Name: FUNCTION tvshows_title_candidates(pattern text); Type: ACL; Schema: app_hidden; Owner: -
+--
+
+REVOKE ALL ON FUNCTION app_hidden.tvshows_title_candidates(pattern text) FROM PUBLIC;
+GRANT ALL ON FUNCTION app_hidden.tvshows_title_candidates(pattern text) TO media_service_gql_role;
 
 
 --
@@ -13742,6 +14446,27 @@ REVOKE ALL ON FUNCTION ax_define.create_messaging_counter_table() FROM PUBLIC;
 
 
 --
+-- Name: FUNCTION create_messaging_health_monitoring(); Type: ACL; Schema: ax_define; Owner: -
+--
+
+REVOKE ALL ON FUNCTION ax_define.create_messaging_health_monitoring() FROM PUBLIC;
+
+
+--
+-- Name: FUNCTION create_trx_next_messages_function(trx_next_message_function_schema text, trx_table_schema text, trx_table_name text); Type: ACL; Schema: ax_define; Owner: -
+--
+
+REVOKE ALL ON FUNCTION ax_define.create_trx_next_messages_function(trx_next_message_function_schema text, trx_table_schema text, trx_table_name text) FROM PUBLIC;
+
+
+--
+-- Name: FUNCTION create_trx_table(trx_schema text, trx_table_name text, additional_roles_to_grant text[], concurrency text); Type: ACL; Schema: ax_define; Owner: -
+--
+
+REVOKE ALL ON FUNCTION ax_define.create_trx_table(trx_schema text, trx_table_name text, additional_roles_to_grant text[], concurrency text) FROM PUBLIC;
+
+
+--
 -- Name: FUNCTION define_audit_date_fields_on_table(tablename text, schemaname text); Type: ACL; Schema: ax_define; Owner: -
 --
 
@@ -13784,10 +14509,17 @@ REVOKE ALL ON FUNCTION ax_define.define_index(fieldname text, tablename text, sc
 
 
 --
--- Name: FUNCTION define_indexes_with_id(fieldname text, tablename text, schemaname text, indexnameasc text, indexnamedesc text); Type: ACL; Schema: ax_define; Owner: -
+-- Name: FUNCTION define_indexed_search(fieldname text, tablename text, schemaname text, readpermissions text, gqlrole text, additionalrls text); Type: ACL; Schema: ax_define; Owner: -
 --
 
-REVOKE ALL ON FUNCTION ax_define.define_indexes_with_id(fieldname text, tablename text, schemaname text, indexnameasc text, indexnamedesc text) FROM PUBLIC;
+REVOKE ALL ON FUNCTION ax_define.define_indexed_search(fieldname text, tablename text, schemaname text, readpermissions text, gqlrole text, additionalrls text) FROM PUBLIC;
+
+
+--
+-- Name: FUNCTION define_indexes_with_id(fieldname text, tablename text, schemaname text, indexnameasc text, indexnamedesc text, idfieldname text); Type: ACL; Schema: ax_define; Owner: -
+--
+
+REVOKE ALL ON FUNCTION ax_define.define_indexes_with_id(fieldname text, tablename text, schemaname text, indexnameasc text, indexnamedesc text, idfieldname text) FROM PUBLIC;
 
 
 --
@@ -13879,6 +14611,13 @@ REVOKE ALL ON FUNCTION ax_define.define_users_trigger(tablename text, schemaname
 --
 
 REVOKE ALL ON FUNCTION ax_define.drop_index(fieldname text, tablename text, indexname text) FROM PUBLIC;
+
+
+--
+-- Name: FUNCTION drop_indexed_search(fieldname text, tablename text); Type: ACL; Schema: ax_define; Owner: -
+--
+
+REVOKE ALL ON FUNCTION ax_define.drop_indexed_search(fieldname text, tablename text) FROM PUBLIC;
 
 
 --
