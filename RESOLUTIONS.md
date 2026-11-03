@@ -12,7 +12,7 @@ The goal is to minimize resolutions and remove them when no longer needed.
 - **Parent packages**: `@axinom/mosaic-cli@0.58.0` now pulls `@asyncapi/parser@^3.6.0`, which natively requires `jsonpath-plus@^10.0.7` — as do `@stoplight/spectral-core@1.23.1` (`^10.3.0`) and `nimma@0.2.3`. The resolution is still required because `@asyncapi/modelina@5.10.1` → `@asyncapi/multi-parser@2.3.0` additionally pulls `@asyncapi/parser@2.1.2` and `@asyncapi/parser@3.0.0-next-major-spec.8`, **both of which still declare `jsonpath-plus@^7.2.0`** (vulnerable).
 - **Original selector**: `^7.2.0` (`@asyncapi/parser@2.1.2`, `@asyncapi/parser@3.0.0-next-major-spec.8`)
 - **Date added**: 2025-05-06
-- **Last verified**: 2026-09-14
+- **Last verified**: 2026-11-03
 - **Commit**: `197ee4eb` — *"[AB#47252] fix: bumping several packages to address CVEs (#443)"*
 - **Can be removed when**: `@asyncapi/multi-parser` drops its `@asyncapi/parser@2.x` / `3.0.0-next-major-spec.x` legacy parsers, or those releases update `jsonpath-plus` to `^10.x`
 
@@ -25,7 +25,7 @@ The goal is to minimize resolutions and remove them when no longer needed.
 - **Patched in**: 6.12.3 (Prototype Pollution), 6.14.0 (ReDoS for 6.x) / 8.18.0 (ReDoS for 7.x+)
 - **Blocked by**: `json-schema-migrate@0.2.0` requires `ajv@^5.0.0` (reached via `@axinom/mosaic-cli` → `@asyncapi/multi-parser` → `@asyncapi/parser@2.1.2` → `ramldt2jsonschema@1.2.3`); `webapi-parser@0.5.0` pins `ajv@6.5.2` exactly
 - **Date**: 2026-02-23
-- **Last verified**: 2026-09-14
+- **Last verified**: 2026-11-03
 - **Check again when**: `@asyncapi/multi-parser` drops the legacy `@asyncapi/parser@2.x` chain, or `webapi-parser` releases a version without the exact `6.5.2` pin
 
 ### lodash@4.17.23 via tilde ranges
@@ -33,20 +33,20 @@ The goal is to minimize resolutions and remove them when no longer needed.
 - **Vulnerability**: Prototype Pollution via array path bypass in `_.unset`/`_.omit` (medium), Code Injection via `_.template` imports key names (high)
 - **Current version**: 4.17.23
 - **Patched in**: 4.18.0
-- **Blocked by**: `@graphql-codegen/plugin-helpers@2.7.2` and `@5.0.3` use `~4.17.0`, and `@stoplight/spectral-functions@1.7.2` / `@stoplight/spectral-rulesets@1.18.1` use `~4.17.21` — tilde ranges cap at 4.17.x. The `^4.17.x` consumers already resolve to 4.18.1; only the tilde-range entry remains.
+- **Blocked by**: `@graphql-codegen/plugin-helpers@2.7.2` and `@5.0.3` use `~4.17.0` (tilde ranges cap at 4.17.x). They are pulled by the `@graphql-codegen/cli@^4` / `typescript@^2` / `typescript-operations@^2` / `typescript-graphql-request@^4` / `typescript-react-apollo@^3` devDependencies, whose ranges do not admit newer helpers. The `@stoplight/spectral-*` consumers were re-resolved on 2026-11-03 to `spectral-functions@1.11.0` / `spectral-rulesets@1.23.0`, which use `^4.18.1`; the `^4.17.x` consumers already resolve to 4.18.1.
 - **Date**: 2026-04-14
-- **Last verified**: 2026-09-14
-- **Check again when**: `@graphql-codegen/plugin-helpers` or `@stoplight/spectral-*` update their lodash range to `^4.18.0`
+- **Last verified**: 2026-11-03
+- **Check again when**: the `@graphql-codegen/*` devDependencies are migrated to current majors (`@graphql-codegen/plugin-helpers@7.x` uses `lodash@^4.18.1`) — this is our own migration work rather than a pending upstream release
 
 ### serialize-javascript
 
 - **Vulnerability**: RCE via `RegExp.flags` / `Date.prototype.toISOString` (high), CPU Exhaustion DoS via crafted array-like objects (medium)
 - **Current version**: 6.0.2
 - **Patched in**: 7.0.3 / 7.0.5
-- **Blocked by**: `css-minimizer-webpack-plugin@5.0.1` requires `^6.0.1`. Only 5.0.0 and 5.0.1 exist for the 5.x line. Latest `css-minimizer-webpack-plugin` (7.x) uses `^7.0.3`, but `piral-cli-webpack5@1.5.3` requires `^5.0.1`.
+- **Blocked by**: `css-minimizer-webpack-plugin` — every 5.x and 7.x release (latest 7.0.4) requires `serialize-javascript@^6.0.x`; only `css-minimizer-webpack-plugin@8.0.0` moves to `^7.0.3`. `piral-cli-webpack5` (locked 1.5.3; every release since 1.8.0, latest 1.12.4) requires `css-minimizer-webpack-plugin@^7`, so bumping piral alone does not help.
 - **Date**: 2026-03-03
-- **Last verified**: 2026-09-14
-- **Check again when**: `piral-cli-webpack5` updates its `css-minimizer-webpack-plugin` range
+- **Last verified**: 2026-11-03
+- **Check again when**: `piral-cli-webpack5` accepts `css-minimizer-webpack-plugin@^8`, or `css-minimizer-webpack-plugin@7.x` ships with `serialize-javascript@^7`
 
 ### immutable@~3.7.6
 
@@ -55,8 +55,8 @@ The goal is to minimize resolutions and remove them when no longer needed.
 - **Patched in**: 3.8.3 / 3.8.4
 - **Blocked by**: `@ardatan/relay-compiler@12.0.0` tilde-pins `immutable@~3.7.6` (allows only 3.7.x). `@graphql-tools/relay-operation-optimizer@7.1.3` uses `@ardatan/relay-compiler@^13.0.1` (fixed), but `@graphql-codegen/visitor-plugin-common@2.x` requires `^6.5.0` of relay-operation-optimizer. The `^4.0.0` consumers already resolve to the patched 4.3.9.
 - **Date**: 2026-03-12
-- **Last verified**: 2026-09-14
-- **Check again when**: `@graphql-codegen/visitor-plugin-common` releases a v3+ that accepts `@graphql-tools/relay-operation-optimizer@^7`
+- **Last verified**: 2026-11-03
+- **Check again when**: the `@graphql-codegen/*` devDependencies are migrated to current majors — `@graphql-codegen/visitor-plugin-common@7.x` already uses `@graphql-tools/relay-operation-optimizer@^7.1.12` (→ `@ardatan/relay-compiler@^13`), so this is now our own migration work rather than a pending upstream release
 
 ## Deferred (Tolerated For Now)
 
@@ -72,7 +72,7 @@ not dismissed and not passively "waiting for upstream".
 - **Patched in**: 11.1.1 (major version jump)
 - **Why deferred**: The bug only affects `v3`/`v5`/`v6` generation when an explicit output `buf` is passed; all consumers (`@axinom/mosaic-message-bus`, `@axinom/mosaic-service-common`, `@azure/core-http`, `rascal`, `pg-transactional-outbox`) pin `uuid@^8.3.2` / `^9.0.x` and use `v4` (random), which is unaffected. uuid <11 is also deprecated, so we do want to move off it — but reaching 11.x means coordinating upstream (`@axinom/mosaic-*` ranges) rather than passively waiting, so it is tracked as future work.
 - **Date**: 2026-06-09
-- **Last verified**: 2026-09-14
+- **Last verified**: 2026-11-03
 - **Next step / done when**: Bump the `@axinom/mosaic-*` libraries (and other consumers) so they accept `uuid@^11`, then drop any need for a resolution. Until then the alert stays open.
 
 ### tmp
@@ -82,8 +82,8 @@ not dismissed and not passively "waiting for upstream".
 - **Patched in**: 0.2.4 / 0.2.6 — both major-line jumps with API changes
 - **Why deferred**: `tmp@0.0.33` is dev-only — pulled solely via `external-editor@3.1.0` (`@graphql-codegen/cli` → `inquirer@8`), not present in any deployed service runtime. `external-editor@3.1.0` (latest, unreleased since) pins `tmp@^0.0.33`; reaching 0.2.6 needs either a forced resolution that risks breaking `external-editor`'s use of the old `tmp` API, or migrating off the `inquirer@8` toolchain. Worth doing eventually, so the alert stays open.
 - **Date**: 2026-06-09
-- **Last verified**: 2026-09-14
-- **Next step / done when**: `external-editor` releases a version with an updated `tmp` dep, `@graphql-codegen/cli` stops depending on `inquirer@8`, or a vetted forced resolution to `tmp@^0.2.6` is confirmed safe for `external-editor`.
+- **Last verified**: 2026-11-03
+- **Next step / done when**: `@graphql-codegen/cli` is migrated off 4.x — current `@graphql-codegen/cli@7.x` uses `@inquirer/prompts` instead of `inquirer@8`, which drops `external-editor`/`tmp@0.0.33` entirely. Alternatively a vetted forced resolution to `tmp@^0.2.6` confirmed safe for `external-editor`.
 
 ## Ignored Vulnerabilities
 
