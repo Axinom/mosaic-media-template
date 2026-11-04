@@ -11,6 +11,10 @@ import { videoCuePointTypes } from '../../../domains/register-video-cue-point-ty
 import { getSdk, GetVideosQuery } from '../../../generated/graphql/video';
 import { SnapshotValidationResult } from '../../../publishing';
 import { PublishVideo, TrailerJSONSelectable } from '../models';
+import { isSupportedPublishFormat } from './supported-video-formats';
+
+const formatList = (formats: Iterable<string>): string =>
+  [...formats].map((f) => `'${f}'`).join(', ');
 
 export type GqlVideo = NonNullable<GetVideosQuery['videos']>['nodes'][0];
 
@@ -60,12 +64,31 @@ const processVideo = (
     return;
   }
 
+  // The Video Service may return output formats that the publish message
+  // schema does not allow. Such a video cannot be published.
+  const outputFormat: string = gqlVideo.outputFormat;
+  if (!isSupportedPublishFormat(outputFormat)) {
+    validation.push({
+      context: 'VIDEO',
+      message: `${typeText} video with id '${videoId}' has the unsupported output format '${outputFormat}' and is not published.`,
+      severity: 'WARNING',
+    });
+    return;
+  }
+
   const tags = gqlVideo.videosTags.nodes.map((tag) => tag.name);
-  const videoStreams: VideoStream[] = gqlVideo.videoStreams.nodes.map((s) => {
-    return {
+  const videoStreams: VideoStream[] = [];
+  const unsupportedStreamFormats = new Set<string>();
+  for (const s of gqlVideo.videoStreams.nodes) {
+    const format: string = s.format;
+    if (!isSupportedPublishFormat(format)) {
+      unsupportedStreamFormats.add(format);
+      continue;
+    }
+    videoStreams.push({
       key_id: s.keyId,
       iv: s.iv,
-      format: s.format,
+      format,
       file: s.file,
       label: s.label,
       language_code: s.languageCode,
@@ -80,8 +103,16 @@ const processVideo = (
       pixel_aspect_ratio: s.pixelAspectRatio,
       sampling_rate: s.samplingRate,
       language_name: s.languageName,
-    };
-  });
+    });
+  }
+  if (unsupportedStreamFormats.size > 0) {
+    validation.push({
+      context: 'VIDEO',
+      message: `${typeText} video with id '${videoId}' has streams with unsupported format(s) ${formatList(unsupportedStreamFormats)}. These streams are not published.`,
+      severity: 'WARNING',
+    });
+  }
+
   const cuePoints: CuePoint[] = gqlVideo.cuePoints.nodes.map((cp) => {
     return {
       cue_point_type_key: cp.cuePointTypeKey,
@@ -131,7 +162,7 @@ const processVideo = (
     type: assignmentType,
     title: gqlVideo.title,
     is_protected: gqlVideo.isProtected,
-    output_format: gqlVideo.outputFormat,
+    output_format: outputFormat,
     length_in_seconds: gqlVideo.lengthInSeconds,
     hls_manifest: gqlVideo.hlsManifestPath,
     dash_manifest: gqlVideo.dashManifestPath,

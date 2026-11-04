@@ -242,7 +242,8 @@
                     "HLS",
                     "DASH_HLS",
                     "CMAF",
-                    "DASH_ON_DEMAND"
+                    "DASH_ON_DEMAND",
+                    "MPEG2_TS"
                   ]
                 },
                 "type": {
@@ -396,7 +397,8 @@
               "HLS",
               "DASH_HLS",
               "CMAF",
-              "DASH_ON_DEMAND"
+              "DASH_ON_DEMAND",
+              "MPEG2_TS"
             ]
           }
         },

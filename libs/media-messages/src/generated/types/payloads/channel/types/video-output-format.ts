@@ -1,4 +1,4 @@
 /**
  * Output format.
  */
-export type VideoOutputFormat = "HLS" | "DASH" | "DASH_HLS" | "CMAF" | "DASH_ON_DEMAND";
+export type VideoOutputFormat = "HLS" | "DASH" | "DASH_HLS" | "CMAF" | "DASH_ON_DEMAND" | "MPEG2_TS";
