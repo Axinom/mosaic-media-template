@@ -277,7 +277,11 @@ describe('getValidationAndImages', () => {
     ];
     result = () => {
       throw new ClientError(
-        { data: { images: null }, errors, status: 400 },
+        {
+          data: { images: null },
+          errors: errors as unknown as ClientError['response']['errors'],
+          status: 400,
+        },
         { query: '' },
       );
     };
@@ -304,7 +308,11 @@ describe('getValidationAndImages', () => {
     ];
     result = () => {
       throw new ClientError(
-        { data: { images: null }, errors, status: 401 },
+        {
+          data: { images: null },
+          errors: errors as unknown as ClientError['response']['errors'],
+          status: 401,
+        },
         { query: '' },
       );
     };

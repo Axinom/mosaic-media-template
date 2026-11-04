@@ -4,8 +4,8 @@ import {
   mosaicErrorMappingFactory,
   UnreachableCaseError,
 } from '@axinom/mosaic-service-common';
-import { GraphQLClient } from 'graphql-request';
-import { ClientError, GraphQLError } from 'graphql-request/dist/types';
+import { GraphQLError } from 'graphql';
+import { ClientError, GraphQLClient } from 'graphql-request';
 import urljoin from 'url-join';
 import { CommonErrors, sanitizeStringArray } from '../../../common';
 import {

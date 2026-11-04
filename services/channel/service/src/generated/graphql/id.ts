@@ -1,114 +1,82 @@
-import { GraphQLClient } from 'graphql-request';
-import * as Dom from 'graphql-request/dist/types.dom';
-import { print } from 'graphql'
+/** Internal type. DO NOT USE DIRECTLY. */
+type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
+/** Internal type. DO NOT USE DIRECTLY. */
+export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
+import { GraphQLClient, type RequestOptions } from 'graphql-request';
+import { GraphQLError, print } from 'graphql'
 import gql from 'graphql-tag';
 export type Maybe<T> = T | null;
 export type InputMaybe<T> = Maybe<T>;
-export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
-export type MakeOptional<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]?: Maybe<T[SubKey]> };
-export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]: Maybe<T[SubKey]> };
+type GraphQLClientRequestHeaders = RequestOptions['requestHeaders'];
 /** All built-in and custom scalars, mapped to their actual values */
 export type Scalars = {
-  ID: string;
-  String: string;
-  Boolean: boolean;
-  Int: number;
-  Float: number;
+  ID: { input: string; output: string; }
+  String: { input: string; output: string; }
+  Boolean: { input: boolean; output: boolean; }
+  Int: { input: number; output: number; }
+  Float: { input: number; output: number; }
 };
 
 export type AuthenticateManagedServiceAccountInput = {
   /** Managed Service Account ID. */
-  clientId: Scalars['String'];
+  clientId: Scalars['String']['input'];
   /** Managed Service Account Password. */
-  clientSecret: Scalars['String'];
+  clientSecret: Scalars['String']['input'];
   /** Environment ID to be used in resulting AccessToken. If not provided, Root Environment ID will be used. */
-  targetEnvironmentId?: InputMaybe<Scalars['String']>;
+  targetEnvironmentId?: InputMaybe<Scalars['String']['input']>;
   /** Tenant ID to be used in resulting AccessToken. If not provided, Root Tenant ID will be used. */
-  targetTenantId?: InputMaybe<Scalars['String']>;
+  targetTenantId?: InputMaybe<Scalars['String']['input']>;
 };
 
 export type AuthenticateManagedServiceAccountPayload = {
   __typename?: 'AuthenticateManagedServiceAccountPayload';
   /** Access Token containing permissions of the Service Account */
-  accessToken: Scalars['String'];
+  accessToken: Scalars['String']['output'];
   /** Access Token expiration timeout */
-  expiresInSeconds: Scalars['Int'];
+  expiresInSeconds: Scalars['Int']['output'];
   /** Access Token type to use when making client requests */
-  tokenType: Scalars['String'];
+  tokenType: Scalars['String']['output'];
 };
 
 export type AuthenticateManagedServiceAccountWithEnvironmentScopeInput = {
   /** Managed Service Account ID. */
-  clientId: Scalars['String'];
+  clientId: Scalars['String']['input'];
   /** Managed Service Account Password. */
-  clientSecret: Scalars['String'];
+  clientSecret: Scalars['String']['input'];
   /**
    * A Management JWT authenticated by the Mosaic ID Service.
    * The Tenant and Environment IDs in this JWT is used to scope
    * the Managed Service Account Token to a specific Environment.
    */
-  managementJWT: Scalars['String'];
+  managementJWT: Scalars['String']['input'];
 };
 
 export type AuthenticateServiceAccountInput = {
   /** Service Account ID. */
-  clientId: Scalars['String'];
+  clientId: Scalars['String']['input'];
   /** Service Account Password. */
-  clientSecret: Scalars['String'];
+  clientSecret: Scalars['String']['input'];
 };
 
 export type AuthenticateServiceAccountPayload = {
   __typename?: 'AuthenticateServiceAccountPayload';
   /** Access Token containing permissions of the Service Account */
-  accessToken: Scalars['String'];
+  accessToken: Scalars['String']['output'];
   /** Access Token expiration timeout */
-  expiresInSeconds: Scalars['Int'];
+  expiresInSeconds: Scalars['Int']['output'];
   /** Access Token type to use when making client requests */
-  tokenType: Scalars['String'];
-};
-
-export type CreateDevServiceAccountInput = {
-  /** Optional Environment ID to use for service account. If not specified will default to configured dev value. */
-  environmentId?: InputMaybe<Scalars['String']>;
-  /**
-   * Example:
-   *
-   * permissionStructure: [
-   *   {
-   *     serviceId: "media-service",
-   *     permissions: ["ADMIN", "MOVIES_EDIT"]
-   *   },
-   *   {
-   *     serviceId: "ax-video-service",
-   *     permissions: ["ADMIN", "VIDEOS_EDIT"]
-   *   }
-   * ]
-   */
-  permissionStructure: Array<InputMaybe<DevPermissionStructureInput>>;
-  /** Service account name. */
-  serviceAccountName: Scalars['String'];
-  /** Optional tenant ID to use for service account. If not specified will default to configured dev value. */
-  tenantId?: InputMaybe<Scalars['String']>;
-};
-
-export type CreateDevServiceAccountPayload = {
-  __typename?: 'CreateDevServiceAccountPayload';
-  clientId: Scalars['String'];
-  clientSecret: Scalars['String'];
-  environmentId: Scalars['String'];
-  serviceAccountName: Scalars['String'];
-  tenantId: Scalars['String'];
+  tokenType: Scalars['String']['output'];
 };
 
 export type DevDeleteServiceAccountInput = {
   /** Client ID of the Service Account to be deleted */
-  clientId: Scalars['String'];
+  clientId: Scalars['String']['input'];
 };
 
 export type DevDeleteServiceAccountPayload = {
   __typename?: 'DevDeleteServiceAccountPayload';
   /** Indicates if the permission structure was deleted successfully */
-  isSuccess: Scalars['Boolean'];
+  isSuccess: Scalars['Boolean']['output'];
 };
 
 export type DevGenerateUserAccessTokenWithPermissionsInput = {
@@ -120,32 +88,27 @@ export type DevGenerateUserAccessTokenWithPermissionsInput = {
    * email: dev@domain.local
    * id: 00000000-0000-0000-0000-000000000000
    */
-  email?: InputMaybe<Scalars['String']>;
+  email?: InputMaybe<Scalars['String']['input']>;
   /**
    * If set to true, the permissions will be validated against existing permissions.
    * If any invalid permissions exist, the setup operation will be aborted.
    */
-  enforceValidPermissionStructure?: InputMaybe<Scalars['Boolean']>;
+  enforceValidPermissionStructure?: InputMaybe<Scalars['Boolean']['input']>;
   /**
    * Permission Structure for the new account.
    * This is an array of shape {serviceId: String!, permissions: [String!]}
    */
   permissionStructure?: InputMaybe<Array<InputMaybe<PermissionStructure>>>;
   /** Token Expiration time in seconds. If not given, this will be defaulted to 30 days. */
-  tokenExpirationInSeconds?: InputMaybe<Scalars['Int']>;
+  tokenExpirationInSeconds?: InputMaybe<Scalars['Int']['input']>;
 };
 
 export type DevGenerateUserAccessTokenWithPermissionsPayload = {
   __typename?: 'DevGenerateUserAccessTokenWithPermissionsPayload';
   /** Access token with requested permissions. */
-  accessToken: Scalars['String'];
-  expiresInSeconds: Scalars['Int'];
-  tokenType: Scalars['String'];
-};
-
-export type DevPermissionStructureInput = {
-  permissions?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
-  serviceId: Scalars['String'];
+  accessToken: Scalars['String']['output'];
+  expiresInSeconds: Scalars['Int']['output'];
+  tokenType: Scalars['String']['output'];
 };
 
 export type DevSetupServiceAccountWithPermissionsInput = {
@@ -153,32 +116,32 @@ export type DevSetupServiceAccountWithPermissionsInput = {
    * If set to true, the permissions will be validated against existing permissions.
    * If any invalid permissions exist, the setup operation will be aborted.
    */
-  enforceValidPermissionStructure?: InputMaybe<Scalars['Boolean']>;
+  enforceValidPermissionStructure?: InputMaybe<Scalars['Boolean']['input']>;
   /**
    * Permission Structure for the new account.
    * This is an array of shape {serviceId: String!, permissions: [String!]}
    */
   permissionStructure?: InputMaybe<Array<InputMaybe<PermissionStructure>>>;
   /** Service Account Name */
-  serviceAccountName: Scalars['String'];
+  serviceAccountName: Scalars['String']['input'];
 };
 
 export type DevSetupServiceAccountWithPermissionsPayload = {
   __typename?: 'DevSetupServiceAccountWithPermissionsPayload';
   /** Client ID of the created service account. */
-  clientId: Scalars['String'];
+  clientId: Scalars['String']['output'];
   /** Client Secret of the created service account. */
-  clientSecret: Scalars['String'];
+  clientSecret: Scalars['String']['output'];
 };
 
 export type DevUpdateServiceAccountPermissionStructureInput = {
   /** Client ID of the Service Account to be updated */
-  clientId: Scalars['String'];
+  clientId: Scalars['String']['input'];
   /**
    * If set to true, the permissions will be validated against existing permissions.
    * If any invalid permissions exist, the setup operation will be aborted.
    */
-  enforceValidPermissionStructure?: InputMaybe<Scalars['Boolean']>;
+  enforceValidPermissionStructure?: InputMaybe<Scalars['Boolean']['input']>;
   /**
    * Permission Structure for the new account.
    * This is an array of shape {serviceId: String!, permissions: [String!]}
@@ -189,15 +152,15 @@ export type DevUpdateServiceAccountPermissionStructureInput = {
 export type DevUpdateServiceAccountPermissionStructurePayload = {
   __typename?: 'DevUpdateServiceAccountPermissionStructurePayload';
   /** Indicates if the permission structure was updated successfully */
-  isSuccess: Scalars['Boolean'];
+  isSuccess: Scalars['Boolean']['output'];
 };
 
 export type EnabledManagedServicesPayload = {
   __typename?: 'EnabledManagedServicesPayload';
   /** Enabled Managed Service Name */
-  name: Scalars['String'];
+  name: Scalars['String']['output'];
   /** Enabled Managed Service ID */
-  serviceId: Scalars['String'];
+  serviceId: Scalars['String']['output'];
 };
 
 /** Exposes all error codes and messages for errors that a service requests can throw. In some cases, messages that are actually thrown can be different, since they can include more details or a single code can used for different errors of the same type. */
@@ -266,6 +229,8 @@ export enum ErrorCodesEnum {
   DatabaseValidationFailed = 'DATABASE_VALIDATION_FAILED',
   /** Error accessing database. */
   DbAccessError = 'DB_ACCESS_ERROR',
+  /** The specified email address is not allowed according to the current configuration. Please use different email address and try again. */
+  EmailNotAllowed = 'EMAIL_NOT_ALLOWED',
   /** The account is not activated. Please contact another Tenant Administrator or Axinom Support to activate the account. */
   EnvAdminAccountNotActive = 'ENV_ADMIN_ACCOUNT_NOT_ACTIVE',
   /** Either the account or the tenant is not enabled for usage. */
@@ -338,6 +303,8 @@ export enum ErrorCodesEnum {
   LastTenantAdminActiveTenantDeactivate = 'LAST_TENANT_ADMIN_ACTIVE_TENANT_DEACTIVATE',
   /** Please disable the tenant before deleting the last active Tenant Administrator. */
   LastTenantAdminActiveTenantDelete = 'LAST_TENANT_ADMIN_ACTIVE_TENANT_DELETE',
+  /** IDP logout can only be enabled for custom identity providers. */
+  LogoutFromIdpNotAllowed = 'LOGOUT_FROM_IDP_NOT_ALLOWED',
   /** Malformed access token received */
   MalformedToken = 'MALFORMED_TOKEN',
   /** Service [%s] is already disabled for this environment. No action was performed. */
@@ -378,6 +345,8 @@ export enum ErrorCodesEnum {
   OrchestrationParamsMissing = 'ORCHESTRATION_PARAMS_MISSING',
   /** Dynamic orchestration step resolution failed. */
   OrchestrationStepResolutionFailed = 'ORCHESTRATION_STEP_RESOLUTION_FAILED',
+  /** Access from this origin is not permitted. Please contact your Tenant Administrator to add it to the allowed origins in the Admin Portal. */
+  OriginNotAllowed = 'ORIGIN_NOT_ALLOWED',
   /** Error generating the password. */
   PasswordGeneartionError = 'PASSWORD_GENEARTION_ERROR',
   /** The new password does not meet the minimum policy requirements. */
@@ -396,8 +365,14 @@ export enum ErrorCodesEnum {
   RootTenantNotFound = 'ROOT_TENANT_NOT_FOUND',
   /** No Service Account exists for Client ID [%s]. */
   ServiceAccountDoesNotExist = 'SERVICE_ACCOUNT_DOES_NOT_EXIST',
+  /** An error occurred while exporting Service Accounts. */
+  ServiceAccountExportError = 'SERVICE_ACCOUNT_EXPORT_ERROR',
+  /** An error occurred while importing Service Accounts. */
+  ServiceAccountImportError = 'SERVICE_ACCOUNT_IMPORT_ERROR',
   /** Service Account does not exist. */
   ServiceAccountNotExists = 'SERVICE_ACCOUNT_NOT_EXISTS',
+  /** This service account is protected and cannot be modified or deleted. Remove the protection first. */
+  ServiceAccountProtected = 'SERVICE_ACCOUNT_PROTECTED',
   /** The service-id is required for service-state-change-events. */
   ServiceIdNotFound = 'SERVICE_ID_NOT_FOUND',
   /** Sign in with credentials failed with an error message: [%s]. */
@@ -410,7 +385,7 @@ export enum ErrorCodesEnum {
   SigningKeyNotFound = 'SIGNING_KEY_NOT_FOUND',
   /** An error occurred while rotating signing keys. */
   SigningKeyRotateError = 'SIGNING_KEY_ROTATE_ERROR',
-  /** Error validating SSO Token. */
+  /** We encountered an error while validating your SSO token with the Axinom Portal. Please try again in a few seconds. If the problem persists, please contact Axinom Support. */
   SsoTokenValidationError = 'SSO_TOKEN_VALIDATION_ERROR',
   /** An application startup error has occurred. The actual message will have more information. */
   StartupError = 'STARTUP_ERROR',
@@ -470,67 +445,26 @@ export enum ErrorCodesEnum {
   WellKnownConfigUrlResolveError = 'WELL_KNOWN_CONFIG_URL_RESOLVE_ERROR'
 }
 
-export type GenerateDevAccessTokenInput = {
-  /** Optional Environment ID to use for service account. If not specified will default to configured dev value. */
-  environmentId?: InputMaybe<Scalars['String']>;
-  /**
-   * Example:
-   *
-   * permissionStructure: [
-   *   {
-   *     serviceId: "media-service",
-   *     permissions: ["ADMIN", "MOVIES_EDIT"]
-   *   },
-   *   {
-   *     serviceId: "ax-video-service",
-   *     permissions: ["ADMIN", "VIDEOS_EDIT"]
-   *   }
-   * ]
-   */
-  permissionStructure?: InputMaybe<Array<InputMaybe<DevPermissionStructureInput>>>;
-  /**
-   * Example:
-   *
-   * tags: ["LK_MANAGER", "DE_MANAGER"]
-   */
-  tags?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
-  /** Optional tenant ID to use for service account. If not specified will default to configured dev value. */
-  tenantId?: InputMaybe<Scalars['String']>;
-};
-
-export type GenerateDevAccessTokenPayload = {
-  __typename?: 'GenerateDevAccessTokenPayload';
-  accessToken: Scalars['String'];
-  expiresInSeconds: Scalars['Int'];
-  tokenType: Scalars['String'];
-};
-
 export type GenerateLongLivedTokenInput = {
   /** User access token to extend the validity period for. */
-  userToken: Scalars['String'];
+  userToken: Scalars['String']['input'];
   /** Validity duration from time of invocation. Defaults to 30 days if unspecified. */
-  validityDurationInSeconds?: InputMaybe<Scalars['Int']>;
+  validityDurationInSeconds?: InputMaybe<Scalars['Int']['input']>;
 };
 
 export type GenerateLongLivedTokenPayload = {
   __typename?: 'GenerateLongLivedTokenPayload';
   /** Long lived access token */
-  accessToken: Scalars['String'];
+  accessToken: Scalars['String']['output'];
   /** Access Token expiration timeout in seconds */
-  expiresInSeconds: Scalars['Int'];
+  expiresInSeconds: Scalars['Int']['output'];
   /** Access Token type to use when making client requests */
-  tokenType: Scalars['String'];
+  tokenType: Scalars['String']['output'];
 };
 
 /** The root mutation type which contains root level fields which mutate data. */
 export type Mutation = {
   __typename?: 'Mutation';
-  /** Creates a development-time service account with SYNCHRONIZE_PERMISSIONS granted. */
-  _DEV_createServiceAccount?: Maybe<CreateDevServiceAccountPayload>;
-  /** Generates development-time user access tokens with specified PERMISSIONS. */
-  _DEV_generateUserAccessToken?: Maybe<GenerateDevAccessTokenPayload>;
-  /** Creates development-time tenant, environment & idp-configuration basic data. Re-running will reset all data. */
-  _DEV_setupIdBasicData?: Maybe<SetupDevBasicDataPayload>;
   /** Authenticates a Managed Service Account */
   authenticateManagedServiceAccount: AuthenticateManagedServiceAccountPayload;
   /**
@@ -553,24 +487,6 @@ export type Mutation = {
   generateLongLivedToken: GenerateLongLivedTokenPayload;
   /** Update Service Account Name */
   updateServiceAccount: UpdateServiceAccountPayload;
-};
-
-
-/** The root mutation type which contains root level fields which mutate data. */
-export type Mutation_Dev_CreateServiceAccountArgs = {
-  input: CreateDevServiceAccountInput;
-};
-
-
-/** The root mutation type which contains root level fields which mutate data. */
-export type Mutation_Dev_GenerateUserAccessTokenArgs = {
-  input: GenerateDevAccessTokenInput;
-};
-
-
-/** The root mutation type which contains root level fields which mutate data. */
-export type Mutation_Dev_SetupIdBasicDataArgs = {
-  input: SetupDevBasicDataInput;
 };
 
 
@@ -628,8 +544,8 @@ export type MutationUpdateServiceAccountArgs = {
 };
 
 export type PermissionStructure = {
-  permissions: Array<InputMaybe<Scalars['String']>>;
-  serviceId: Scalars['String'];
+  permissions: Array<InputMaybe<Scalars['String']['input']>>;
+  serviceId: Scalars['String']['input'];
 };
 
 /** The root query type which gives access points into the data universe. */
@@ -644,53 +560,28 @@ export type Query = {
   query: Query;
 };
 
-export type SetupDevBasicDataInput = {
-  /** Email given here will be setup as the tenant administrator email, as well as user administrator email. */
-  adminEmail: Scalars['String'];
-  /** Password given here will be setup as the tenant administrator password. */
-  adminPassword: Scalars['String'];
-  /** Optional Environment ID to generate basic data with. If not specified will default to configured dev value. */
-  environmentId?: InputMaybe<Scalars['String']>;
-  /** environmentTemplateId */
-  environmentTemplateId: Scalars['String'];
-  /** Google IDP Configuration - Client ID. */
-  googleClientId: Scalars['String'];
-  /** Google IDP Configuration - Client Secret. */
-  googleClientSecret: Scalars['String'];
-  /** Optional tenant ID to generate basic data with. If not specified will default to configured dev value. */
-  tenantId?: InputMaybe<Scalars['String']>;
-};
-
-export type SetupDevBasicDataPayload = {
-  __typename?: 'SetupDevBasicDataPayload';
-  /** Development Environment ID to be used in ID Service integration. */
-  environmentId: Scalars['String'];
-  /** Development Tenant ID to be used in ID Service integration. */
-  tenantId: Scalars['String'];
-};
-
 export type UpdateServiceAccountInput = {
   /** Client ID of the Service Account to be updated */
-  clientId: Scalars['String'];
+  clientId: Scalars['String']['input'];
   /** Update Service Account Patch */
   patch: UpdateServiceAccountInputPatch;
 };
 
 export type UpdateServiceAccountInputPatch = {
   /** Name to be updated */
-  name?: InputMaybe<Scalars['String']>;
+  name?: InputMaybe<Scalars['String']['input']>;
 };
 
 export type UpdateServiceAccountPayload = {
   __typename?: 'UpdateServiceAccountPayload';
   /** Indicates if service account name was updated successfully */
-  isSuccess: Scalars['Boolean'];
+  isSuccess: Scalars['Boolean']['output'];
 };
 
 export type GetEnabledManagedServicesQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type GetEnabledManagedServicesQuery = { __typename?: 'Query', enabledManagedServices: Array<{ __typename?: 'EnabledManagedServicesPayload', serviceId: string }> };
+export type GetEnabledManagedServicesQuery = { enabledManagedServices: Array<{ serviceId: string }> };
 
 
 export const GetEnabledManagedServicesDocument = gql`
@@ -701,15 +592,15 @@ export const GetEnabledManagedServicesDocument = gql`
 }
     `;
 
-export type SdkFunctionWrapper = <T>(action: (requestHeaders?:Record<string, string>) => Promise<T>, operationName: string, operationType?: string) => Promise<T>;
+export type SdkFunctionWrapper = <T>(action: (requestHeaders?:Record<string, string>) => Promise<T>, operationName: string, operationType?: string, variables?: any) => Promise<T>;
 
 
-const defaultWrapper: SdkFunctionWrapper = (action, _operationName, _operationType) => action();
+const defaultWrapper: SdkFunctionWrapper = (action, _operationName, _operationType, _variables) => action();
 const GetEnabledManagedServicesDocumentString = print(GetEnabledManagedServicesDocument);
 export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = defaultWrapper) {
   return {
-    GetEnabledManagedServices(variables?: GetEnabledManagedServicesQueryVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<{ data: GetEnabledManagedServicesQuery; extensions?: any; headers: Dom.Headers; status: number; }> {
-        return withWrapper((wrappedRequestHeaders) => client.rawRequest<GetEnabledManagedServicesQuery>(GetEnabledManagedServicesDocumentString, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'GetEnabledManagedServices', 'query');
+    GetEnabledManagedServices(variables?: GetEnabledManagedServicesQueryVariables, requestHeaders?: GraphQLClientRequestHeaders): Promise<{ data: GetEnabledManagedServicesQuery; errors?: GraphQLError[]; extensions?: any; headers: Headers; status: number; }> {
+        return withWrapper((wrappedRequestHeaders) => client.rawRequest<GetEnabledManagedServicesQuery>(GetEnabledManagedServicesDocumentString, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'GetEnabledManagedServices', 'query', variables);
     }
   };
 }

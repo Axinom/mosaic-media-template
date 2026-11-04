@@ -14,7 +14,7 @@ import {
 
 type FormData = CreateMovieMutationVariables['input']['movie'];
 
-type SubmitResponse = CreateMovieMutation['createMovie'];
+type SubmitResponse = CreateMovieMutation['createMovie'] | undefined;
 
 const movieCreateSchema = Yup.object().shape<ObjectSchemaDefinition<FormData>>({
   title: Yup.string().required('Title is a required field').max(100),

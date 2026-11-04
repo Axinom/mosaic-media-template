@@ -23,7 +23,9 @@ import {
 
 type FormData = MutationCreateEpisodesLicenseArgs['input']['episodesLicense'];
 
-type SubmitResponse = CreateEpisodesLicenseMutation['createEpisodesLicense'];
+type SubmitResponse =
+  | CreateEpisodesLicenseMutation['createEpisodesLicense']
+  | undefined;
 
 const licenseSchema = Yup.object<ObjectSchemaDefinition<FormData>>({
   episodeId: Yup.number().required(),

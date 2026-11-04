@@ -3,6 +3,7 @@ import { ClientError } from 'graphql-request';
 import { VideoOutputFormat } from 'media-messages';
 import { CommonErrors } from '../../../common';
 import * as video from '../../../generated/graphql/video';
+import type { GqlResultFixture } from '../../../tests/test-utils/gql-result-fixture';
 import { createValidationError, createValidationWarning } from '../../models';
 import {
   getValidationAndVideos,
@@ -19,7 +20,7 @@ describe('getValidationAndVideos', () => {
   const videoId1 = 'valid-uuid-but-does-not-matter-here';
   const videoId2 = 'valid-uuid-but-does-not-matter-here-2';
   const createGqlVideo = (id: string): GqlVideo => {
-    return {
+    const fixture: GqlResultFixture<GqlVideo> = {
       id: id,
       title: `Video ${id}`,
       sourceFileName: `source-${id}`,
@@ -56,6 +57,7 @@ describe('getValidationAndVideos', () => {
         ],
       },
     };
+    return fixture as GqlVideo;
   };
   const endpoint = 'http://does-not-matter-as-request-is.mocked';
   const authToken = 'does-not-matter-as-request-is-mocked';
@@ -200,7 +202,11 @@ describe('getValidationAndVideos', () => {
     ];
     result = () => {
       throw new ClientError(
-        { data: { videos: null }, errors, status: 400 },
+        {
+          data: { videos: null },
+          errors: errors as unknown as ClientError['response']['errors'],
+          status: 400,
+        },
         { query: '' },
       );
     };
@@ -228,7 +234,11 @@ describe('getValidationAndVideos', () => {
     ];
     result = () => {
       throw new ClientError(
-        { data: { videos: null }, errors, status: 401 },
+        {
+          data: { videos: null },
+          errors: errors as unknown as ClientError['response']['errors'],
+          status: 401,
+        },
         { query: '' },
       );
     };

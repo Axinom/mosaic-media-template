@@ -19,7 +19,9 @@ import {
 
 type FormData = CreateEpisodeMutationVariables['input']['episode'];
 
-type SubmitResponse = Nullable<CreateEpisodeMutation['createEpisode']>;
+type SubmitResponse =
+  | Nullable<CreateEpisodeMutation['createEpisode']>
+  | undefined;
 
 const episodeCreateSchema = Yup.object<ObjectSchemaDefinition<FormData>>({
   title: Yup.string().required('Title is a required field').max(100),

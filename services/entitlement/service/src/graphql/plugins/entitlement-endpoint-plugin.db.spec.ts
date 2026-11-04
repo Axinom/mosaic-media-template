@@ -1,9 +1,5 @@
 import type { MockInstance } from 'vitest';
 import { vi } from 'vitest';
-import type {
-  GraphQLRequestContext,
-  GraphQLResponse,
-} from 'graphql-request/dist/types';
 
 // mock the sdk to return values to be tested, emulating catalog response
 let catalogCall: any = () => undefined;
@@ -54,6 +50,10 @@ import {
   TestRequestContext,
 } from '../../tests/test-utils';
 import { getPolicy } from './entitlement-endpoint/entitlement-message-generation';
+
+// graphql-request v6 no longer exports these types; derive them from ClientError.
+type GraphQLResponse = ClientError['response'];
+type GraphQLRequestContext = ClientError['request'];
 
 const ENTITLEMENT_REQUEST = gql`
   query Entitlement($input: EntitlementInput) {
@@ -273,7 +273,7 @@ describe('EntitlementEndpointPlugin', () => {
       async (response) => {
         // Arrange
         catalogCall = () => {
-          throw new ClientError(response, {
+          throw new ClientError(response as unknown as GraphQLResponse, {
             query: '',
           });
         };
@@ -707,7 +707,7 @@ describe('EntitlementEndpointPlugin', () => {
           throw new ClientError(
             {
               errors,
-            } satisfies Partial<GraphQLResponse> as unknown as GraphQLResponse,
+            } as unknown as GraphQLResponse,
             {} satisfies Partial<GraphQLRequestContext> as unknown as GraphQLRequestContext,
           );
         };
@@ -762,7 +762,7 @@ describe('EntitlementEndpointPlugin', () => {
           throw new ClientError(
             {
               errors,
-            } satisfies Partial<GraphQLResponse> as unknown as GraphQLResponse,
+            } as unknown as GraphQLResponse,
             {} satisfies Partial<GraphQLRequestContext> as unknown as GraphQLRequestContext,
           );
         };

@@ -1,57 +1,70 @@
-import { GraphQLClient } from 'graphql-request';
-import * as Dom from 'graphql-request/dist/types.dom';
-import { print } from 'graphql'
+/** Internal type. DO NOT USE DIRECTLY. */
+type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
+/** Internal type. DO NOT USE DIRECTLY. */
+export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
+import type * as Types from './localization';
+
+import { GraphQLClient, type RequestOptions } from 'graphql-request';
+import { GraphQLError, print } from 'graphql'
 import gql from 'graphql-tag';
 export type Maybe<T> = T | null;
 export type InputMaybe<T> = Maybe<T>;
-export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
-export type MakeOptional<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]?: Maybe<T[SubKey]> };
-export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]: Maybe<T[SubKey]> };
+type GraphQLClientRequestHeaders = RequestOptions['requestHeaders'];
 /** All built-in and custom scalars, mapped to their actual values */
 export type Scalars = {
-  ID: string;
-  String: string;
-  Boolean: boolean;
-  Int: number;
-  Float: number;
-  Cursor: any;
-  Datetime: any;
-  JSON: any;
-  UUID: any;
+  ID: { input: string; output: string; }
+  String: { input: string; output: string; }
+  Boolean: { input: boolean; output: boolean; }
+  Int: { input: number; output: number; }
+  Float: { input: number; output: number; }
+  Cursor: { input: any; output: any; }
+  Datetime: { input: any; output: any; }
+  JSON: { input: any; output: any; }
+  UiFieldCustomDefinitionObject: { input: any; output: any; }
+  UUID: { input: any; output: any; }
 };
 
 export type ActivateLocaleInput = {
-  clientMutationId?: InputMaybe<Scalars['String']>;
-  languageTag: Scalars['String'];
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
+  languageTag: Scalars['String']['input'];
 };
 
 export type ActivateLocalePayload = {
   __typename?: 'ActivateLocalePayload';
-  clientMutationId?: Maybe<Scalars['String']>;
+  clientMutationId?: Maybe<Scalars['String']['output']>;
   locale?: Maybe<Locale>;
   query?: Maybe<Query>;
 };
 
+export enum ApprovalBehavior {
+  /** Not Required */
+  NotRequired = 'NOT_REQUIRED',
+  /** Required */
+  Required = 'REQUIRED',
+  /** Required if not empty */
+  RequiredIfNotEmpty = 'REQUIRED_IF_NOT_EMPTY'
+}
+
 /** A filter to be used against Boolean fields. All fields are combined with a logical ‘and.’ */
 export type BooleanFilter = {
   /** Equal to the specified value. */
-  equalTo?: InputMaybe<Scalars['Boolean']>;
+  equalTo?: InputMaybe<Scalars['Boolean']['input']>;
   /** Greater than the specified value. */
-  greaterThan?: InputMaybe<Scalars['Boolean']>;
+  greaterThan?: InputMaybe<Scalars['Boolean']['input']>;
   /** Greater than or equal to the specified value. */
-  greaterThanOrEqualTo?: InputMaybe<Scalars['Boolean']>;
+  greaterThanOrEqualTo?: InputMaybe<Scalars['Boolean']['input']>;
   /** Included in the specified list. */
-  in?: InputMaybe<Array<Scalars['Boolean']>>;
+  in?: InputMaybe<Array<Scalars['Boolean']['input']>>;
   /** Is null (if `true` is specified) or is not null (if `false` is specified). */
-  isNull?: InputMaybe<Scalars['Boolean']>;
+  isNull?: InputMaybe<Scalars['Boolean']['input']>;
   /** Less than the specified value. */
-  lessThan?: InputMaybe<Scalars['Boolean']>;
+  lessThan?: InputMaybe<Scalars['Boolean']['input']>;
   /** Less than or equal to the specified value. */
-  lessThanOrEqualTo?: InputMaybe<Scalars['Boolean']>;
+  lessThanOrEqualTo?: InputMaybe<Scalars['Boolean']['input']>;
   /** Not equal to the specified value. */
-  notEqualTo?: InputMaybe<Scalars['Boolean']>;
+  notEqualTo?: InputMaybe<Scalars['Boolean']['input']>;
   /** Not included in the specified list. */
-  notIn?: InputMaybe<Array<Scalars['Boolean']>>;
+  notIn?: InputMaybe<Array<Scalars['Boolean']['input']>>;
 };
 
 /**
@@ -63,7 +76,7 @@ export type CreateLocaleInput = {
    * An arbitrary string value with no semantic meaning. Will be included in the
    * payload verbatim. May be used to track mutations by the client.
    */
-  clientMutationId?: InputMaybe<Scalars['String']>;
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
   /** The `Locale` to be created by this mutation. */
   locale: LocaleInput;
 };
@@ -75,7 +88,7 @@ export type CreateLocalePayload = {
    * The exact same `clientMutationId` that was provided in the mutation input,
    * unchanged and unused. May be used by a client to track mutations.
    */
-  clientMutationId?: Maybe<Scalars['String']>;
+  clientMutationId?: Maybe<Scalars['String']['output']>;
   /** The `Locale` that was created by this mutation. */
   locale?: Maybe<Locale>;
   /** An edge for our `Locale`. May be used by Relay 1. */
@@ -100,33 +113,33 @@ export enum CreateLocaleState {
 /** A filter to be used against Datetime fields. All fields are combined with a logical ‘and.’ */
 export type DatetimeFilter = {
   /** Equal to the specified value. */
-  equalTo?: InputMaybe<Scalars['Datetime']>;
+  equalTo?: InputMaybe<Scalars['Datetime']['input']>;
   /** Greater than the specified value. */
-  greaterThan?: InputMaybe<Scalars['Datetime']>;
+  greaterThan?: InputMaybe<Scalars['Datetime']['input']>;
   /** Greater than or equal to the specified value. */
-  greaterThanOrEqualTo?: InputMaybe<Scalars['Datetime']>;
+  greaterThanOrEqualTo?: InputMaybe<Scalars['Datetime']['input']>;
   /** Included in the specified list. */
-  in?: InputMaybe<Array<Scalars['Datetime']>>;
+  in?: InputMaybe<Array<Scalars['Datetime']['input']>>;
   /** Is null (if `true` is specified) or is not null (if `false` is specified). */
-  isNull?: InputMaybe<Scalars['Boolean']>;
+  isNull?: InputMaybe<Scalars['Boolean']['input']>;
   /** Less than the specified value. */
-  lessThan?: InputMaybe<Scalars['Datetime']>;
+  lessThan?: InputMaybe<Scalars['Datetime']['input']>;
   /** Less than or equal to the specified value. */
-  lessThanOrEqualTo?: InputMaybe<Scalars['Datetime']>;
+  lessThanOrEqualTo?: InputMaybe<Scalars['Datetime']['input']>;
   /** Not equal to the specified value. */
-  notEqualTo?: InputMaybe<Scalars['Datetime']>;
+  notEqualTo?: InputMaybe<Scalars['Datetime']['input']>;
   /** Not included in the specified list. */
-  notIn?: InputMaybe<Array<Scalars['Datetime']>>;
+  notIn?: InputMaybe<Array<Scalars['Datetime']['input']>>;
 };
 
 export type DeactivateLocaleInput = {
-  clientMutationId?: InputMaybe<Scalars['String']>;
-  languageTag: Scalars['String'];
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
+  languageTag: Scalars['String']['input'];
 };
 
 export type DeactivateLocalePayload = {
   __typename?: 'DeactivateLocalePayload';
-  clientMutationId?: Maybe<Scalars['String']>;
+  clientMutationId?: Maybe<Scalars['String']['output']>;
   locale?: Maybe<Locale>;
   query?: Maybe<Query>;
 };
@@ -140,14 +153,14 @@ export type DeleteLocaleInput = {
    * An arbitrary string value with no semantic meaning. Will be included in the
    * payload verbatim. May be used to track mutations by the client.
    */
-  clientMutationId?: InputMaybe<Scalars['String']>;
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
   /**
    * @isIdentifierKey()
    * @isTrimmed()
    * @maxLength(100)
    * @notEmpty()
    */
-  languageTag: Scalars['String'];
+  languageTag: Scalars['String']['input'];
 };
 
 /** The output of our delete `Locale` mutation. */
@@ -157,7 +170,7 @@ export type DeleteLocalePayload = {
    * The exact same `clientMutationId` that was provided in the mutation input,
    * unchanged and unused. May be used by a client to track mutations.
    */
-  clientMutationId?: Maybe<Scalars['String']>;
+  clientMutationId?: Maybe<Scalars['String']['output']>;
   /** The `Locale` that was deleted by this mutation. */
   locale?: Maybe<Locale>;
   /** An edge for our `Locale`. May be used by Relay 1. */
@@ -181,8 +194,8 @@ export type DeleteLocalizationSourceEntityInput = {
    * An arbitrary string value with no semantic meaning. Will be included in the
    * payload verbatim. May be used to track mutations by the client.
    */
-  clientMutationId?: InputMaybe<Scalars['String']>;
-  id: Scalars['UUID'];
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
+  id: Scalars['UUID']['input'];
 };
 
 /** The output of our delete `LocalizationSourceEntity` mutation. */
@@ -192,7 +205,7 @@ export type DeleteLocalizationSourceEntityPayload = {
    * The exact same `clientMutationId` that was provided in the mutation input,
    * unchanged and unused. May be used by a client to track mutations.
    */
-  clientMutationId?: Maybe<Scalars['String']>;
+  clientMutationId?: Maybe<Scalars['String']['output']>;
   /** Reads a single `EntityDefinition` that is related to this `LocalizationSourceEntity`. */
   entityDefinition?: Maybe<EntityDefinition>;
   /** The `LocalizationSourceEntity` that was deleted by this mutation. */
@@ -212,45 +225,45 @@ export type DeleteLocalizationSourceEntityPayloadLocalizationSourceEntityEdgeArg
 /** @permissions: ENTITY_DEFINITIONS_VIEW,ENTITY_DEFINITIONS_EDIT,SOURCE_ENTITIES_VIEW,SOURCE_ENTITIES_EDIT,LOCALIZED_ENTITIES_VIEW,LOCALIZED_ENTITIES_EDIT,LOCALIZED_ENTITIES_REVIEW,ADMIN */
 export type EntityDefinition = {
   __typename?: 'EntityDefinition';
-  createdDate: Scalars['Datetime'];
-  createdUser: Scalars['String'];
-  description?: Maybe<Scalars['String']>;
-  entityType: Scalars['String'];
+  createdDate: Scalars['Datetime']['output'];
+  createdUser: Scalars['String']['output'];
+  description?: Maybe<Scalars['String']['output']>;
+  entityType: Scalars['String']['output'];
   /** Reads and enables pagination through a set of `EntityFieldDefinition`. */
   fieldDefinitions: EntityFieldDefinitionsConnection;
-  id: Scalars['UUID'];
-  isArchived: Scalars['Boolean'];
+  id: Scalars['UUID']['output'];
+  isArchived: Scalars['Boolean']['output'];
   /** Reads and enables pagination through a set of `LocalizationSourceEntity`. */
   localizationSourceEntities: LocalizationSourceEntitiesConnection;
-  serviceId: Scalars['String'];
-  title: Scalars['String'];
-  updatedDate: Scalars['Datetime'];
-  updatedUser: Scalars['String'];
+  serviceId: Scalars['String']['output'];
+  title: Scalars['String']['output'];
+  updatedDate: Scalars['Datetime']['output'];
+  updatedUser: Scalars['String']['output'];
 };
 
 
 /** @permissions: ENTITY_DEFINITIONS_VIEW,ENTITY_DEFINITIONS_EDIT,SOURCE_ENTITIES_VIEW,SOURCE_ENTITIES_EDIT,LOCALIZED_ENTITIES_VIEW,LOCALIZED_ENTITIES_EDIT,LOCALIZED_ENTITIES_REVIEW,ADMIN */
 export type EntityDefinitionFieldDefinitionsArgs = {
-  after?: InputMaybe<Scalars['Cursor']>;
-  before?: InputMaybe<Scalars['Cursor']>;
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
   condition?: InputMaybe<EntityFieldDefinitionCondition>;
   filter?: InputMaybe<EntityFieldDefinitionFilter>;
-  first?: InputMaybe<Scalars['Int']>;
-  last?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Array<EntityFieldDefinitionsOrderBy>>;
 };
 
 
 /** @permissions: ENTITY_DEFINITIONS_VIEW,ENTITY_DEFINITIONS_EDIT,SOURCE_ENTITIES_VIEW,SOURCE_ENTITIES_EDIT,LOCALIZED_ENTITIES_VIEW,LOCALIZED_ENTITIES_EDIT,LOCALIZED_ENTITIES_REVIEW,ADMIN */
 export type EntityDefinitionLocalizationSourceEntitiesArgs = {
-  after?: InputMaybe<Scalars['Cursor']>;
-  before?: InputMaybe<Scalars['Cursor']>;
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
   condition?: InputMaybe<LocalizationSourceEntityCondition>;
   filter?: InputMaybe<LocalizationSourceEntityFilter>;
-  first?: InputMaybe<Scalars['Int']>;
-  last?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Array<LocalizationSourceEntitiesOrderBy>>;
 };
 
@@ -260,36 +273,36 @@ export type EntityDefinitionLocalizationSourceEntitiesArgs = {
  */
 export type EntityDefinitionCondition = {
   /** Checks for equality with the object’s `createdDate` field. */
-  createdDate?: InputMaybe<Scalars['Datetime']>;
+  createdDate?: InputMaybe<Scalars['Datetime']['input']>;
   /** Checks for equality with the object’s `createdUser` field. */
-  createdUser?: InputMaybe<Scalars['String']>;
+  createdUser?: InputMaybe<Scalars['String']['input']>;
   /** Checks for equality with the object’s `description` field. */
-  description?: InputMaybe<Scalars['String']>;
+  description?: InputMaybe<Scalars['String']['input']>;
   /**
    * Checks for equality with the object’s `entityType` field.
    * @isTrimmed()
    * @notEmpty()
    */
-  entityType?: InputMaybe<Scalars['String']>;
+  entityType?: InputMaybe<Scalars['String']['input']>;
   /** Checks for equality with the object’s `id` field. */
-  id?: InputMaybe<Scalars['UUID']>;
+  id?: InputMaybe<Scalars['UUID']['input']>;
   /** Checks for equality with the object’s `isArchived` field. */
-  isArchived?: InputMaybe<Scalars['Boolean']>;
+  isArchived?: InputMaybe<Scalars['Boolean']['input']>;
   /**
    * Checks for equality with the object’s `serviceId` field.
    * @isTrimmed()
    * @notEmpty()
    */
-  serviceId?: InputMaybe<Scalars['String']>;
+  serviceId?: InputMaybe<Scalars['String']['input']>;
   /**
    * Checks for equality with the object’s `title` field.
    * @notEmpty()
    */
-  title?: InputMaybe<Scalars['String']>;
+  title?: InputMaybe<Scalars['String']['input']>;
   /** Checks for equality with the object’s `updatedDate` field. */
-  updatedDate?: InputMaybe<Scalars['Datetime']>;
+  updatedDate?: InputMaybe<Scalars['Datetime']['input']>;
   /** Checks for equality with the object’s `updatedUser` field. */
-  updatedUser?: InputMaybe<Scalars['String']>;
+  updatedUser?: InputMaybe<Scalars['String']['input']>;
 };
 
 /** A filter to be used against `EntityDefinition` object types. All fields are combined with a logical ‘and.’ */
@@ -305,7 +318,7 @@ export type EntityDefinitionFilter = {
   /** Filter by the object’s `fieldDefinitions` relation. */
   fieldDefinitions?: InputMaybe<EntityDefinitionToManyEntityFieldDefinitionFilter>;
   /** Some related `fieldDefinitions` exist. */
-  fieldDefinitionsExist?: InputMaybe<Scalars['Boolean']>;
+  fieldDefinitionsExist?: InputMaybe<Scalars['Boolean']['input']>;
   /** Filter by the object’s `id` field. */
   id?: InputMaybe<UuidFilter>;
   /** Filter by the object’s `isArchived` field. */
@@ -313,7 +326,7 @@ export type EntityDefinitionFilter = {
   /** Filter by the object’s `localizationSourceEntities` relation. */
   localizationSourceEntities?: InputMaybe<EntityDefinitionToManyLocalizationSourceEntityFilter>;
   /** Some related `localizationSourceEntities` exist. */
-  localizationSourceEntitiesExist?: InputMaybe<Scalars['Boolean']>;
+  localizationSourceEntitiesExist?: InputMaybe<Scalars['Boolean']['input']>;
   /** Filter by the object’s `serviceId` field. */
   serviceId?: InputMaybe<StringFilter>;
   /** Filter by the object’s `title` field. */
@@ -337,14 +350,14 @@ export type EntityDefinitionsConnection = {
   /** Information to aid in pagination. */
   pageInfo: PageInfo;
   /** The count of *all* `EntityDefinition` you could get from the connection. */
-  totalCount: Scalars['Int'];
+  totalCount: Scalars['Int']['output'];
 };
 
 /** A `EntityDefinition` edge in the connection. */
 export type EntityDefinitionsEdge = {
   __typename?: 'EntityDefinitionsEdge';
   /** A cursor for use in pagination. */
-  cursor?: Maybe<Scalars['Cursor']>;
+  cursor?: Maybe<Scalars['Cursor']['output']>;
   /** The `EntityDefinition` at the end of the edge. */
   node: EntityDefinition;
 };
@@ -399,20 +412,22 @@ export type EntityDefinitionToManyLocalizationSourceEntityFilter = {
 /** @permissions: ENTITY_DEFINITIONS_VIEW,ENTITY_DEFINITIONS_EDIT,SOURCE_ENTITIES_VIEW,SOURCE_ENTITIES_EDIT,LOCALIZED_ENTITIES_VIEW,LOCALIZED_ENTITIES_EDIT,LOCALIZED_ENTITIES_REVIEW,ADMIN */
 export type EntityFieldDefinition = {
   __typename?: 'EntityFieldDefinition';
-  createdDate: Scalars['Datetime'];
-  createdUser: Scalars['String'];
-  description?: Maybe<Scalars['String']>;
+  approvalBehavior: ApprovalBehavior;
+  createdDate: Scalars['Datetime']['output'];
+  createdUser: Scalars['String']['output'];
+  description?: Maybe<Scalars['String']['output']>;
   /** Reads a single `EntityDefinition` that is related to this `EntityFieldDefinition`. */
   entityDefinition?: Maybe<EntityDefinition>;
-  entityDefinitionId: Scalars['UUID'];
-  fieldName: Scalars['String'];
+  entityDefinitionId: Scalars['UUID']['output'];
+  fieldName: Scalars['String']['output'];
   fieldType: FieldType;
-  isActive: Scalars['Boolean'];
-  sortIndex: Scalars['Int'];
-  title: Scalars['String'];
+  isActive: Scalars['Boolean']['output'];
+  sortIndex: Scalars['Int']['output'];
+  title: Scalars['String']['output'];
+  uiFieldCustomDefinition?: Maybe<Scalars['UiFieldCustomDefinitionObject']['output']>;
   uiFieldType: UiFieldType;
-  updatedDate: Scalars['Datetime'];
-  updatedUser: Scalars['String'];
+  updatedDate: Scalars['Datetime']['output'];
+  updatedUser: Scalars['String']['output'];
   /** Reads and enables pagination through a set of `EntityFieldValidationRule`. */
   validationRules: EntityFieldValidationRulesConnection;
 };
@@ -420,13 +435,13 @@ export type EntityFieldDefinition = {
 
 /** @permissions: ENTITY_DEFINITIONS_VIEW,ENTITY_DEFINITIONS_EDIT,SOURCE_ENTITIES_VIEW,SOURCE_ENTITIES_EDIT,LOCALIZED_ENTITIES_VIEW,LOCALIZED_ENTITIES_EDIT,LOCALIZED_ENTITIES_REVIEW,ADMIN */
 export type EntityFieldDefinitionValidationRulesArgs = {
-  after?: InputMaybe<Scalars['Cursor']>;
-  before?: InputMaybe<Scalars['Cursor']>;
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
   condition?: InputMaybe<EntityFieldValidationRuleCondition>;
   filter?: InputMaybe<EntityFieldValidationRuleFilter>;
-  first?: InputMaybe<Scalars['Int']>;
-  last?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Array<EntityFieldValidationRulesOrderBy>>;
 };
 
@@ -435,33 +450,37 @@ export type EntityFieldDefinitionValidationRulesArgs = {
  * are tested for equality and combined with a logical ‘and.’
  */
 export type EntityFieldDefinitionCondition = {
+  /** Checks for equality with the object’s `approvalBehavior` field. */
+  approvalBehavior?: InputMaybe<ApprovalBehavior>;
   /** Checks for equality with the object’s `createdDate` field. */
-  createdDate?: InputMaybe<Scalars['Datetime']>;
+  createdDate?: InputMaybe<Scalars['Datetime']['input']>;
   /** Checks for equality with the object’s `createdUser` field. */
-  createdUser?: InputMaybe<Scalars['String']>;
+  createdUser?: InputMaybe<Scalars['String']['input']>;
   /** Checks for equality with the object’s `description` field. */
-  description?: InputMaybe<Scalars['String']>;
+  description?: InputMaybe<Scalars['String']['input']>;
   /** Checks for equality with the object’s `entityDefinitionId` field. */
-  entityDefinitionId?: InputMaybe<Scalars['UUID']>;
+  entityDefinitionId?: InputMaybe<Scalars['UUID']['input']>;
   /** Checks for equality with the object’s `fieldName` field. */
-  fieldName?: InputMaybe<Scalars['String']>;
+  fieldName?: InputMaybe<Scalars['String']['input']>;
   /** Checks for equality with the object’s `fieldType` field. */
   fieldType?: InputMaybe<FieldType>;
   /** Checks for equality with the object’s `isActive` field. */
-  isActive?: InputMaybe<Scalars['Boolean']>;
+  isActive?: InputMaybe<Scalars['Boolean']['input']>;
   /** Checks for equality with the object’s `sortIndex` field. */
-  sortIndex?: InputMaybe<Scalars['Int']>;
+  sortIndex?: InputMaybe<Scalars['Int']['input']>;
   /**
    * Checks for equality with the object’s `title` field.
    * @notEmpty()
    */
-  title?: InputMaybe<Scalars['String']>;
+  title?: InputMaybe<Scalars['String']['input']>;
+  /** Checks for equality with the object’s `uiFieldCustomDefinition` field. */
+  uiFieldCustomDefinition?: InputMaybe<Scalars['UiFieldCustomDefinitionObject']['input']>;
   /** Checks for equality with the object’s `uiFieldType` field. */
   uiFieldType?: InputMaybe<UiFieldType>;
   /** Checks for equality with the object’s `updatedDate` field. */
-  updatedDate?: InputMaybe<Scalars['Datetime']>;
+  updatedDate?: InputMaybe<Scalars['Datetime']['input']>;
   /** Checks for equality with the object’s `updatedUser` field. */
-  updatedUser?: InputMaybe<Scalars['String']>;
+  updatedUser?: InputMaybe<Scalars['String']['input']>;
 };
 
 /** A filter to be used against `EntityFieldDefinition` object types. All fields are combined with a logical ‘and.’ */
@@ -493,7 +512,7 @@ export type EntityFieldDefinitionFilter = {
   /** Filter by the object’s `validationRules` relation. */
   validationRules?: InputMaybe<EntityFieldDefinitionToManyEntityFieldValidationRuleFilter>;
   /** Some related `validationRules` exist. */
-  validationRulesExist?: InputMaybe<Scalars['Boolean']>;
+  validationRulesExist?: InputMaybe<Scalars['Boolean']['input']>;
 };
 
 /**
@@ -509,20 +528,22 @@ export type EntityFieldDefinitionsConnection = {
   /** Information to aid in pagination. */
   pageInfo: PageInfo;
   /** The count of *all* `EntityFieldDefinition` you could get from the connection. */
-  totalCount: Scalars['Int'];
+  totalCount: Scalars['Int']['output'];
 };
 
 /** A `EntityFieldDefinition` edge in the connection. */
 export type EntityFieldDefinitionsEdge = {
   __typename?: 'EntityFieldDefinitionsEdge';
   /** A cursor for use in pagination. */
-  cursor?: Maybe<Scalars['Cursor']>;
+  cursor?: Maybe<Scalars['Cursor']['output']>;
   /** The `EntityFieldDefinition` at the end of the edge. */
   node: EntityFieldDefinition;
 };
 
 /** Methods to use when ordering `EntityFieldDefinition`. */
 export enum EntityFieldDefinitionsOrderBy {
+  ApprovalBehaviorAsc = 'APPROVAL_BEHAVIOR_ASC',
+  ApprovalBehaviorDesc = 'APPROVAL_BEHAVIOR_DESC',
   CreatedDateAsc = 'CREATED_DATE_ASC',
   CreatedDateDesc = 'CREATED_DATE_DESC',
   CreatedUserAsc = 'CREATED_USER_ASC',
@@ -544,6 +565,8 @@ export enum EntityFieldDefinitionsOrderBy {
   SortIndexDesc = 'SORT_INDEX_DESC',
   TitleAsc = 'TITLE_ASC',
   TitleDesc = 'TITLE_DESC',
+  UiFieldCustomDefinitionAsc = 'UI_FIELD_CUSTOM_DEFINITION_ASC',
+  UiFieldCustomDefinitionDesc = 'UI_FIELD_CUSTOM_DEFINITION_DESC',
   UiFieldTypeAsc = 'UI_FIELD_TYPE_ASC',
   UiFieldTypeDesc = 'UI_FIELD_TYPE_DESC',
   UpdatedDateAsc = 'UPDATED_DATE_ASC',
@@ -565,18 +588,18 @@ export type EntityFieldDefinitionToManyEntityFieldValidationRuleFilter = {
 /** @permissions: ENTITY_DEFINITIONS_VIEW,ENTITY_DEFINITIONS_EDIT,SOURCE_ENTITIES_VIEW,SOURCE_ENTITIES_EDIT,LOCALIZED_ENTITIES_VIEW,LOCALIZED_ENTITIES_EDIT,LOCALIZED_ENTITIES_REVIEW,ADMIN */
 export type EntityFieldValidationRule = {
   __typename?: 'EntityFieldValidationRule';
-  createdDate: Scalars['Datetime'];
-  createdUser: Scalars['String'];
-  entityDefinitionId: Scalars['UUID'];
+  createdDate: Scalars['Datetime']['output'];
+  createdUser: Scalars['String']['output'];
+  entityDefinitionId: Scalars['UUID']['output'];
   /** Reads a single `EntityFieldDefinition` that is related to this `EntityFieldValidationRule`. */
   fieldDefinition?: Maybe<EntityFieldDefinition>;
-  fieldName: Scalars['String'];
-  message?: Maybe<Scalars['String']>;
-  settings?: Maybe<Scalars['JSON']>;
+  fieldName: Scalars['String']['output'];
+  message?: Maybe<Scalars['String']['output']>;
+  settings?: Maybe<Scalars['JSON']['output']>;
   severity: ValidationSeverity;
   type: FieldValidationRule;
-  updatedDate: Scalars['Datetime'];
-  updatedUser: Scalars['String'];
+  updatedDate: Scalars['Datetime']['output'];
+  updatedUser: Scalars['String']['output'];
 };
 
 /**
@@ -585,25 +608,25 @@ export type EntityFieldValidationRule = {
  */
 export type EntityFieldValidationRuleCondition = {
   /** Checks for equality with the object’s `createdDate` field. */
-  createdDate?: InputMaybe<Scalars['Datetime']>;
+  createdDate?: InputMaybe<Scalars['Datetime']['input']>;
   /** Checks for equality with the object’s `createdUser` field. */
-  createdUser?: InputMaybe<Scalars['String']>;
+  createdUser?: InputMaybe<Scalars['String']['input']>;
   /** Checks for equality with the object’s `entityDefinitionId` field. */
-  entityDefinitionId?: InputMaybe<Scalars['UUID']>;
+  entityDefinitionId?: InputMaybe<Scalars['UUID']['input']>;
   /** Checks for equality with the object’s `fieldName` field. */
-  fieldName?: InputMaybe<Scalars['String']>;
+  fieldName?: InputMaybe<Scalars['String']['input']>;
   /** Checks for equality with the object’s `message` field. */
-  message?: InputMaybe<Scalars['String']>;
+  message?: InputMaybe<Scalars['String']['input']>;
   /** Checks for equality with the object’s `settings` field. */
-  settings?: InputMaybe<Scalars['JSON']>;
+  settings?: InputMaybe<Scalars['JSON']['input']>;
   /** Checks for equality with the object’s `severity` field. */
   severity?: InputMaybe<ValidationSeverity>;
   /** Checks for equality with the object’s `type` field. */
   type?: InputMaybe<FieldValidationRule>;
   /** Checks for equality with the object’s `updatedDate` field. */
-  updatedDate?: InputMaybe<Scalars['Datetime']>;
+  updatedDate?: InputMaybe<Scalars['Datetime']['input']>;
   /** Checks for equality with the object’s `updatedUser` field. */
-  updatedUser?: InputMaybe<Scalars['String']>;
+  updatedUser?: InputMaybe<Scalars['String']['input']>;
 };
 
 /** A filter to be used against `EntityFieldValidationRule` object types. All fields are combined with a logical ‘and.’ */
@@ -643,14 +666,14 @@ export type EntityFieldValidationRulesConnection = {
   /** Information to aid in pagination. */
   pageInfo: PageInfo;
   /** The count of *all* `EntityFieldValidationRule` you could get from the connection. */
-  totalCount: Scalars['Int'];
+  totalCount: Scalars['Int']['output'];
 };
 
 /** A `EntityFieldValidationRule` edge in the connection. */
 export type EntityFieldValidationRulesEdge = {
   __typename?: 'EntityFieldValidationRulesEdge';
   /** A cursor for use in pagination. */
-  cursor?: Maybe<Scalars['Cursor']>;
+  cursor?: Maybe<Scalars['Cursor']['output']>;
   /** The `EntityFieldValidationRule` at the end of the edge. */
   node: EntityFieldValidationRule;
 };
@@ -685,9 +708,9 @@ export enum EntityFieldValidationRulesOrderBy {
 /** The details of a failed validation of a source entity localization. */
 export type EntityLocalizationValidationMessage = {
   __typename?: 'EntityLocalizationValidationMessage';
-  fieldName?: Maybe<Scalars['String']>;
-  locale: Scalars['String'];
-  message: Scalars['String'];
+  fieldName?: Maybe<Scalars['String']['output']>;
+  locale: Scalars['String']['output'];
+  message: Scalars['String']['output'];
   severity: EntityLocalizationValidationSeverity;
   type: EntityLocalizationValidationType;
 };
@@ -807,6 +830,8 @@ export enum ErrorCodesEnum {
   SubjectNotFound = 'SUBJECT_NOT_FOUND',
   /** The subject has no permissions. */
   Unauthorized = 'UNAUTHORIZED',
+  /** Locales [%s] used for the localization are not defined yet. Please make sure these locales are defined in Localization Service. */
+  UndefinedLocalesUsedForLocalization = 'UNDEFINED_LOCALES_USED_FOR_LOCALIZATION',
   /** Unexpected null or undefined value received. */
   UnexpectedNullUndefined = 'UNEXPECTED_NULL_UNDEFINED',
   /** An unhandled database-related error has occurred. Please contact the service support. */
@@ -845,7 +870,7 @@ export type FieldTypeFilter = {
   /** Included in the specified list. */
   in?: InputMaybe<Array<FieldType>>;
   /** Is null (if `true` is specified) or is not null (if `false` is specified). */
-  isNull?: InputMaybe<Scalars['Boolean']>;
+  isNull?: InputMaybe<Scalars['Boolean']['input']>;
   /** Less than the specified value. */
   lessThan?: InputMaybe<FieldType>;
   /** Less than or equal to the specified value. */
@@ -876,7 +901,7 @@ export type FieldValidationRuleFilter = {
   /** Included in the specified list. */
   in?: InputMaybe<Array<FieldValidationRule>>;
   /** Is null (if `true` is specified) or is not null (if `false` is specified). */
-  isNull?: InputMaybe<Scalars['Boolean']>;
+  isNull?: InputMaybe<Scalars['Boolean']['input']>;
   /** Less than the specified value. */
   lessThan?: InputMaybe<FieldValidationRule>;
   /** Less than or equal to the specified value. */
@@ -887,62 +912,42 @@ export type FieldValidationRuleFilter = {
   notIn?: InputMaybe<Array<FieldValidationRule>>;
 };
 
-export type InboxOutboxReportInput = {
-  testId: Scalars['String'];
-};
-
-export type InboxOutboxReportPayload = {
-  __typename?: 'InboxOutboxReportPayload';
-  inboxReport: Scalars['String'];
-  outboxReport: Scalars['String'];
-};
-
-export type InboxOutboxStateInput = {
-  testId: Scalars['String'];
-};
-
-export type InboxOutboxStatePayload = {
-  __typename?: 'InboxOutboxStatePayload';
-  inboxActiveCount: Scalars['Int'];
-  outboxActiveCount: Scalars['Int'];
-};
-
 /** @permissions: SETTINGS_VIEW,SETTINGS_EDIT,SOURCE_ENTITIES_EDIT,LOCALIZED_ENTITIES_REVIEW,LOCALIZED_ENTITIES_EDIT,LOCALIZED_ENTITIES_VIEW,ADMIN */
 export type Locale = {
   __typename?: 'Locale';
-  createdDate: Scalars['Datetime'];
-  createdUser: Scalars['String'];
-  isDefault: Scalars['Boolean'];
-  languageTag: Scalars['String'];
+  createdDate: Scalars['Datetime']['output'];
+  createdUser: Scalars['String']['output'];
+  isDefault: Scalars['Boolean']['output'];
+  languageTag: Scalars['String']['output'];
   /** Reads and enables pagination through a set of `LocalizedEntity`. */
   localizedEntities: LocalizedEntitiesConnection;
   state: LocaleState;
-  title: Scalars['String'];
-  updatedDate: Scalars['Datetime'];
-  updatedUser: Scalars['String'];
+  title: Scalars['String']['output'];
+  updatedDate: Scalars['Datetime']['output'];
+  updatedUser: Scalars['String']['output'];
 };
 
 
 /** @permissions: SETTINGS_VIEW,SETTINGS_EDIT,SOURCE_ENTITIES_EDIT,LOCALIZED_ENTITIES_REVIEW,LOCALIZED_ENTITIES_EDIT,LOCALIZED_ENTITIES_VIEW,ADMIN */
 export type LocaleLocalizedEntitiesArgs = {
-  after?: InputMaybe<Scalars['Cursor']>;
-  before?: InputMaybe<Scalars['Cursor']>;
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
   condition?: InputMaybe<LocalizedEntityCondition>;
   filter?: InputMaybe<LocalizedEntityFilter>;
-  first?: InputMaybe<Scalars['Int']>;
-  last?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Array<LocalizedEntitiesOrderBy>>;
 };
 
 /** A condition to be used against `Locale` object types. All fields are tested for equality and combined with a logical ‘and.’ */
 export type LocaleCondition = {
   /** Checks for equality with the object’s `createdDate` field. */
-  createdDate?: InputMaybe<Scalars['Datetime']>;
+  createdDate?: InputMaybe<Scalars['Datetime']['input']>;
   /** Checks for equality with the object’s `createdUser` field. */
-  createdUser?: InputMaybe<Scalars['String']>;
+  createdUser?: InputMaybe<Scalars['String']['input']>;
   /** Checks for equality with the object’s `isDefault` field. */
-  isDefault?: InputMaybe<Scalars['Boolean']>;
+  isDefault?: InputMaybe<Scalars['Boolean']['input']>;
   /**
    * Checks for equality with the object’s `languageTag` field.
    * @isIdentifierKey()
@@ -950,7 +955,7 @@ export type LocaleCondition = {
    * @maxLength(100)
    * @notEmpty()
    */
-  languageTag?: InputMaybe<Scalars['String']>;
+  languageTag?: InputMaybe<Scalars['String']['input']>;
   /** Checks for equality with the object’s `state` field. */
   state?: InputMaybe<LocaleState>;
   /**
@@ -958,11 +963,11 @@ export type LocaleCondition = {
    * @isTrimmed()
    * @notEmpty()
    */
-  title?: InputMaybe<Scalars['String']>;
+  title?: InputMaybe<Scalars['String']['input']>;
   /** Checks for equality with the object’s `updatedDate` field. */
-  updatedDate?: InputMaybe<Scalars['Datetime']>;
+  updatedDate?: InputMaybe<Scalars['Datetime']['input']>;
   /** Checks for equality with the object’s `updatedUser` field. */
-  updatedUser?: InputMaybe<Scalars['String']>;
+  updatedUser?: InputMaybe<Scalars['String']['input']>;
 };
 
 /** A filter to be used against `Locale` object types. All fields are combined with a logical ‘and.’ */
@@ -978,7 +983,7 @@ export type LocaleFilter = {
   /** Filter by the object’s `localizedEntities` relation. */
   localizedEntities?: InputMaybe<LocaleToManyLocalizedEntityFilter>;
   /** Some related `localizedEntities` exist. */
-  localizedEntitiesExist?: InputMaybe<Scalars['Boolean']>;
+  localizedEntitiesExist?: InputMaybe<Scalars['Boolean']['input']>;
   /** Filter by the object’s `state` field. */
   state?: InputMaybe<LocaleStateFilter>;
   /** Filter by the object’s `title` field. */
@@ -991,20 +996,20 @@ export type LocaleFilter = {
 
 /** An input for mutations affecting `Locale` */
 export type LocaleInput = {
-  isDefault: Scalars['Boolean'];
+  isDefault: Scalars['Boolean']['input'];
   /**
    * @isIdentifierKey()
    * @isTrimmed()
    * @maxLength(100)
    * @notEmpty()
    */
-  languageTag: Scalars['String'];
+  languageTag: Scalars['String']['input'];
   state?: InputMaybe<CreateLocaleState>;
   /**
    * @isTrimmed()
    * @notEmpty()
    */
-  title: Scalars['String'];
+  title: Scalars['String']['input'];
 };
 
 /** Represents an update to a `Locale`. Fields that are set will be updated. */
@@ -1016,12 +1021,12 @@ export type LocalePatch = {
    * @maxLength(100)
    * @notEmpty()
    */
-  languageTag?: InputMaybe<Scalars['String']>;
+  languageTag?: InputMaybe<Scalars['String']['input']>;
   /**
    * @isTrimmed()
    * @notEmpty()
    */
-  title?: InputMaybe<Scalars['String']>;
+  title?: InputMaybe<Scalars['String']['input']>;
 };
 
 /**
@@ -1037,14 +1042,14 @@ export type LocalesConnection = {
   /** Information to aid in pagination. */
   pageInfo: PageInfo;
   /** The count of *all* `Locale` you could get from the connection. */
-  totalCount: Scalars['Int'];
+  totalCount: Scalars['Int']['output'];
 };
 
 /** A `Locale` edge in the connection. */
 export type LocalesEdge = {
   __typename?: 'LocalesEdge';
   /** A cursor for use in pagination. */
-  cursor?: Maybe<Scalars['Cursor']>;
+  cursor?: Maybe<Scalars['Cursor']['output']>;
   /** The `Locale` at the end of the edge. */
   node: Locale;
 };
@@ -1092,7 +1097,7 @@ export type LocaleStateFilter = {
   /** Included in the specified list. */
   in?: InputMaybe<Array<LocaleState>>;
   /** Is null (if `true` is specified) or is not null (if `false` is specified). */
-  isNull?: InputMaybe<Scalars['Boolean']>;
+  isNull?: InputMaybe<Scalars['Boolean']['input']>;
   /** Less than the specified value. */
   lessThan?: InputMaybe<LocaleState>;
   /** Less than or equal to the specified value. */
@@ -1106,8 +1111,8 @@ export type LocaleStateFilter = {
 /** @permissions: SETTINGS_VIEW,SETTINGS_EDIT,ADMIN */
 export type LocaleSuggestion = {
   __typename?: 'LocaleSuggestion';
-  languageTag: Scalars['String'];
-  title?: Maybe<Scalars['String']>;
+  languageTag: Scalars['String']['output'];
+  title?: Maybe<Scalars['String']['output']>;
 };
 
 /**
@@ -1116,9 +1121,9 @@ export type LocaleSuggestion = {
  */
 export type LocaleSuggestionCondition = {
   /** Checks for equality with the object’s `languageTag` field. */
-  languageTag?: InputMaybe<Scalars['String']>;
+  languageTag?: InputMaybe<Scalars['String']['input']>;
   /** Checks for equality with the object’s `title` field. */
-  title?: InputMaybe<Scalars['String']>;
+  title?: InputMaybe<Scalars['String']['input']>;
 };
 
 /** A filter to be used against `LocaleSuggestion` object types. All fields are combined with a logical ‘and.’ */
@@ -1142,14 +1147,14 @@ export type LocaleSuggestionsConnection = {
   /** Information to aid in pagination. */
   pageInfo: PageInfo;
   /** The count of *all* `LocaleSuggestion` you could get from the connection. */
-  totalCount: Scalars['Int'];
+  totalCount: Scalars['Int']['output'];
 };
 
 /** A `LocaleSuggestion` edge in the connection. */
 export type LocaleSuggestionsEdge = {
   __typename?: 'LocaleSuggestionsEdge';
   /** A cursor for use in pagination. */
-  cursor?: Maybe<Scalars['Cursor']>;
+  cursor?: Maybe<Scalars['Cursor']['output']>;
   /** The `LocaleSuggestion` at the end of the edge. */
   node: LocaleSuggestion;
 };
@@ -1188,14 +1193,14 @@ export type LocalizationSourceEntitiesConnection = {
   /** Information to aid in pagination. */
   pageInfo: PageInfo;
   /** The count of *all* `LocalizationSourceEntity` you could get from the connection. */
-  totalCount: Scalars['Int'];
+  totalCount: Scalars['Int']['output'];
 };
 
 /** A `LocalizationSourceEntity` edge in the connection. */
 export type LocalizationSourceEntitiesEdge = {
   __typename?: 'LocalizationSourceEntitiesEdge';
   /** A cursor for use in pagination. */
-  cursor?: Maybe<Scalars['Cursor']>;
+  cursor?: Maybe<Scalars['Cursor']['output']>;
   /** The `LocalizationSourceEntity` at the end of the edge. */
   node: LocalizationSourceEntity;
 };
@@ -1230,32 +1235,32 @@ export enum LocalizationSourceEntitiesOrderBy {
 /** @permissions: SOURCE_ENTITIES_VIEW,SOURCE_ENTITIES_EDIT,LOCALIZED_ENTITIES_VIEW,LOCALIZED_ENTITIES_EDIT,LOCALIZED_ENTITIES_REVIEW,SETTINGS_EDIT,ADMIN */
 export type LocalizationSourceEntity = {
   __typename?: 'LocalizationSourceEntity';
-  createdDate: Scalars['Datetime'];
-  createdUser: Scalars['String'];
+  createdDate: Scalars['Datetime']['output'];
+  createdUser: Scalars['String']['output'];
   /** Reads a single `EntityDefinition` that is related to this `LocalizationSourceEntity`. */
   entityDefinition?: Maybe<EntityDefinition>;
-  entityDefinitionId: Scalars['UUID'];
-  entityId: Scalars['String'];
+  entityDefinitionId: Scalars['UUID']['output'];
+  entityId: Scalars['String']['output'];
   fields?: Maybe<Array<Maybe<LocalizationSourceEntityField>>>;
-  id: Scalars['UUID'];
-  imageId?: Maybe<Scalars['UUID']>;
+  id: Scalars['UUID']['output'];
+  imageId?: Maybe<Scalars['UUID']['output']>;
   /** Reads and enables pagination through a set of `LocalizedEntity`. */
   localizedEntities: LocalizedEntitiesConnection;
-  title?: Maybe<Scalars['String']>;
-  updatedDate: Scalars['Datetime'];
-  updatedUser: Scalars['String'];
+  title?: Maybe<Scalars['String']['output']>;
+  updatedDate: Scalars['Datetime']['output'];
+  updatedUser: Scalars['String']['output'];
 };
 
 
 /** @permissions: SOURCE_ENTITIES_VIEW,SOURCE_ENTITIES_EDIT,LOCALIZED_ENTITIES_VIEW,LOCALIZED_ENTITIES_EDIT,LOCALIZED_ENTITIES_REVIEW,SETTINGS_EDIT,ADMIN */
 export type LocalizationSourceEntityLocalizedEntitiesArgs = {
-  after?: InputMaybe<Scalars['Cursor']>;
-  before?: InputMaybe<Scalars['Cursor']>;
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
   condition?: InputMaybe<LocalizedEntityCondition>;
   filter?: InputMaybe<LocalizedEntityFilter>;
-  first?: InputMaybe<Scalars['Int']>;
-  last?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Array<LocalizedEntitiesOrderBy>>;
 };
 
@@ -1265,29 +1270,29 @@ export type LocalizationSourceEntityLocalizedEntitiesArgs = {
  */
 export type LocalizationSourceEntityCondition = {
   /** Checks for equality with the object’s `createdDate` field. */
-  createdDate?: InputMaybe<Scalars['Datetime']>;
+  createdDate?: InputMaybe<Scalars['Datetime']['input']>;
   /** Checks for equality with the object’s `createdUser` field. */
-  createdUser?: InputMaybe<Scalars['String']>;
+  createdUser?: InputMaybe<Scalars['String']['input']>;
   /** Checks for equality with the object’s `entityDefinitionId` field. */
-  entityDefinitionId?: InputMaybe<Scalars['UUID']>;
+  entityDefinitionId?: InputMaybe<Scalars['UUID']['input']>;
   /** Checks for equality with the object’s `entityId` field. */
-  entityId?: InputMaybe<Scalars['String']>;
+  entityId?: InputMaybe<Scalars['String']['input']>;
   /** Checks for equality with the object’s `id` field. */
-  id?: InputMaybe<Scalars['UUID']>;
+  id?: InputMaybe<Scalars['UUID']['input']>;
   /** Checks for equality with the object’s `imageId` field. */
-  imageId?: InputMaybe<Scalars['UUID']>;
+  imageId?: InputMaybe<Scalars['UUID']['input']>;
   /** Checks for equality with the object’s `title` field. */
-  title?: InputMaybe<Scalars['String']>;
+  title?: InputMaybe<Scalars['String']['input']>;
   /** Checks for equality with the object’s `updatedDate` field. */
-  updatedDate?: InputMaybe<Scalars['Datetime']>;
+  updatedDate?: InputMaybe<Scalars['Datetime']['input']>;
   /** Checks for equality with the object’s `updatedUser` field. */
-  updatedUser?: InputMaybe<Scalars['String']>;
+  updatedUser?: InputMaybe<Scalars['String']['input']>;
 };
 
 export type LocalizationSourceEntityField = {
   __typename?: 'LocalizationSourceEntityField';
-  fieldName: Scalars['String'];
-  fieldValue?: Maybe<Scalars['JSON']>;
+  fieldName: Scalars['String']['output'];
+  fieldValue?: Maybe<Scalars['JSON']['output']>;
 };
 
 /** A filter to be used against `LocalizationSourceEntity` object types. All fields are combined with a logical ‘and.’ */
@@ -1309,7 +1314,7 @@ export type LocalizationSourceEntityFilter = {
   /** Filter by the object’s `localizedEntities` relation. */
   localizedEntities?: InputMaybe<LocalizationSourceEntityToManyLocalizedEntityFilter>;
   /** Some related `localizedEntities` exist. */
-  localizedEntitiesExist?: InputMaybe<Scalars['Boolean']>;
+  localizedEntitiesExist?: InputMaybe<Scalars['Boolean']['input']>;
   /** Filter by the object’s `title` field. */
   title?: InputMaybe<StringFilter>;
   /** Filter by the object’s `updatedDate` field. */
@@ -1320,8 +1325,8 @@ export type LocalizationSourceEntityFilter = {
 
 /** Represents an update to a `LocalizationSourceEntity`. Fields that are set will be updated. */
 export type LocalizationSourceEntityPatch = {
-  imageId?: InputMaybe<Scalars['UUID']>;
-  title?: InputMaybe<Scalars['String']>;
+  imageId?: InputMaybe<Scalars['UUID']['input']>;
+  title?: InputMaybe<Scalars['String']['input']>;
 };
 
 export enum LocalizationSourceEntitySubscriptionEventKey {
@@ -1333,9 +1338,9 @@ export enum LocalizationSourceEntitySubscriptionEventKey {
 export type LocalizationSourceEntitySubscriptionPayload = {
   __typename?: 'LocalizationSourceEntitySubscriptionPayload';
   /** @deprecated Use 'eventKey' instead. */
-  event?: Maybe<Scalars['String']>;
+  event?: Maybe<Scalars['String']['output']>;
   eventKey?: Maybe<LocalizationSourceEntitySubscriptionEventKey>;
-  id: Scalars['UUID'];
+  id: Scalars['UUID']['output'];
   localizationSourceEntity?: Maybe<LocalizationSourceEntity>;
 };
 
@@ -1362,14 +1367,14 @@ export type LocalizedEntitiesConnection = {
   /** Information to aid in pagination. */
   pageInfo: PageInfo;
   /** The count of *all* `LocalizedEntity` you could get from the connection. */
-  totalCount: Scalars['Int'];
+  totalCount: Scalars['Int']['output'];
 };
 
 /** A `LocalizedEntity` edge in the connection. */
 export type LocalizedEntitiesEdge = {
   __typename?: 'LocalizedEntitiesEdge';
   /** A cursor for use in pagination. */
-  cursor?: Maybe<Scalars['Cursor']>;
+  cursor?: Maybe<Scalars['Cursor']['output']>;
   /** The `LocalizedEntity` at the end of the edge. */
   node: LocalizedEntity;
 };
@@ -1412,20 +1417,20 @@ export enum LocalizedEntitiesOrderBy {
 /** @permissions: LOCALIZED_ENTITIES_VIEW,LOCALIZED_ENTITIES_EDIT,LOCALIZED_ENTITIES_REVIEW,SOURCE_ENTITIES_EDIT,SETTINGS_EDIT,ADMIN */
 export type LocalizedEntity = {
   __typename?: 'LocalizedEntity';
-  createdDate: Scalars['Datetime'];
-  createdUser: Scalars['String'];
+  createdDate: Scalars['Datetime']['output'];
+  createdUser: Scalars['String']['output'];
   fields?: Maybe<Array<Maybe<LocalizedEntityField>>>;
-  id: Scalars['UUID'];
-  languageTag: Scalars['String'];
+  id: Scalars['UUID']['output'];
+  languageTag: Scalars['String']['output'];
   /** Reads a single `Locale` that is related to this `LocalizedEntity`. */
   locale?: Maybe<Locale>;
   /** Reads a single `LocalizationSourceEntity` that is related to this `LocalizedEntity`. */
   localizationSourceEntity?: Maybe<LocalizationSourceEntity>;
-  localizationSourceEntityId: Scalars['UUID'];
-  requiresLocalization: Scalars['Boolean'];
-  requiresReview: Scalars['Boolean'];
-  updatedDate: Scalars['Datetime'];
-  updatedUser: Scalars['String'];
+  localizationSourceEntityId: Scalars['UUID']['output'];
+  requiresLocalization: Scalars['Boolean']['output'];
+  requiresReview: Scalars['Boolean']['output'];
+  updatedDate: Scalars['Datetime']['output'];
+  updatedUser: Scalars['String']['output'];
 };
 
 /**
@@ -1434,29 +1439,29 @@ export type LocalizedEntity = {
  */
 export type LocalizedEntityCondition = {
   /** Checks for equality with the object’s `createdDate` field. */
-  createdDate?: InputMaybe<Scalars['Datetime']>;
+  createdDate?: InputMaybe<Scalars['Datetime']['input']>;
   /** Checks for equality with the object’s `createdUser` field. */
-  createdUser?: InputMaybe<Scalars['String']>;
+  createdUser?: InputMaybe<Scalars['String']['input']>;
   /** Checks for equality with the object’s `id` field. */
-  id?: InputMaybe<Scalars['UUID']>;
+  id?: InputMaybe<Scalars['UUID']['input']>;
   /** Checks for equality with the object’s `languageTag` field. */
-  languageTag?: InputMaybe<Scalars['String']>;
+  languageTag?: InputMaybe<Scalars['String']['input']>;
   /** Checks for equality with the object’s `localizationSourceEntityId` field. */
-  localizationSourceEntityId?: InputMaybe<Scalars['UUID']>;
+  localizationSourceEntityId?: InputMaybe<Scalars['UUID']['input']>;
   /** Checks for equality with the object’s `requiresLocalization` field. */
-  requiresLocalization?: InputMaybe<Scalars['Boolean']>;
+  requiresLocalization?: InputMaybe<Scalars['Boolean']['input']>;
   /** Checks for equality with the object’s `requiresReview` field. */
-  requiresReview?: InputMaybe<Scalars['Boolean']>;
+  requiresReview?: InputMaybe<Scalars['Boolean']['input']>;
   /** Checks for equality with the object’s `updatedDate` field. */
-  updatedDate?: InputMaybe<Scalars['Datetime']>;
+  updatedDate?: InputMaybe<Scalars['Datetime']['input']>;
   /** Checks for equality with the object’s `updatedUser` field. */
-  updatedUser?: InputMaybe<Scalars['String']>;
+  updatedUser?: InputMaybe<Scalars['String']['input']>;
 };
 
 export type LocalizedEntityField = {
   __typename?: 'LocalizedEntityField';
-  fieldName: Scalars['String'];
-  fieldValue?: Maybe<Scalars['JSON']>;
+  fieldName: Scalars['String']['output'];
+  fieldValue?: Maybe<Scalars['JSON']['output']>;
   state?: Maybe<LocalizedStateEnum>;
 };
 
@@ -1495,16 +1500,16 @@ export enum LocalizedEntitySubscriptionEventKey {
 export type LocalizedEntitySubscriptionPayload = {
   __typename?: 'LocalizedEntitySubscriptionPayload';
   /** @deprecated Use 'eventKey' instead. */
-  event?: Maybe<Scalars['String']>;
+  event?: Maybe<Scalars['String']['output']>;
   eventKey?: Maybe<LocalizedEntitySubscriptionEventKey>;
-  id: Scalars['UUID'];
+  id: Scalars['UUID']['output'];
   localizedEntity?: Maybe<LocalizedEntity>;
 };
 
 /** An input for mutations affecting `LocalizedField` */
 export type LocalizedFieldInput = {
-  fieldName?: InputMaybe<Scalars['String']>;
-  fieldValue?: InputMaybe<Scalars['JSON']>;
+  fieldName?: InputMaybe<Scalars['String']['input']>;
+  fieldValue?: InputMaybe<Scalars['JSON']['input']>;
   state?: InputMaybe<LocalizedStateEnum>;
 };
 
@@ -1521,9 +1526,9 @@ export type LocalizeEntityInput = {
    * An arbitrary string value with no semantic meaning. Will be included in the
    * payload verbatim. May be used to track mutations by the client.
    */
-  clientMutationId?: InputMaybe<Scalars['String']>;
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
   fields?: InputMaybe<Array<InputMaybe<LocalizedFieldInput>>>;
-  localizedEntityId?: InputMaybe<Scalars['UUID']>;
+  localizedEntityId?: InputMaybe<Scalars['UUID']['input']>;
 };
 
 /** The output of our `localizeEntity` mutation. */
@@ -1533,7 +1538,7 @@ export type LocalizeEntityPayload = {
    * The exact same `clientMutationId` that was provided in the mutation input,
    * unchanged and unused. May be used by a client to track mutations.
    */
-  clientMutationId?: Maybe<Scalars['String']>;
+  clientMutationId?: Maybe<Scalars['String']['output']>;
   /** Reads a single `Locale` that is related to this `LocalizedEntity`. */
   locale?: Maybe<Locale>;
   /** Reads a single `LocalizationSourceEntity` that is related to this `LocalizedEntity`. */
@@ -1563,8 +1568,6 @@ export type Mutation = {
   /** Deletes a single `LocalizationSourceEntity` using a unique key. */
   deleteLocalizationSourceEntity?: Maybe<DeleteLocalizationSourceEntityPayload>;
   localizeEntity?: Maybe<LocalizeEntityPayload>;
-  populateLocalizations?: Maybe<PopulatePayload>;
-  truncateLocalizations?: Maybe<TruncateLocalizationsPayload>;
   /** Updates a single `Locale` using a unique key and a patch. */
   updateLocale?: Maybe<UpdateLocalePayload>;
   /** Updates a single `LocalizationSourceEntity` using a unique key and a patch. */
@@ -1610,12 +1613,6 @@ export type MutationLocalizeEntityArgs = {
 
 
 /** The root mutation type which contains root level fields which mutate data. */
-export type MutationPopulateLocalizationsArgs = {
-  input: PopulateInput;
-};
-
-
-/** The root mutation type which contains root level fields which mutate data. */
 export type MutationUpdateLocaleArgs = {
   input: UpdateLocaleInput;
 };
@@ -1636,53 +1633,34 @@ export type MutationUpsertLocalizationSourceEntityArgs = {
 export type PageInfo = {
   __typename?: 'PageInfo';
   /** When paginating forwards, the cursor to continue. */
-  endCursor?: Maybe<Scalars['Cursor']>;
+  endCursor?: Maybe<Scalars['Cursor']['output']>;
   /** When paginating forwards, are there more items? */
-  hasNextPage: Scalars['Boolean'];
+  hasNextPage: Scalars['Boolean']['output'];
   /** When paginating backwards, are there more items? */
-  hasPreviousPage: Scalars['Boolean'];
+  hasPreviousPage: Scalars['Boolean']['output'];
   /** When paginating backwards, the cursor to continue. */
-  startCursor?: Maybe<Scalars['Cursor']>;
-};
-
-/** Populate Localizations input type */
-export type PopulateInput = {
-  /** Define how many entity definitions with fields should be created. */
-  entityDefinitionsCount?: InputMaybe<Scalars['Int']>;
-  /** Define how many locales should be created (if any). No matter the count it will always ensure there is one default locale creating en-US if none exists. */
-  localesCount?: InputMaybe<Scalars['Int']>;
-  /** Define how many source entities should be created. This would also create the corresponding localized entities and fields. */
-  sourceEntitiesCount?: InputMaybe<Scalars['Int']>;
-};
-
-export type PopulatePayload = {
-  __typename?: 'PopulatePayload';
-  entityDefinitionsCount: Scalars['Int'];
-  localesCount: Scalars['Int'];
-  localizedEntitiesCount: Scalars['Int'];
-  query?: Maybe<Query>;
-  sourceEntitiesCount: Scalars['Int'];
+  startCursor?: Maybe<Scalars['Cursor']['output']>;
 };
 
 /** The input to prepare localizations of a specific entity for publishing. */
 export type PrepareEntityLocalizationsForPublishingInput = {
   /** The ID of an entity whose localizations will be prepared for publishing. */
-  entityId: Scalars['String'];
+  entityId: Scalars['String']['input'];
   /** The type name of an entity whose localizations will be prepared for publishing. */
-  entityType: Scalars['String'];
+  entityType: Scalars['String']['input'];
   /** The validation hash retrieved by calling the "validateEntityLocalizations" query. */
-  hash: Scalars['String'];
+  hash: Scalars['String']['input'];
   /** The ID of a service to which a source entity belongs. */
-  serviceId: Scalars['String'];
+  serviceId: Scalars['String']['input'];
 };
 
 /** The localizations and metadata of a source entity that are prepared for publishing. */
 export type PrepareEntityLocalizationsForPublishingPayload = {
   __typename?: 'PrepareEntityLocalizationsForPublishingPayload';
   /** The ID of an entity whose localizations are prepared for publishing. */
-  entityId: Scalars['String'];
+  entityId: Scalars['String']['output'];
   /** The type name of an entity whose localizations are prepared for publishing. */
-  entityType: Scalars['String'];
+  entityType: Scalars['String']['output'];
   /**
    * Localizations of a specific source entity that are prepared for publishing. Example:
    *
@@ -1703,9 +1681,9 @@ export type PrepareEntityLocalizationsForPublishingPayload = {
    * ]
    * ```
    */
-  localizations: Array<Scalars['JSON']>;
+  localizations: Array<Scalars['JSON']['output']>;
   /** The ID of a service to which a source entity belongs. */
-  serviceId: Scalars['String'];
+  serviceId: Scalars['String']['output'];
 };
 
 /** The root query type which gives access points into the data universe. */
@@ -1714,8 +1692,6 @@ export type Query = {
   entityDefinition?: Maybe<EntityDefinition>;
   /** Reads and enables pagination through a set of `EntityDefinition`. */
   entityDefinitions?: Maybe<EntityDefinitionsConnection>;
-  inboxOutboxReport?: Maybe<InboxOutboxReportPayload>;
-  inboxOutboxState?: Maybe<InboxOutboxStatePayload>;
   locale?: Maybe<Locale>;
   /** Reads and enables pagination through a set of `Locale`. */
   locales?: Maybe<LocalesConnection>;
@@ -1741,102 +1717,90 @@ export type Query = {
 
 /** The root query type which gives access points into the data universe. */
 export type QueryEntityDefinitionArgs = {
-  id: Scalars['UUID'];
+  id: Scalars['UUID']['input'];
 };
 
 
 /** The root query type which gives access points into the data universe. */
 export type QueryEntityDefinitionsArgs = {
-  after?: InputMaybe<Scalars['Cursor']>;
-  before?: InputMaybe<Scalars['Cursor']>;
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
   condition?: InputMaybe<EntityDefinitionCondition>;
   filter?: InputMaybe<EntityDefinitionFilter>;
-  first?: InputMaybe<Scalars['Int']>;
-  last?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Array<EntityDefinitionsOrderBy>>;
 };
 
 
 /** The root query type which gives access points into the data universe. */
-export type QueryInboxOutboxReportArgs = {
-  input: InboxOutboxReportInput;
-};
-
-
-/** The root query type which gives access points into the data universe. */
-export type QueryInboxOutboxStateArgs = {
-  input: InboxOutboxStateInput;
-};
-
-
-/** The root query type which gives access points into the data universe. */
 export type QueryLocaleArgs = {
-  languageTag: Scalars['String'];
+  languageTag: Scalars['String']['input'];
 };
 
 
 /** The root query type which gives access points into the data universe. */
 export type QueryLocalesArgs = {
-  after?: InputMaybe<Scalars['Cursor']>;
-  before?: InputMaybe<Scalars['Cursor']>;
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
   condition?: InputMaybe<LocaleCondition>;
   filter?: InputMaybe<LocaleFilter>;
-  first?: InputMaybe<Scalars['Int']>;
-  last?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Array<LocalesOrderBy>>;
 };
 
 
 /** The root query type which gives access points into the data universe. */
 export type QueryLocaleSuggestionsArgs = {
-  after?: InputMaybe<Scalars['Cursor']>;
-  before?: InputMaybe<Scalars['Cursor']>;
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
   condition?: InputMaybe<LocaleSuggestionCondition>;
   filter?: InputMaybe<LocaleSuggestionFilter>;
-  first?: InputMaybe<Scalars['Int']>;
-  last?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Array<LocaleSuggestionsOrderBy>>;
 };
 
 
 /** The root query type which gives access points into the data universe. */
 export type QueryLocalizationSourceEntitiesArgs = {
-  after?: InputMaybe<Scalars['Cursor']>;
-  before?: InputMaybe<Scalars['Cursor']>;
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
   condition?: InputMaybe<LocalizationSourceEntityCondition>;
   filter?: InputMaybe<LocalizationSourceEntityFilter>;
-  first?: InputMaybe<Scalars['Int']>;
-  last?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Array<LocalizationSourceEntitiesOrderBy>>;
 };
 
 
 /** The root query type which gives access points into the data universe. */
 export type QueryLocalizationSourceEntityArgs = {
-  id: Scalars['UUID'];
+  id: Scalars['UUID']['input'];
 };
 
 
 /** The root query type which gives access points into the data universe. */
 export type QueryLocalizedEntitiesArgs = {
-  after?: InputMaybe<Scalars['Cursor']>;
-  before?: InputMaybe<Scalars['Cursor']>;
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
   condition?: InputMaybe<LocalizedEntityCondition>;
   filter?: InputMaybe<LocalizedEntityFilter>;
-  first?: InputMaybe<Scalars['Int']>;
-  last?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Array<LocalizedEntitiesOrderBy>>;
 };
 
 
 /** The root query type which gives access points into the data universe. */
 export type QueryLocalizedEntityArgs = {
-  id: Scalars['UUID'];
+  id: Scalars['UUID']['input'];
 };
 
 
@@ -1853,46 +1817,46 @@ export type QueryValidateEntityLocalizationsArgs = {
 
 /** An input for mutations affecting `SourceField` */
 export type SourceFieldInput = {
-  fieldName?: InputMaybe<Scalars['String']>;
-  fieldValue?: InputMaybe<Scalars['JSON']>;
+  fieldName?: InputMaybe<Scalars['String']['input']>;
+  fieldValue?: InputMaybe<Scalars['JSON']['input']>;
 };
 
 /** A filter to be used against String fields. All fields are combined with a logical ‘and.’ */
 export type StringFilter = {
   /** Equal to the specified value. */
-  equalTo?: InputMaybe<Scalars['String']>;
+  equalTo?: InputMaybe<Scalars['String']['input']>;
   /** Greater than the specified value. */
-  greaterThan?: InputMaybe<Scalars['String']>;
+  greaterThan?: InputMaybe<Scalars['String']['input']>;
   /** Greater than or equal to the specified value. */
-  greaterThanOrEqualTo?: InputMaybe<Scalars['String']>;
+  greaterThanOrEqualTo?: InputMaybe<Scalars['String']['input']>;
   /** Included in the specified list. */
-  in?: InputMaybe<Array<Scalars['String']>>;
+  in?: InputMaybe<Array<Scalars['String']['input']>>;
   /** Contains the specified string (case-sensitive). */
-  includes?: InputMaybe<Scalars['String']>;
+  includes?: InputMaybe<Scalars['String']['input']>;
   /** Contains the specified string (case-insensitive). */
-  includesInsensitive?: InputMaybe<Scalars['String']>;
+  includesInsensitive?: InputMaybe<Scalars['String']['input']>;
   /** Is null (if `true` is specified) or is not null (if `false` is specified). */
-  isNull?: InputMaybe<Scalars['Boolean']>;
+  isNull?: InputMaybe<Scalars['Boolean']['input']>;
   /** Less than the specified value. */
-  lessThan?: InputMaybe<Scalars['String']>;
+  lessThan?: InputMaybe<Scalars['String']['input']>;
   /** Less than or equal to the specified value. */
-  lessThanOrEqualTo?: InputMaybe<Scalars['String']>;
+  lessThanOrEqualTo?: InputMaybe<Scalars['String']['input']>;
   /** Not equal to the specified value. */
-  notEqualTo?: InputMaybe<Scalars['String']>;
+  notEqualTo?: InputMaybe<Scalars['String']['input']>;
   /** Not included in the specified list. */
-  notIn?: InputMaybe<Array<Scalars['String']>>;
+  notIn?: InputMaybe<Array<Scalars['String']['input']>>;
   /** Does not contain the specified string (case-sensitive). */
-  notIncludes?: InputMaybe<Scalars['String']>;
+  notIncludes?: InputMaybe<Scalars['String']['input']>;
   /** Does not contain the specified string (case-insensitive). */
-  notIncludesInsensitive?: InputMaybe<Scalars['String']>;
+  notIncludesInsensitive?: InputMaybe<Scalars['String']['input']>;
   /** Does not start with the specified string (case-sensitive). */
-  notStartsWith?: InputMaybe<Scalars['String']>;
+  notStartsWith?: InputMaybe<Scalars['String']['input']>;
   /** Does not start with the specified string (case-insensitive). */
-  notStartsWithInsensitive?: InputMaybe<Scalars['String']>;
+  notStartsWithInsensitive?: InputMaybe<Scalars['String']['input']>;
   /** Starts with the specified string (case-sensitive). */
-  startsWith?: InputMaybe<Scalars['String']>;
+  startsWith?: InputMaybe<Scalars['String']['input']>;
   /** Starts with the specified string (case-insensitive). */
-  startsWithInsensitive?: InputMaybe<Scalars['String']>;
+  startsWithInsensitive?: InputMaybe<Scalars['String']['input']>;
 };
 
 /** The root subscription type: contains realtime events you can subscribe to with the `subscription` operation. */
@@ -1904,12 +1868,9 @@ export type Subscription = {
   localizedEntityMutated?: Maybe<LocalizedEntitySubscriptionPayload>;
 };
 
-export type TruncateLocalizationsPayload = {
-  __typename?: 'TruncateLocalizationsPayload';
-  completed: Scalars['Boolean'];
-};
-
 export enum UiFieldType {
+  /** Custom */
+  Custom = 'CUSTOM',
   /** Textarea */
   Textarea = 'TEXTAREA',
   /** Textbox */
@@ -1927,7 +1888,7 @@ export type UiFieldTypeFilter = {
   /** Included in the specified list. */
   in?: InputMaybe<Array<UiFieldType>>;
   /** Is null (if `true` is specified) or is not null (if `false` is specified). */
-  isNull?: InputMaybe<Scalars['Boolean']>;
+  isNull?: InputMaybe<Scalars['Boolean']['input']>;
   /** Less than the specified value. */
   lessThan?: InputMaybe<UiFieldType>;
   /** Less than or equal to the specified value. */
@@ -1947,14 +1908,14 @@ export type UpdateLocaleInput = {
    * An arbitrary string value with no semantic meaning. Will be included in the
    * payload verbatim. May be used to track mutations by the client.
    */
-  clientMutationId?: InputMaybe<Scalars['String']>;
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
   /**
    * @isIdentifierKey()
    * @isTrimmed()
    * @maxLength(100)
    * @notEmpty()
    */
-  languageTag: Scalars['String'];
+  languageTag: Scalars['String']['input'];
   /** An object where the defined keys will be set on the `Locale` being updated. */
   patch: LocalePatch;
 };
@@ -1966,7 +1927,7 @@ export type UpdateLocalePayload = {
    * The exact same `clientMutationId` that was provided in the mutation input,
    * unchanged and unused. May be used by a client to track mutations.
    */
-  clientMutationId?: Maybe<Scalars['String']>;
+  clientMutationId?: Maybe<Scalars['String']['output']>;
   /** The `Locale` that was updated by this mutation. */
   locale?: Maybe<Locale>;
   /** An edge for our `Locale`. May be used by Relay 1. */
@@ -1990,8 +1951,8 @@ export type UpdateLocalizationSourceEntityInput = {
    * An arbitrary string value with no semantic meaning. Will be included in the
    * payload verbatim. May be used to track mutations by the client.
    */
-  clientMutationId?: InputMaybe<Scalars['String']>;
-  id: Scalars['UUID'];
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
+  id: Scalars['UUID']['input'];
   /** An object where the defined keys will be set on the `LocalizationSourceEntity` being updated. */
   patch: LocalizationSourceEntityPatch;
 };
@@ -2003,7 +1964,7 @@ export type UpdateLocalizationSourceEntityPayload = {
    * The exact same `clientMutationId` that was provided in the mutation input,
    * unchanged and unused. May be used by a client to track mutations.
    */
-  clientMutationId?: Maybe<Scalars['String']>;
+  clientMutationId?: Maybe<Scalars['String']['output']>;
   /** Reads a single `EntityDefinition` that is related to this `LocalizationSourceEntity`. */
   entityDefinition?: Maybe<EntityDefinition>;
   /** The `LocalizationSourceEntity` that was updated by this mutation. */
@@ -2026,13 +1987,13 @@ export type UpsertLocalizationSourceEntityInput = {
    * An arbitrary string value with no semantic meaning. Will be included in the
    * payload verbatim. May be used to track mutations by the client.
    */
-  clientMutationId?: InputMaybe<Scalars['String']>;
-  entityId: Scalars['String'];
-  entityTitle?: InputMaybe<Scalars['String']>;
-  entityType: Scalars['String'];
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
+  entityId: Scalars['String']['input'];
+  entityTitle?: InputMaybe<Scalars['String']['input']>;
+  entityType: Scalars['String']['input'];
   fields: Array<InputMaybe<SourceFieldInput>>;
-  imageId?: InputMaybe<Scalars['UUID']>;
-  serviceId: Scalars['String'];
+  imageId?: InputMaybe<Scalars['UUID']['input']>;
+  serviceId: Scalars['String']['input'];
 };
 
 /** The output of our `upsertLocalizationSourceEntity` mutation. */
@@ -2042,7 +2003,7 @@ export type UpsertLocalizationSourceEntityPayload = {
    * The exact same `clientMutationId` that was provided in the mutation input,
    * unchanged and unused. May be used by a client to track mutations.
    */
-  clientMutationId?: Maybe<Scalars['String']>;
+  clientMutationId?: Maybe<Scalars['String']['output']>;
   /** Reads a single `EntityDefinition` that is related to this `LocalizationSourceEntity`. */
   entityDefinition?: Maybe<EntityDefinition>;
   localizationSourceEntity?: Maybe<LocalizationSourceEntity>;
@@ -2061,33 +2022,33 @@ export type UpsertLocalizationSourceEntityPayloadLocalizationSourceEntityEdgeArg
 /** A filter to be used against UUID fields. All fields are combined with a logical ‘and.’ */
 export type UuidFilter = {
   /** Equal to the specified value. */
-  equalTo?: InputMaybe<Scalars['UUID']>;
+  equalTo?: InputMaybe<Scalars['UUID']['input']>;
   /** Greater than the specified value. */
-  greaterThan?: InputMaybe<Scalars['UUID']>;
+  greaterThan?: InputMaybe<Scalars['UUID']['input']>;
   /** Greater than or equal to the specified value. */
-  greaterThanOrEqualTo?: InputMaybe<Scalars['UUID']>;
+  greaterThanOrEqualTo?: InputMaybe<Scalars['UUID']['input']>;
   /** Included in the specified list. */
-  in?: InputMaybe<Array<Scalars['UUID']>>;
+  in?: InputMaybe<Array<Scalars['UUID']['input']>>;
   /** Is null (if `true` is specified) or is not null (if `false` is specified). */
-  isNull?: InputMaybe<Scalars['Boolean']>;
+  isNull?: InputMaybe<Scalars['Boolean']['input']>;
   /** Less than the specified value. */
-  lessThan?: InputMaybe<Scalars['UUID']>;
+  lessThan?: InputMaybe<Scalars['UUID']['input']>;
   /** Less than or equal to the specified value. */
-  lessThanOrEqualTo?: InputMaybe<Scalars['UUID']>;
+  lessThanOrEqualTo?: InputMaybe<Scalars['UUID']['input']>;
   /** Not equal to the specified value. */
-  notEqualTo?: InputMaybe<Scalars['UUID']>;
+  notEqualTo?: InputMaybe<Scalars['UUID']['input']>;
   /** Not included in the specified list. */
-  notIn?: InputMaybe<Array<Scalars['UUID']>>;
+  notIn?: InputMaybe<Array<Scalars['UUID']['input']>>;
 };
 
 /** The input to validate localizations for a specific entity. */
 export type ValidateEntityLocalizationsInput = {
   /** The ID of an entity whose localizations will be validated. */
-  entityId: Scalars['String'];
+  entityId: Scalars['String']['input'];
   /** The type name of an entity whose localizations will be validated. */
-  entityType: Scalars['String'];
+  entityType: Scalars['String']['input'];
   /** The ID of a service to which a validated entity belongs. */
-  serviceId: Scalars['String'];
+  serviceId: Scalars['String']['input'];
 };
 
 /** The validation result of the source entity localizations. */
@@ -2095,7 +2056,7 @@ export type ValidateEntityLocalizationsPayload = {
   __typename?: 'ValidateEntityLocalizationsPayload';
   query?: Maybe<Query>;
   /** Hash of the source entity localizations to be used during the call to "prepareEntityLocalizationsForPublishing". */
-  validationHash?: Maybe<Scalars['String']>;
+  validationHash?: Maybe<Scalars['String']['output']>;
   /** List of validation messages. */
   validationMessages: Array<EntityLocalizationValidationMessage>;
   /** Validation status of the source entity localizations. */
@@ -2120,7 +2081,7 @@ export type ValidationSeverityFilter = {
   /** Included in the specified list. */
   in?: InputMaybe<Array<ValidationSeverity>>;
   /** Is null (if `true` is specified) or is not null (if `false` is specified). */
-  isNull?: InputMaybe<Scalars['Boolean']>;
+  isNull?: InputMaybe<Scalars['Boolean']['input']>;
   /** Less than the specified value. */
   lessThan?: InputMaybe<ValidationSeverity>;
   /** Less than or equal to the specified value. */
@@ -2132,32 +2093,32 @@ export type ValidationSeverityFilter = {
 };
 
 export type MediaLocalizationsQueryVariables = Exact<{
-  entityId: Scalars['String'];
-  entityType: Scalars['String'];
-  serviceId: Scalars['String'];
+  entityId: string;
+  entityType: string;
+  serviceId: string;
 }>;
 
 
-export type MediaLocalizationsQuery = { __typename?: 'Query', localizedEntities?: { __typename?: 'LocalizedEntitiesConnection', nodes: Array<{ __typename?: 'LocalizedEntity', id: any, languageTag: string, fields?: Array<{ __typename?: 'LocalizedEntityField', fieldName: string, fieldValue?: any | null, state?: LocalizedStateEnum | null } | null> | null }> } | null };
+export type MediaLocalizationsQuery = { localizedEntities: { nodes: Array<{ id: any, languageTag: string, fields: Array<{ fieldName: string, fieldValue: any, state: Types.LocalizedStateEnum | null } | null> | null }> } | null };
 
 export type PrepareEntityLocalizationsForPublishingQueryVariables = Exact<{
-  serviceId: Scalars['String'];
-  hash: Scalars['String'];
-  entityType: Scalars['String'];
-  entityId: Scalars['String'];
+  serviceId: string;
+  hash: string;
+  entityType: string;
+  entityId: string;
 }>;
 
 
-export type PrepareEntityLocalizationsForPublishingQuery = { __typename?: 'Query', prepareEntityLocalizationsForPublishing: { __typename?: 'PrepareEntityLocalizationsForPublishingPayload', localizations: Array<any> } };
+export type PrepareEntityLocalizationsForPublishingQuery = { prepareEntityLocalizationsForPublishing: { localizations: Array<any> } };
 
 export type ValidateEntityLocalizationsQueryVariables = Exact<{
-  entityId: Scalars['String'];
-  entityType: Scalars['String'];
-  serviceId: Scalars['String'];
+  entityId: string;
+  entityType: string;
+  serviceId: string;
 }>;
 
 
-export type ValidateEntityLocalizationsQuery = { __typename?: 'Query', validateEntityLocalizations: { __typename?: 'ValidateEntityLocalizationsPayload', validationHash?: string | null, validationStatus: EntityLocalizationValidationStatus, validationMessages: Array<{ __typename?: 'EntityLocalizationValidationMessage', fieldName?: string | null, locale: string, message: string, severity: EntityLocalizationValidationSeverity }> } };
+export type ValidateEntityLocalizationsQuery = { validateEntityLocalizations: { validationHash: string | null, validationStatus: Types.EntityLocalizationValidationStatus, validationMessages: Array<{ fieldName: string | null, locale: string, message: string, severity: Types.EntityLocalizationValidationSeverity }> } };
 
 
 export const MediaLocalizationsDocument = gql`
@@ -2203,23 +2164,23 @@ export const ValidateEntityLocalizationsDocument = gql`
 }
     `;
 
-export type SdkFunctionWrapper = <T>(action: (requestHeaders?:Record<string, string>) => Promise<T>, operationName: string, operationType?: string) => Promise<T>;
+export type SdkFunctionWrapper = <T>(action: (requestHeaders?:Record<string, string>) => Promise<T>, operationName: string, operationType?: string, variables?: any) => Promise<T>;
 
 
-const defaultWrapper: SdkFunctionWrapper = (action, _operationName, _operationType) => action();
+const defaultWrapper: SdkFunctionWrapper = (action, _operationName, _operationType, _variables) => action();
 const MediaLocalizationsDocumentString = print(MediaLocalizationsDocument);
 const PrepareEntityLocalizationsForPublishingDocumentString = print(PrepareEntityLocalizationsForPublishingDocument);
 const ValidateEntityLocalizationsDocumentString = print(ValidateEntityLocalizationsDocument);
 export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = defaultWrapper) {
   return {
-    MediaLocalizations(variables: MediaLocalizationsQueryVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<{ data: MediaLocalizationsQuery; extensions?: any; headers: Dom.Headers; status: number; }> {
-        return withWrapper((wrappedRequestHeaders) => client.rawRequest<MediaLocalizationsQuery>(MediaLocalizationsDocumentString, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'MediaLocalizations', 'query');
+    MediaLocalizations(variables: MediaLocalizationsQueryVariables, requestHeaders?: GraphQLClientRequestHeaders): Promise<{ data: MediaLocalizationsQuery; errors?: GraphQLError[]; extensions?: any; headers: Headers; status: number; }> {
+        return withWrapper((wrappedRequestHeaders) => client.rawRequest<MediaLocalizationsQuery>(MediaLocalizationsDocumentString, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'MediaLocalizations', 'query', variables);
     },
-    PrepareEntityLocalizationsForPublishing(variables: PrepareEntityLocalizationsForPublishingQueryVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<{ data: PrepareEntityLocalizationsForPublishingQuery; extensions?: any; headers: Dom.Headers; status: number; }> {
-        return withWrapper((wrappedRequestHeaders) => client.rawRequest<PrepareEntityLocalizationsForPublishingQuery>(PrepareEntityLocalizationsForPublishingDocumentString, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'PrepareEntityLocalizationsForPublishing', 'query');
+    PrepareEntityLocalizationsForPublishing(variables: PrepareEntityLocalizationsForPublishingQueryVariables, requestHeaders?: GraphQLClientRequestHeaders): Promise<{ data: PrepareEntityLocalizationsForPublishingQuery; errors?: GraphQLError[]; extensions?: any; headers: Headers; status: number; }> {
+        return withWrapper((wrappedRequestHeaders) => client.rawRequest<PrepareEntityLocalizationsForPublishingQuery>(PrepareEntityLocalizationsForPublishingDocumentString, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'PrepareEntityLocalizationsForPublishing', 'query', variables);
     },
-    ValidateEntityLocalizations(variables: ValidateEntityLocalizationsQueryVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<{ data: ValidateEntityLocalizationsQuery; extensions?: any; headers: Dom.Headers; status: number; }> {
-        return withWrapper((wrappedRequestHeaders) => client.rawRequest<ValidateEntityLocalizationsQuery>(ValidateEntityLocalizationsDocumentString, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'ValidateEntityLocalizations', 'query');
+    ValidateEntityLocalizations(variables: ValidateEntityLocalizationsQueryVariables, requestHeaders?: GraphQLClientRequestHeaders): Promise<{ data: ValidateEntityLocalizationsQuery; errors?: GraphQLError[]; extensions?: any; headers: Headers; status: number; }> {
+        return withWrapper((wrappedRequestHeaders) => client.rawRequest<ValidateEntityLocalizationsQuery>(ValidateEntityLocalizationsDocumentString, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'ValidateEntityLocalizations', 'query', variables);
     }
   };
 }

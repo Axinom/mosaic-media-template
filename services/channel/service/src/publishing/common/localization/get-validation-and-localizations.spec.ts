@@ -549,7 +549,11 @@ describe('getValidationAndLocalizations', () => {
       ];
       validationResult = () => {
         throw new ClientError(
-          { data: { validateEntityLocalizations: null }, errors, status: 400 },
+          {
+            data: { validateEntityLocalizations: null },
+            errors: errors as unknown as ClientError['response']['errors'],
+            status: 400,
+          },
           { query: '' },
         );
       };
@@ -584,7 +588,7 @@ describe('getValidationAndLocalizations', () => {
         throw new ClientError(
           {
             data: { prepareEntityLocalizationsForPublishing: null },
-            errors,
+            errors: errors as unknown as ClientError['response']['errors'],
             status: 401,
           },
           { query: '' },
@@ -631,7 +635,7 @@ describe('getValidationAndLocalizations', () => {
           throw new ClientError(
             {
               data: { prepareEntityLocalizationsForPublishing: null },
-              errors,
+              errors: errors as unknown as ClientError['response']['errors'],
               status: 401,
             },
             { query: '' },

@@ -15,7 +15,7 @@ import { NewProgram, ProgramEntity } from '../ProgramManagement.types';
 
 interface ProgramCuePointMid {
   type: ProgramBreakType.Mid;
-  videoCuePointId: Scalars['UUID'];
+  videoCuePointId: Scalars['UUID']['output'];
   timeInSeconds: number;
 }
 interface ProgramCuePointPREorPOST {

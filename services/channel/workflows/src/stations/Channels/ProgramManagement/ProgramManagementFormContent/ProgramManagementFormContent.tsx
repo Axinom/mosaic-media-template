@@ -153,7 +153,7 @@ export const ProgramManagementFormContent: React.FC<{
     const addSchedule = (
       type: CuePointScheduleType,
       duration = 0,
-      videoId: Scalars['UUID'] | null = null,
+      videoId: Scalars['UUID']['output'] | null = null,
     ): void => {
       const cp: ProgramCuePoint | undefined = values?.programs.nodes[
         programIndex
@@ -174,7 +174,7 @@ export const ProgramManagementFormContent: React.FC<{
 
     const addVideo = (
       lengthInSeconds: number,
-      videoId: Scalars['UUID'],
+      videoId: Scalars['UUID']['output'],
     ): void => {
       addSchedule(CuePointScheduleType.Video, lengthInSeconds, videoId);
       setVideoSelect(undefined);
