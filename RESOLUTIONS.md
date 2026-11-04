@@ -94,3 +94,12 @@ not dismissed and not passively "waiting for upstream".
 - **Reason for ignoring**: There is nothing to upgrade to; upstream has shipped no fix in any `image-size` version. The package is reached only through `less@4.2.0` (which requires `image-size@~0.5.0`), the CSS preprocessor used by the workflows frontend build. It is dev-only build tooling, is not present in any deployed service runtime, and never parses untrusted image input — the build only processes first-party stylesheets and assets from this repository. Alerts were dismissed as `tolerable_risk`.
 - **Date**: 2026-09-14
 - **Review again when**: `image-size` ships a patched release and `less` widens its `~0.5.0` range, or the workflows build stops depending on `less`
+
+### deepmerge
+
+- **Vulnerability**: GHSA-gcqx-w48m-w2h4 — `mergeObject()` allows prototype poisoning of returned objects (low). Affects `>=4.2.0 <=4.3.1`; **no patched version exists**.
+- **Current version**: 4.2.2 (`formik@2.2.9` uses `deepmerge@2.2.1`, which is outside the vulnerable range)
+- **Reason for ignoring**: Reached only through `fork-ts-checker-webpack-plugin@9.1.0`, a devDependency of `media-workflows` and `channel-workflows` that type-checks during the pilet build. Both `webpack.config.js` files instantiate it as `new ForkTsCheckerWebpackPlugin()` with no options, so `deepmerge` only merges the plugin's own defaults — no external input can reach it, and it is not part of any deployed service runtime or the shipped pilet bundle. There is nothing to upgrade to. Alert was dismissed as `tolerable_risk`.
+- **Considered alternative**: drop the plugin and run `tsc --noEmit` before `pilet build` (piral's ts-loader is `transpileOnly`, so that would keep build-time type checking but lose live type errors in `pilet debug`). Not done, to keep this a dependency-only change.
+- **Date**: 2026-11-04
+- **Review again when**: `deepmerge` ships a patched release, or the workflows build drops `fork-ts-checker-webpack-plugin`
