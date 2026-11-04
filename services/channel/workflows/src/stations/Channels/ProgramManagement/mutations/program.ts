@@ -19,9 +19,9 @@ const generateUpdateGQLFragment = createUpdateGQLFragmentGenerator<Mutation>();
 export const generateProgramMutations = (
   current: ProgramProps[],
   original: ProgramProps[],
-  playlistId: Scalars['UUID'],
-  deletedProgramIds: Scalars['UUID'][],
-  deletedCuePointIds: Scalars['UUID'][],
+  playlistId: Scalars['UUID']['output'],
+  deletedProgramIds: Scalars['UUID']['output'][],
+  deletedCuePointIds: Scalars['UUID']['output'][],
 ): string[] => {
   return generateArrayMutationsWithUpdates({
     current,

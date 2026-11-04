@@ -1,101 +1,102 @@
-import { GraphQLClient } from 'graphql-request';
-import * as Dom from 'graphql-request/dist/types.dom';
-import { print } from 'graphql'
+/** Internal type. DO NOT USE DIRECTLY. */
+type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
+/** Internal type. DO NOT USE DIRECTLY. */
+export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
+import { GraphQLClient, type RequestOptions } from 'graphql-request';
+import { GraphQLError, print } from 'graphql'
 import gql from 'graphql-tag';
 export type Maybe<T> = T | null;
 export type InputMaybe<T> = Maybe<T>;
-export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
-export type MakeOptional<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]?: Maybe<T[SubKey]> };
-export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]: Maybe<T[SubKey]> };
+type GraphQLClientRequestHeaders = RequestOptions['requestHeaders'];
 /** All built-in and custom scalars, mapped to their actual values */
 export type Scalars = {
-  ID: string;
-  String: string;
-  Boolean: boolean;
-  Int: number;
-  Float: number;
-  Cursor: any;
-  Datetime: any;
+  ID: { input: string; output: string; }
+  String: { input: string; output: string; }
+  Boolean: { input: boolean; output: boolean; }
+  Int: { input: number; output: number; }
+  Float: { input: number; output: number; }
+  Cursor: { input: any; output: any; }
+  Datetime: { input: any; output: any; }
 };
 
 /** A filter to be used against Boolean fields. All fields are combined with a logical ‘and.’ */
 export type BooleanFilter = {
   /** Not equal to the specified value, treating null like an ordinary value. */
-  distinctFrom?: InputMaybe<Scalars['Boolean']>;
+  distinctFrom?: InputMaybe<Scalars['Boolean']['input']>;
   /** Equal to the specified value. */
-  equalTo?: InputMaybe<Scalars['Boolean']>;
+  equalTo?: InputMaybe<Scalars['Boolean']['input']>;
   /** Greater than the specified value. */
-  greaterThan?: InputMaybe<Scalars['Boolean']>;
+  greaterThan?: InputMaybe<Scalars['Boolean']['input']>;
   /** Greater than or equal to the specified value. */
-  greaterThanOrEqualTo?: InputMaybe<Scalars['Boolean']>;
+  greaterThanOrEqualTo?: InputMaybe<Scalars['Boolean']['input']>;
   /** Included in the specified list. */
-  in?: InputMaybe<Array<Scalars['Boolean']>>;
+  in?: InputMaybe<Array<Scalars['Boolean']['input']>>;
   /** Is null (if `true` is specified) or is not null (if `false` is specified). */
-  isNull?: InputMaybe<Scalars['Boolean']>;
+  isNull?: InputMaybe<Scalars['Boolean']['input']>;
   /** Less than the specified value. */
-  lessThan?: InputMaybe<Scalars['Boolean']>;
+  lessThan?: InputMaybe<Scalars['Boolean']['input']>;
   /** Less than or equal to the specified value. */
-  lessThanOrEqualTo?: InputMaybe<Scalars['Boolean']>;
+  lessThanOrEqualTo?: InputMaybe<Scalars['Boolean']['input']>;
   /** Equal to the specified value, treating null like an ordinary value. */
-  notDistinctFrom?: InputMaybe<Scalars['Boolean']>;
+  notDistinctFrom?: InputMaybe<Scalars['Boolean']['input']>;
   /** Not equal to the specified value. */
-  notEqualTo?: InputMaybe<Scalars['Boolean']>;
+  notEqualTo?: InputMaybe<Scalars['Boolean']['input']>;
   /** Not included in the specified list. */
-  notIn?: InputMaybe<Array<Scalars['Boolean']>>;
+  notIn?: InputMaybe<Array<Scalars['Boolean']['input']>>;
 };
 
 /** Definition of the channel entity. */
 export type Channel = {
   __typename?: 'Channel';
   /** DASH stream URL of the channel. */
-  dashStreamUrl?: Maybe<Scalars['String']>;
+  dashStreamUrl?: Maybe<Scalars['String']['output']>;
   /** Description of the channel. */
-  description?: Maybe<Scalars['String']>;
+  description?: Maybe<Scalars['String']['output']>;
   /** HLS stream URL of the channel. */
-  hlsStreamUrl?: Maybe<Scalars['String']>;
-  id: Scalars['String'];
+  hlsStreamUrl?: Maybe<Scalars['String']['output']>;
+  id: Scalars['String']['output'];
   /** Reads and enables pagination through a set of `ChannelImage`. */
   images: ChannelImagesConnection;
   /** Key identifier for DRM protected streams. */
-  keyId?: Maybe<Scalars['String']>;
+  keyId?: Maybe<Scalars['String']['output']>;
   /** Reads and enables pagination through a set of `Playlist`. */
   playlists: PlaylistsConnection;
   /** Title of the channel. */
-  title?: Maybe<Scalars['String']>;
+  title?: Maybe<Scalars['String']['output']>;
 };
 
 
 /** Definition of the channel entity. */
 export type ChannelImagesArgs = {
-  after?: InputMaybe<Scalars['Cursor']>;
-  before?: InputMaybe<Scalars['Cursor']>;
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
   condition?: InputMaybe<ChannelImageCondition>;
   filter?: InputMaybe<ChannelImageFilter>;
-  first?: InputMaybe<Scalars['Int']>;
-  last?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Array<ChannelImagesOrderBy>>;
 };
 
 
 /** Definition of the channel entity. */
 export type ChannelPlaylistsArgs = {
-  after?: InputMaybe<Scalars['Cursor']>;
-  before?: InputMaybe<Scalars['Cursor']>;
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
   condition?: InputMaybe<PlaylistCondition>;
   filter?: InputMaybe<PlaylistFilter>;
-  first?: InputMaybe<Scalars['Int']>;
-  last?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Array<PlaylistsOrderBy>>;
 };
 
 /** A condition to be used against `Channel` object types. All fields are tested for equality and combined with a logical ‘and.’ */
 export type ChannelCondition = {
   /** Checks for equality with the object’s `id` field. */
-  id?: InputMaybe<Scalars['String']>;
+  id?: InputMaybe<Scalars['String']['input']>;
   /** Checks for equality with the object’s `title` field. */
-  title?: InputMaybe<Scalars['String']>;
+  title?: InputMaybe<Scalars['String']['input']>;
 };
 
 /** A filter to be used against `Channel` object types. All fields are combined with a logical ‘and.’ */
@@ -115,19 +116,19 @@ export type ChannelFilter = {
 /** Asset image metadata. */
 export type ChannelImage = {
   __typename?: 'ChannelImage';
-  altText?: Maybe<Scalars['String']>;
+  altText?: Maybe<Scalars['String']['output']>;
   /** Reads a single `Channel` that is related to this `ChannelImage`. */
   channel?: Maybe<Channel>;
-  channelId?: Maybe<Scalars['String']>;
+  channelId?: Maybe<Scalars['String']['output']>;
   /** Height of the image in pixels. */
-  height?: Maybe<Scalars['Int']>;
-  id: Scalars['Int'];
+  height?: Maybe<Scalars['Int']['output']>;
+  id: Scalars['Int']['output'];
   /** URI to the image file. */
-  path?: Maybe<Scalars['String']>;
+  path?: Maybe<Scalars['String']['output']>;
   /** Type of the image. */
-  type?: Maybe<Scalars['String']>;
+  type?: Maybe<Scalars['String']['output']>;
   /** Width of the image in pixels. */
-  width?: Maybe<Scalars['Int']>;
+  width?: Maybe<Scalars['Int']['output']>;
 };
 
 /**
@@ -136,11 +137,11 @@ export type ChannelImage = {
  */
 export type ChannelImageCondition = {
   /** Checks for equality with the object’s `altText` field. */
-  altText?: InputMaybe<Scalars['String']>;
+  altText?: InputMaybe<Scalars['String']['input']>;
   /** Checks for equality with the object’s `channelId` field. */
-  channelId?: InputMaybe<Scalars['String']>;
+  channelId?: InputMaybe<Scalars['String']['input']>;
   /** Checks for equality with the object’s `id` field. */
-  id?: InputMaybe<Scalars['Int']>;
+  id?: InputMaybe<Scalars['Int']['input']>;
 };
 
 /** A filter to be used against `ChannelImage` object types. All fields are combined with a logical ‘and.’ */
@@ -169,14 +170,14 @@ export type ChannelImagesConnection = {
   /** Information to aid in pagination. */
   pageInfo: PageInfo;
   /** The count of *all* `ChannelImage` you could get from the connection. */
-  totalCount: Scalars['Int'];
+  totalCount: Scalars['Int']['output'];
 };
 
 /** A `ChannelImage` edge in the connection. */
 export type ChannelImagesEdge = {
   __typename?: 'ChannelImagesEdge';
   /** A cursor for use in pagination. */
-  cursor?: Maybe<Scalars['Cursor']>;
+  cursor?: Maybe<Scalars['Cursor']['output']>;
   /** The `ChannelImage` at the end of the edge. */
   node: ChannelImage;
 };
@@ -204,14 +205,14 @@ export type ChannelsConnection = {
   /** Information to aid in pagination. */
   pageInfo: PageInfo;
   /** The count of *all* `Channel` you could get from the connection. */
-  totalCount: Scalars['Int'];
+  totalCount: Scalars['Int']['output'];
 };
 
 /** A `Channel` edge in the connection. */
 export type ChannelsEdge = {
   __typename?: 'ChannelsEdge';
   /** A cursor for use in pagination. */
-  cursor?: Maybe<Scalars['Cursor']>;
+  cursor?: Maybe<Scalars['Cursor']['output']>;
   /** The `Channel` at the end of the edge. */
   node: Channel;
 };
@@ -231,43 +232,43 @@ export enum ChannelsOrderBy {
 export type Collection = {
   __typename?: 'Collection';
   /** Longer description. */
-  description?: Maybe<Scalars['String']>;
-  id: Scalars['String'];
+  description?: Maybe<Scalars['String']['output']>;
+  id: Scalars['String']['output'];
   /** Reads and enables pagination through a set of `CollectionImage`. */
   images: CollectionImagesConnection;
   /** Reads and enables pagination through a set of `CollectionItemsRelation`. */
   items: CollectionItemsRelationsConnection;
   /** Short description. */
-  synopsis?: Maybe<Scalars['String']>;
+  synopsis?: Maybe<Scalars['String']['output']>;
   /** Array of tags associated with the content. */
-  tags?: Maybe<Array<Maybe<Scalars['String']>>>;
+  tags?: Maybe<Array<Maybe<Scalars['String']['output']>>>;
   /** Title of the collection. */
-  title?: Maybe<Scalars['String']>;
+  title?: Maybe<Scalars['String']['output']>;
 };
 
 
 /** Definition of the collection entity. */
 export type CollectionImagesArgs = {
-  after?: InputMaybe<Scalars['Cursor']>;
-  before?: InputMaybe<Scalars['Cursor']>;
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
   condition?: InputMaybe<CollectionImageCondition>;
   filter?: InputMaybe<CollectionImageFilter>;
-  first?: InputMaybe<Scalars['Int']>;
-  last?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Array<CollectionImagesOrderBy>>;
 };
 
 
 /** Definition of the collection entity. */
 export type CollectionItemsArgs = {
-  after?: InputMaybe<Scalars['Cursor']>;
-  before?: InputMaybe<Scalars['Cursor']>;
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
   condition?: InputMaybe<CollectionItemsRelationCondition>;
   filter?: InputMaybe<CollectionItemsRelationFilter>;
-  first?: InputMaybe<Scalars['Int']>;
-  last?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Array<CollectionItemsRelationsOrderBy>>;
 };
 
@@ -277,9 +278,9 @@ export type CollectionItemsArgs = {
  */
 export type CollectionCondition = {
   /** Checks for equality with the object’s `id` field. */
-  id?: InputMaybe<Scalars['String']>;
+  id?: InputMaybe<Scalars['String']['input']>;
   /** Checks for equality with the object’s `title` field. */
-  title?: InputMaybe<Scalars['String']>;
+  title?: InputMaybe<Scalars['String']['input']>;
 };
 
 /** A filter to be used against `Collection` object types. All fields are combined with a logical ‘and.’ */
@@ -299,19 +300,19 @@ export type CollectionFilter = {
 /** Asset image metadata. */
 export type CollectionImage = {
   __typename?: 'CollectionImage';
-  altText?: Maybe<Scalars['String']>;
+  altText?: Maybe<Scalars['String']['output']>;
   /** Reads a single `Collection` that is related to this `CollectionImage`. */
   collection?: Maybe<Collection>;
-  collectionId?: Maybe<Scalars['String']>;
+  collectionId?: Maybe<Scalars['String']['output']>;
   /** Height of the image in pixels. */
-  height?: Maybe<Scalars['Int']>;
-  id: Scalars['Int'];
+  height?: Maybe<Scalars['Int']['output']>;
+  id: Scalars['Int']['output'];
   /** URI to the image file. */
-  path?: Maybe<Scalars['String']>;
+  path?: Maybe<Scalars['String']['output']>;
   /** Type of the image. */
-  type?: Maybe<Scalars['String']>;
+  type?: Maybe<Scalars['String']['output']>;
   /** Width of the image in pixels. */
-  width?: Maybe<Scalars['Int']>;
+  width?: Maybe<Scalars['Int']['output']>;
 };
 
 /**
@@ -320,11 +321,11 @@ export type CollectionImage = {
  */
 export type CollectionImageCondition = {
   /** Checks for equality with the object’s `altText` field. */
-  altText?: InputMaybe<Scalars['String']>;
+  altText?: InputMaybe<Scalars['String']['input']>;
   /** Checks for equality with the object’s `collectionId` field. */
-  collectionId?: InputMaybe<Scalars['String']>;
+  collectionId?: InputMaybe<Scalars['String']['input']>;
   /** Checks for equality with the object’s `id` field. */
-  id?: InputMaybe<Scalars['Int']>;
+  id?: InputMaybe<Scalars['Int']['input']>;
 };
 
 /** A filter to be used against `CollectionImage` object types. All fields are combined with a logical ‘and.’ */
@@ -353,14 +354,14 @@ export type CollectionImagesConnection = {
   /** Information to aid in pagination. */
   pageInfo: PageInfo;
   /** The count of *all* `CollectionImage` you could get from the connection. */
-  totalCount: Scalars['Int'];
+  totalCount: Scalars['Int']['output'];
 };
 
 /** A `CollectionImage` edge in the connection. */
 export type CollectionImagesEdge = {
   __typename?: 'CollectionImagesEdge';
   /** A cursor for use in pagination. */
-  cursor?: Maybe<Scalars['Cursor']>;
+  cursor?: Maybe<Scalars['Cursor']['output']>;
   /** The `CollectionImage` at the end of the edge. */
   node: CollectionImage;
 };
@@ -382,23 +383,23 @@ export type CollectionItemsRelation = {
   __typename?: 'CollectionItemsRelation';
   /** Reads a single `Collection` that is related to this `CollectionItemsRelation`. */
   collection?: Maybe<Collection>;
-  collectionId?: Maybe<Scalars['String']>;
+  collectionId?: Maybe<Scalars['String']['output']>;
   /** Reads a single `Episode` that is related to this `CollectionItemsRelation`. */
   episode?: Maybe<Episode>;
-  episodeId?: Maybe<Scalars['String']>;
-  id: Scalars['Int'];
+  episodeId?: Maybe<Scalars['String']['output']>;
+  id: Scalars['Int']['output'];
   /** Reads a single `Movie` that is related to this `CollectionItemsRelation`. */
   movie?: Maybe<Movie>;
-  movieId?: Maybe<Scalars['String']>;
-  orderNo: Scalars['Int'];
+  movieId?: Maybe<Scalars['String']['output']>;
+  orderNo: Scalars['Int']['output'];
   /** Type of the relation. */
-  relationType?: Maybe<Scalars['String']>;
+  relationType?: Maybe<Scalars['String']['output']>;
   /** Reads a single `Season` that is related to this `CollectionItemsRelation`. */
   season?: Maybe<Season>;
-  seasonId?: Maybe<Scalars['String']>;
+  seasonId?: Maybe<Scalars['String']['output']>;
   /** Reads a single `Tvshow` that is related to this `CollectionItemsRelation`. */
   tvshow?: Maybe<Tvshow>;
-  tvshowId?: Maybe<Scalars['String']>;
+  tvshowId?: Maybe<Scalars['String']['output']>;
 };
 
 /**
@@ -407,19 +408,19 @@ export type CollectionItemsRelation = {
  */
 export type CollectionItemsRelationCondition = {
   /** Checks for equality with the object’s `collectionId` field. */
-  collectionId?: InputMaybe<Scalars['String']>;
+  collectionId?: InputMaybe<Scalars['String']['input']>;
   /** Checks for equality with the object’s `episodeId` field. */
-  episodeId?: InputMaybe<Scalars['String']>;
+  episodeId?: InputMaybe<Scalars['String']['input']>;
   /** Checks for equality with the object’s `id` field. */
-  id?: InputMaybe<Scalars['Int']>;
+  id?: InputMaybe<Scalars['Int']['input']>;
   /** Checks for equality with the object’s `movieId` field. */
-  movieId?: InputMaybe<Scalars['String']>;
+  movieId?: InputMaybe<Scalars['String']['input']>;
   /** Checks for equality with the object’s `orderNo` field. */
-  orderNo?: InputMaybe<Scalars['Int']>;
+  orderNo?: InputMaybe<Scalars['Int']['input']>;
   /** Checks for equality with the object’s `seasonId` field. */
-  seasonId?: InputMaybe<Scalars['String']>;
+  seasonId?: InputMaybe<Scalars['String']['input']>;
   /** Checks for equality with the object’s `tvshowId` field. */
-  tvshowId?: InputMaybe<Scalars['String']>;
+  tvshowId?: InputMaybe<Scalars['String']['input']>;
 };
 
 /** A filter to be used against `CollectionItemsRelation` object types. All fields are combined with a logical ‘and.’ */
@@ -456,14 +457,14 @@ export type CollectionItemsRelationsConnection = {
   /** Information to aid in pagination. */
   pageInfo: PageInfo;
   /** The count of *all* `CollectionItemsRelation` you could get from the connection. */
-  totalCount: Scalars['Int'];
+  totalCount: Scalars['Int']['output'];
 };
 
 /** A `CollectionItemsRelation` edge in the connection. */
 export type CollectionItemsRelationsEdge = {
   __typename?: 'CollectionItemsRelationsEdge';
   /** A cursor for use in pagination. */
-  cursor?: Maybe<Scalars['Cursor']>;
+  cursor?: Maybe<Scalars['Cursor']['output']>;
   /** The `CollectionItemsRelation` at the end of the edge. */
   node: CollectionItemsRelation;
 };
@@ -499,14 +500,14 @@ export type CollectionsConnection = {
   /** Information to aid in pagination. */
   pageInfo: PageInfo;
   /** The count of *all* `Collection` you could get from the connection. */
-  totalCount: Scalars['Int'];
+  totalCount: Scalars['Int']['output'];
 };
 
 /** A `Collection` edge in the connection. */
 export type CollectionsEdge = {
   __typename?: 'CollectionsEdge';
   /** A cursor for use in pagination. */
-  cursor?: Maybe<Scalars['Cursor']>;
+  cursor?: Maybe<Scalars['Cursor']['output']>;
   /** The `Collection` at the end of the edge. */
   node: Collection;
 };
@@ -526,35 +527,35 @@ export enum CollectionsOrderBy {
 export type Episode = {
   __typename?: 'Episode';
   /** Cast of the episode. */
-  cast?: Maybe<Array<Maybe<Scalars['String']>>>;
+  cast?: Maybe<Array<Maybe<Scalars['String']['output']>>>;
   /** Extended synopsis. */
-  description?: Maybe<Scalars['String']>;
+  description?: Maybe<Scalars['String']['output']>;
   /** Reads and enables pagination through a set of `EpisodeGenresRelation`. */
   genres: EpisodeGenresRelationsConnection;
-  id: Scalars['String'];
+  id: Scalars['String']['output'];
   /** Reads and enables pagination through a set of `EpisodeImage`. */
   images: EpisodeImagesConnection;
   /** Episode number */
-  index?: Maybe<Scalars['Int']>;
+  index?: Maybe<Scalars['Int']['output']>;
   /** Reads and enables pagination through a set of `EpisodeLicense`. */
   licenses: EpisodeLicensesConnection;
   /** Original title of the episode. */
-  originalTitle?: Maybe<Scalars['String']>;
+  originalTitle?: Maybe<Scalars['String']['output']>;
   /** Array of production countries */
-  productionCountries?: Maybe<Array<Maybe<Scalars['String']>>>;
+  productionCountries?: Maybe<Array<Maybe<Scalars['String']['output']>>>;
   /** Date of first release. */
-  released?: Maybe<Scalars['Datetime']>;
+  released?: Maybe<Scalars['Datetime']['output']>;
   /** Reads a single `Season` that is related to this `Episode`. */
   season?: Maybe<Season>;
-  seasonId?: Maybe<Scalars['String']>;
+  seasonId?: Maybe<Scalars['String']['output']>;
   /** Name of the producing studio. */
-  studio?: Maybe<Scalars['String']>;
+  studio?: Maybe<Scalars['String']['output']>;
   /** Short description of the main plot elements. */
-  synopsis?: Maybe<Scalars['String']>;
+  synopsis?: Maybe<Scalars['String']['output']>;
   /** Array of tags associated with the content. */
-  tags?: Maybe<Array<Maybe<Scalars['String']>>>;
+  tags?: Maybe<Array<Maybe<Scalars['String']['output']>>>;
   /** Title of the episode. */
-  title?: Maybe<Scalars['String']>;
+  title?: Maybe<Scalars['String']['output']>;
   /** Reads and enables pagination through a set of `EpisodeVideo`. */
   videos: EpisodeVideosConnection;
 };
@@ -562,63 +563,63 @@ export type Episode = {
 
 /** Definition of the TV show episode entity. */
 export type EpisodeGenresArgs = {
-  after?: InputMaybe<Scalars['Cursor']>;
-  before?: InputMaybe<Scalars['Cursor']>;
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
   condition?: InputMaybe<EpisodeGenresRelationCondition>;
   filter?: InputMaybe<EpisodeGenresRelationFilter>;
-  first?: InputMaybe<Scalars['Int']>;
-  last?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Array<EpisodeGenresRelationsOrderBy>>;
 };
 
 
 /** Definition of the TV show episode entity. */
 export type EpisodeImagesArgs = {
-  after?: InputMaybe<Scalars['Cursor']>;
-  before?: InputMaybe<Scalars['Cursor']>;
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
   condition?: InputMaybe<EpisodeImageCondition>;
   filter?: InputMaybe<EpisodeImageFilter>;
-  first?: InputMaybe<Scalars['Int']>;
-  last?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Array<EpisodeImagesOrderBy>>;
 };
 
 
 /** Definition of the TV show episode entity. */
 export type EpisodeLicensesArgs = {
-  after?: InputMaybe<Scalars['Cursor']>;
-  before?: InputMaybe<Scalars['Cursor']>;
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
   condition?: InputMaybe<EpisodeLicenseCondition>;
   filter?: InputMaybe<EpisodeLicenseFilter>;
-  first?: InputMaybe<Scalars['Int']>;
-  last?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Array<EpisodeLicensesOrderBy>>;
 };
 
 
 /** Definition of the TV show episode entity. */
 export type EpisodeVideosArgs = {
-  after?: InputMaybe<Scalars['Cursor']>;
-  before?: InputMaybe<Scalars['Cursor']>;
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
   condition?: InputMaybe<EpisodeVideoCondition>;
   filter?: InputMaybe<EpisodeVideoFilter>;
-  first?: InputMaybe<Scalars['Int']>;
-  last?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Array<EpisodeVideosOrderBy>>;
 };
 
 /** A condition to be used against `Episode` object types. All fields are tested for equality and combined with a logical ‘and.’ */
 export type EpisodeCondition = {
   /** Checks for equality with the object’s `id` field. */
-  id?: InputMaybe<Scalars['String']>;
+  id?: InputMaybe<Scalars['String']['input']>;
   /** Checks for equality with the object’s `seasonId` field. */
-  seasonId?: InputMaybe<Scalars['String']>;
+  seasonId?: InputMaybe<Scalars['String']['input']>;
   /** Checks for equality with the object’s `title` field. */
-  title?: InputMaybe<Scalars['String']>;
+  title?: InputMaybe<Scalars['String']['input']>;
 };
 
 /** A filter to be used against `Episode` object types. All fields are combined with a logical ‘and.’ */
@@ -641,12 +642,12 @@ export type EpisodeGenresRelation = {
   __typename?: 'EpisodeGenresRelation';
   /** Reads a single `Episode` that is related to this `EpisodeGenresRelation`. */
   episode?: Maybe<Episode>;
-  episodeId?: Maybe<Scalars['String']>;
-  id: Scalars['Int'];
-  orderNo: Scalars['Int'];
+  episodeId?: Maybe<Scalars['String']['output']>;
+  id: Scalars['Int']['output'];
+  orderNo: Scalars['Int']['output'];
   /** Reads a single `TvshowGenre` that is related to this `EpisodeGenresRelation`. */
   tvshowGenre?: Maybe<TvshowGenre>;
-  tvshowGenreId?: Maybe<Scalars['String']>;
+  tvshowGenreId?: Maybe<Scalars['String']['output']>;
 };
 
 /**
@@ -655,13 +656,13 @@ export type EpisodeGenresRelation = {
  */
 export type EpisodeGenresRelationCondition = {
   /** Checks for equality with the object’s `episodeId` field. */
-  episodeId?: InputMaybe<Scalars['String']>;
+  episodeId?: InputMaybe<Scalars['String']['input']>;
   /** Checks for equality with the object’s `id` field. */
-  id?: InputMaybe<Scalars['Int']>;
+  id?: InputMaybe<Scalars['Int']['input']>;
   /** Checks for equality with the object’s `orderNo` field. */
-  orderNo?: InputMaybe<Scalars['Int']>;
+  orderNo?: InputMaybe<Scalars['Int']['input']>;
   /** Checks for equality with the object’s `tvshowGenreId` field. */
-  tvshowGenreId?: InputMaybe<Scalars['String']>;
+  tvshowGenreId?: InputMaybe<Scalars['String']['input']>;
 };
 
 /** A filter to be used against `EpisodeGenresRelation` object types. All fields are combined with a logical ‘and.’ */
@@ -692,14 +693,14 @@ export type EpisodeGenresRelationsConnection = {
   /** Information to aid in pagination. */
   pageInfo: PageInfo;
   /** The count of *all* `EpisodeGenresRelation` you could get from the connection. */
-  totalCount: Scalars['Int'];
+  totalCount: Scalars['Int']['output'];
 };
 
 /** A `EpisodeGenresRelation` edge in the connection. */
 export type EpisodeGenresRelationsEdge = {
   __typename?: 'EpisodeGenresRelationsEdge';
   /** A cursor for use in pagination. */
-  cursor?: Maybe<Scalars['Cursor']>;
+  cursor?: Maybe<Scalars['Cursor']['output']>;
   /** The `EpisodeGenresRelation` at the end of the edge. */
   node: EpisodeGenresRelation;
 };
@@ -722,19 +723,19 @@ export enum EpisodeGenresRelationsOrderBy {
 /** Asset image metadata. */
 export type EpisodeImage = {
   __typename?: 'EpisodeImage';
-  altText?: Maybe<Scalars['String']>;
+  altText?: Maybe<Scalars['String']['output']>;
   /** Reads a single `Episode` that is related to this `EpisodeImage`. */
   episode?: Maybe<Episode>;
-  episodeId?: Maybe<Scalars['String']>;
+  episodeId?: Maybe<Scalars['String']['output']>;
   /** Height of the image in pixels. */
-  height?: Maybe<Scalars['Int']>;
-  id: Scalars['Int'];
+  height?: Maybe<Scalars['Int']['output']>;
+  id: Scalars['Int']['output'];
   /** URI to the image file. */
-  path?: Maybe<Scalars['String']>;
+  path?: Maybe<Scalars['String']['output']>;
   /** Type of the image. */
-  type?: Maybe<Scalars['String']>;
+  type?: Maybe<Scalars['String']['output']>;
   /** Width of the image in pixels. */
-  width?: Maybe<Scalars['Int']>;
+  width?: Maybe<Scalars['Int']['output']>;
 };
 
 /**
@@ -743,11 +744,11 @@ export type EpisodeImage = {
  */
 export type EpisodeImageCondition = {
   /** Checks for equality with the object’s `altText` field. */
-  altText?: InputMaybe<Scalars['String']>;
+  altText?: InputMaybe<Scalars['String']['input']>;
   /** Checks for equality with the object’s `episodeId` field. */
-  episodeId?: InputMaybe<Scalars['String']>;
+  episodeId?: InputMaybe<Scalars['String']['input']>;
   /** Checks for equality with the object’s `id` field. */
-  id?: InputMaybe<Scalars['Int']>;
+  id?: InputMaybe<Scalars['Int']['input']>;
 };
 
 /** A filter to be used against `EpisodeImage` object types. All fields are combined with a logical ‘and.’ */
@@ -776,14 +777,14 @@ export type EpisodeImagesConnection = {
   /** Information to aid in pagination. */
   pageInfo: PageInfo;
   /** The count of *all* `EpisodeImage` you could get from the connection. */
-  totalCount: Scalars['Int'];
+  totalCount: Scalars['Int']['output'];
 };
 
 /** A `EpisodeImage` edge in the connection. */
 export type EpisodeImagesEdge = {
   __typename?: 'EpisodeImagesEdge';
   /** A cursor for use in pagination. */
-  cursor?: Maybe<Scalars['Cursor']>;
+  cursor?: Maybe<Scalars['Cursor']['output']>;
   /** The `EpisodeImage` at the end of the edge. */
   node: EpisodeImage;
 };
@@ -805,15 +806,15 @@ export enum EpisodeImagesOrderBy {
 export type EpisodeLicense = {
   __typename?: 'EpisodeLicense';
   /** Array of countries where the license applies. */
-  countries?: Maybe<Array<Maybe<Scalars['String']>>>;
+  countries?: Maybe<Array<Maybe<Scalars['String']['output']>>>;
   /** Time when license becomes invalid. */
-  endTime?: Maybe<Scalars['Datetime']>;
+  endTime?: Maybe<Scalars['Datetime']['output']>;
   /** Reads a single `Episode` that is related to this `EpisodeLicense`. */
   episode?: Maybe<Episode>;
-  episodeId?: Maybe<Scalars['String']>;
-  id: Scalars['Int'];
+  episodeId?: Maybe<Scalars['String']['output']>;
+  id: Scalars['Int']['output'];
   /** Time when license becomes valid. */
-  startTime?: Maybe<Scalars['Datetime']>;
+  startTime?: Maybe<Scalars['Datetime']['output']>;
 };
 
 /**
@@ -822,9 +823,9 @@ export type EpisodeLicense = {
  */
 export type EpisodeLicenseCondition = {
   /** Checks for equality with the object’s `episodeId` field. */
-  episodeId?: InputMaybe<Scalars['String']>;
+  episodeId?: InputMaybe<Scalars['String']['input']>;
   /** Checks for equality with the object’s `id` field. */
-  id?: InputMaybe<Scalars['Int']>;
+  id?: InputMaybe<Scalars['Int']['input']>;
 };
 
 /** A filter to be used against `EpisodeLicense` object types. All fields are combined with a logical ‘and.’ */
@@ -851,14 +852,14 @@ export type EpisodeLicensesConnection = {
   /** Information to aid in pagination. */
   pageInfo: PageInfo;
   /** The count of *all* `EpisodeLicense` you could get from the connection. */
-  totalCount: Scalars['Int'];
+  totalCount: Scalars['Int']['output'];
 };
 
 /** A `EpisodeLicense` edge in the connection. */
 export type EpisodeLicensesEdge = {
   __typename?: 'EpisodeLicensesEdge';
   /** A cursor for use in pagination. */
-  cursor?: Maybe<Scalars['Cursor']>;
+  cursor?: Maybe<Scalars['Cursor']['output']>;
   /** The `EpisodeLicense` at the end of the edge. */
   node: EpisodeLicense;
 };
@@ -884,14 +885,14 @@ export type EpisodesConnection = {
   /** Information to aid in pagination. */
   pageInfo: PageInfo;
   /** The count of *all* `Episode` you could get from the connection. */
-  totalCount: Scalars['Int'];
+  totalCount: Scalars['Int']['output'];
 };
 
 /** A `Episode` edge in the connection. */
 export type EpisodesEdge = {
   __typename?: 'EpisodesEdge';
   /** A cursor for use in pagination. */
-  cursor?: Maybe<Scalars['Cursor']>;
+  cursor?: Maybe<Scalars['Cursor']['output']>;
   /** The `Episode` at the end of the edge. */
   node: Episode;
 };
@@ -913,31 +914,31 @@ export enum EpisodesOrderBy {
 export type EpisodeVideo = {
   __typename?: 'EpisodeVideo';
   /** Array of audio languages available in the stream. */
-  audioLanguages?: Maybe<Array<Maybe<Scalars['String']>>>;
+  audioLanguages?: Maybe<Array<Maybe<Scalars['String']['output']>>>;
   /** Array of caption languages available in the stream. */
-  captionLanguages?: Maybe<Array<Maybe<Scalars['String']>>>;
+  captionLanguages?: Maybe<Array<Maybe<Scalars['String']['output']>>>;
   /** Reads and enables pagination through a set of `EpisodeVideoCuePoint`. */
   cuePoints: EpisodeVideoCuePointsConnection;
   /** URI to a DASH manifest. */
-  dashManifest?: Maybe<Scalars['String']>;
+  dashManifest?: Maybe<Scalars['String']['output']>;
   /** Reads a single `Episode` that is related to this `EpisodeVideo`. */
   episode?: Maybe<Episode>;
-  episodeId?: Maybe<Scalars['String']>;
+  episodeId?: Maybe<Scalars['String']['output']>;
   /** URI to an HLS manifest. */
-  hlsManifest?: Maybe<Scalars['String']>;
-  id: Scalars['Int'];
+  hlsManifest?: Maybe<Scalars['String']['output']>;
+  id: Scalars['Int']['output'];
   /** Indicates whether a stream is protected with DRM. */
-  isProtected?: Maybe<Scalars['Boolean']>;
+  isProtected?: Maybe<Scalars['Boolean']['output']>;
   /** Length of the stream in seconds. */
-  lengthInSeconds?: Maybe<Scalars['Float']>;
+  lengthInSeconds?: Maybe<Scalars['Float']['output']>;
   /** Output format of the stream. */
-  outputFormat?: Maybe<Scalars['String']>;
+  outputFormat?: Maybe<Scalars['String']['output']>;
   /** Array of subtitle languages available in the stream. */
-  subtitleLanguages?: Maybe<Array<Maybe<Scalars['String']>>>;
+  subtitleLanguages?: Maybe<Array<Maybe<Scalars['String']['output']>>>;
   /** Title of the video stream */
-  title?: Maybe<Scalars['String']>;
+  title?: Maybe<Scalars['String']['output']>;
   /** Type of the video stream. */
-  type?: Maybe<Scalars['String']>;
+  type?: Maybe<Scalars['String']['output']>;
   /** Reads and enables pagination through a set of `EpisodeVideoStream`. */
   videoStreams: EpisodeVideoStreamsConnection;
 };
@@ -945,26 +946,26 @@ export type EpisodeVideo = {
 
 /** Video stream metadata. */
 export type EpisodeVideoCuePointsArgs = {
-  after?: InputMaybe<Scalars['Cursor']>;
-  before?: InputMaybe<Scalars['Cursor']>;
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
   condition?: InputMaybe<EpisodeVideoCuePointCondition>;
   filter?: InputMaybe<EpisodeVideoCuePointFilter>;
-  first?: InputMaybe<Scalars['Int']>;
-  last?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Array<EpisodeVideoCuePointsOrderBy>>;
 };
 
 
 /** Video stream metadata. */
 export type EpisodeVideoVideoStreamsArgs = {
-  after?: InputMaybe<Scalars['Cursor']>;
-  before?: InputMaybe<Scalars['Cursor']>;
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
   condition?: InputMaybe<EpisodeVideoStreamCondition>;
   filter?: InputMaybe<EpisodeVideoStreamFilter>;
-  first?: InputMaybe<Scalars['Int']>;
-  last?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Array<EpisodeVideoStreamsOrderBy>>;
 };
 
@@ -974,26 +975,26 @@ export type EpisodeVideoVideoStreamsArgs = {
  */
 export type EpisodeVideoCondition = {
   /** Checks for equality with the object’s `episodeId` field. */
-  episodeId?: InputMaybe<Scalars['String']>;
+  episodeId?: InputMaybe<Scalars['String']['input']>;
   /** Checks for equality with the object’s `id` field. */
-  id?: InputMaybe<Scalars['Int']>;
+  id?: InputMaybe<Scalars['Int']['input']>;
   /** Checks for equality with the object’s `type` field. */
-  type?: InputMaybe<Scalars['String']>;
+  type?: InputMaybe<Scalars['String']['input']>;
 };
 
 /** Video cue point metadata */
 export type EpisodeVideoCuePoint = {
   __typename?: 'EpisodeVideoCuePoint';
   /** Type of the cue point */
-  cuePointTypeKey: Scalars['String'];
-  id: Scalars['Int'];
+  cuePointTypeKey: Scalars['String']['output'];
+  id: Scalars['Int']['output'];
   /** Time in seconds at which the cue point is set within the video */
-  timeInSeconds: Scalars['Float'];
+  timeInSeconds: Scalars['Float']['output'];
   /** Additional information associated with the cue point */
-  value?: Maybe<Scalars['String']>;
+  value?: Maybe<Scalars['String']['output']>;
   /** Reads a single `EpisodeVideo` that is related to this `EpisodeVideoCuePoint`. */
   video?: Maybe<EpisodeVideo>;
-  videoId?: Maybe<Scalars['Int']>;
+  videoId?: Maybe<Scalars['Int']['output']>;
 };
 
 /**
@@ -1002,9 +1003,9 @@ export type EpisodeVideoCuePoint = {
  */
 export type EpisodeVideoCuePointCondition = {
   /** Checks for equality with the object’s `id` field. */
-  id?: InputMaybe<Scalars['Int']>;
+  id?: InputMaybe<Scalars['Int']['input']>;
   /** Checks for equality with the object’s `videoId` field. */
-  videoId?: InputMaybe<Scalars['Int']>;
+  videoId?: InputMaybe<Scalars['Int']['input']>;
 };
 
 /** A filter to be used against `EpisodeVideoCuePoint` object types. All fields are combined with a logical ‘and.’ */
@@ -1031,14 +1032,14 @@ export type EpisodeVideoCuePointsConnection = {
   /** Information to aid in pagination. */
   pageInfo: PageInfo;
   /** The count of *all* `EpisodeVideoCuePoint` you could get from the connection. */
-  totalCount: Scalars['Int'];
+  totalCount: Scalars['Int']['output'];
 };
 
 /** A `EpisodeVideoCuePoint` edge in the connection. */
 export type EpisodeVideoCuePointsEdge = {
   __typename?: 'EpisodeVideoCuePointsEdge';
   /** A cursor for use in pagination. */
-  cursor?: Maybe<Scalars['Cursor']>;
+  cursor?: Maybe<Scalars['Cursor']['output']>;
   /** The `EpisodeVideoCuePoint` at the end of the edge. */
   node: EpisodeVideoCuePoint;
 };
@@ -1080,14 +1081,14 @@ export type EpisodeVideosConnection = {
   /** Information to aid in pagination. */
   pageInfo: PageInfo;
   /** The count of *all* `EpisodeVideo` you could get from the connection. */
-  totalCount: Scalars['Int'];
+  totalCount: Scalars['Int']['output'];
 };
 
 /** A `EpisodeVideo` edge in the connection. */
 export type EpisodeVideosEdge = {
   __typename?: 'EpisodeVideosEdge';
   /** A cursor for use in pagination. */
-  cursor?: Maybe<Scalars['Cursor']>;
+  cursor?: Maybe<Scalars['Cursor']['output']>;
   /** The `EpisodeVideo` at the end of the edge. */
   node: EpisodeVideo;
 };
@@ -1109,43 +1110,43 @@ export enum EpisodeVideosOrderBy {
 export type EpisodeVideoStream = {
   __typename?: 'EpisodeVideoStream';
   /** Bitrate in kilobits per second */
-  bitrateInKbps?: Maybe<Scalars['Int']>;
+  bitrateInKbps?: Maybe<Scalars['Int']['output']>;
   /** Codecs */
-  codecs?: Maybe<Scalars['String']>;
+  codecs?: Maybe<Scalars['String']['output']>;
   /** Display aspect ratio for video streams */
-  displayAspectRatio?: Maybe<Scalars['String']>;
+  displayAspectRatio?: Maybe<Scalars['String']['output']>;
   /** File path to the initialization segment */
-  file?: Maybe<Scalars['String']>;
+  file?: Maybe<Scalars['String']['output']>;
   /** File Template */
-  fileTemplate?: Maybe<Scalars['String']>;
+  fileTemplate?: Maybe<Scalars['String']['output']>;
   /** Packaging format of the stream */
-  format?: Maybe<Scalars['String']>;
+  format?: Maybe<Scalars['String']['output']>;
   /** Frame rate of the video stream */
-  frameRate?: Maybe<Scalars['Float']>;
+  frameRate?: Maybe<Scalars['Float']['output']>;
   /** Height of the video stream */
-  height?: Maybe<Scalars['Int']>;
-  id: Scalars['Int'];
+  height?: Maybe<Scalars['Int']['output']>;
+  id: Scalars['Int']['output'];
   /** Initialization Vector of the stream */
-  iv?: Maybe<Scalars['String']>;
+  iv?: Maybe<Scalars['String']['output']>;
   /** DRM Key ID */
-  keyId?: Maybe<Scalars['String']>;
+  keyId?: Maybe<Scalars['String']['output']>;
   /** Label indicating the type of stream (audio/video) */
-  label?: Maybe<Scalars['String']>;
+  label?: Maybe<Scalars['String']['output']>;
   /** The language code for audio streams */
-  languageCode?: Maybe<Scalars['String']>;
+  languageCode?: Maybe<Scalars['String']['output']>;
   /** Language name for audio, subtitle, or caption streams */
-  languageName?: Maybe<Scalars['String']>;
+  languageName?: Maybe<Scalars['String']['output']>;
   /** Pixel aspect ratio for video streams */
-  pixelAspectRatio?: Maybe<Scalars['String']>;
+  pixelAspectRatio?: Maybe<Scalars['String']['output']>;
   /** Sampling rate for audio streams */
-  samplingRate?: Maybe<Scalars['Int']>;
+  samplingRate?: Maybe<Scalars['Int']['output']>;
   /** Stream type */
   type?: Maybe<VideoStreamType>;
   /** Reads a single `EpisodeVideo` that is related to this `EpisodeVideoStream`. */
   video?: Maybe<EpisodeVideo>;
-  videoId?: Maybe<Scalars['Int']>;
+  videoId?: Maybe<Scalars['Int']['output']>;
   /** Width of the video stream */
-  width?: Maybe<Scalars['Int']>;
+  width?: Maybe<Scalars['Int']['output']>;
 };
 
 /**
@@ -1154,11 +1155,11 @@ export type EpisodeVideoStream = {
  */
 export type EpisodeVideoStreamCondition = {
   /** Checks for equality with the object’s `id` field. */
-  id?: InputMaybe<Scalars['Int']>;
+  id?: InputMaybe<Scalars['Int']['input']>;
   /** Checks for equality with the object’s `type` field. */
   type?: InputMaybe<VideoStreamType>;
   /** Checks for equality with the object’s `videoId` field. */
-  videoId?: InputMaybe<Scalars['Int']>;
+  videoId?: InputMaybe<Scalars['Int']['input']>;
 };
 
 /** A filter to be used against `EpisodeVideoStream` object types. All fields are combined with a logical ‘and.’ */
@@ -1187,14 +1188,14 @@ export type EpisodeVideoStreamsConnection = {
   /** Information to aid in pagination. */
   pageInfo: PageInfo;
   /** The count of *all* `EpisodeVideoStream` you could get from the connection. */
-  totalCount: Scalars['Int'];
+  totalCount: Scalars['Int']['output'];
 };
 
 /** A `EpisodeVideoStream` edge in the connection. */
 export type EpisodeVideoStreamsEdge = {
   __typename?: 'EpisodeVideoStreamsEdge';
   /** A cursor for use in pagination. */
-  cursor?: Maybe<Scalars['Cursor']>;
+  cursor?: Maybe<Scalars['Cursor']['output']>;
   /** The `EpisodeVideoStream` at the end of the edge. */
   node: EpisodeVideoStream;
 };
@@ -1251,41 +1252,41 @@ export enum ErrorCodesEnum {
 /** A filter to be used against Int fields. All fields are combined with a logical ‘and.’ */
 export type IntFilter = {
   /** Not equal to the specified value, treating null like an ordinary value. */
-  distinctFrom?: InputMaybe<Scalars['Int']>;
+  distinctFrom?: InputMaybe<Scalars['Int']['input']>;
   /** Equal to the specified value. */
-  equalTo?: InputMaybe<Scalars['Int']>;
+  equalTo?: InputMaybe<Scalars['Int']['input']>;
   /** Greater than the specified value. */
-  greaterThan?: InputMaybe<Scalars['Int']>;
+  greaterThan?: InputMaybe<Scalars['Int']['input']>;
   /** Greater than or equal to the specified value. */
-  greaterThanOrEqualTo?: InputMaybe<Scalars['Int']>;
+  greaterThanOrEqualTo?: InputMaybe<Scalars['Int']['input']>;
   /** Included in the specified list. */
-  in?: InputMaybe<Array<Scalars['Int']>>;
+  in?: InputMaybe<Array<Scalars['Int']['input']>>;
   /** Is null (if `true` is specified) or is not null (if `false` is specified). */
-  isNull?: InputMaybe<Scalars['Boolean']>;
+  isNull?: InputMaybe<Scalars['Boolean']['input']>;
   /** Less than the specified value. */
-  lessThan?: InputMaybe<Scalars['Int']>;
+  lessThan?: InputMaybe<Scalars['Int']['input']>;
   /** Less than or equal to the specified value. */
-  lessThanOrEqualTo?: InputMaybe<Scalars['Int']>;
+  lessThanOrEqualTo?: InputMaybe<Scalars['Int']['input']>;
   /** Equal to the specified value, treating null like an ordinary value. */
-  notDistinctFrom?: InputMaybe<Scalars['Int']>;
+  notDistinctFrom?: InputMaybe<Scalars['Int']['input']>;
   /** Not equal to the specified value. */
-  notEqualTo?: InputMaybe<Scalars['Int']>;
+  notEqualTo?: InputMaybe<Scalars['Int']['input']>;
   /** Not included in the specified list. */
-  notIn?: InputMaybe<Array<Scalars['Int']>>;
+  notIn?: InputMaybe<Array<Scalars['Int']['input']>>;
 };
 
 export type Locale = {
   __typename?: 'Locale';
-  isDefault: Scalars['Boolean'];
-  locale: Scalars['String'];
+  isDefault: Scalars['Boolean']['output'];
+  locale: Scalars['String']['output'];
 };
 
 /** A condition to be used against `Locale` object types. All fields are tested for equality and combined with a logical ‘and.’ */
 export type LocaleCondition = {
   /** Checks for equality with the object’s `isDefault` field. */
-  isDefault?: InputMaybe<Scalars['Boolean']>;
+  isDefault?: InputMaybe<Scalars['Boolean']['input']>;
   /** Checks for equality with the object’s `locale` field. */
-  locale?: InputMaybe<Scalars['String']>;
+  locale?: InputMaybe<Scalars['String']['input']>;
 };
 
 /** A filter to be used against `Locale` object types. All fields are combined with a logical ‘and.’ */
@@ -1312,14 +1313,14 @@ export type LocalesConnection = {
   /** Information to aid in pagination. */
   pageInfo: PageInfo;
   /** The count of *all* `Locale` you could get from the connection. */
-  totalCount: Scalars['Int'];
+  totalCount: Scalars['Int']['output'];
 };
 
 /** A `Locale` edge in the connection. */
 export type LocalesEdge = {
   __typename?: 'LocalesEdge';
   /** A cursor for use in pagination. */
-  cursor?: Maybe<Scalars['Cursor']>;
+  cursor?: Maybe<Scalars['Cursor']['output']>;
   /** The `Locale` at the end of the edge. */
   node: Locale;
 };
@@ -1339,30 +1340,30 @@ export enum LocalesOrderBy {
 export type Movie = {
   __typename?: 'Movie';
   /** Cast of the movie. */
-  cast?: Maybe<Array<Maybe<Scalars['String']>>>;
+  cast?: Maybe<Array<Maybe<Scalars['String']['output']>>>;
   /** Extended synopsis. */
-  description?: Maybe<Scalars['String']>;
+  description?: Maybe<Scalars['String']['output']>;
   /** Reads and enables pagination through a set of `MovieGenresRelation`. */
   genres: MovieGenresRelationsConnection;
-  id: Scalars['String'];
+  id: Scalars['String']['output'];
   /** Reads and enables pagination through a set of `MovieImage`. */
   images: MovieImagesConnection;
   /** Reads and enables pagination through a set of `MovieLicense`. */
   licenses: MovieLicensesConnection;
   /** Original title of the movie. */
-  originalTitle?: Maybe<Scalars['String']>;
+  originalTitle?: Maybe<Scalars['String']['output']>;
   /** Array of production countries */
-  productionCountries?: Maybe<Array<Maybe<Scalars['String']>>>;
+  productionCountries?: Maybe<Array<Maybe<Scalars['String']['output']>>>;
   /** Date of first release. */
-  released?: Maybe<Scalars['Datetime']>;
+  released?: Maybe<Scalars['Datetime']['output']>;
   /** Name of the producing studio. */
-  studio?: Maybe<Scalars['String']>;
+  studio?: Maybe<Scalars['String']['output']>;
   /** Short description of the main plot elements. */
-  synopsis?: Maybe<Scalars['String']>;
+  synopsis?: Maybe<Scalars['String']['output']>;
   /** Array of tags associated with the content. */
-  tags?: Maybe<Array<Maybe<Scalars['String']>>>;
+  tags?: Maybe<Array<Maybe<Scalars['String']['output']>>>;
   /** Title of the movie. */
-  title?: Maybe<Scalars['String']>;
+  title?: Maybe<Scalars['String']['output']>;
   /** Reads and enables pagination through a set of `MovieVideo`. */
   videos: MovieVideosConnection;
 };
@@ -1370,61 +1371,61 @@ export type Movie = {
 
 /** Definition of the movie entity. */
 export type MovieGenresArgs = {
-  after?: InputMaybe<Scalars['Cursor']>;
-  before?: InputMaybe<Scalars['Cursor']>;
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
   condition?: InputMaybe<MovieGenresRelationCondition>;
   filter?: InputMaybe<MovieGenresRelationFilter>;
-  first?: InputMaybe<Scalars['Int']>;
-  last?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Array<MovieGenresRelationsOrderBy>>;
 };
 
 
 /** Definition of the movie entity. */
 export type MovieImagesArgs = {
-  after?: InputMaybe<Scalars['Cursor']>;
-  before?: InputMaybe<Scalars['Cursor']>;
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
   condition?: InputMaybe<MovieImageCondition>;
   filter?: InputMaybe<MovieImageFilter>;
-  first?: InputMaybe<Scalars['Int']>;
-  last?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Array<MovieImagesOrderBy>>;
 };
 
 
 /** Definition of the movie entity. */
 export type MovieLicensesArgs = {
-  after?: InputMaybe<Scalars['Cursor']>;
-  before?: InputMaybe<Scalars['Cursor']>;
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
   condition?: InputMaybe<MovieLicenseCondition>;
   filter?: InputMaybe<MovieLicenseFilter>;
-  first?: InputMaybe<Scalars['Int']>;
-  last?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Array<MovieLicensesOrderBy>>;
 };
 
 
 /** Definition of the movie entity. */
 export type MovieVideosArgs = {
-  after?: InputMaybe<Scalars['Cursor']>;
-  before?: InputMaybe<Scalars['Cursor']>;
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
   condition?: InputMaybe<MovieVideoCondition>;
   filter?: InputMaybe<MovieVideoFilter>;
-  first?: InputMaybe<Scalars['Int']>;
-  last?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Array<MovieVideosOrderBy>>;
 };
 
 /** A condition to be used against `Movie` object types. All fields are tested for equality and combined with a logical ‘and.’ */
 export type MovieCondition = {
   /** Checks for equality with the object’s `id` field. */
-  id?: InputMaybe<Scalars['String']>;
+  id?: InputMaybe<Scalars['String']['input']>;
   /** Checks for equality with the object’s `title` field. */
-  title?: InputMaybe<Scalars['String']>;
+  title?: InputMaybe<Scalars['String']['input']>;
 };
 
 /** A filter to be used against `Movie` object types. All fields are combined with a logical ‘and.’ */
@@ -1444,11 +1445,11 @@ export type MovieFilter = {
 /** Definition of the movie genre entity. */
 export type MovieGenre = {
   __typename?: 'MovieGenre';
-  id: Scalars['String'];
+  id: Scalars['String']['output'];
   /** Global ordering number for the genre. */
-  orderNo?: Maybe<Scalars['Int']>;
+  orderNo?: Maybe<Scalars['Int']['output']>;
   /** Title of the genre. */
-  title?: Maybe<Scalars['String']>;
+  title?: Maybe<Scalars['String']['output']>;
 };
 
 /**
@@ -1457,11 +1458,11 @@ export type MovieGenre = {
  */
 export type MovieGenreCondition = {
   /** Checks for equality with the object’s `id` field. */
-  id?: InputMaybe<Scalars['String']>;
+  id?: InputMaybe<Scalars['String']['input']>;
   /** Checks for equality with the object’s `orderNo` field. */
-  orderNo?: InputMaybe<Scalars['Int']>;
+  orderNo?: InputMaybe<Scalars['Int']['input']>;
   /** Checks for equality with the object’s `title` field. */
-  title?: InputMaybe<Scalars['String']>;
+  title?: InputMaybe<Scalars['String']['input']>;
 };
 
 /** A filter to be used against `MovieGenre` object types. All fields are combined with a logical ‘and.’ */
@@ -1490,14 +1491,14 @@ export type MovieGenresConnection = {
   /** Information to aid in pagination. */
   pageInfo: PageInfo;
   /** The count of *all* `MovieGenre` you could get from the connection. */
-  totalCount: Scalars['Int'];
+  totalCount: Scalars['Int']['output'];
 };
 
 /** A `MovieGenre` edge in the connection. */
 export type MovieGenresEdge = {
   __typename?: 'MovieGenresEdge';
   /** A cursor for use in pagination. */
-  cursor?: Maybe<Scalars['Cursor']>;
+  cursor?: Maybe<Scalars['Cursor']['output']>;
   /** The `MovieGenre` at the end of the edge. */
   node: MovieGenre;
 };
@@ -1517,14 +1518,14 @@ export enum MovieGenresOrderBy {
 
 export type MovieGenresRelation = {
   __typename?: 'MovieGenresRelation';
-  id: Scalars['Int'];
+  id: Scalars['Int']['output'];
   /** Reads a single `Movie` that is related to this `MovieGenresRelation`. */
   movie?: Maybe<Movie>;
   /** Reads a single `MovieGenre` that is related to this `MovieGenresRelation`. */
   movieGenre?: Maybe<MovieGenre>;
-  movieGenreId?: Maybe<Scalars['String']>;
-  movieId?: Maybe<Scalars['String']>;
-  orderNo: Scalars['Int'];
+  movieGenreId?: Maybe<Scalars['String']['output']>;
+  movieId?: Maybe<Scalars['String']['output']>;
+  orderNo: Scalars['Int']['output'];
 };
 
 /**
@@ -1533,13 +1534,13 @@ export type MovieGenresRelation = {
  */
 export type MovieGenresRelationCondition = {
   /** Checks for equality with the object’s `id` field. */
-  id?: InputMaybe<Scalars['Int']>;
+  id?: InputMaybe<Scalars['Int']['input']>;
   /** Checks for equality with the object’s `movieGenreId` field. */
-  movieGenreId?: InputMaybe<Scalars['String']>;
+  movieGenreId?: InputMaybe<Scalars['String']['input']>;
   /** Checks for equality with the object’s `movieId` field. */
-  movieId?: InputMaybe<Scalars['String']>;
+  movieId?: InputMaybe<Scalars['String']['input']>;
   /** Checks for equality with the object’s `orderNo` field. */
-  orderNo?: InputMaybe<Scalars['Int']>;
+  orderNo?: InputMaybe<Scalars['Int']['input']>;
 };
 
 /** A filter to be used against `MovieGenresRelation` object types. All fields are combined with a logical ‘and.’ */
@@ -1570,14 +1571,14 @@ export type MovieGenresRelationsConnection = {
   /** Information to aid in pagination. */
   pageInfo: PageInfo;
   /** The count of *all* `MovieGenresRelation` you could get from the connection. */
-  totalCount: Scalars['Int'];
+  totalCount: Scalars['Int']['output'];
 };
 
 /** A `MovieGenresRelation` edge in the connection. */
 export type MovieGenresRelationsEdge = {
   __typename?: 'MovieGenresRelationsEdge';
   /** A cursor for use in pagination. */
-  cursor?: Maybe<Scalars['Cursor']>;
+  cursor?: Maybe<Scalars['Cursor']['output']>;
   /** The `MovieGenresRelation` at the end of the edge. */
   node: MovieGenresRelation;
 };
@@ -1600,19 +1601,19 @@ export enum MovieGenresRelationsOrderBy {
 /** Asset image metadata. */
 export type MovieImage = {
   __typename?: 'MovieImage';
-  altText?: Maybe<Scalars['String']>;
+  altText?: Maybe<Scalars['String']['output']>;
   /** Height of the image in pixels. */
-  height?: Maybe<Scalars['Int']>;
-  id: Scalars['Int'];
+  height?: Maybe<Scalars['Int']['output']>;
+  id: Scalars['Int']['output'];
   /** Reads a single `Movie` that is related to this `MovieImage`. */
   movie?: Maybe<Movie>;
-  movieId?: Maybe<Scalars['String']>;
+  movieId?: Maybe<Scalars['String']['output']>;
   /** URI to the image file. */
-  path?: Maybe<Scalars['String']>;
+  path?: Maybe<Scalars['String']['output']>;
   /** Type of the image. */
-  type?: Maybe<Scalars['String']>;
+  type?: Maybe<Scalars['String']['output']>;
   /** Width of the image in pixels. */
-  width?: Maybe<Scalars['Int']>;
+  width?: Maybe<Scalars['Int']['output']>;
 };
 
 /**
@@ -1621,11 +1622,11 @@ export type MovieImage = {
  */
 export type MovieImageCondition = {
   /** Checks for equality with the object’s `altText` field. */
-  altText?: InputMaybe<Scalars['String']>;
+  altText?: InputMaybe<Scalars['String']['input']>;
   /** Checks for equality with the object’s `id` field. */
-  id?: InputMaybe<Scalars['Int']>;
+  id?: InputMaybe<Scalars['Int']['input']>;
   /** Checks for equality with the object’s `movieId` field. */
-  movieId?: InputMaybe<Scalars['String']>;
+  movieId?: InputMaybe<Scalars['String']['input']>;
 };
 
 /** A filter to be used against `MovieImage` object types. All fields are combined with a logical ‘and.’ */
@@ -1654,14 +1655,14 @@ export type MovieImagesConnection = {
   /** Information to aid in pagination. */
   pageInfo: PageInfo;
   /** The count of *all* `MovieImage` you could get from the connection. */
-  totalCount: Scalars['Int'];
+  totalCount: Scalars['Int']['output'];
 };
 
 /** A `MovieImage` edge in the connection. */
 export type MovieImagesEdge = {
   __typename?: 'MovieImagesEdge';
   /** A cursor for use in pagination. */
-  cursor?: Maybe<Scalars['Cursor']>;
+  cursor?: Maybe<Scalars['Cursor']['output']>;
   /** The `MovieImage` at the end of the edge. */
   node: MovieImage;
 };
@@ -1683,15 +1684,15 @@ export enum MovieImagesOrderBy {
 export type MovieLicense = {
   __typename?: 'MovieLicense';
   /** Array of countries where the license applies. */
-  countries?: Maybe<Array<Maybe<Scalars['String']>>>;
+  countries?: Maybe<Array<Maybe<Scalars['String']['output']>>>;
   /** Time when license becomes invalid. */
-  endTime?: Maybe<Scalars['Datetime']>;
-  id: Scalars['Int'];
+  endTime?: Maybe<Scalars['Datetime']['output']>;
+  id: Scalars['Int']['output'];
   /** Reads a single `Movie` that is related to this `MovieLicense`. */
   movie?: Maybe<Movie>;
-  movieId?: Maybe<Scalars['String']>;
+  movieId?: Maybe<Scalars['String']['output']>;
   /** Time when license becomes valid. */
-  startTime?: Maybe<Scalars['Datetime']>;
+  startTime?: Maybe<Scalars['Datetime']['output']>;
 };
 
 /**
@@ -1700,9 +1701,9 @@ export type MovieLicense = {
  */
 export type MovieLicenseCondition = {
   /** Checks for equality with the object’s `id` field. */
-  id?: InputMaybe<Scalars['Int']>;
+  id?: InputMaybe<Scalars['Int']['input']>;
   /** Checks for equality with the object’s `movieId` field. */
-  movieId?: InputMaybe<Scalars['String']>;
+  movieId?: InputMaybe<Scalars['String']['input']>;
 };
 
 /** A filter to be used against `MovieLicense` object types. All fields are combined with a logical ‘and.’ */
@@ -1729,14 +1730,14 @@ export type MovieLicensesConnection = {
   /** Information to aid in pagination. */
   pageInfo: PageInfo;
   /** The count of *all* `MovieLicense` you could get from the connection. */
-  totalCount: Scalars['Int'];
+  totalCount: Scalars['Int']['output'];
 };
 
 /** A `MovieLicense` edge in the connection. */
 export type MovieLicensesEdge = {
   __typename?: 'MovieLicensesEdge';
   /** A cursor for use in pagination. */
-  cursor?: Maybe<Scalars['Cursor']>;
+  cursor?: Maybe<Scalars['Cursor']['output']>;
   /** The `MovieLicense` at the end of the edge. */
   node: MovieLicense;
 };
@@ -1762,14 +1763,14 @@ export type MoviesConnection = {
   /** Information to aid in pagination. */
   pageInfo: PageInfo;
   /** The count of *all* `Movie` you could get from the connection. */
-  totalCount: Scalars['Int'];
+  totalCount: Scalars['Int']['output'];
 };
 
 /** A `Movie` edge in the connection. */
 export type MoviesEdge = {
   __typename?: 'MoviesEdge';
   /** A cursor for use in pagination. */
-  cursor?: Maybe<Scalars['Cursor']>;
+  cursor?: Maybe<Scalars['Cursor']['output']>;
   /** The `Movie` at the end of the edge. */
   node: Movie;
 };
@@ -1789,31 +1790,31 @@ export enum MoviesOrderBy {
 export type MovieVideo = {
   __typename?: 'MovieVideo';
   /** Array of audio languages available in the stream. */
-  audioLanguages?: Maybe<Array<Maybe<Scalars['String']>>>;
+  audioLanguages?: Maybe<Array<Maybe<Scalars['String']['output']>>>;
   /** Array of caption languages available in the stream. */
-  captionLanguages?: Maybe<Array<Maybe<Scalars['String']>>>;
+  captionLanguages?: Maybe<Array<Maybe<Scalars['String']['output']>>>;
   /** Reads and enables pagination through a set of `MovieVideoCuePoint`. */
   cuePoints: MovieVideoCuePointsConnection;
   /** URI to a DASH manifest. */
-  dashManifest?: Maybe<Scalars['String']>;
+  dashManifest?: Maybe<Scalars['String']['output']>;
   /** URI to an HLS manifest. */
-  hlsManifest?: Maybe<Scalars['String']>;
-  id: Scalars['Int'];
+  hlsManifest?: Maybe<Scalars['String']['output']>;
+  id: Scalars['Int']['output'];
   /** Indicates whether a stream is protected with DRM. */
-  isProtected?: Maybe<Scalars['Boolean']>;
+  isProtected?: Maybe<Scalars['Boolean']['output']>;
   /** Length of the stream in seconds. */
-  lengthInSeconds?: Maybe<Scalars['Float']>;
+  lengthInSeconds?: Maybe<Scalars['Float']['output']>;
   /** Reads a single `Movie` that is related to this `MovieVideo`. */
   movie?: Maybe<Movie>;
-  movieId?: Maybe<Scalars['String']>;
+  movieId?: Maybe<Scalars['String']['output']>;
   /** Output format of the stream. */
-  outputFormat?: Maybe<Scalars['String']>;
+  outputFormat?: Maybe<Scalars['String']['output']>;
   /** Array of subtitle languages available in the stream. */
-  subtitleLanguages?: Maybe<Array<Maybe<Scalars['String']>>>;
+  subtitleLanguages?: Maybe<Array<Maybe<Scalars['String']['output']>>>;
   /** Title of the video stream */
-  title?: Maybe<Scalars['String']>;
+  title?: Maybe<Scalars['String']['output']>;
   /** Type of the video stream. */
-  type?: Maybe<Scalars['String']>;
+  type?: Maybe<Scalars['String']['output']>;
   /** Reads and enables pagination through a set of `MovieVideoStream`. */
   videoStreams: MovieVideoStreamsConnection;
 };
@@ -1821,26 +1822,26 @@ export type MovieVideo = {
 
 /** Video stream metadata. */
 export type MovieVideoCuePointsArgs = {
-  after?: InputMaybe<Scalars['Cursor']>;
-  before?: InputMaybe<Scalars['Cursor']>;
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
   condition?: InputMaybe<MovieVideoCuePointCondition>;
   filter?: InputMaybe<MovieVideoCuePointFilter>;
-  first?: InputMaybe<Scalars['Int']>;
-  last?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Array<MovieVideoCuePointsOrderBy>>;
 };
 
 
 /** Video stream metadata. */
 export type MovieVideoVideoStreamsArgs = {
-  after?: InputMaybe<Scalars['Cursor']>;
-  before?: InputMaybe<Scalars['Cursor']>;
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
   condition?: InputMaybe<MovieVideoStreamCondition>;
   filter?: InputMaybe<MovieVideoStreamFilter>;
-  first?: InputMaybe<Scalars['Int']>;
-  last?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Array<MovieVideoStreamsOrderBy>>;
 };
 
@@ -1850,26 +1851,26 @@ export type MovieVideoVideoStreamsArgs = {
  */
 export type MovieVideoCondition = {
   /** Checks for equality with the object’s `id` field. */
-  id?: InputMaybe<Scalars['Int']>;
+  id?: InputMaybe<Scalars['Int']['input']>;
   /** Checks for equality with the object’s `movieId` field. */
-  movieId?: InputMaybe<Scalars['String']>;
+  movieId?: InputMaybe<Scalars['String']['input']>;
   /** Checks for equality with the object’s `type` field. */
-  type?: InputMaybe<Scalars['String']>;
+  type?: InputMaybe<Scalars['String']['input']>;
 };
 
 /** Video cue point metadata */
 export type MovieVideoCuePoint = {
   __typename?: 'MovieVideoCuePoint';
   /** Type of the cue point */
-  cuePointTypeKey: Scalars['String'];
-  id: Scalars['Int'];
+  cuePointTypeKey: Scalars['String']['output'];
+  id: Scalars['Int']['output'];
   /** Time in seconds at which the cue point is set within the video */
-  timeInSeconds: Scalars['Float'];
+  timeInSeconds: Scalars['Float']['output'];
   /** Additional information associated with the cue point */
-  value?: Maybe<Scalars['String']>;
+  value?: Maybe<Scalars['String']['output']>;
   /** Reads a single `MovieVideo` that is related to this `MovieVideoCuePoint`. */
   video?: Maybe<MovieVideo>;
-  videoId?: Maybe<Scalars['Int']>;
+  videoId?: Maybe<Scalars['Int']['output']>;
 };
 
 /**
@@ -1878,9 +1879,9 @@ export type MovieVideoCuePoint = {
  */
 export type MovieVideoCuePointCondition = {
   /** Checks for equality with the object’s `id` field. */
-  id?: InputMaybe<Scalars['Int']>;
+  id?: InputMaybe<Scalars['Int']['input']>;
   /** Checks for equality with the object’s `videoId` field. */
-  videoId?: InputMaybe<Scalars['Int']>;
+  videoId?: InputMaybe<Scalars['Int']['input']>;
 };
 
 /** A filter to be used against `MovieVideoCuePoint` object types. All fields are combined with a logical ‘and.’ */
@@ -1907,14 +1908,14 @@ export type MovieVideoCuePointsConnection = {
   /** Information to aid in pagination. */
   pageInfo: PageInfo;
   /** The count of *all* `MovieVideoCuePoint` you could get from the connection. */
-  totalCount: Scalars['Int'];
+  totalCount: Scalars['Int']['output'];
 };
 
 /** A `MovieVideoCuePoint` edge in the connection. */
 export type MovieVideoCuePointsEdge = {
   __typename?: 'MovieVideoCuePointsEdge';
   /** A cursor for use in pagination. */
-  cursor?: Maybe<Scalars['Cursor']>;
+  cursor?: Maybe<Scalars['Cursor']['output']>;
   /** The `MovieVideoCuePoint` at the end of the edge. */
   node: MovieVideoCuePoint;
 };
@@ -1956,14 +1957,14 @@ export type MovieVideosConnection = {
   /** Information to aid in pagination. */
   pageInfo: PageInfo;
   /** The count of *all* `MovieVideo` you could get from the connection. */
-  totalCount: Scalars['Int'];
+  totalCount: Scalars['Int']['output'];
 };
 
 /** A `MovieVideo` edge in the connection. */
 export type MovieVideosEdge = {
   __typename?: 'MovieVideosEdge';
   /** A cursor for use in pagination. */
-  cursor?: Maybe<Scalars['Cursor']>;
+  cursor?: Maybe<Scalars['Cursor']['output']>;
   /** The `MovieVideo` at the end of the edge. */
   node: MovieVideo;
 };
@@ -1985,43 +1986,43 @@ export enum MovieVideosOrderBy {
 export type MovieVideoStream = {
   __typename?: 'MovieVideoStream';
   /** Bitrate in kilobits per second */
-  bitrateInKbps?: Maybe<Scalars['Int']>;
+  bitrateInKbps?: Maybe<Scalars['Int']['output']>;
   /** Codecs */
-  codecs?: Maybe<Scalars['String']>;
+  codecs?: Maybe<Scalars['String']['output']>;
   /** Display aspect ratio for video streams */
-  displayAspectRatio?: Maybe<Scalars['String']>;
+  displayAspectRatio?: Maybe<Scalars['String']['output']>;
   /** File path to the initialization segment */
-  file?: Maybe<Scalars['String']>;
+  file?: Maybe<Scalars['String']['output']>;
   /** File Template */
-  fileTemplate?: Maybe<Scalars['String']>;
+  fileTemplate?: Maybe<Scalars['String']['output']>;
   /** Packaging format of the stream */
-  format?: Maybe<Scalars['String']>;
+  format?: Maybe<Scalars['String']['output']>;
   /** Frame rate of the video stream */
-  frameRate?: Maybe<Scalars['Float']>;
+  frameRate?: Maybe<Scalars['Float']['output']>;
   /** Height of the video stream */
-  height?: Maybe<Scalars['Int']>;
-  id: Scalars['Int'];
+  height?: Maybe<Scalars['Int']['output']>;
+  id: Scalars['Int']['output'];
   /** Initialization Vector of the stream */
-  iv?: Maybe<Scalars['String']>;
+  iv?: Maybe<Scalars['String']['output']>;
   /** DRM Key ID */
-  keyId?: Maybe<Scalars['String']>;
+  keyId?: Maybe<Scalars['String']['output']>;
   /** Label indicating the type of stream (audio/video) */
-  label?: Maybe<Scalars['String']>;
+  label?: Maybe<Scalars['String']['output']>;
   /** The language code for audio streams */
-  languageCode?: Maybe<Scalars['String']>;
+  languageCode?: Maybe<Scalars['String']['output']>;
   /** Language name for audio, subtitle, or caption streams */
-  languageName?: Maybe<Scalars['String']>;
+  languageName?: Maybe<Scalars['String']['output']>;
   /** Pixel aspect ratio for video streams */
-  pixelAspectRatio?: Maybe<Scalars['String']>;
+  pixelAspectRatio?: Maybe<Scalars['String']['output']>;
   /** Sampling rate for audio streams */
-  samplingRate?: Maybe<Scalars['Int']>;
+  samplingRate?: Maybe<Scalars['Int']['output']>;
   /** Stream type */
   type?: Maybe<VideoStreamType>;
   /** Reads a single `MovieVideo` that is related to this `MovieVideoStream`. */
   video?: Maybe<MovieVideo>;
-  videoId?: Maybe<Scalars['Int']>;
+  videoId?: Maybe<Scalars['Int']['output']>;
   /** Width of the video stream */
-  width?: Maybe<Scalars['Int']>;
+  width?: Maybe<Scalars['Int']['output']>;
 };
 
 /**
@@ -2030,11 +2031,11 @@ export type MovieVideoStream = {
  */
 export type MovieVideoStreamCondition = {
   /** Checks for equality with the object’s `id` field. */
-  id?: InputMaybe<Scalars['Int']>;
+  id?: InputMaybe<Scalars['Int']['input']>;
   /** Checks for equality with the object’s `type` field. */
   type?: InputMaybe<VideoStreamType>;
   /** Checks for equality with the object’s `videoId` field. */
-  videoId?: InputMaybe<Scalars['Int']>;
+  videoId?: InputMaybe<Scalars['Int']['input']>;
 };
 
 /** A filter to be used against `MovieVideoStream` object types. All fields are combined with a logical ‘and.’ */
@@ -2063,14 +2064,14 @@ export type MovieVideoStreamsConnection = {
   /** Information to aid in pagination. */
   pageInfo: PageInfo;
   /** The count of *all* `MovieVideoStream` you could get from the connection. */
-  totalCount: Scalars['Int'];
+  totalCount: Scalars['Int']['output'];
 };
 
 /** A `MovieVideoStream` edge in the connection. */
 export type MovieVideoStreamsEdge = {
   __typename?: 'MovieVideoStreamsEdge';
   /** A cursor for use in pagination. */
-  cursor?: Maybe<Scalars['Cursor']>;
+  cursor?: Maybe<Scalars['Cursor']['output']>;
   /** The `MovieVideoStream` at the end of the edge. */
   node: MovieVideoStream;
 };
@@ -2092,13 +2093,13 @@ export enum MovieVideoStreamsOrderBy {
 export type PageInfo = {
   __typename?: 'PageInfo';
   /** When paginating forwards, the cursor to continue. */
-  endCursor?: Maybe<Scalars['Cursor']>;
+  endCursor?: Maybe<Scalars['Cursor']['output']>;
   /** When paginating forwards, are there more items? */
-  hasNextPage: Scalars['Boolean'];
+  hasNextPage: Scalars['Boolean']['output'];
   /** When paginating backwards, are there more items? */
-  hasPreviousPage: Scalars['Boolean'];
+  hasPreviousPage: Scalars['Boolean']['output'];
   /** When paginating backwards, the cursor to continue. */
-  startCursor?: Maybe<Scalars['Cursor']>;
+  startCursor?: Maybe<Scalars['Cursor']['output']>;
 };
 
 /** Definition of the playlist entity. */
@@ -2107,26 +2108,26 @@ export type Playlist = {
   /** Reads a single `Channel` that is related to this `Playlist`. */
   channel?: Maybe<Channel>;
   /** The channel ID. */
-  channelId?: Maybe<Scalars['String']>;
+  channelId?: Maybe<Scalars['String']['output']>;
   /** End date of the playlist. */
-  endDateTime: Scalars['Datetime'];
-  id: Scalars['String'];
+  endDateTime: Scalars['Datetime']['output'];
+  id: Scalars['String']['output'];
   /** Reads and enables pagination through a set of `Program`. */
   programs: ProgramsConnection;
   /** Start date of the playlist. */
-  startDateTime: Scalars['Datetime'];
+  startDateTime: Scalars['Datetime']['output'];
 };
 
 
 /** Definition of the playlist entity. */
 export type PlaylistProgramsArgs = {
-  after?: InputMaybe<Scalars['Cursor']>;
-  before?: InputMaybe<Scalars['Cursor']>;
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
   condition?: InputMaybe<ProgramCondition>;
   filter?: InputMaybe<ProgramFilter>;
-  first?: InputMaybe<Scalars['Int']>;
-  last?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Array<ProgramsOrderBy>>;
 };
 
@@ -2136,7 +2137,7 @@ export type PlaylistProgramsArgs = {
  */
 export type PlaylistCondition = {
   /** Checks for equality with the object’s `id` field. */
-  id?: InputMaybe<Scalars['String']>;
+  id?: InputMaybe<Scalars['String']['input']>;
 };
 
 /** A filter to be used against `Playlist` object types. All fields are combined with a logical ‘and.’ */
@@ -2161,14 +2162,14 @@ export type PlaylistsConnection = {
   /** Information to aid in pagination. */
   pageInfo: PageInfo;
   /** The count of *all* `Playlist` you could get from the connection. */
-  totalCount: Scalars['Int'];
+  totalCount: Scalars['Int']['output'];
 };
 
 /** A `Playlist` edge in the connection. */
 export type PlaylistsEdge = {
   __typename?: 'PlaylistsEdge';
   /** A cursor for use in pagination. */
-  cursor?: Maybe<Scalars['Cursor']>;
+  cursor?: Maybe<Scalars['Cursor']['output']>;
   /** The `Playlist` at the end of the edge. */
   node: Playlist;
 };
@@ -2190,44 +2191,44 @@ export type Program = {
   /** Reads a single `Episode` that is related to this `Program`. */
   episode?: Maybe<Episode>;
   /** The episode ID. */
-  episodeId?: Maybe<Scalars['String']>;
-  id: Scalars['Int'];
+  episodeId?: Maybe<Scalars['String']['output']>;
+  id: Scalars['Int']['output'];
   /** Reads and enables pagination through a set of `ProgramImage`. */
   images: ProgramImagesConnection;
   /** Reads a single `Movie` that is related to this `Program`. */
   movie?: Maybe<Movie>;
   /** The movie ID. */
-  movieId?: Maybe<Scalars['String']>;
+  movieId?: Maybe<Scalars['String']['output']>;
   /** Reads a single `Playlist` that is related to this `Program`. */
   playlist?: Maybe<Playlist>;
-  playlistId?: Maybe<Scalars['String']>;
+  playlistId?: Maybe<Scalars['String']['output']>;
   /** The sort index of the program. */
-  sortIndex?: Maybe<Scalars['Int']>;
+  sortIndex?: Maybe<Scalars['Int']['output']>;
   /** Title of the program. */
-  title?: Maybe<Scalars['String']>;
+  title?: Maybe<Scalars['String']['output']>;
 };
 
 
 /** Definition of the program object. */
 export type ProgramImagesArgs = {
-  after?: InputMaybe<Scalars['Cursor']>;
-  before?: InputMaybe<Scalars['Cursor']>;
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
   condition?: InputMaybe<ProgramImageCondition>;
   filter?: InputMaybe<ProgramImageFilter>;
-  first?: InputMaybe<Scalars['Int']>;
-  last?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Array<ProgramImagesOrderBy>>;
 };
 
 /** A condition to be used against `Program` object types. All fields are tested for equality and combined with a logical ‘and.’ */
 export type ProgramCondition = {
   /** Checks for equality with the object’s `id` field. */
-  id?: InputMaybe<Scalars['Int']>;
+  id?: InputMaybe<Scalars['Int']['input']>;
   /** Checks for equality with the object’s `playlistId` field. */
-  playlistId?: InputMaybe<Scalars['String']>;
+  playlistId?: InputMaybe<Scalars['String']['input']>;
   /** Checks for equality with the object’s `title` field. */
-  title?: InputMaybe<Scalars['String']>;
+  title?: InputMaybe<Scalars['String']['input']>;
 };
 
 /** A filter to be used against `Program` object types. All fields are combined with a logical ‘and.’ */
@@ -2249,19 +2250,19 @@ export type ProgramFilter = {
 /** Asset image metadata. */
 export type ProgramImage = {
   __typename?: 'ProgramImage';
-  altText?: Maybe<Scalars['String']>;
+  altText?: Maybe<Scalars['String']['output']>;
   /** Height of the image in pixels. */
-  height?: Maybe<Scalars['Int']>;
-  id: Scalars['Int'];
+  height?: Maybe<Scalars['Int']['output']>;
+  id: Scalars['Int']['output'];
   /** URI to the image file. */
-  path?: Maybe<Scalars['String']>;
+  path?: Maybe<Scalars['String']['output']>;
   /** Reads a single `Program` that is related to this `ProgramImage`. */
   program?: Maybe<Program>;
-  programId?: Maybe<Scalars['Int']>;
+  programId?: Maybe<Scalars['Int']['output']>;
   /** Type of the image. */
-  type?: Maybe<Scalars['String']>;
+  type?: Maybe<Scalars['String']['output']>;
   /** Width of the image in pixels. */
-  width?: Maybe<Scalars['Int']>;
+  width?: Maybe<Scalars['Int']['output']>;
 };
 
 /**
@@ -2270,11 +2271,11 @@ export type ProgramImage = {
  */
 export type ProgramImageCondition = {
   /** Checks for equality with the object’s `altText` field. */
-  altText?: InputMaybe<Scalars['String']>;
+  altText?: InputMaybe<Scalars['String']['input']>;
   /** Checks for equality with the object’s `id` field. */
-  id?: InputMaybe<Scalars['Int']>;
+  id?: InputMaybe<Scalars['Int']['input']>;
   /** Checks for equality with the object’s `programId` field. */
-  programId?: InputMaybe<Scalars['Int']>;
+  programId?: InputMaybe<Scalars['Int']['input']>;
 };
 
 /** A filter to be used against `ProgramImage` object types. All fields are combined with a logical ‘and.’ */
@@ -2303,14 +2304,14 @@ export type ProgramImagesConnection = {
   /** Information to aid in pagination. */
   pageInfo: PageInfo;
   /** The count of *all* `ProgramImage` you could get from the connection. */
-  totalCount: Scalars['Int'];
+  totalCount: Scalars['Int']['output'];
 };
 
 /** A `ProgramImage` edge in the connection. */
 export type ProgramImagesEdge = {
   __typename?: 'ProgramImagesEdge';
   /** A cursor for use in pagination. */
-  cursor?: Maybe<Scalars['Cursor']>;
+  cursor?: Maybe<Scalars['Cursor']['output']>;
   /** The `ProgramImage` at the end of the edge. */
   node: ProgramImage;
 };
@@ -2338,14 +2339,14 @@ export type ProgramsConnection = {
   /** Information to aid in pagination. */
   pageInfo: PageInfo;
   /** The count of *all* `Program` you could get from the connection. */
-  totalCount: Scalars['Int'];
+  totalCount: Scalars['Int']['output'];
 };
 
 /** A `Program` edge in the connection. */
 export type ProgramsEdge = {
   __typename?: 'ProgramsEdge';
   /** A cursor for use in pagination. */
-  cursor?: Maybe<Scalars['Cursor']>;
+  cursor?: Maybe<Scalars['Cursor']['output']>;
   /** The `Program` at the end of the edge. */
   node: Program;
 };
@@ -2408,192 +2409,192 @@ export type Query = {
 
 /** The root query type which gives access points into the data universe. */
 export type QueryChannelArgs = {
-  id: Scalars['String'];
+  id: Scalars['String']['input'];
 };
 
 
 /** The root query type which gives access points into the data universe. */
 export type QueryChannelsArgs = {
-  after?: InputMaybe<Scalars['Cursor']>;
-  before?: InputMaybe<Scalars['Cursor']>;
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
   condition?: InputMaybe<ChannelCondition>;
   filter?: InputMaybe<ChannelFilter>;
-  first?: InputMaybe<Scalars['Int']>;
-  last?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Array<ChannelsOrderBy>>;
 };
 
 
 /** The root query type which gives access points into the data universe. */
 export type QueryCollectionArgs = {
-  id: Scalars['String'];
+  id: Scalars['String']['input'];
 };
 
 
 /** The root query type which gives access points into the data universe. */
 export type QueryCollectionsArgs = {
-  after?: InputMaybe<Scalars['Cursor']>;
-  before?: InputMaybe<Scalars['Cursor']>;
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
   condition?: InputMaybe<CollectionCondition>;
   filter?: InputMaybe<CollectionFilter>;
-  first?: InputMaybe<Scalars['Int']>;
-  last?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Array<CollectionsOrderBy>>;
 };
 
 
 /** The root query type which gives access points into the data universe. */
 export type QueryEpisodeArgs = {
-  countryCode?: InputMaybe<Scalars['String']>;
-  id: Scalars['String'];
+  countryCode?: InputMaybe<Scalars['String']['input']>;
+  id: Scalars['String']['input'];
 };
 
 
 /** The root query type which gives access points into the data universe. */
 export type QueryEpisodesArgs = {
-  after?: InputMaybe<Scalars['Cursor']>;
-  before?: InputMaybe<Scalars['Cursor']>;
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
   condition?: InputMaybe<EpisodeCondition>;
   filter?: InputMaybe<EpisodeFilter>;
-  first?: InputMaybe<Scalars['Int']>;
-  last?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Array<EpisodesOrderBy>>;
 };
 
 
 /** The root query type which gives access points into the data universe. */
 export type QueryLocaleArgs = {
-  locale: Scalars['String'];
+  locale: Scalars['String']['input'];
 };
 
 
 /** The root query type which gives access points into the data universe. */
 export type QueryLocalesArgs = {
-  after?: InputMaybe<Scalars['Cursor']>;
-  before?: InputMaybe<Scalars['Cursor']>;
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
   condition?: InputMaybe<LocaleCondition>;
   filter?: InputMaybe<LocaleFilter>;
-  first?: InputMaybe<Scalars['Int']>;
-  last?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Array<LocalesOrderBy>>;
 };
 
 
 /** The root query type which gives access points into the data universe. */
 export type QueryMovieArgs = {
-  countryCode?: InputMaybe<Scalars['String']>;
-  id: Scalars['String'];
+  countryCode?: InputMaybe<Scalars['String']['input']>;
+  id: Scalars['String']['input'];
 };
 
 
 /** The root query type which gives access points into the data universe. */
 export type QueryMovieGenreArgs = {
-  id: Scalars['String'];
+  id: Scalars['String']['input'];
 };
 
 
 /** The root query type which gives access points into the data universe. */
 export type QueryMovieGenresArgs = {
-  after?: InputMaybe<Scalars['Cursor']>;
-  before?: InputMaybe<Scalars['Cursor']>;
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
   condition?: InputMaybe<MovieGenreCondition>;
   filter?: InputMaybe<MovieGenreFilter>;
-  first?: InputMaybe<Scalars['Int']>;
-  last?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Array<MovieGenresOrderBy>>;
 };
 
 
 /** The root query type which gives access points into the data universe. */
 export type QueryMoviesArgs = {
-  after?: InputMaybe<Scalars['Cursor']>;
-  before?: InputMaybe<Scalars['Cursor']>;
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
   condition?: InputMaybe<MovieCondition>;
   filter?: InputMaybe<MovieFilter>;
-  first?: InputMaybe<Scalars['Int']>;
-  last?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Array<MoviesOrderBy>>;
 };
 
 
 /** The root query type which gives access points into the data universe. */
 export type QueryPlaylistArgs = {
-  id: Scalars['String'];
+  id: Scalars['String']['input'];
 };
 
 
 /** The root query type which gives access points into the data universe. */
 export type QueryPlaylistsArgs = {
-  after?: InputMaybe<Scalars['Cursor']>;
-  before?: InputMaybe<Scalars['Cursor']>;
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
   condition?: InputMaybe<PlaylistCondition>;
   filter?: InputMaybe<PlaylistFilter>;
-  first?: InputMaybe<Scalars['Int']>;
-  last?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Array<PlaylistsOrderBy>>;
 };
 
 
 /** The root query type which gives access points into the data universe. */
 export type QuerySeasonArgs = {
-  id: Scalars['String'];
+  id: Scalars['String']['input'];
 };
 
 
 /** The root query type which gives access points into the data universe. */
 export type QuerySeasonsArgs = {
-  after?: InputMaybe<Scalars['Cursor']>;
-  before?: InputMaybe<Scalars['Cursor']>;
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
   condition?: InputMaybe<SeasonCondition>;
   filter?: InputMaybe<SeasonFilter>;
-  first?: InputMaybe<Scalars['Int']>;
-  last?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Array<SeasonsOrderBy>>;
 };
 
 
 /** The root query type which gives access points into the data universe. */
 export type QueryTvshowArgs = {
-  id: Scalars['String'];
+  id: Scalars['String']['input'];
 };
 
 
 /** The root query type which gives access points into the data universe. */
 export type QueryTvshowGenreArgs = {
-  id: Scalars['String'];
+  id: Scalars['String']['input'];
 };
 
 
 /** The root query type which gives access points into the data universe. */
 export type QueryTvshowGenresArgs = {
-  after?: InputMaybe<Scalars['Cursor']>;
-  before?: InputMaybe<Scalars['Cursor']>;
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
   condition?: InputMaybe<TvshowGenreCondition>;
   filter?: InputMaybe<TvshowGenreFilter>;
-  first?: InputMaybe<Scalars['Int']>;
-  last?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Array<TvshowGenresOrderBy>>;
 };
 
 
 /** The root query type which gives access points into the data universe. */
 export type QueryTvshowsArgs = {
-  after?: InputMaybe<Scalars['Cursor']>;
-  before?: InputMaybe<Scalars['Cursor']>;
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
   condition?: InputMaybe<TvshowCondition>;
   filter?: InputMaybe<TvshowFilter>;
-  first?: InputMaybe<Scalars['Int']>;
-  last?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Array<TvshowsOrderBy>>;
 };
 
@@ -2601,33 +2602,33 @@ export type QueryTvshowsArgs = {
 export type Season = {
   __typename?: 'Season';
   /** Cast of the season. */
-  cast?: Maybe<Array<Maybe<Scalars['String']>>>;
+  cast?: Maybe<Array<Maybe<Scalars['String']['output']>>>;
   /** Extended synopsis. */
-  description?: Maybe<Scalars['String']>;
+  description?: Maybe<Scalars['String']['output']>;
   /** Reads and enables pagination through a set of `Episode`. */
   episodes: EpisodesConnection;
   /** Reads and enables pagination through a set of `SeasonGenresRelation`. */
   genres: SeasonGenresRelationsConnection;
-  id: Scalars['String'];
+  id: Scalars['String']['output'];
   /** Reads and enables pagination through a set of `SeasonImage`. */
   images: SeasonImagesConnection;
   /** Season number */
-  index?: Maybe<Scalars['Int']>;
+  index?: Maybe<Scalars['Int']['output']>;
   /** Reads and enables pagination through a set of `SeasonLicense`. */
   licenses: SeasonLicensesConnection;
   /** Array of production countries */
-  productionCountries?: Maybe<Array<Maybe<Scalars['String']>>>;
+  productionCountries?: Maybe<Array<Maybe<Scalars['String']['output']>>>;
   /** Date of first release. */
-  released?: Maybe<Scalars['Datetime']>;
+  released?: Maybe<Scalars['Datetime']['output']>;
   /** Name of the producing studio. */
-  studio?: Maybe<Scalars['String']>;
+  studio?: Maybe<Scalars['String']['output']>;
   /** Short description of the main plot elements. */
-  synopsis?: Maybe<Scalars['String']>;
+  synopsis?: Maybe<Scalars['String']['output']>;
   /** Array of tags associated with the content. */
-  tags?: Maybe<Array<Maybe<Scalars['String']>>>;
+  tags?: Maybe<Array<Maybe<Scalars['String']['output']>>>;
   /** Reads a single `Tvshow` that is related to this `Season`. */
   tvshow?: Maybe<Tvshow>;
-  tvshowId?: Maybe<Scalars['String']>;
+  tvshowId?: Maybe<Scalars['String']['output']>;
   /** Reads and enables pagination through a set of `SeasonVideo`. */
   videos: SeasonVideosConnection;
 };
@@ -2635,74 +2636,74 @@ export type Season = {
 
 /** Definition of the TV show season entity. */
 export type SeasonEpisodesArgs = {
-  after?: InputMaybe<Scalars['Cursor']>;
-  before?: InputMaybe<Scalars['Cursor']>;
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
   condition?: InputMaybe<EpisodeCondition>;
   filter?: InputMaybe<EpisodeFilter>;
-  first?: InputMaybe<Scalars['Int']>;
-  last?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Array<EpisodesOrderBy>>;
 };
 
 
 /** Definition of the TV show season entity. */
 export type SeasonGenresArgs = {
-  after?: InputMaybe<Scalars['Cursor']>;
-  before?: InputMaybe<Scalars['Cursor']>;
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
   condition?: InputMaybe<SeasonGenresRelationCondition>;
   filter?: InputMaybe<SeasonGenresRelationFilter>;
-  first?: InputMaybe<Scalars['Int']>;
-  last?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Array<SeasonGenresRelationsOrderBy>>;
 };
 
 
 /** Definition of the TV show season entity. */
 export type SeasonImagesArgs = {
-  after?: InputMaybe<Scalars['Cursor']>;
-  before?: InputMaybe<Scalars['Cursor']>;
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
   condition?: InputMaybe<SeasonImageCondition>;
   filter?: InputMaybe<SeasonImageFilter>;
-  first?: InputMaybe<Scalars['Int']>;
-  last?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Array<SeasonImagesOrderBy>>;
 };
 
 
 /** Definition of the TV show season entity. */
 export type SeasonLicensesArgs = {
-  after?: InputMaybe<Scalars['Cursor']>;
-  before?: InputMaybe<Scalars['Cursor']>;
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
   condition?: InputMaybe<SeasonLicenseCondition>;
   filter?: InputMaybe<SeasonLicenseFilter>;
-  first?: InputMaybe<Scalars['Int']>;
-  last?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Array<SeasonLicensesOrderBy>>;
 };
 
 
 /** Definition of the TV show season entity. */
 export type SeasonVideosArgs = {
-  after?: InputMaybe<Scalars['Cursor']>;
-  before?: InputMaybe<Scalars['Cursor']>;
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
   condition?: InputMaybe<SeasonVideoCondition>;
   filter?: InputMaybe<SeasonVideoFilter>;
-  first?: InputMaybe<Scalars['Int']>;
-  last?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Array<SeasonVideosOrderBy>>;
 };
 
 /** A condition to be used against `Season` object types. All fields are tested for equality and combined with a logical ‘and.’ */
 export type SeasonCondition = {
   /** Checks for equality with the object’s `id` field. */
-  id?: InputMaybe<Scalars['String']>;
+  id?: InputMaybe<Scalars['String']['input']>;
   /** Checks for equality with the object’s `tvshowId` field. */
-  tvshowId?: InputMaybe<Scalars['String']>;
+  tvshowId?: InputMaybe<Scalars['String']['input']>;
 };
 
 /** A filter to be used against `Season` object types. All fields are combined with a logical ‘and.’ */
@@ -2721,14 +2722,14 @@ export type SeasonFilter = {
 
 export type SeasonGenresRelation = {
   __typename?: 'SeasonGenresRelation';
-  id: Scalars['Int'];
-  orderNo: Scalars['Int'];
+  id: Scalars['Int']['output'];
+  orderNo: Scalars['Int']['output'];
   /** Reads a single `Season` that is related to this `SeasonGenresRelation`. */
   season?: Maybe<Season>;
-  seasonId?: Maybe<Scalars['String']>;
+  seasonId?: Maybe<Scalars['String']['output']>;
   /** Reads a single `TvshowGenre` that is related to this `SeasonGenresRelation`. */
   tvshowGenre?: Maybe<TvshowGenre>;
-  tvshowGenreId?: Maybe<Scalars['String']>;
+  tvshowGenreId?: Maybe<Scalars['String']['output']>;
 };
 
 /**
@@ -2737,13 +2738,13 @@ export type SeasonGenresRelation = {
  */
 export type SeasonGenresRelationCondition = {
   /** Checks for equality with the object’s `id` field. */
-  id?: InputMaybe<Scalars['Int']>;
+  id?: InputMaybe<Scalars['Int']['input']>;
   /** Checks for equality with the object’s `orderNo` field. */
-  orderNo?: InputMaybe<Scalars['Int']>;
+  orderNo?: InputMaybe<Scalars['Int']['input']>;
   /** Checks for equality with the object’s `seasonId` field. */
-  seasonId?: InputMaybe<Scalars['String']>;
+  seasonId?: InputMaybe<Scalars['String']['input']>;
   /** Checks for equality with the object’s `tvshowGenreId` field. */
-  tvshowGenreId?: InputMaybe<Scalars['String']>;
+  tvshowGenreId?: InputMaybe<Scalars['String']['input']>;
 };
 
 /** A filter to be used against `SeasonGenresRelation` object types. All fields are combined with a logical ‘and.’ */
@@ -2774,14 +2775,14 @@ export type SeasonGenresRelationsConnection = {
   /** Information to aid in pagination. */
   pageInfo: PageInfo;
   /** The count of *all* `SeasonGenresRelation` you could get from the connection. */
-  totalCount: Scalars['Int'];
+  totalCount: Scalars['Int']['output'];
 };
 
 /** A `SeasonGenresRelation` edge in the connection. */
 export type SeasonGenresRelationsEdge = {
   __typename?: 'SeasonGenresRelationsEdge';
   /** A cursor for use in pagination. */
-  cursor?: Maybe<Scalars['Cursor']>;
+  cursor?: Maybe<Scalars['Cursor']['output']>;
   /** The `SeasonGenresRelation` at the end of the edge. */
   node: SeasonGenresRelation;
 };
@@ -2804,19 +2805,19 @@ export enum SeasonGenresRelationsOrderBy {
 /** Asset image metadata. */
 export type SeasonImage = {
   __typename?: 'SeasonImage';
-  altText?: Maybe<Scalars['String']>;
+  altText?: Maybe<Scalars['String']['output']>;
   /** Height of the image in pixels. */
-  height?: Maybe<Scalars['Int']>;
-  id: Scalars['Int'];
+  height?: Maybe<Scalars['Int']['output']>;
+  id: Scalars['Int']['output'];
   /** URI to the image file. */
-  path?: Maybe<Scalars['String']>;
+  path?: Maybe<Scalars['String']['output']>;
   /** Reads a single `Season` that is related to this `SeasonImage`. */
   season?: Maybe<Season>;
-  seasonId?: Maybe<Scalars['String']>;
+  seasonId?: Maybe<Scalars['String']['output']>;
   /** Type of the image. */
-  type?: Maybe<Scalars['String']>;
+  type?: Maybe<Scalars['String']['output']>;
   /** Width of the image in pixels. */
-  width?: Maybe<Scalars['Int']>;
+  width?: Maybe<Scalars['Int']['output']>;
 };
 
 /**
@@ -2825,11 +2826,11 @@ export type SeasonImage = {
  */
 export type SeasonImageCondition = {
   /** Checks for equality with the object’s `altText` field. */
-  altText?: InputMaybe<Scalars['String']>;
+  altText?: InputMaybe<Scalars['String']['input']>;
   /** Checks for equality with the object’s `id` field. */
-  id?: InputMaybe<Scalars['Int']>;
+  id?: InputMaybe<Scalars['Int']['input']>;
   /** Checks for equality with the object’s `seasonId` field. */
-  seasonId?: InputMaybe<Scalars['String']>;
+  seasonId?: InputMaybe<Scalars['String']['input']>;
 };
 
 /** A filter to be used against `SeasonImage` object types. All fields are combined with a logical ‘and.’ */
@@ -2858,14 +2859,14 @@ export type SeasonImagesConnection = {
   /** Information to aid in pagination. */
   pageInfo: PageInfo;
   /** The count of *all* `SeasonImage` you could get from the connection. */
-  totalCount: Scalars['Int'];
+  totalCount: Scalars['Int']['output'];
 };
 
 /** A `SeasonImage` edge in the connection. */
 export type SeasonImagesEdge = {
   __typename?: 'SeasonImagesEdge';
   /** A cursor for use in pagination. */
-  cursor?: Maybe<Scalars['Cursor']>;
+  cursor?: Maybe<Scalars['Cursor']['output']>;
   /** The `SeasonImage` at the end of the edge. */
   node: SeasonImage;
 };
@@ -2887,15 +2888,15 @@ export enum SeasonImagesOrderBy {
 export type SeasonLicense = {
   __typename?: 'SeasonLicense';
   /** Array of countries where the license applies. */
-  countries?: Maybe<Array<Maybe<Scalars['String']>>>;
+  countries?: Maybe<Array<Maybe<Scalars['String']['output']>>>;
   /** Time when license becomes invalid. */
-  endTime?: Maybe<Scalars['Datetime']>;
-  id: Scalars['Int'];
+  endTime?: Maybe<Scalars['Datetime']['output']>;
+  id: Scalars['Int']['output'];
   /** Reads a single `Season` that is related to this `SeasonLicense`. */
   season?: Maybe<Season>;
-  seasonId?: Maybe<Scalars['String']>;
+  seasonId?: Maybe<Scalars['String']['output']>;
   /** Time when license becomes valid. */
-  startTime?: Maybe<Scalars['Datetime']>;
+  startTime?: Maybe<Scalars['Datetime']['output']>;
 };
 
 /**
@@ -2904,9 +2905,9 @@ export type SeasonLicense = {
  */
 export type SeasonLicenseCondition = {
   /** Checks for equality with the object’s `id` field. */
-  id?: InputMaybe<Scalars['Int']>;
+  id?: InputMaybe<Scalars['Int']['input']>;
   /** Checks for equality with the object’s `seasonId` field. */
-  seasonId?: InputMaybe<Scalars['String']>;
+  seasonId?: InputMaybe<Scalars['String']['input']>;
 };
 
 /** A filter to be used against `SeasonLicense` object types. All fields are combined with a logical ‘and.’ */
@@ -2933,14 +2934,14 @@ export type SeasonLicensesConnection = {
   /** Information to aid in pagination. */
   pageInfo: PageInfo;
   /** The count of *all* `SeasonLicense` you could get from the connection. */
-  totalCount: Scalars['Int'];
+  totalCount: Scalars['Int']['output'];
 };
 
 /** A `SeasonLicense` edge in the connection. */
 export type SeasonLicensesEdge = {
   __typename?: 'SeasonLicensesEdge';
   /** A cursor for use in pagination. */
-  cursor?: Maybe<Scalars['Cursor']>;
+  cursor?: Maybe<Scalars['Cursor']['output']>;
   /** The `SeasonLicense` at the end of the edge. */
   node: SeasonLicense;
 };
@@ -2966,14 +2967,14 @@ export type SeasonsConnection = {
   /** Information to aid in pagination. */
   pageInfo: PageInfo;
   /** The count of *all* `Season` you could get from the connection. */
-  totalCount: Scalars['Int'];
+  totalCount: Scalars['Int']['output'];
 };
 
 /** A `Season` edge in the connection. */
 export type SeasonsEdge = {
   __typename?: 'SeasonsEdge';
   /** A cursor for use in pagination. */
-  cursor?: Maybe<Scalars['Cursor']>;
+  cursor?: Maybe<Scalars['Cursor']['output']>;
   /** The `Season` at the end of the edge. */
   node: Season;
 };
@@ -2993,31 +2994,31 @@ export enum SeasonsOrderBy {
 export type SeasonVideo = {
   __typename?: 'SeasonVideo';
   /** Array of audio languages available in the stream. */
-  audioLanguages?: Maybe<Array<Maybe<Scalars['String']>>>;
+  audioLanguages?: Maybe<Array<Maybe<Scalars['String']['output']>>>;
   /** Array of caption languages available in the stream. */
-  captionLanguages?: Maybe<Array<Maybe<Scalars['String']>>>;
+  captionLanguages?: Maybe<Array<Maybe<Scalars['String']['output']>>>;
   /** Reads and enables pagination through a set of `SeasonVideoCuePoint`. */
   cuePoints: SeasonVideoCuePointsConnection;
   /** URI to a DASH manifest. */
-  dashManifest?: Maybe<Scalars['String']>;
+  dashManifest?: Maybe<Scalars['String']['output']>;
   /** URI to an HLS manifest. */
-  hlsManifest?: Maybe<Scalars['String']>;
-  id: Scalars['Int'];
+  hlsManifest?: Maybe<Scalars['String']['output']>;
+  id: Scalars['Int']['output'];
   /** Indicates whether a stream is protected with DRM. */
-  isProtected?: Maybe<Scalars['Boolean']>;
+  isProtected?: Maybe<Scalars['Boolean']['output']>;
   /** Length of the stream in seconds. */
-  lengthInSeconds?: Maybe<Scalars['Float']>;
+  lengthInSeconds?: Maybe<Scalars['Float']['output']>;
   /** Output format of the stream. */
-  outputFormat?: Maybe<Scalars['String']>;
+  outputFormat?: Maybe<Scalars['String']['output']>;
   /** Reads a single `Season` that is related to this `SeasonVideo`. */
   season?: Maybe<Season>;
-  seasonId?: Maybe<Scalars['String']>;
+  seasonId?: Maybe<Scalars['String']['output']>;
   /** Array of subtitle languages available in the stream. */
-  subtitleLanguages?: Maybe<Array<Maybe<Scalars['String']>>>;
+  subtitleLanguages?: Maybe<Array<Maybe<Scalars['String']['output']>>>;
   /** Title of the video stream */
-  title?: Maybe<Scalars['String']>;
+  title?: Maybe<Scalars['String']['output']>;
   /** Type of the video stream. */
-  type?: Maybe<Scalars['String']>;
+  type?: Maybe<Scalars['String']['output']>;
   /** Reads and enables pagination through a set of `SeasonVideoStream`. */
   videoStreams: SeasonVideoStreamsConnection;
 };
@@ -3025,26 +3026,26 @@ export type SeasonVideo = {
 
 /** Video stream metadata. */
 export type SeasonVideoCuePointsArgs = {
-  after?: InputMaybe<Scalars['Cursor']>;
-  before?: InputMaybe<Scalars['Cursor']>;
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
   condition?: InputMaybe<SeasonVideoCuePointCondition>;
   filter?: InputMaybe<SeasonVideoCuePointFilter>;
-  first?: InputMaybe<Scalars['Int']>;
-  last?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Array<SeasonVideoCuePointsOrderBy>>;
 };
 
 
 /** Video stream metadata. */
 export type SeasonVideoVideoStreamsArgs = {
-  after?: InputMaybe<Scalars['Cursor']>;
-  before?: InputMaybe<Scalars['Cursor']>;
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
   condition?: InputMaybe<SeasonVideoStreamCondition>;
   filter?: InputMaybe<SeasonVideoStreamFilter>;
-  first?: InputMaybe<Scalars['Int']>;
-  last?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Array<SeasonVideoStreamsOrderBy>>;
 };
 
@@ -3054,24 +3055,24 @@ export type SeasonVideoVideoStreamsArgs = {
  */
 export type SeasonVideoCondition = {
   /** Checks for equality with the object’s `id` field. */
-  id?: InputMaybe<Scalars['Int']>;
+  id?: InputMaybe<Scalars['Int']['input']>;
   /** Checks for equality with the object’s `seasonId` field. */
-  seasonId?: InputMaybe<Scalars['String']>;
+  seasonId?: InputMaybe<Scalars['String']['input']>;
 };
 
 /** Video cue point metadata */
 export type SeasonVideoCuePoint = {
   __typename?: 'SeasonVideoCuePoint';
   /** Type of the cue point */
-  cuePointTypeKey: Scalars['String'];
-  id: Scalars['Int'];
+  cuePointTypeKey: Scalars['String']['output'];
+  id: Scalars['Int']['output'];
   /** Time in seconds at which the cue point is set within the video */
-  timeInSeconds: Scalars['Float'];
+  timeInSeconds: Scalars['Float']['output'];
   /** Additional information associated with the cue point */
-  value?: Maybe<Scalars['String']>;
+  value?: Maybe<Scalars['String']['output']>;
   /** Reads a single `SeasonVideo` that is related to this `SeasonVideoCuePoint`. */
   video?: Maybe<SeasonVideo>;
-  videoId?: Maybe<Scalars['Int']>;
+  videoId?: Maybe<Scalars['Int']['output']>;
 };
 
 /**
@@ -3080,9 +3081,9 @@ export type SeasonVideoCuePoint = {
  */
 export type SeasonVideoCuePointCondition = {
   /** Checks for equality with the object’s `id` field. */
-  id?: InputMaybe<Scalars['Int']>;
+  id?: InputMaybe<Scalars['Int']['input']>;
   /** Checks for equality with the object’s `videoId` field. */
-  videoId?: InputMaybe<Scalars['Int']>;
+  videoId?: InputMaybe<Scalars['Int']['input']>;
 };
 
 /** A filter to be used against `SeasonVideoCuePoint` object types. All fields are combined with a logical ‘and.’ */
@@ -3109,14 +3110,14 @@ export type SeasonVideoCuePointsConnection = {
   /** Information to aid in pagination. */
   pageInfo: PageInfo;
   /** The count of *all* `SeasonVideoCuePoint` you could get from the connection. */
-  totalCount: Scalars['Int'];
+  totalCount: Scalars['Int']['output'];
 };
 
 /** A `SeasonVideoCuePoint` edge in the connection. */
 export type SeasonVideoCuePointsEdge = {
   __typename?: 'SeasonVideoCuePointsEdge';
   /** A cursor for use in pagination. */
-  cursor?: Maybe<Scalars['Cursor']>;
+  cursor?: Maybe<Scalars['Cursor']['output']>;
   /** The `SeasonVideoCuePoint` at the end of the edge. */
   node: SeasonVideoCuePoint;
 };
@@ -3156,14 +3157,14 @@ export type SeasonVideosConnection = {
   /** Information to aid in pagination. */
   pageInfo: PageInfo;
   /** The count of *all* `SeasonVideo` you could get from the connection. */
-  totalCount: Scalars['Int'];
+  totalCount: Scalars['Int']['output'];
 };
 
 /** A `SeasonVideo` edge in the connection. */
 export type SeasonVideosEdge = {
   __typename?: 'SeasonVideosEdge';
   /** A cursor for use in pagination. */
-  cursor?: Maybe<Scalars['Cursor']>;
+  cursor?: Maybe<Scalars['Cursor']['output']>;
   /** The `SeasonVideo` at the end of the edge. */
   node: SeasonVideo;
 };
@@ -3183,43 +3184,43 @@ export enum SeasonVideosOrderBy {
 export type SeasonVideoStream = {
   __typename?: 'SeasonVideoStream';
   /** Bitrate in kilobits per second */
-  bitrateInKbps?: Maybe<Scalars['Int']>;
+  bitrateInKbps?: Maybe<Scalars['Int']['output']>;
   /** Codecs */
-  codecs?: Maybe<Scalars['String']>;
+  codecs?: Maybe<Scalars['String']['output']>;
   /** Display aspect ratio for video streams */
-  displayAspectRatio?: Maybe<Scalars['String']>;
+  displayAspectRatio?: Maybe<Scalars['String']['output']>;
   /** File path to the initialization segment */
-  file?: Maybe<Scalars['String']>;
+  file?: Maybe<Scalars['String']['output']>;
   /** File Template */
-  fileTemplate?: Maybe<Scalars['String']>;
+  fileTemplate?: Maybe<Scalars['String']['output']>;
   /** Packaging format of the stream */
-  format?: Maybe<Scalars['String']>;
+  format?: Maybe<Scalars['String']['output']>;
   /** Frame rate of the video stream */
-  frameRate?: Maybe<Scalars['Float']>;
+  frameRate?: Maybe<Scalars['Float']['output']>;
   /** Height of the video stream */
-  height?: Maybe<Scalars['Int']>;
-  id: Scalars['Int'];
+  height?: Maybe<Scalars['Int']['output']>;
+  id: Scalars['Int']['output'];
   /** Initialization Vector of the stream */
-  iv?: Maybe<Scalars['String']>;
+  iv?: Maybe<Scalars['String']['output']>;
   /** DRM Key ID */
-  keyId?: Maybe<Scalars['String']>;
+  keyId?: Maybe<Scalars['String']['output']>;
   /** Label indicating the type of stream (audio/video) */
-  label?: Maybe<Scalars['String']>;
+  label?: Maybe<Scalars['String']['output']>;
   /** The language code for audio streams */
-  languageCode?: Maybe<Scalars['String']>;
+  languageCode?: Maybe<Scalars['String']['output']>;
   /** Language name for audio, subtitle, or caption streams */
-  languageName?: Maybe<Scalars['String']>;
+  languageName?: Maybe<Scalars['String']['output']>;
   /** Pixel aspect ratio for video streams */
-  pixelAspectRatio?: Maybe<Scalars['String']>;
+  pixelAspectRatio?: Maybe<Scalars['String']['output']>;
   /** Sampling rate for audio streams */
-  samplingRate?: Maybe<Scalars['Int']>;
+  samplingRate?: Maybe<Scalars['Int']['output']>;
   /** Stream type */
   type?: Maybe<VideoStreamType>;
   /** Reads a single `SeasonVideo` that is related to this `SeasonVideoStream`. */
   video?: Maybe<SeasonVideo>;
-  videoId?: Maybe<Scalars['Int']>;
+  videoId?: Maybe<Scalars['Int']['output']>;
   /** Width of the video stream */
-  width?: Maybe<Scalars['Int']>;
+  width?: Maybe<Scalars['Int']['output']>;
 };
 
 /**
@@ -3228,11 +3229,11 @@ export type SeasonVideoStream = {
  */
 export type SeasonVideoStreamCondition = {
   /** Checks for equality with the object’s `id` field. */
-  id?: InputMaybe<Scalars['Int']>;
+  id?: InputMaybe<Scalars['Int']['input']>;
   /** Checks for equality with the object’s `type` field. */
   type?: InputMaybe<VideoStreamType>;
   /** Checks for equality with the object’s `videoId` field. */
-  videoId?: InputMaybe<Scalars['Int']>;
+  videoId?: InputMaybe<Scalars['Int']['input']>;
 };
 
 /** A filter to be used against `SeasonVideoStream` object types. All fields are combined with a logical ‘and.’ */
@@ -3261,14 +3262,14 @@ export type SeasonVideoStreamsConnection = {
   /** Information to aid in pagination. */
   pageInfo: PageInfo;
   /** The count of *all* `SeasonVideoStream` you could get from the connection. */
-  totalCount: Scalars['Int'];
+  totalCount: Scalars['Int']['output'];
 };
 
 /** A `SeasonVideoStream` edge in the connection. */
 export type SeasonVideoStreamsEdge = {
   __typename?: 'SeasonVideoStreamsEdge';
   /** A cursor for use in pagination. */
-  cursor?: Maybe<Scalars['Cursor']>;
+  cursor?: Maybe<Scalars['Cursor']['output']>;
   /** The `SeasonVideoStream` at the end of the edge. */
   node: SeasonVideoStream;
 };
@@ -3289,111 +3290,111 @@ export enum SeasonVideoStreamsOrderBy {
 /** A filter to be used against String fields. All fields are combined with a logical ‘and.’ */
 export type StringFilter = {
   /** Not equal to the specified value, treating null like an ordinary value. */
-  distinctFrom?: InputMaybe<Scalars['String']>;
+  distinctFrom?: InputMaybe<Scalars['String']['input']>;
   /** Not equal to the specified value, treating null like an ordinary value (case-insensitive). */
-  distinctFromInsensitive?: InputMaybe<Scalars['String']>;
+  distinctFromInsensitive?: InputMaybe<Scalars['String']['input']>;
   /** Ends with the specified string (case-sensitive). */
-  endsWith?: InputMaybe<Scalars['String']>;
+  endsWith?: InputMaybe<Scalars['String']['input']>;
   /** Ends with the specified string (case-insensitive). */
-  endsWithInsensitive?: InputMaybe<Scalars['String']>;
+  endsWithInsensitive?: InputMaybe<Scalars['String']['input']>;
   /** Equal to the specified value. */
-  equalTo?: InputMaybe<Scalars['String']>;
+  equalTo?: InputMaybe<Scalars['String']['input']>;
   /** Equal to the specified value (case-insensitive). */
-  equalToInsensitive?: InputMaybe<Scalars['String']>;
+  equalToInsensitive?: InputMaybe<Scalars['String']['input']>;
   /** Greater than the specified value. */
-  greaterThan?: InputMaybe<Scalars['String']>;
+  greaterThan?: InputMaybe<Scalars['String']['input']>;
   /** Greater than the specified value (case-insensitive). */
-  greaterThanInsensitive?: InputMaybe<Scalars['String']>;
+  greaterThanInsensitive?: InputMaybe<Scalars['String']['input']>;
   /** Greater than or equal to the specified value. */
-  greaterThanOrEqualTo?: InputMaybe<Scalars['String']>;
+  greaterThanOrEqualTo?: InputMaybe<Scalars['String']['input']>;
   /** Greater than or equal to the specified value (case-insensitive). */
-  greaterThanOrEqualToInsensitive?: InputMaybe<Scalars['String']>;
+  greaterThanOrEqualToInsensitive?: InputMaybe<Scalars['String']['input']>;
   /** Included in the specified list. */
-  in?: InputMaybe<Array<Scalars['String']>>;
+  in?: InputMaybe<Array<Scalars['String']['input']>>;
   /** Contains the specified string (case-sensitive). */
-  includes?: InputMaybe<Scalars['String']>;
+  includes?: InputMaybe<Scalars['String']['input']>;
   /** Contains the specified string (case-insensitive). */
-  includesInsensitive?: InputMaybe<Scalars['String']>;
+  includesInsensitive?: InputMaybe<Scalars['String']['input']>;
   /** Included in the specified list (case-insensitive). */
-  inInsensitive?: InputMaybe<Array<Scalars['String']>>;
+  inInsensitive?: InputMaybe<Array<Scalars['String']['input']>>;
   /** Is null (if `true` is specified) or is not null (if `false` is specified). */
-  isNull?: InputMaybe<Scalars['Boolean']>;
+  isNull?: InputMaybe<Scalars['Boolean']['input']>;
   /** Less than the specified value. */
-  lessThan?: InputMaybe<Scalars['String']>;
+  lessThan?: InputMaybe<Scalars['String']['input']>;
   /** Less than the specified value (case-insensitive). */
-  lessThanInsensitive?: InputMaybe<Scalars['String']>;
+  lessThanInsensitive?: InputMaybe<Scalars['String']['input']>;
   /** Less than or equal to the specified value. */
-  lessThanOrEqualTo?: InputMaybe<Scalars['String']>;
+  lessThanOrEqualTo?: InputMaybe<Scalars['String']['input']>;
   /** Less than or equal to the specified value (case-insensitive). */
-  lessThanOrEqualToInsensitive?: InputMaybe<Scalars['String']>;
+  lessThanOrEqualToInsensitive?: InputMaybe<Scalars['String']['input']>;
   /** Matches the specified pattern (case-sensitive). An underscore (_) matches any single character; a percent sign (%) matches any sequence of zero or more characters. */
-  like?: InputMaybe<Scalars['String']>;
+  like?: InputMaybe<Scalars['String']['input']>;
   /** Matches the specified pattern (case-insensitive). An underscore (_) matches any single character; a percent sign (%) matches any sequence of zero or more characters. */
-  likeInsensitive?: InputMaybe<Scalars['String']>;
+  likeInsensitive?: InputMaybe<Scalars['String']['input']>;
   /** Equal to the specified value, treating null like an ordinary value. */
-  notDistinctFrom?: InputMaybe<Scalars['String']>;
+  notDistinctFrom?: InputMaybe<Scalars['String']['input']>;
   /** Equal to the specified value, treating null like an ordinary value (case-insensitive). */
-  notDistinctFromInsensitive?: InputMaybe<Scalars['String']>;
+  notDistinctFromInsensitive?: InputMaybe<Scalars['String']['input']>;
   /** Does not end with the specified string (case-sensitive). */
-  notEndsWith?: InputMaybe<Scalars['String']>;
+  notEndsWith?: InputMaybe<Scalars['String']['input']>;
   /** Does not end with the specified string (case-insensitive). */
-  notEndsWithInsensitive?: InputMaybe<Scalars['String']>;
+  notEndsWithInsensitive?: InputMaybe<Scalars['String']['input']>;
   /** Not equal to the specified value. */
-  notEqualTo?: InputMaybe<Scalars['String']>;
+  notEqualTo?: InputMaybe<Scalars['String']['input']>;
   /** Not equal to the specified value (case-insensitive). */
-  notEqualToInsensitive?: InputMaybe<Scalars['String']>;
+  notEqualToInsensitive?: InputMaybe<Scalars['String']['input']>;
   /** Not included in the specified list. */
-  notIn?: InputMaybe<Array<Scalars['String']>>;
+  notIn?: InputMaybe<Array<Scalars['String']['input']>>;
   /** Does not contain the specified string (case-sensitive). */
-  notIncludes?: InputMaybe<Scalars['String']>;
+  notIncludes?: InputMaybe<Scalars['String']['input']>;
   /** Does not contain the specified string (case-insensitive). */
-  notIncludesInsensitive?: InputMaybe<Scalars['String']>;
+  notIncludesInsensitive?: InputMaybe<Scalars['String']['input']>;
   /** Not included in the specified list (case-insensitive). */
-  notInInsensitive?: InputMaybe<Array<Scalars['String']>>;
+  notInInsensitive?: InputMaybe<Array<Scalars['String']['input']>>;
   /** Does not match the specified pattern (case-sensitive). An underscore (_) matches any single character; a percent sign (%) matches any sequence of zero or more characters. */
-  notLike?: InputMaybe<Scalars['String']>;
+  notLike?: InputMaybe<Scalars['String']['input']>;
   /** Does not match the specified pattern (case-insensitive). An underscore (_) matches any single character; a percent sign (%) matches any sequence of zero or more characters. */
-  notLikeInsensitive?: InputMaybe<Scalars['String']>;
+  notLikeInsensitive?: InputMaybe<Scalars['String']['input']>;
   /** Does not start with the specified string (case-sensitive). */
-  notStartsWith?: InputMaybe<Scalars['String']>;
+  notStartsWith?: InputMaybe<Scalars['String']['input']>;
   /** Does not start with the specified string (case-insensitive). */
-  notStartsWithInsensitive?: InputMaybe<Scalars['String']>;
+  notStartsWithInsensitive?: InputMaybe<Scalars['String']['input']>;
   /** Starts with the specified string (case-sensitive). */
-  startsWith?: InputMaybe<Scalars['String']>;
+  startsWith?: InputMaybe<Scalars['String']['input']>;
   /** Starts with the specified string (case-insensitive). */
-  startsWithInsensitive?: InputMaybe<Scalars['String']>;
+  startsWithInsensitive?: InputMaybe<Scalars['String']['input']>;
 };
 
 /** Definition of the TV show entity. */
 export type Tvshow = {
   __typename?: 'Tvshow';
   /** Cast of the TV show. */
-  cast?: Maybe<Array<Maybe<Scalars['String']>>>;
+  cast?: Maybe<Array<Maybe<Scalars['String']['output']>>>;
   /** Extended synopsis. */
-  description?: Maybe<Scalars['String']>;
+  description?: Maybe<Scalars['String']['output']>;
   /** Reads and enables pagination through a set of `TvshowGenresRelation`. */
   genres: TvshowGenresRelationsConnection;
-  id: Scalars['String'];
+  id: Scalars['String']['output'];
   /** Reads and enables pagination through a set of `TvshowImage`. */
   images: TvshowImagesConnection;
   /** Reads and enables pagination through a set of `TvshowLicense`. */
   licenses: TvshowLicensesConnection;
   /** Original title of the TV show. */
-  originalTitle?: Maybe<Scalars['String']>;
+  originalTitle?: Maybe<Scalars['String']['output']>;
   /** Array of production countries */
-  productionCountries?: Maybe<Array<Maybe<Scalars['String']>>>;
+  productionCountries?: Maybe<Array<Maybe<Scalars['String']['output']>>>;
   /** Date of first release. */
-  released?: Maybe<Scalars['Datetime']>;
+  released?: Maybe<Scalars['Datetime']['output']>;
   /** Reads and enables pagination through a set of `Season`. */
   seasons: SeasonsConnection;
   /** Name of the producing studio. */
-  studio?: Maybe<Scalars['String']>;
+  studio?: Maybe<Scalars['String']['output']>;
   /** Short description of the main plot elements. */
-  synopsis?: Maybe<Scalars['String']>;
+  synopsis?: Maybe<Scalars['String']['output']>;
   /** Array of tags associated with the content. */
-  tags?: Maybe<Array<Maybe<Scalars['String']>>>;
+  tags?: Maybe<Array<Maybe<Scalars['String']['output']>>>;
   /** Title of the TV show. */
-  title?: Maybe<Scalars['String']>;
+  title?: Maybe<Scalars['String']['output']>;
   /** Reads and enables pagination through a set of `TvshowVideo`. */
   videos: TvshowVideosConnection;
 };
@@ -3401,74 +3402,74 @@ export type Tvshow = {
 
 /** Definition of the TV show entity. */
 export type TvshowGenresArgs = {
-  after?: InputMaybe<Scalars['Cursor']>;
-  before?: InputMaybe<Scalars['Cursor']>;
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
   condition?: InputMaybe<TvshowGenresRelationCondition>;
   filter?: InputMaybe<TvshowGenresRelationFilter>;
-  first?: InputMaybe<Scalars['Int']>;
-  last?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Array<TvshowGenresRelationsOrderBy>>;
 };
 
 
 /** Definition of the TV show entity. */
 export type TvshowImagesArgs = {
-  after?: InputMaybe<Scalars['Cursor']>;
-  before?: InputMaybe<Scalars['Cursor']>;
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
   condition?: InputMaybe<TvshowImageCondition>;
   filter?: InputMaybe<TvshowImageFilter>;
-  first?: InputMaybe<Scalars['Int']>;
-  last?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Array<TvshowImagesOrderBy>>;
 };
 
 
 /** Definition of the TV show entity. */
 export type TvshowLicensesArgs = {
-  after?: InputMaybe<Scalars['Cursor']>;
-  before?: InputMaybe<Scalars['Cursor']>;
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
   condition?: InputMaybe<TvshowLicenseCondition>;
   filter?: InputMaybe<TvshowLicenseFilter>;
-  first?: InputMaybe<Scalars['Int']>;
-  last?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Array<TvshowLicensesOrderBy>>;
 };
 
 
 /** Definition of the TV show entity. */
 export type TvshowSeasonsArgs = {
-  after?: InputMaybe<Scalars['Cursor']>;
-  before?: InputMaybe<Scalars['Cursor']>;
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
   condition?: InputMaybe<SeasonCondition>;
   filter?: InputMaybe<SeasonFilter>;
-  first?: InputMaybe<Scalars['Int']>;
-  last?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Array<SeasonsOrderBy>>;
 };
 
 
 /** Definition of the TV show entity. */
 export type TvshowVideosArgs = {
-  after?: InputMaybe<Scalars['Cursor']>;
-  before?: InputMaybe<Scalars['Cursor']>;
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
   condition?: InputMaybe<TvshowVideoCondition>;
   filter?: InputMaybe<TvshowVideoFilter>;
-  first?: InputMaybe<Scalars['Int']>;
-  last?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Array<TvshowVideosOrderBy>>;
 };
 
 /** A condition to be used against `Tvshow` object types. All fields are tested for equality and combined with a logical ‘and.’ */
 export type TvshowCondition = {
   /** Checks for equality with the object’s `id` field. */
-  id?: InputMaybe<Scalars['String']>;
+  id?: InputMaybe<Scalars['String']['input']>;
   /** Checks for equality with the object’s `title` field. */
-  title?: InputMaybe<Scalars['String']>;
+  title?: InputMaybe<Scalars['String']['input']>;
 };
 
 /** A filter to be used against `Tvshow` object types. All fields are combined with a logical ‘and.’ */
@@ -3488,11 +3489,11 @@ export type TvshowFilter = {
 /** Definition of the TV show genre entity. */
 export type TvshowGenre = {
   __typename?: 'TvshowGenre';
-  id: Scalars['String'];
+  id: Scalars['String']['output'];
   /** Global ordering number for the genre. */
-  orderNo?: Maybe<Scalars['Int']>;
+  orderNo?: Maybe<Scalars['Int']['output']>;
   /** Title of the genre. */
-  title?: Maybe<Scalars['String']>;
+  title?: Maybe<Scalars['String']['output']>;
 };
 
 /**
@@ -3501,11 +3502,11 @@ export type TvshowGenre = {
  */
 export type TvshowGenreCondition = {
   /** Checks for equality with the object’s `id` field. */
-  id?: InputMaybe<Scalars['String']>;
+  id?: InputMaybe<Scalars['String']['input']>;
   /** Checks for equality with the object’s `orderNo` field. */
-  orderNo?: InputMaybe<Scalars['Int']>;
+  orderNo?: InputMaybe<Scalars['Int']['input']>;
   /** Checks for equality with the object’s `title` field. */
-  title?: InputMaybe<Scalars['String']>;
+  title?: InputMaybe<Scalars['String']['input']>;
 };
 
 /** A filter to be used against `TvshowGenre` object types. All fields are combined with a logical ‘and.’ */
@@ -3534,14 +3535,14 @@ export type TvshowGenresConnection = {
   /** Information to aid in pagination. */
   pageInfo: PageInfo;
   /** The count of *all* `TvshowGenre` you could get from the connection. */
-  totalCount: Scalars['Int'];
+  totalCount: Scalars['Int']['output'];
 };
 
 /** A `TvshowGenre` edge in the connection. */
 export type TvshowGenresEdge = {
   __typename?: 'TvshowGenresEdge';
   /** A cursor for use in pagination. */
-  cursor?: Maybe<Scalars['Cursor']>;
+  cursor?: Maybe<Scalars['Cursor']['output']>;
   /** The `TvshowGenre` at the end of the edge. */
   node: TvshowGenre;
 };
@@ -3561,14 +3562,14 @@ export enum TvshowGenresOrderBy {
 
 export type TvshowGenresRelation = {
   __typename?: 'TvshowGenresRelation';
-  id: Scalars['Int'];
-  orderNo: Scalars['Int'];
+  id: Scalars['Int']['output'];
+  orderNo: Scalars['Int']['output'];
   /** Reads a single `Tvshow` that is related to this `TvshowGenresRelation`. */
   tvshow?: Maybe<Tvshow>;
   /** Reads a single `TvshowGenre` that is related to this `TvshowGenresRelation`. */
   tvshowGenre?: Maybe<TvshowGenre>;
-  tvshowGenreId?: Maybe<Scalars['String']>;
-  tvshowId?: Maybe<Scalars['String']>;
+  tvshowGenreId?: Maybe<Scalars['String']['output']>;
+  tvshowId?: Maybe<Scalars['String']['output']>;
 };
 
 /**
@@ -3577,13 +3578,13 @@ export type TvshowGenresRelation = {
  */
 export type TvshowGenresRelationCondition = {
   /** Checks for equality with the object’s `id` field. */
-  id?: InputMaybe<Scalars['Int']>;
+  id?: InputMaybe<Scalars['Int']['input']>;
   /** Checks for equality with the object’s `orderNo` field. */
-  orderNo?: InputMaybe<Scalars['Int']>;
+  orderNo?: InputMaybe<Scalars['Int']['input']>;
   /** Checks for equality with the object’s `tvshowGenreId` field. */
-  tvshowGenreId?: InputMaybe<Scalars['String']>;
+  tvshowGenreId?: InputMaybe<Scalars['String']['input']>;
   /** Checks for equality with the object’s `tvshowId` field. */
-  tvshowId?: InputMaybe<Scalars['String']>;
+  tvshowId?: InputMaybe<Scalars['String']['input']>;
 };
 
 /** A filter to be used against `TvshowGenresRelation` object types. All fields are combined with a logical ‘and.’ */
@@ -3614,14 +3615,14 @@ export type TvshowGenresRelationsConnection = {
   /** Information to aid in pagination. */
   pageInfo: PageInfo;
   /** The count of *all* `TvshowGenresRelation` you could get from the connection. */
-  totalCount: Scalars['Int'];
+  totalCount: Scalars['Int']['output'];
 };
 
 /** A `TvshowGenresRelation` edge in the connection. */
 export type TvshowGenresRelationsEdge = {
   __typename?: 'TvshowGenresRelationsEdge';
   /** A cursor for use in pagination. */
-  cursor?: Maybe<Scalars['Cursor']>;
+  cursor?: Maybe<Scalars['Cursor']['output']>;
   /** The `TvshowGenresRelation` at the end of the edge. */
   node: TvshowGenresRelation;
 };
@@ -3644,19 +3645,19 @@ export enum TvshowGenresRelationsOrderBy {
 /** Asset image metadata. */
 export type TvshowImage = {
   __typename?: 'TvshowImage';
-  altText?: Maybe<Scalars['String']>;
+  altText?: Maybe<Scalars['String']['output']>;
   /** Height of the image in pixels. */
-  height?: Maybe<Scalars['Int']>;
-  id: Scalars['Int'];
+  height?: Maybe<Scalars['Int']['output']>;
+  id: Scalars['Int']['output'];
   /** URI to the image file. */
-  path?: Maybe<Scalars['String']>;
+  path?: Maybe<Scalars['String']['output']>;
   /** Reads a single `Tvshow` that is related to this `TvshowImage`. */
   tvshow?: Maybe<Tvshow>;
-  tvshowId?: Maybe<Scalars['String']>;
+  tvshowId?: Maybe<Scalars['String']['output']>;
   /** Type of the image. */
-  type?: Maybe<Scalars['String']>;
+  type?: Maybe<Scalars['String']['output']>;
   /** Width of the image in pixels. */
-  width?: Maybe<Scalars['Int']>;
+  width?: Maybe<Scalars['Int']['output']>;
 };
 
 /**
@@ -3665,11 +3666,11 @@ export type TvshowImage = {
  */
 export type TvshowImageCondition = {
   /** Checks for equality with the object’s `altText` field. */
-  altText?: InputMaybe<Scalars['String']>;
+  altText?: InputMaybe<Scalars['String']['input']>;
   /** Checks for equality with the object’s `id` field. */
-  id?: InputMaybe<Scalars['Int']>;
+  id?: InputMaybe<Scalars['Int']['input']>;
   /** Checks for equality with the object’s `tvshowId` field. */
-  tvshowId?: InputMaybe<Scalars['String']>;
+  tvshowId?: InputMaybe<Scalars['String']['input']>;
 };
 
 /** A filter to be used against `TvshowImage` object types. All fields are combined with a logical ‘and.’ */
@@ -3698,14 +3699,14 @@ export type TvshowImagesConnection = {
   /** Information to aid in pagination. */
   pageInfo: PageInfo;
   /** The count of *all* `TvshowImage` you could get from the connection. */
-  totalCount: Scalars['Int'];
+  totalCount: Scalars['Int']['output'];
 };
 
 /** A `TvshowImage` edge in the connection. */
 export type TvshowImagesEdge = {
   __typename?: 'TvshowImagesEdge';
   /** A cursor for use in pagination. */
-  cursor?: Maybe<Scalars['Cursor']>;
+  cursor?: Maybe<Scalars['Cursor']['output']>;
   /** The `TvshowImage` at the end of the edge. */
   node: TvshowImage;
 };
@@ -3727,15 +3728,15 @@ export enum TvshowImagesOrderBy {
 export type TvshowLicense = {
   __typename?: 'TvshowLicense';
   /** Array of countries where the license applies. */
-  countries?: Maybe<Array<Maybe<Scalars['String']>>>;
+  countries?: Maybe<Array<Maybe<Scalars['String']['output']>>>;
   /** Time when license becomes invalid. */
-  endTime?: Maybe<Scalars['Datetime']>;
-  id: Scalars['Int'];
+  endTime?: Maybe<Scalars['Datetime']['output']>;
+  id: Scalars['Int']['output'];
   /** Time when license becomes valid. */
-  startTime?: Maybe<Scalars['Datetime']>;
+  startTime?: Maybe<Scalars['Datetime']['output']>;
   /** Reads a single `Tvshow` that is related to this `TvshowLicense`. */
   tvshow?: Maybe<Tvshow>;
-  tvshowId?: Maybe<Scalars['String']>;
+  tvshowId?: Maybe<Scalars['String']['output']>;
 };
 
 /**
@@ -3744,9 +3745,9 @@ export type TvshowLicense = {
  */
 export type TvshowLicenseCondition = {
   /** Checks for equality with the object’s `id` field. */
-  id?: InputMaybe<Scalars['Int']>;
+  id?: InputMaybe<Scalars['Int']['input']>;
   /** Checks for equality with the object’s `tvshowId` field. */
-  tvshowId?: InputMaybe<Scalars['String']>;
+  tvshowId?: InputMaybe<Scalars['String']['input']>;
 };
 
 /** A filter to be used against `TvshowLicense` object types. All fields are combined with a logical ‘and.’ */
@@ -3773,14 +3774,14 @@ export type TvshowLicensesConnection = {
   /** Information to aid in pagination. */
   pageInfo: PageInfo;
   /** The count of *all* `TvshowLicense` you could get from the connection. */
-  totalCount: Scalars['Int'];
+  totalCount: Scalars['Int']['output'];
 };
 
 /** A `TvshowLicense` edge in the connection. */
 export type TvshowLicensesEdge = {
   __typename?: 'TvshowLicensesEdge';
   /** A cursor for use in pagination. */
-  cursor?: Maybe<Scalars['Cursor']>;
+  cursor?: Maybe<Scalars['Cursor']['output']>;
   /** The `TvshowLicense` at the end of the edge. */
   node: TvshowLicense;
 };
@@ -3806,14 +3807,14 @@ export type TvshowsConnection = {
   /** Information to aid in pagination. */
   pageInfo: PageInfo;
   /** The count of *all* `Tvshow` you could get from the connection. */
-  totalCount: Scalars['Int'];
+  totalCount: Scalars['Int']['output'];
 };
 
 /** A `Tvshow` edge in the connection. */
 export type TvshowsEdge = {
   __typename?: 'TvshowsEdge';
   /** A cursor for use in pagination. */
-  cursor?: Maybe<Scalars['Cursor']>;
+  cursor?: Maybe<Scalars['Cursor']['output']>;
   /** The `Tvshow` at the end of the edge. */
   node: Tvshow;
 };
@@ -3833,31 +3834,31 @@ export enum TvshowsOrderBy {
 export type TvshowVideo = {
   __typename?: 'TvshowVideo';
   /** Array of audio languages available in the stream. */
-  audioLanguages?: Maybe<Array<Maybe<Scalars['String']>>>;
+  audioLanguages?: Maybe<Array<Maybe<Scalars['String']['output']>>>;
   /** Array of caption languages available in the stream. */
-  captionLanguages?: Maybe<Array<Maybe<Scalars['String']>>>;
+  captionLanguages?: Maybe<Array<Maybe<Scalars['String']['output']>>>;
   /** Reads and enables pagination through a set of `TvshowVideoCuePoint`. */
   cuePoints: TvshowVideoCuePointsConnection;
   /** URI to a DASH manifest. */
-  dashManifest?: Maybe<Scalars['String']>;
+  dashManifest?: Maybe<Scalars['String']['output']>;
   /** URI to an HLS manifest. */
-  hlsManifest?: Maybe<Scalars['String']>;
-  id: Scalars['Int'];
+  hlsManifest?: Maybe<Scalars['String']['output']>;
+  id: Scalars['Int']['output'];
   /** Indicates whether a stream is protected with DRM. */
-  isProtected?: Maybe<Scalars['Boolean']>;
+  isProtected?: Maybe<Scalars['Boolean']['output']>;
   /** Length of the stream in seconds. */
-  lengthInSeconds?: Maybe<Scalars['Float']>;
+  lengthInSeconds?: Maybe<Scalars['Float']['output']>;
   /** Output format of the stream. */
-  outputFormat?: Maybe<Scalars['String']>;
+  outputFormat?: Maybe<Scalars['String']['output']>;
   /** Array of subtitle languages available in the stream. */
-  subtitleLanguages?: Maybe<Array<Maybe<Scalars['String']>>>;
+  subtitleLanguages?: Maybe<Array<Maybe<Scalars['String']['output']>>>;
   /** Title of the video stream */
-  title?: Maybe<Scalars['String']>;
+  title?: Maybe<Scalars['String']['output']>;
   /** Reads a single `Tvshow` that is related to this `TvshowVideo`. */
   tvshow?: Maybe<Tvshow>;
-  tvshowId?: Maybe<Scalars['String']>;
+  tvshowId?: Maybe<Scalars['String']['output']>;
   /** Type of the video stream. */
-  type?: Maybe<Scalars['String']>;
+  type?: Maybe<Scalars['String']['output']>;
   /** Reads and enables pagination through a set of `TvshowVideoStream`. */
   videoStreams: TvshowVideoStreamsConnection;
 };
@@ -3865,26 +3866,26 @@ export type TvshowVideo = {
 
 /** Video stream metadata. */
 export type TvshowVideoCuePointsArgs = {
-  after?: InputMaybe<Scalars['Cursor']>;
-  before?: InputMaybe<Scalars['Cursor']>;
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
   condition?: InputMaybe<TvshowVideoCuePointCondition>;
   filter?: InputMaybe<TvshowVideoCuePointFilter>;
-  first?: InputMaybe<Scalars['Int']>;
-  last?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Array<TvshowVideoCuePointsOrderBy>>;
 };
 
 
 /** Video stream metadata. */
 export type TvshowVideoVideoStreamsArgs = {
-  after?: InputMaybe<Scalars['Cursor']>;
-  before?: InputMaybe<Scalars['Cursor']>;
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
   condition?: InputMaybe<TvshowVideoStreamCondition>;
   filter?: InputMaybe<TvshowVideoStreamFilter>;
-  first?: InputMaybe<Scalars['Int']>;
-  last?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Array<TvshowVideoStreamsOrderBy>>;
 };
 
@@ -3894,24 +3895,24 @@ export type TvshowVideoVideoStreamsArgs = {
  */
 export type TvshowVideoCondition = {
   /** Checks for equality with the object’s `id` field. */
-  id?: InputMaybe<Scalars['Int']>;
+  id?: InputMaybe<Scalars['Int']['input']>;
   /** Checks for equality with the object’s `tvshowId` field. */
-  tvshowId?: InputMaybe<Scalars['String']>;
+  tvshowId?: InputMaybe<Scalars['String']['input']>;
 };
 
 /** Video cue point metadata */
 export type TvshowVideoCuePoint = {
   __typename?: 'TvshowVideoCuePoint';
   /** Type of the cue point */
-  cuePointTypeKey: Scalars['String'];
-  id: Scalars['Int'];
+  cuePointTypeKey: Scalars['String']['output'];
+  id: Scalars['Int']['output'];
   /** Time in seconds at which the cue point is set within the video */
-  timeInSeconds: Scalars['Float'];
+  timeInSeconds: Scalars['Float']['output'];
   /** Additional information associated with the cue point */
-  value?: Maybe<Scalars['String']>;
+  value?: Maybe<Scalars['String']['output']>;
   /** Reads a single `TvshowVideo` that is related to this `TvshowVideoCuePoint`. */
   video?: Maybe<TvshowVideo>;
-  videoId?: Maybe<Scalars['Int']>;
+  videoId?: Maybe<Scalars['Int']['output']>;
 };
 
 /**
@@ -3920,9 +3921,9 @@ export type TvshowVideoCuePoint = {
  */
 export type TvshowVideoCuePointCondition = {
   /** Checks for equality with the object’s `id` field. */
-  id?: InputMaybe<Scalars['Int']>;
+  id?: InputMaybe<Scalars['Int']['input']>;
   /** Checks for equality with the object’s `videoId` field. */
-  videoId?: InputMaybe<Scalars['Int']>;
+  videoId?: InputMaybe<Scalars['Int']['input']>;
 };
 
 /** A filter to be used against `TvshowVideoCuePoint` object types. All fields are combined with a logical ‘and.’ */
@@ -3949,14 +3950,14 @@ export type TvshowVideoCuePointsConnection = {
   /** Information to aid in pagination. */
   pageInfo: PageInfo;
   /** The count of *all* `TvshowVideoCuePoint` you could get from the connection. */
-  totalCount: Scalars['Int'];
+  totalCount: Scalars['Int']['output'];
 };
 
 /** A `TvshowVideoCuePoint` edge in the connection. */
 export type TvshowVideoCuePointsEdge = {
   __typename?: 'TvshowVideoCuePointsEdge';
   /** A cursor for use in pagination. */
-  cursor?: Maybe<Scalars['Cursor']>;
+  cursor?: Maybe<Scalars['Cursor']['output']>;
   /** The `TvshowVideoCuePoint` at the end of the edge. */
   node: TvshowVideoCuePoint;
 };
@@ -3996,14 +3997,14 @@ export type TvshowVideosConnection = {
   /** Information to aid in pagination. */
   pageInfo: PageInfo;
   /** The count of *all* `TvshowVideo` you could get from the connection. */
-  totalCount: Scalars['Int'];
+  totalCount: Scalars['Int']['output'];
 };
 
 /** A `TvshowVideo` edge in the connection. */
 export type TvshowVideosEdge = {
   __typename?: 'TvshowVideosEdge';
   /** A cursor for use in pagination. */
-  cursor?: Maybe<Scalars['Cursor']>;
+  cursor?: Maybe<Scalars['Cursor']['output']>;
   /** The `TvshowVideo` at the end of the edge. */
   node: TvshowVideo;
 };
@@ -4023,43 +4024,43 @@ export enum TvshowVideosOrderBy {
 export type TvshowVideoStream = {
   __typename?: 'TvshowVideoStream';
   /** Bitrate in kilobits per second */
-  bitrateInKbps?: Maybe<Scalars['Int']>;
+  bitrateInKbps?: Maybe<Scalars['Int']['output']>;
   /** Codecs */
-  codecs?: Maybe<Scalars['String']>;
+  codecs?: Maybe<Scalars['String']['output']>;
   /** Display aspect ratio for video streams */
-  displayAspectRatio?: Maybe<Scalars['String']>;
+  displayAspectRatio?: Maybe<Scalars['String']['output']>;
   /** File path to the initialization segment */
-  file?: Maybe<Scalars['String']>;
+  file?: Maybe<Scalars['String']['output']>;
   /** File Template */
-  fileTemplate?: Maybe<Scalars['String']>;
+  fileTemplate?: Maybe<Scalars['String']['output']>;
   /** Packaging format of the stream */
-  format?: Maybe<Scalars['String']>;
+  format?: Maybe<Scalars['String']['output']>;
   /** Frame rate of the video stream */
-  frameRate?: Maybe<Scalars['Float']>;
+  frameRate?: Maybe<Scalars['Float']['output']>;
   /** Height of the video stream */
-  height?: Maybe<Scalars['Int']>;
-  id: Scalars['Int'];
+  height?: Maybe<Scalars['Int']['output']>;
+  id: Scalars['Int']['output'];
   /** Initialization Vector of the stream */
-  iv?: Maybe<Scalars['String']>;
+  iv?: Maybe<Scalars['String']['output']>;
   /** DRM Key ID */
-  keyId?: Maybe<Scalars['String']>;
+  keyId?: Maybe<Scalars['String']['output']>;
   /** Label indicating the type of stream (audio/video) */
-  label?: Maybe<Scalars['String']>;
+  label?: Maybe<Scalars['String']['output']>;
   /** The language code for audio streams */
-  languageCode?: Maybe<Scalars['String']>;
+  languageCode?: Maybe<Scalars['String']['output']>;
   /** Language name for audio, subtitle, or caption streams */
-  languageName?: Maybe<Scalars['String']>;
+  languageName?: Maybe<Scalars['String']['output']>;
   /** Pixel aspect ratio for video streams */
-  pixelAspectRatio?: Maybe<Scalars['String']>;
+  pixelAspectRatio?: Maybe<Scalars['String']['output']>;
   /** Sampling rate for audio streams */
-  samplingRate?: Maybe<Scalars['Int']>;
+  samplingRate?: Maybe<Scalars['Int']['output']>;
   /** Stream type */
   type?: Maybe<VideoStreamType>;
   /** Reads a single `TvshowVideo` that is related to this `TvshowVideoStream`. */
   video?: Maybe<TvshowVideo>;
-  videoId?: Maybe<Scalars['Int']>;
+  videoId?: Maybe<Scalars['Int']['output']>;
   /** Width of the video stream */
-  width?: Maybe<Scalars['Int']>;
+  width?: Maybe<Scalars['Int']['output']>;
 };
 
 /**
@@ -4068,11 +4069,11 @@ export type TvshowVideoStream = {
  */
 export type TvshowVideoStreamCondition = {
   /** Checks for equality with the object’s `id` field. */
-  id?: InputMaybe<Scalars['Int']>;
+  id?: InputMaybe<Scalars['Int']['input']>;
   /** Checks for equality with the object’s `type` field. */
   type?: InputMaybe<VideoStreamType>;
   /** Checks for equality with the object’s `videoId` field. */
-  videoId?: InputMaybe<Scalars['Int']>;
+  videoId?: InputMaybe<Scalars['Int']['input']>;
 };
 
 /** A filter to be used against `TvshowVideoStream` object types. All fields are combined with a logical ‘and.’ */
@@ -4101,14 +4102,14 @@ export type TvshowVideoStreamsConnection = {
   /** Information to aid in pagination. */
   pageInfo: PageInfo;
   /** The count of *all* `TvshowVideoStream` you could get from the connection. */
-  totalCount: Scalars['Int'];
+  totalCount: Scalars['Int']['output'];
 };
 
 /** A `TvshowVideoStream` edge in the connection. */
 export type TvshowVideoStreamsEdge = {
   __typename?: 'TvshowVideoStreamsEdge';
   /** A cursor for use in pagination. */
-  cursor?: Maybe<Scalars['Cursor']>;
+  cursor?: Maybe<Scalars['Cursor']['output']>;
   /** The `TvshowVideoStream` at the end of the edge. */
   node: TvshowVideoStream;
 };
@@ -4131,6 +4132,8 @@ export enum VideoStreamType {
   Audio = 'AUDIO',
   /** Closed caption */
   ClosedCaption = 'CLOSED_CAPTION',
+  /** Descriptive Audio */
+  DescriptiveAudio = 'DESCRIPTIVE_AUDIO',
   /** Subtitle */
   Subtitle = 'SUBTITLE',
   /** Video */
@@ -4150,7 +4153,7 @@ export type VideoStreamTypeFilter = {
   /** Included in the specified list. */
   in?: InputMaybe<Array<VideoStreamType>>;
   /** Is null (if `true` is specified) or is not null (if `false` is specified). */
-  isNull?: InputMaybe<Scalars['Boolean']>;
+  isNull?: InputMaybe<Scalars['Boolean']['input']>;
   /** Less than the specified value. */
   lessThan?: InputMaybe<VideoStreamType>;
   /** Less than or equal to the specified value. */
@@ -4164,27 +4167,27 @@ export type VideoStreamTypeFilter = {
 };
 
 export type GetChannelVideoQueryVariables = Exact<{
-  id: Scalars['String'];
+  id: string;
 }>;
 
 
-export type GetChannelVideoQuery = { __typename?: 'Query', channel?: { __typename?: 'Channel', dashStreamUrl?: string | null, hlsStreamUrl?: string | null, keyId?: string | null } | null };
+export type GetChannelVideoQuery = { channel: { dashStreamUrl: string | null, hlsStreamUrl: string | null, keyId: string | null } | null };
 
 export type GetEpisodeMainVideoQueryVariables = Exact<{
-  id: Scalars['String'];
-  countryCode?: InputMaybe<Scalars['String']>;
+  id: string;
+  countryCode?: string | null | undefined;
 }>;
 
 
-export type GetEpisodeMainVideoQuery = { __typename?: 'Query', episode?: { __typename?: 'Episode', videos: { __typename?: 'EpisodeVideosConnection', nodes: Array<{ __typename?: 'EpisodeVideo', id: number, isProtected?: boolean | null, videoStreams: { __typename?: 'EpisodeVideoStreamsConnection', nodes: Array<{ __typename?: 'EpisodeVideoStream', keyId?: string | null }> } }> } } | null };
+export type GetEpisodeMainVideoQuery = { episode: { videos: { nodes: Array<{ id: number, isProtected: boolean | null, videoStreams: { nodes: Array<{ keyId: string | null }> } }> } } | null };
 
 export type GetMovieMainVideoQueryVariables = Exact<{
-  id: Scalars['String'];
-  countryCode?: InputMaybe<Scalars['String']>;
+  id: string;
+  countryCode?: string | null | undefined;
 }>;
 
 
-export type GetMovieMainVideoQuery = { __typename?: 'Query', movie?: { __typename?: 'Movie', videos: { __typename?: 'MovieVideosConnection', nodes: Array<{ __typename?: 'MovieVideo', id: number, isProtected?: boolean | null, videoStreams: { __typename?: 'MovieVideoStreamsConnection', nodes: Array<{ __typename?: 'MovieVideoStream', keyId?: string | null }> } }> } } | null };
+export type GetMovieMainVideoQuery = { movie: { videos: { nodes: Array<{ id: number, isProtected: boolean | null, videoStreams: { nodes: Array<{ keyId: string | null }> } }> } } | null };
 
 
 export const GetChannelVideoDocument = gql`
@@ -4231,23 +4234,23 @@ export const GetMovieMainVideoDocument = gql`
 }
     `;
 
-export type SdkFunctionWrapper = <T>(action: (requestHeaders?:Record<string, string>) => Promise<T>, operationName: string, operationType?: string) => Promise<T>;
+export type SdkFunctionWrapper = <T>(action: (requestHeaders?:Record<string, string>) => Promise<T>, operationName: string, operationType?: string, variables?: any) => Promise<T>;
 
 
-const defaultWrapper: SdkFunctionWrapper = (action, _operationName, _operationType) => action();
+const defaultWrapper: SdkFunctionWrapper = (action, _operationName, _operationType, _variables) => action();
 const GetChannelVideoDocumentString = print(GetChannelVideoDocument);
 const GetEpisodeMainVideoDocumentString = print(GetEpisodeMainVideoDocument);
 const GetMovieMainVideoDocumentString = print(GetMovieMainVideoDocument);
 export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = defaultWrapper) {
   return {
-    GetChannelVideo(variables: GetChannelVideoQueryVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<{ data: GetChannelVideoQuery; extensions?: any; headers: Dom.Headers; status: number; }> {
-        return withWrapper((wrappedRequestHeaders) => client.rawRequest<GetChannelVideoQuery>(GetChannelVideoDocumentString, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'GetChannelVideo', 'query');
+    GetChannelVideo(variables: GetChannelVideoQueryVariables, requestHeaders?: GraphQLClientRequestHeaders): Promise<{ data: GetChannelVideoQuery; errors?: GraphQLError[]; extensions?: any; headers: Headers; status: number; }> {
+        return withWrapper((wrappedRequestHeaders) => client.rawRequest<GetChannelVideoQuery>(GetChannelVideoDocumentString, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'GetChannelVideo', 'query', variables);
     },
-    GetEpisodeMainVideo(variables: GetEpisodeMainVideoQueryVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<{ data: GetEpisodeMainVideoQuery; extensions?: any; headers: Dom.Headers; status: number; }> {
-        return withWrapper((wrappedRequestHeaders) => client.rawRequest<GetEpisodeMainVideoQuery>(GetEpisodeMainVideoDocumentString, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'GetEpisodeMainVideo', 'query');
+    GetEpisodeMainVideo(variables: GetEpisodeMainVideoQueryVariables, requestHeaders?: GraphQLClientRequestHeaders): Promise<{ data: GetEpisodeMainVideoQuery; errors?: GraphQLError[]; extensions?: any; headers: Headers; status: number; }> {
+        return withWrapper((wrappedRequestHeaders) => client.rawRequest<GetEpisodeMainVideoQuery>(GetEpisodeMainVideoDocumentString, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'GetEpisodeMainVideo', 'query', variables);
     },
-    GetMovieMainVideo(variables: GetMovieMainVideoQueryVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<{ data: GetMovieMainVideoQuery; extensions?: any; headers: Dom.Headers; status: number; }> {
-        return withWrapper((wrappedRequestHeaders) => client.rawRequest<GetMovieMainVideoQuery>(GetMovieMainVideoDocumentString, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'GetMovieMainVideo', 'query');
+    GetMovieMainVideo(variables: GetMovieMainVideoQueryVariables, requestHeaders?: GraphQLClientRequestHeaders): Promise<{ data: GetMovieMainVideoQuery; errors?: GraphQLError[]; extensions?: any; headers: Headers; status: number; }> {
+        return withWrapper((wrappedRequestHeaders) => client.rawRequest<GetMovieMainVideoQuery>(GetMovieMainVideoDocumentString, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'GetMovieMainVideo', 'query', variables);
     }
   };
 }

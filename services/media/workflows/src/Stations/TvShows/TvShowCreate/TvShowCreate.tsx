@@ -14,7 +14,7 @@ import {
 
 type FormData = CreateTvShowMutationVariables['input']['tvshow'];
 
-type SubmitResponse = CreateTvShowMutation['createTvshow'];
+type SubmitResponse = CreateTvShowMutation['createTvshow'] | undefined;
 
 const tvShowCreateSchema = Yup.object().shape<ObjectSchemaDefinition<FormData>>(
   {

@@ -21,7 +21,7 @@ type FormData = Omit<
   'channelId'
 >;
 
-type SubmitResponse = CreatePlaylistMutation['createPlaylist'];
+type SubmitResponse = CreatePlaylistMutation['createPlaylist'] | undefined;
 const playlistCreateSchema = Yup.object().shape<
   ObjectSchemaDefinition<FormData>
 >({

@@ -110,6 +110,7 @@
     "yargs": "^16.2.0"
   },
   "resolutions": {
+    "@graphql-tools/utils@^11.0.0": "^12.0.3",
     "jsonpath-plus": "^10.2.0"
   },
   "dependenciesMeta": {

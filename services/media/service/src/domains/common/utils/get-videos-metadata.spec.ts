@@ -8,7 +8,13 @@ import {
   PreviewStatus,
   VideoStreamType,
 } from '../../../generated/graphql/video';
-import { getVideosMetadata, GqlVideo } from './get-videos-metadata';
+import type { GqlResultFixture } from '../../../tests/test-utils/gql-result-fixture';
+import {
+  getVideosMetadata,
+  GqlVideo as GqlVideoResult,
+} from './get-videos-metadata';
+
+type GqlVideo = GqlResultFixture<GqlVideoResult>;
 
 let result: any = () => undefined;
 vi.spyOn(video, 'getSdk').mockImplementation(() => ({

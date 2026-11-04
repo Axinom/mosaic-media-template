@@ -1,47 +1,50 @@
+/** Internal type. DO NOT USE DIRECTLY. */
+type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
+/** Internal type. DO NOT USE DIRECTLY. */
+export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
+import type * as Types from './graphql';
+
 import { gql } from '@apollo/client';
 import * as Apollo from '@apollo/client';
 export type Maybe<T> = T | null;
 export type InputMaybe<T> = Maybe<T>;
-export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
-export type MakeOptional<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]?: Maybe<T[SubKey]> };
-export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]: Maybe<T[SubKey]> };
 const defaultOptions = {} as const;
 /** All built-in and custom scalars, mapped to their actual values */
 export type Scalars = {
-  ID: string;
-  String: string;
-  Boolean: boolean;
-  Int: number;
-  Float: number;
-  Cursor: any;
-  Datetime: any;
-  UUID: any;
+  ID: { input: string; output: string; }
+  String: { input: string; output: string; }
+  Boolean: { input: boolean; output: boolean; }
+  Int: { input: number; output: number; }
+  Float: { input: number; output: number; }
+  Cursor: { input: any; output: any; }
+  Datetime: { input: any; output: any; }
+  UUID: { input: any; output: any; }
 };
 
 /** A filter to be used against Boolean fields. All fields are combined with a logical ‘and.’ */
 export type BooleanFilter = {
   /** Not equal to the specified value, treating null like an ordinary value. */
-  distinctFrom?: InputMaybe<Scalars['Boolean']>;
+  distinctFrom?: InputMaybe<Scalars['Boolean']['input']>;
   /** Equal to the specified value. */
-  equalTo?: InputMaybe<Scalars['Boolean']>;
+  equalTo?: InputMaybe<Scalars['Boolean']['input']>;
   /** Greater than the specified value. */
-  greaterThan?: InputMaybe<Scalars['Boolean']>;
+  greaterThan?: InputMaybe<Scalars['Boolean']['input']>;
   /** Greater than or equal to the specified value. */
-  greaterThanOrEqualTo?: InputMaybe<Scalars['Boolean']>;
+  greaterThanOrEqualTo?: InputMaybe<Scalars['Boolean']['input']>;
   /** Included in the specified list. */
-  in?: InputMaybe<Array<Scalars['Boolean']>>;
+  in?: InputMaybe<Array<Scalars['Boolean']['input']>>;
   /** Is null (if `true` is specified) or is not null (if `false` is specified). */
-  isNull?: InputMaybe<Scalars['Boolean']>;
+  isNull?: InputMaybe<Scalars['Boolean']['input']>;
   /** Less than the specified value. */
-  lessThan?: InputMaybe<Scalars['Boolean']>;
+  lessThan?: InputMaybe<Scalars['Boolean']['input']>;
   /** Less than or equal to the specified value. */
-  lessThanOrEqualTo?: InputMaybe<Scalars['Boolean']>;
+  lessThanOrEqualTo?: InputMaybe<Scalars['Boolean']['input']>;
   /** Equal to the specified value, treating null like an ordinary value. */
-  notDistinctFrom?: InputMaybe<Scalars['Boolean']>;
+  notDistinctFrom?: InputMaybe<Scalars['Boolean']['input']>;
   /** Not equal to the specified value. */
-  notEqualTo?: InputMaybe<Scalars['Boolean']>;
+  notEqualTo?: InputMaybe<Scalars['Boolean']['input']>;
   /** Not included in the specified list. */
-  notIn?: InputMaybe<Array<Scalars['Boolean']>>;
+  notIn?: InputMaybe<Array<Scalars['Boolean']['input']>>;
 };
 
 /** @permissions: ADMIN,CHANNELS_EDIT,CHANNELS_VIEW */
@@ -49,83 +52,83 @@ export type Channel = {
   __typename?: 'Channel';
   /** Reads and enables pagination through a set of `ChannelImage`. */
   channelImages: ChannelImagesConnection;
-  createdDate: Scalars['Datetime'];
-  createdUser: Scalars['String'];
-  dashStreamUrl?: Maybe<Scalars['String']>;
-  description?: Maybe<Scalars['String']>;
-  hlsStreamUrl?: Maybe<Scalars['String']>;
-  id: Scalars['UUID'];
-  isDrmProtected: Scalars['Boolean'];
-  keyId?: Maybe<Scalars['String']>;
-  placeholderVideoId?: Maybe<Scalars['UUID']>;
+  createdDate: Scalars['Datetime']['output'];
+  createdUser: Scalars['String']['output'];
+  dashStreamUrl?: Maybe<Scalars['String']['output']>;
+  description?: Maybe<Scalars['String']['output']>;
+  hlsStreamUrl?: Maybe<Scalars['String']['output']>;
+  id: Scalars['UUID']['output'];
+  isDrmProtected: Scalars['Boolean']['output'];
+  keyId?: Maybe<Scalars['String']['output']>;
+  placeholderVideoId?: Maybe<Scalars['UUID']['output']>;
   /** Reads and enables pagination through a set of `Playlist`. */
   playlists: PlaylistsConnection;
   publicationState: PublicationState;
-  publishedDate?: Maybe<Scalars['Datetime']>;
-  publishedUser?: Maybe<Scalars['String']>;
-  title: Scalars['String'];
-  updatedDate: Scalars['Datetime'];
-  updatedUser: Scalars['String'];
+  publishedDate?: Maybe<Scalars['Datetime']['output']>;
+  publishedUser?: Maybe<Scalars['String']['output']>;
+  title: Scalars['String']['output'];
+  updatedDate: Scalars['Datetime']['output'];
+  updatedUser: Scalars['String']['output'];
 };
 
 
 /** @permissions: ADMIN,CHANNELS_EDIT,CHANNELS_VIEW */
 export type ChannelChannelImagesArgs = {
-  after?: InputMaybe<Scalars['Cursor']>;
-  before?: InputMaybe<Scalars['Cursor']>;
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
   condition?: InputMaybe<ChannelImageCondition>;
   filter?: InputMaybe<ChannelImageFilter>;
-  first?: InputMaybe<Scalars['Int']>;
-  last?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Array<ChannelImagesOrderBy>>;
 };
 
 
 /** @permissions: ADMIN,CHANNELS_EDIT,CHANNELS_VIEW */
 export type ChannelPlaylistsArgs = {
-  after?: InputMaybe<Scalars['Cursor']>;
-  before?: InputMaybe<Scalars['Cursor']>;
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
   condition?: InputMaybe<PlaylistCondition>;
   filter?: InputMaybe<PlaylistFilter>;
-  first?: InputMaybe<Scalars['Int']>;
-  last?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Array<PlaylistsOrderBy>>;
 };
 
 /** A condition to be used against `Channel` object types. All fields are tested for equality and combined with a logical ‘and.’ */
 export type ChannelCondition = {
   /** Checks for equality with the object’s `createdDate` field. */
-  createdDate?: InputMaybe<Scalars['Datetime']>;
+  createdDate?: InputMaybe<Scalars['Datetime']['input']>;
   /** Checks for equality with the object’s `createdUser` field. */
-  createdUser?: InputMaybe<Scalars['String']>;
+  createdUser?: InputMaybe<Scalars['String']['input']>;
   /** Checks for equality with the object’s `dashStreamUrl` field. */
-  dashStreamUrl?: InputMaybe<Scalars['String']>;
+  dashStreamUrl?: InputMaybe<Scalars['String']['input']>;
   /** Checks for equality with the object’s `description` field. */
-  description?: InputMaybe<Scalars['String']>;
+  description?: InputMaybe<Scalars['String']['input']>;
   /** Checks for equality with the object’s `hlsStreamUrl` field. */
-  hlsStreamUrl?: InputMaybe<Scalars['String']>;
+  hlsStreamUrl?: InputMaybe<Scalars['String']['input']>;
   /** Checks for equality with the object’s `id` field. */
-  id?: InputMaybe<Scalars['UUID']>;
+  id?: InputMaybe<Scalars['UUID']['input']>;
   /** Checks for equality with the object’s `isDrmProtected` field. */
-  isDrmProtected?: InputMaybe<Scalars['Boolean']>;
+  isDrmProtected?: InputMaybe<Scalars['Boolean']['input']>;
   /** Checks for equality with the object’s `keyId` field. */
-  keyId?: InputMaybe<Scalars['String']>;
+  keyId?: InputMaybe<Scalars['String']['input']>;
   /** Checks for equality with the object’s `placeholderVideoId` field. */
-  placeholderVideoId?: InputMaybe<Scalars['UUID']>;
+  placeholderVideoId?: InputMaybe<Scalars['UUID']['input']>;
   /** Checks for equality with the object’s `publicationState` field. */
   publicationState?: InputMaybe<PublicationState>;
   /** Checks for equality with the object’s `publishedDate` field. */
-  publishedDate?: InputMaybe<Scalars['Datetime']>;
+  publishedDate?: InputMaybe<Scalars['Datetime']['input']>;
   /** Checks for equality with the object’s `publishedUser` field. */
-  publishedUser?: InputMaybe<Scalars['String']>;
+  publishedUser?: InputMaybe<Scalars['String']['input']>;
   /** Checks for equality with the object’s `title` field. */
-  title?: InputMaybe<Scalars['String']>;
+  title?: InputMaybe<Scalars['String']['input']>;
   /** Checks for equality with the object’s `updatedDate` field. */
-  updatedDate?: InputMaybe<Scalars['Datetime']>;
+  updatedDate?: InputMaybe<Scalars['Datetime']['input']>;
   /** Checks for equality with the object’s `updatedUser` field. */
-  updatedUser?: InputMaybe<Scalars['String']>;
+  updatedUser?: InputMaybe<Scalars['String']['input']>;
 };
 
 /** A filter to be used against `Channel` object types. All fields are combined with a logical ‘and.’ */
@@ -135,7 +138,7 @@ export type ChannelFilter = {
   /** Filter by the object’s `channelImages` relation. */
   channelImages?: InputMaybe<ChannelToManyChannelImageFilter>;
   /** Some related `channelImages` exist. */
-  channelImagesExist?: InputMaybe<Scalars['Boolean']>;
+  channelImagesExist?: InputMaybe<Scalars['Boolean']['input']>;
   /** Filter by the object’s `createdDate` field. */
   createdDate?: InputMaybe<DatetimeFilter>;
   /** Filter by the object’s `createdUser` field. */
@@ -161,7 +164,7 @@ export type ChannelFilter = {
   /** Filter by the object’s `playlists` relation. */
   playlists?: InputMaybe<ChannelToManyPlaylistFilter>;
   /** Some related `playlists` exist. */
-  playlistsExist?: InputMaybe<Scalars['Boolean']>;
+  playlistsExist?: InputMaybe<Scalars['Boolean']['input']>;
   /** Filter by the object’s `publicationState` field. */
   publicationState?: InputMaybe<PublicationStateFilter>;
   /** Filter by the object’s `publishedDate` field. */
@@ -181,13 +184,13 @@ export type ChannelImage = {
   __typename?: 'ChannelImage';
   /** Reads a single `Channel` that is related to this `ChannelImage`. */
   channel?: Maybe<Channel>;
-  channelId: Scalars['UUID'];
-  createdDate: Scalars['Datetime'];
-  createdUser: Scalars['String'];
-  imageId: Scalars['UUID'];
+  channelId: Scalars['UUID']['output'];
+  createdDate: Scalars['Datetime']['output'];
+  createdUser: Scalars['String']['output'];
+  imageId: Scalars['UUID']['output'];
   imageType: ChannelImageType;
-  updatedDate: Scalars['Datetime'];
-  updatedUser: Scalars['String'];
+  updatedDate: Scalars['Datetime']['output'];
+  updatedUser: Scalars['String']['output'];
 };
 
 /**
@@ -196,19 +199,19 @@ export type ChannelImage = {
  */
 export type ChannelImageCondition = {
   /** Checks for equality with the object’s `channelId` field. */
-  channelId?: InputMaybe<Scalars['UUID']>;
+  channelId?: InputMaybe<Scalars['UUID']['input']>;
   /** Checks for equality with the object’s `createdDate` field. */
-  createdDate?: InputMaybe<Scalars['Datetime']>;
+  createdDate?: InputMaybe<Scalars['Datetime']['input']>;
   /** Checks for equality with the object’s `createdUser` field. */
-  createdUser?: InputMaybe<Scalars['String']>;
+  createdUser?: InputMaybe<Scalars['String']['input']>;
   /** Checks for equality with the object’s `imageId` field. */
-  imageId?: InputMaybe<Scalars['UUID']>;
+  imageId?: InputMaybe<Scalars['UUID']['input']>;
   /** Checks for equality with the object’s `imageType` field. */
   imageType?: InputMaybe<ChannelImageType>;
   /** Checks for equality with the object’s `updatedDate` field. */
-  updatedDate?: InputMaybe<Scalars['Datetime']>;
+  updatedDate?: InputMaybe<Scalars['Datetime']['input']>;
   /** Checks for equality with the object’s `updatedUser` field. */
-  updatedUser?: InputMaybe<Scalars['String']>;
+  updatedUser?: InputMaybe<Scalars['String']['input']>;
 };
 
 /** A filter to be used against `ChannelImage` object types. All fields are combined with a logical ‘and.’ */
@@ -239,14 +242,14 @@ export type ChannelImageFilter = {
 
 /** An input for mutations affecting `ChannelImage` */
 export type ChannelImageInput = {
-  channelId: Scalars['UUID'];
-  imageId: Scalars['UUID'];
+  channelId: Scalars['UUID']['input'];
+  imageId: Scalars['UUID']['input'];
   imageType?: InputMaybe<ChannelImageType>;
 };
 
 /** Represents an update to a `ChannelImage`. Fields that are set will be updated. */
 export type ChannelImagePatch = {
-  imageId?: InputMaybe<Scalars['UUID']>;
+  imageId?: InputMaybe<Scalars['UUID']['input']>;
 };
 
 /**
@@ -262,14 +265,14 @@ export type ChannelImagesConnection = {
   /** Information to aid in pagination. */
   pageInfo: PageInfo;
   /** The count of *all* `ChannelImage` you could get from the connection. */
-  totalCount: Scalars['Int'];
+  totalCount: Scalars['Int']['output'];
 };
 
 /** A `ChannelImage` edge in the connection. */
 export type ChannelImagesEdge = {
   __typename?: 'ChannelImagesEdge';
   /** A cursor for use in pagination. */
-  cursor?: Maybe<Scalars['Cursor']>;
+  cursor?: Maybe<Scalars['Cursor']['output']>;
   /** The `ChannelImage` at the end of the edge. */
   node: ChannelImage;
 };
@@ -313,7 +316,7 @@ export type ChannelImageTypeFilter = {
   /** Included in the specified list. */
   in?: InputMaybe<Array<ChannelImageType>>;
   /** Is null (if `true` is specified) or is not null (if `false` is specified). */
-  isNull?: InputMaybe<Scalars['Boolean']>;
+  isNull?: InputMaybe<Scalars['Boolean']['input']>;
   /** Less than the specified value. */
   lessThan?: InputMaybe<ChannelImageType>;
   /** Less than or equal to the specified value. */
@@ -328,18 +331,18 @@ export type ChannelImageTypeFilter = {
 
 /** An input for mutations affecting `Channel` */
 export type ChannelInput = {
-  description?: InputMaybe<Scalars['String']>;
-  isDrmProtected?: InputMaybe<Scalars['Boolean']>;
-  placeholderVideoId?: InputMaybe<Scalars['UUID']>;
-  title: Scalars['String'];
+  description?: InputMaybe<Scalars['String']['input']>;
+  isDrmProtected?: InputMaybe<Scalars['Boolean']['input']>;
+  placeholderVideoId?: InputMaybe<Scalars['UUID']['input']>;
+  title: Scalars['String']['input'];
 };
 
 /** Represents an update to a `Channel`. Fields that are set will be updated. */
 export type ChannelPatch = {
-  description?: InputMaybe<Scalars['String']>;
-  isDrmProtected?: InputMaybe<Scalars['Boolean']>;
-  placeholderVideoId?: InputMaybe<Scalars['UUID']>;
-  title?: InputMaybe<Scalars['String']>;
+  description?: InputMaybe<Scalars['String']['input']>;
+  isDrmProtected?: InputMaybe<Scalars['Boolean']['input']>;
+  placeholderVideoId?: InputMaybe<Scalars['UUID']['input']>;
+  title?: InputMaybe<Scalars['String']['input']>;
 };
 
 /**
@@ -355,14 +358,14 @@ export type ChannelsConnection = {
   /** Information to aid in pagination. */
   pageInfo: PageInfo;
   /** The count of *all* `Channel` you could get from the connection. */
-  totalCount: Scalars['Int'];
+  totalCount: Scalars['Int']['output'];
 };
 
 /** A `Channel` edge in the connection. */
 export type ChannelsEdge = {
   __typename?: 'ChannelsEdge';
   /** A cursor for use in pagination. */
-  cursor?: Maybe<Scalars['Cursor']>;
+  cursor?: Maybe<Scalars['Cursor']['output']>;
   /** The `Channel` at the end of the edge. */
   node: Channel;
 };
@@ -417,9 +420,9 @@ export type ChannelSubscriptionPayload = {
   __typename?: 'ChannelSubscriptionPayload';
   channel?: Maybe<Channel>;
   /** @deprecated Use 'eventKey' instead. */
-  event?: Maybe<Scalars['String']>;
+  event?: Maybe<Scalars['String']['output']>;
   eventKey?: Maybe<ChannelSubscriptionEventKey>;
-  id: Scalars['UUID'];
+  id: Scalars['UUID']['output'];
 };
 
 /** A filter to be used against many `ChannelImage` object types. All fields are combined with a logical ‘and.’ */
@@ -448,10 +451,10 @@ export type CreateAdCuePointScheduleInput = {
    * An arbitrary string value with no semantic meaning. Will be included in the
    * payload verbatim. May be used to track mutations by the client.
    */
-  clientMutationId?: InputMaybe<Scalars['String']>;
-  durationInSeconds?: InputMaybe<Scalars['Float']>;
-  programCuePointId?: InputMaybe<Scalars['UUID']>;
-  sortIndex?: InputMaybe<Scalars['Int']>;
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
+  durationInSeconds?: InputMaybe<Scalars['Float']['input']>;
+  programCuePointId?: InputMaybe<Scalars['UUID']['input']>;
+  sortIndex?: InputMaybe<Scalars['Int']['input']>;
 };
 
 /** The output of our `createAdCuePointSchedule` mutation. */
@@ -461,7 +464,7 @@ export type CreateAdCuePointSchedulePayload = {
    * The exact same `clientMutationId` that was provided in the mutation input,
    * unchanged and unused. May be used by a client to track mutations.
    */
-  clientMutationId?: Maybe<Scalars['String']>;
+  clientMutationId?: Maybe<Scalars['String']['output']>;
   cuePointSchedule?: Maybe<CuePointSchedule>;
   /** An edge for our `CuePointSchedule`. May be used by Relay 1. */
   cuePointScheduleEdge?: Maybe<CuePointSchedulesEdge>;
@@ -488,7 +491,7 @@ export type CreateChannelImageInput = {
    * An arbitrary string value with no semantic meaning. Will be included in the
    * payload verbatim. May be used to track mutations by the client.
    */
-  clientMutationId?: InputMaybe<Scalars['String']>;
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
 };
 
 /** The output of our create `ChannelImage` mutation. */
@@ -504,7 +507,7 @@ export type CreateChannelImagePayload = {
    * The exact same `clientMutationId` that was provided in the mutation input,
    * unchanged and unused. May be used by a client to track mutations.
    */
-  clientMutationId?: Maybe<Scalars['String']>;
+  clientMutationId?: Maybe<Scalars['String']['output']>;
   /** Our root query field type. Allows us to run any query from our mutation payload. */
   query?: Maybe<Query>;
 };
@@ -526,7 +529,7 @@ export type CreateChannelInput = {
    * An arbitrary string value with no semantic meaning. Will be included in the
    * payload verbatim. May be used to track mutations by the client.
    */
-  clientMutationId?: InputMaybe<Scalars['String']>;
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
 };
 
 /** The output of our create `Channel` mutation. */
@@ -540,7 +543,7 @@ export type CreateChannelPayload = {
    * The exact same `clientMutationId` that was provided in the mutation input,
    * unchanged and unused. May be used by a client to track mutations.
    */
-  clientMutationId?: Maybe<Scalars['String']>;
+  clientMutationId?: Maybe<Scalars['String']['output']>;
   /** Our root query field type. Allows us to run any query from our mutation payload. */
   query?: Maybe<Query>;
 };
@@ -560,7 +563,7 @@ export type CreatePlaylistInput = {
    * An arbitrary string value with no semantic meaning. Will be included in the
    * payload verbatim. May be used to track mutations by the client.
    */
-  clientMutationId?: InputMaybe<Scalars['String']>;
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
   /** The `Playlist` to be created by this mutation. */
   playlist: PlaylistInput;
 };
@@ -574,7 +577,7 @@ export type CreatePlaylistPayload = {
    * The exact same `clientMutationId` that was provided in the mutation input,
    * unchanged and unused. May be used by a client to track mutations.
    */
-  clientMutationId?: Maybe<Scalars['String']>;
+  clientMutationId?: Maybe<Scalars['String']['output']>;
   /** The `Playlist` that was created by this mutation. */
   playlist?: Maybe<Playlist>;
   /** An edge for our `Playlist`. May be used by Relay 1. */
@@ -598,7 +601,7 @@ export type CreateProgramCuePointInput = {
    * An arbitrary string value with no semantic meaning. Will be included in the
    * payload verbatim. May be used to track mutations by the client.
    */
-  clientMutationId?: InputMaybe<Scalars['String']>;
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
   /** The `ProgramCuePoint` to be created by this mutation. */
   programCuePoint: ProgramCuePointInput;
 };
@@ -610,7 +613,7 @@ export type CreateProgramCuePointPayload = {
    * The exact same `clientMutationId` that was provided in the mutation input,
    * unchanged and unused. May be used by a client to track mutations.
    */
-  clientMutationId?: Maybe<Scalars['String']>;
+  clientMutationId?: Maybe<Scalars['String']['output']>;
   /** Reads a single `Program` that is related to this `ProgramCuePoint`. */
   program?: Maybe<Program>;
   /** The `ProgramCuePoint` that was created by this mutation. */
@@ -636,7 +639,7 @@ export type CreateProgramInput = {
    * An arbitrary string value with no semantic meaning. Will be included in the
    * payload verbatim. May be used to track mutations by the client.
    */
-  clientMutationId?: InputMaybe<Scalars['String']>;
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
   /** The `Program` to be created by this mutation. */
   program: ProgramInput;
 };
@@ -648,7 +651,7 @@ export type CreateProgramPayload = {
    * The exact same `clientMutationId` that was provided in the mutation input,
    * unchanged and unused. May be used by a client to track mutations.
    */
-  clientMutationId?: Maybe<Scalars['String']>;
+  clientMutationId?: Maybe<Scalars['String']['output']>;
   /** Reads a single `Playlist` that is related to this `Program`. */
   playlist?: Maybe<Playlist>;
   /** The `Program` that was created by this mutation. */
@@ -671,11 +674,11 @@ export type CreateVideoCuePointScheduleInput = {
    * An arbitrary string value with no semantic meaning. Will be included in the
    * payload verbatim. May be used to track mutations by the client.
    */
-  clientMutationId?: InputMaybe<Scalars['String']>;
-  durationInSeconds?: InputMaybe<Scalars['Float']>;
-  programCuePointId?: InputMaybe<Scalars['UUID']>;
-  sortIndex?: InputMaybe<Scalars['Int']>;
-  videoId?: InputMaybe<Scalars['UUID']>;
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
+  durationInSeconds?: InputMaybe<Scalars['Float']['input']>;
+  programCuePointId?: InputMaybe<Scalars['UUID']['input']>;
+  sortIndex?: InputMaybe<Scalars['Int']['input']>;
+  videoId?: InputMaybe<Scalars['UUID']['input']>;
 };
 
 /** The output of our `createVideoCuePointSchedule` mutation. */
@@ -685,7 +688,7 @@ export type CreateVideoCuePointSchedulePayload = {
    * The exact same `clientMutationId` that was provided in the mutation input,
    * unchanged and unused. May be used by a client to track mutations.
    */
-  clientMutationId?: Maybe<Scalars['String']>;
+  clientMutationId?: Maybe<Scalars['String']['output']>;
   cuePointSchedule?: Maybe<CuePointSchedule>;
   /** An edge for our `CuePointSchedule`. May be used by Relay 1. */
   cuePointScheduleEdge?: Maybe<CuePointSchedulesEdge>;
@@ -704,18 +707,18 @@ export type CreateVideoCuePointSchedulePayloadCuePointScheduleEdgeArgs = {
 /** @permissions: ADMIN,CHANNELS_EDIT,CHANNELS_VIEW */
 export type CuePointSchedule = {
   __typename?: 'CuePointSchedule';
-  createdDate: Scalars['Datetime'];
-  createdUser: Scalars['String'];
-  durationInSeconds: Scalars['Float'];
-  id: Scalars['UUID'];
+  createdDate: Scalars['Datetime']['output'];
+  createdUser: Scalars['String']['output'];
+  durationInSeconds: Scalars['Float']['output'];
+  id: Scalars['UUID']['output'];
   /** Reads a single `ProgramCuePoint` that is related to this `CuePointSchedule`. */
   programCuePoint?: Maybe<ProgramCuePoint>;
-  programCuePointId: Scalars['UUID'];
-  sortIndex: Scalars['Int'];
+  programCuePointId: Scalars['UUID']['output'];
+  sortIndex: Scalars['Int']['output'];
   type: CuePointScheduleType;
-  updatedDate: Scalars['Datetime'];
-  updatedUser: Scalars['String'];
-  videoId?: Maybe<Scalars['UUID']>;
+  updatedDate: Scalars['Datetime']['output'];
+  updatedUser: Scalars['String']['output'];
+  videoId?: Maybe<Scalars['UUID']['output']>;
 };
 
 /**
@@ -724,28 +727,28 @@ export type CuePointSchedule = {
  */
 export type CuePointScheduleCondition = {
   /** Checks for equality with the object’s `createdDate` field. */
-  createdDate?: InputMaybe<Scalars['Datetime']>;
+  createdDate?: InputMaybe<Scalars['Datetime']['input']>;
   /** Checks for equality with the object’s `createdUser` field. */
-  createdUser?: InputMaybe<Scalars['String']>;
+  createdUser?: InputMaybe<Scalars['String']['input']>;
   /**
    * Checks for equality with the object’s `durationInSeconds` field.
    * @minValue()
    */
-  durationInSeconds?: InputMaybe<Scalars['Float']>;
+  durationInSeconds?: InputMaybe<Scalars['Float']['input']>;
   /** Checks for equality with the object’s `id` field. */
-  id?: InputMaybe<Scalars['UUID']>;
+  id?: InputMaybe<Scalars['UUID']['input']>;
   /** Checks for equality with the object’s `programCuePointId` field. */
-  programCuePointId?: InputMaybe<Scalars['UUID']>;
+  programCuePointId?: InputMaybe<Scalars['UUID']['input']>;
   /** Checks for equality with the object’s `sortIndex` field. */
-  sortIndex?: InputMaybe<Scalars['Int']>;
+  sortIndex?: InputMaybe<Scalars['Int']['input']>;
   /** Checks for equality with the object’s `type` field. */
   type?: InputMaybe<CuePointScheduleType>;
   /** Checks for equality with the object’s `updatedDate` field. */
-  updatedDate?: InputMaybe<Scalars['Datetime']>;
+  updatedDate?: InputMaybe<Scalars['Datetime']['input']>;
   /** Checks for equality with the object’s `updatedUser` field. */
-  updatedUser?: InputMaybe<Scalars['String']>;
+  updatedUser?: InputMaybe<Scalars['String']['input']>;
   /** Checks for equality with the object’s `videoId` field. */
-  videoId?: InputMaybe<Scalars['UUID']>;
+  videoId?: InputMaybe<Scalars['UUID']['input']>;
 };
 
 /** A filter to be used against `CuePointSchedule` object types. All fields are combined with a logical ‘and.’ */
@@ -793,14 +796,14 @@ export type CuePointSchedulesConnection = {
   /** Information to aid in pagination. */
   pageInfo: PageInfo;
   /** The count of *all* `CuePointSchedule` you could get from the connection. */
-  totalCount: Scalars['Int'];
+  totalCount: Scalars['Int']['output'];
 };
 
 /** A `CuePointSchedule` edge in the connection. */
 export type CuePointSchedulesEdge = {
   __typename?: 'CuePointSchedulesEdge';
   /** A cursor for use in pagination. */
-  cursor?: Maybe<Scalars['Cursor']>;
+  cursor?: Maybe<Scalars['Cursor']['output']>;
   /** The `CuePointSchedule` at the end of the edge. */
   node: CuePointSchedule;
 };
@@ -852,7 +855,7 @@ export type CuePointScheduleTypeFilter = {
   /** Included in the specified list. */
   in?: InputMaybe<Array<CuePointScheduleType>>;
   /** Is null (if `true` is specified) or is not null (if `false` is specified). */
-  isNull?: InputMaybe<Scalars['Boolean']>;
+  isNull?: InputMaybe<Scalars['Boolean']['input']>;
   /** Less than the specified value. */
   lessThan?: InputMaybe<CuePointScheduleType>;
   /** Less than or equal to the specified value. */
@@ -868,27 +871,27 @@ export type CuePointScheduleTypeFilter = {
 /** A filter to be used against Datetime fields. All fields are combined with a logical ‘and.’ */
 export type DatetimeFilter = {
   /** Not equal to the specified value, treating null like an ordinary value. */
-  distinctFrom?: InputMaybe<Scalars['Datetime']>;
+  distinctFrom?: InputMaybe<Scalars['Datetime']['input']>;
   /** Equal to the specified value. */
-  equalTo?: InputMaybe<Scalars['Datetime']>;
+  equalTo?: InputMaybe<Scalars['Datetime']['input']>;
   /** Greater than the specified value. */
-  greaterThan?: InputMaybe<Scalars['Datetime']>;
+  greaterThan?: InputMaybe<Scalars['Datetime']['input']>;
   /** Greater than or equal to the specified value. */
-  greaterThanOrEqualTo?: InputMaybe<Scalars['Datetime']>;
+  greaterThanOrEqualTo?: InputMaybe<Scalars['Datetime']['input']>;
   /** Included in the specified list. */
-  in?: InputMaybe<Array<Scalars['Datetime']>>;
+  in?: InputMaybe<Array<Scalars['Datetime']['input']>>;
   /** Is null (if `true` is specified) or is not null (if `false` is specified). */
-  isNull?: InputMaybe<Scalars['Boolean']>;
+  isNull?: InputMaybe<Scalars['Boolean']['input']>;
   /** Less than the specified value. */
-  lessThan?: InputMaybe<Scalars['Datetime']>;
+  lessThan?: InputMaybe<Scalars['Datetime']['input']>;
   /** Less than or equal to the specified value. */
-  lessThanOrEqualTo?: InputMaybe<Scalars['Datetime']>;
+  lessThanOrEqualTo?: InputMaybe<Scalars['Datetime']['input']>;
   /** Equal to the specified value, treating null like an ordinary value. */
-  notDistinctFrom?: InputMaybe<Scalars['Datetime']>;
+  notDistinctFrom?: InputMaybe<Scalars['Datetime']['input']>;
   /** Not equal to the specified value. */
-  notEqualTo?: InputMaybe<Scalars['Datetime']>;
+  notEqualTo?: InputMaybe<Scalars['Datetime']['input']>;
   /** Not included in the specified list. */
-  notIn?: InputMaybe<Array<Scalars['Datetime']>>;
+  notIn?: InputMaybe<Array<Scalars['Datetime']['input']>>;
 };
 
 /**
@@ -896,12 +899,12 @@ export type DatetimeFilter = {
  * @permissions: ADMIN,CHANNELS_EDIT
  */
 export type DeleteChannelImageByChannelIdAndImageTypeInput = {
-  channelId: Scalars['UUID'];
+  channelId: Scalars['UUID']['input'];
   /**
    * An arbitrary string value with no semantic meaning. Will be included in the
    * payload verbatim. May be used to track mutations by the client.
    */
-  clientMutationId?: InputMaybe<Scalars['String']>;
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
   imageType: ChannelImageType;
 };
 
@@ -910,13 +913,13 @@ export type DeleteChannelImageByChannelIdAndImageTypeInput = {
  * @permissions: ADMIN,CHANNELS_EDIT
  */
 export type DeleteChannelImageInput = {
-  channelId: Scalars['UUID'];
+  channelId: Scalars['UUID']['input'];
   /**
    * An arbitrary string value with no semantic meaning. Will be included in the
    * payload verbatim. May be used to track mutations by the client.
    */
-  clientMutationId?: InputMaybe<Scalars['String']>;
-  imageId: Scalars['UUID'];
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
+  imageId: Scalars['UUID']['input'];
 };
 
 /** The output of our delete `ChannelImage` mutation. */
@@ -932,7 +935,7 @@ export type DeleteChannelImagePayload = {
    * The exact same `clientMutationId` that was provided in the mutation input,
    * unchanged and unused. May be used by a client to track mutations.
    */
-  clientMutationId?: Maybe<Scalars['String']>;
+  clientMutationId?: Maybe<Scalars['String']['output']>;
   /** Our root query field type. Allows us to run any query from our mutation payload. */
   query?: Maybe<Query>;
 };
@@ -952,8 +955,8 @@ export type DeleteChannelInput = {
    * An arbitrary string value with no semantic meaning. Will be included in the
    * payload verbatim. May be used to track mutations by the client.
    */
-  clientMutationId?: InputMaybe<Scalars['String']>;
-  id: Scalars['UUID'];
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
+  id: Scalars['UUID']['input'];
 };
 
 /** The output of our delete `Channel` mutation. */
@@ -967,7 +970,7 @@ export type DeleteChannelPayload = {
    * The exact same `clientMutationId` that was provided in the mutation input,
    * unchanged and unused. May be used by a client to track mutations.
    */
-  clientMutationId?: Maybe<Scalars['String']>;
+  clientMutationId?: Maybe<Scalars['String']['output']>;
   /** Our root query field type. Allows us to run any query from our mutation payload. */
   query?: Maybe<Query>;
 };
@@ -987,8 +990,8 @@ export type DeleteCuePointScheduleInput = {
    * An arbitrary string value with no semantic meaning. Will be included in the
    * payload verbatim. May be used to track mutations by the client.
    */
-  clientMutationId?: InputMaybe<Scalars['String']>;
-  id: Scalars['UUID'];
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
+  id: Scalars['UUID']['input'];
 };
 
 /** The output of our delete `CuePointSchedule` mutation. */
@@ -998,7 +1001,7 @@ export type DeleteCuePointSchedulePayload = {
    * The exact same `clientMutationId` that was provided in the mutation input,
    * unchanged and unused. May be used by a client to track mutations.
    */
-  clientMutationId?: Maybe<Scalars['String']>;
+  clientMutationId?: Maybe<Scalars['String']['output']>;
   /** The `CuePointSchedule` that was deleted by this mutation. */
   cuePointSchedule?: Maybe<CuePointSchedule>;
   /** An edge for our `CuePointSchedule`. May be used by Relay 1. */
@@ -1024,8 +1027,8 @@ export type DeletePlaylistInput = {
    * An arbitrary string value with no semantic meaning. Will be included in the
    * payload verbatim. May be used to track mutations by the client.
    */
-  clientMutationId?: InputMaybe<Scalars['String']>;
-  id: Scalars['UUID'];
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
+  id: Scalars['UUID']['input'];
 };
 
 /** The output of our delete `Playlist` mutation. */
@@ -1037,7 +1040,7 @@ export type DeletePlaylistPayload = {
    * The exact same `clientMutationId` that was provided in the mutation input,
    * unchanged and unused. May be used by a client to track mutations.
    */
-  clientMutationId?: Maybe<Scalars['String']>;
+  clientMutationId?: Maybe<Scalars['String']['output']>;
   /** The `Playlist` that was deleted by this mutation. */
   playlist?: Maybe<Playlist>;
   /** An edge for our `Playlist`. May be used by Relay 1. */
@@ -1061,8 +1064,8 @@ export type DeleteProgramCuePointInput = {
    * An arbitrary string value with no semantic meaning. Will be included in the
    * payload verbatim. May be used to track mutations by the client.
    */
-  clientMutationId?: InputMaybe<Scalars['String']>;
-  id: Scalars['UUID'];
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
+  id: Scalars['UUID']['input'];
 };
 
 /** The output of our delete `ProgramCuePoint` mutation. */
@@ -1072,7 +1075,7 @@ export type DeleteProgramCuePointPayload = {
    * The exact same `clientMutationId` that was provided in the mutation input,
    * unchanged and unused. May be used by a client to track mutations.
    */
-  clientMutationId?: Maybe<Scalars['String']>;
+  clientMutationId?: Maybe<Scalars['String']['output']>;
   /** Reads a single `Program` that is related to this `ProgramCuePoint`. */
   program?: Maybe<Program>;
   /** The `ProgramCuePoint` that was deleted by this mutation. */
@@ -1098,8 +1101,8 @@ export type DeleteProgramInput = {
    * An arbitrary string value with no semantic meaning. Will be included in the
    * payload verbatim. May be used to track mutations by the client.
    */
-  clientMutationId?: InputMaybe<Scalars['String']>;
-  id: Scalars['UUID'];
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
+  id: Scalars['UUID']['input'];
 };
 
 /** The output of our delete `Program` mutation. */
@@ -1109,7 +1112,7 @@ export type DeleteProgramPayload = {
    * The exact same `clientMutationId` that was provided in the mutation input,
    * unchanged and unused. May be used by a client to track mutations.
    */
-  clientMutationId?: Maybe<Scalars['String']>;
+  clientMutationId?: Maybe<Scalars['String']['output']>;
   /** Reads a single `Playlist` that is related to this `Program`. */
   playlist?: Maybe<Playlist>;
   /** The `Program` that was deleted by this mutation. */
@@ -1146,7 +1149,7 @@ export type EntityTypeFilter = {
   /** Included in the specified list. */
   in?: InputMaybe<Array<EntityType>>;
   /** Is null (if `true` is specified) or is not null (if `false` is specified). */
-  isNull?: InputMaybe<Scalars['Boolean']>;
+  isNull?: InputMaybe<Scalars['Boolean']['input']>;
   /** Less than the specified value. */
   lessThan?: InputMaybe<EntityType>;
   /** Less than or equal to the specified value. */
@@ -1162,53 +1165,53 @@ export type EntityTypeFilter = {
 /** A filter to be used against Float fields. All fields are combined with a logical ‘and.’ */
 export type FloatFilter = {
   /** Not equal to the specified value, treating null like an ordinary value. */
-  distinctFrom?: InputMaybe<Scalars['Float']>;
+  distinctFrom?: InputMaybe<Scalars['Float']['input']>;
   /** Equal to the specified value. */
-  equalTo?: InputMaybe<Scalars['Float']>;
+  equalTo?: InputMaybe<Scalars['Float']['input']>;
   /** Greater than the specified value. */
-  greaterThan?: InputMaybe<Scalars['Float']>;
+  greaterThan?: InputMaybe<Scalars['Float']['input']>;
   /** Greater than or equal to the specified value. */
-  greaterThanOrEqualTo?: InputMaybe<Scalars['Float']>;
+  greaterThanOrEqualTo?: InputMaybe<Scalars['Float']['input']>;
   /** Included in the specified list. */
-  in?: InputMaybe<Array<Scalars['Float']>>;
+  in?: InputMaybe<Array<Scalars['Float']['input']>>;
   /** Is null (if `true` is specified) or is not null (if `false` is specified). */
-  isNull?: InputMaybe<Scalars['Boolean']>;
+  isNull?: InputMaybe<Scalars['Boolean']['input']>;
   /** Less than the specified value. */
-  lessThan?: InputMaybe<Scalars['Float']>;
+  lessThan?: InputMaybe<Scalars['Float']['input']>;
   /** Less than or equal to the specified value. */
-  lessThanOrEqualTo?: InputMaybe<Scalars['Float']>;
+  lessThanOrEqualTo?: InputMaybe<Scalars['Float']['input']>;
   /** Equal to the specified value, treating null like an ordinary value. */
-  notDistinctFrom?: InputMaybe<Scalars['Float']>;
+  notDistinctFrom?: InputMaybe<Scalars['Float']['input']>;
   /** Not equal to the specified value. */
-  notEqualTo?: InputMaybe<Scalars['Float']>;
+  notEqualTo?: InputMaybe<Scalars['Float']['input']>;
   /** Not included in the specified list. */
-  notIn?: InputMaybe<Array<Scalars['Float']>>;
+  notIn?: InputMaybe<Array<Scalars['Float']['input']>>;
 };
 
 /** A filter to be used against Int fields. All fields are combined with a logical ‘and.’ */
 export type IntFilter = {
   /** Not equal to the specified value, treating null like an ordinary value. */
-  distinctFrom?: InputMaybe<Scalars['Int']>;
+  distinctFrom?: InputMaybe<Scalars['Int']['input']>;
   /** Equal to the specified value. */
-  equalTo?: InputMaybe<Scalars['Int']>;
+  equalTo?: InputMaybe<Scalars['Int']['input']>;
   /** Greater than the specified value. */
-  greaterThan?: InputMaybe<Scalars['Int']>;
+  greaterThan?: InputMaybe<Scalars['Int']['input']>;
   /** Greater than or equal to the specified value. */
-  greaterThanOrEqualTo?: InputMaybe<Scalars['Int']>;
+  greaterThanOrEqualTo?: InputMaybe<Scalars['Int']['input']>;
   /** Included in the specified list. */
-  in?: InputMaybe<Array<Scalars['Int']>>;
+  in?: InputMaybe<Array<Scalars['Int']['input']>>;
   /** Is null (if `true` is specified) or is not null (if `false` is specified). */
-  isNull?: InputMaybe<Scalars['Boolean']>;
+  isNull?: InputMaybe<Scalars['Boolean']['input']>;
   /** Less than the specified value. */
-  lessThan?: InputMaybe<Scalars['Int']>;
+  lessThan?: InputMaybe<Scalars['Int']['input']>;
   /** Less than or equal to the specified value. */
-  lessThanOrEqualTo?: InputMaybe<Scalars['Int']>;
+  lessThanOrEqualTo?: InputMaybe<Scalars['Int']['input']>;
   /** Equal to the specified value, treating null like an ordinary value. */
-  notDistinctFrom?: InputMaybe<Scalars['Int']>;
+  notDistinctFrom?: InputMaybe<Scalars['Int']['input']>;
   /** Not equal to the specified value. */
-  notEqualTo?: InputMaybe<Scalars['Int']>;
+  notEqualTo?: InputMaybe<Scalars['Int']['input']>;
   /** Not included in the specified list. */
-  notIn?: InputMaybe<Array<Scalars['Int']>>;
+  notIn?: InputMaybe<Array<Scalars['Int']['input']>>;
 };
 
 /** The root mutation type which contains root level fields which mutate data. */
@@ -1424,47 +1427,47 @@ export type MutationUpdateVideoCuePointScheduleArgs = {
 export type PageInfo = {
   __typename?: 'PageInfo';
   /** When paginating forwards, the cursor to continue. */
-  endCursor?: Maybe<Scalars['Cursor']>;
+  endCursor?: Maybe<Scalars['Cursor']['output']>;
   /** When paginating forwards, are there more items? */
-  hasNextPage: Scalars['Boolean'];
+  hasNextPage: Scalars['Boolean']['output'];
   /** When paginating backwards, are there more items? */
-  hasPreviousPage: Scalars['Boolean'];
+  hasPreviousPage: Scalars['Boolean']['output'];
   /** When paginating backwards, the cursor to continue. */
-  startCursor?: Maybe<Scalars['Cursor']>;
+  startCursor?: Maybe<Scalars['Cursor']['output']>;
 };
 
 /** @permissions: ADMIN,CHANNELS_EDIT,CHANNELS_VIEW */
 export type Playlist = {
   __typename?: 'Playlist';
-  calculatedDurationInSeconds: Scalars['Float'];
-  calculatedEndDateTime?: Maybe<Scalars['Datetime']>;
+  calculatedDurationInSeconds: Scalars['Float']['output'];
+  calculatedEndDateTime?: Maybe<Scalars['Datetime']['output']>;
   /** Reads a single `Channel` that is related to this `Playlist`. */
   channel?: Maybe<Channel>;
-  channelId: Scalars['UUID'];
-  createdDate: Scalars['Datetime'];
-  createdUser: Scalars['String'];
-  id: Scalars['UUID'];
+  channelId: Scalars['UUID']['output'];
+  createdDate: Scalars['Datetime']['output'];
+  createdUser: Scalars['String']['output'];
+  id: Scalars['UUID']['output'];
   /** Reads and enables pagination through a set of `Program`. */
   programs: ProgramsConnection;
   publicationState: PublicationState;
-  publishedDate?: Maybe<Scalars['Datetime']>;
-  publishedUser?: Maybe<Scalars['String']>;
-  startDateTime: Scalars['Datetime'];
-  title: Scalars['String'];
-  updatedDate: Scalars['Datetime'];
-  updatedUser: Scalars['String'];
+  publishedDate?: Maybe<Scalars['Datetime']['output']>;
+  publishedUser?: Maybe<Scalars['String']['output']>;
+  startDateTime: Scalars['Datetime']['output'];
+  title: Scalars['String']['output'];
+  updatedDate: Scalars['Datetime']['output'];
+  updatedUser: Scalars['String']['output'];
 };
 
 
 /** @permissions: ADMIN,CHANNELS_EDIT,CHANNELS_VIEW */
 export type PlaylistProgramsArgs = {
-  after?: InputMaybe<Scalars['Cursor']>;
-  before?: InputMaybe<Scalars['Cursor']>;
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
   condition?: InputMaybe<ProgramCondition>;
   filter?: InputMaybe<ProgramFilter>;
-  first?: InputMaybe<Scalars['Int']>;
-  last?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Array<ProgramsOrderBy>>;
 };
 
@@ -1474,29 +1477,29 @@ export type PlaylistProgramsArgs = {
  */
 export type PlaylistCondition = {
   /** Checks for equality with the object’s `calculatedDurationInSeconds` field. */
-  calculatedDurationInSeconds?: InputMaybe<Scalars['Float']>;
+  calculatedDurationInSeconds?: InputMaybe<Scalars['Float']['input']>;
   /** Checks for equality with the object’s `channelId` field. */
-  channelId?: InputMaybe<Scalars['UUID']>;
+  channelId?: InputMaybe<Scalars['UUID']['input']>;
   /** Checks for equality with the object’s `createdDate` field. */
-  createdDate?: InputMaybe<Scalars['Datetime']>;
+  createdDate?: InputMaybe<Scalars['Datetime']['input']>;
   /** Checks for equality with the object’s `createdUser` field. */
-  createdUser?: InputMaybe<Scalars['String']>;
+  createdUser?: InputMaybe<Scalars['String']['input']>;
   /** Checks for equality with the object’s `id` field. */
-  id?: InputMaybe<Scalars['UUID']>;
+  id?: InputMaybe<Scalars['UUID']['input']>;
   /** Checks for equality with the object’s `publicationState` field. */
   publicationState?: InputMaybe<PublicationState>;
   /** Checks for equality with the object’s `publishedDate` field. */
-  publishedDate?: InputMaybe<Scalars['Datetime']>;
+  publishedDate?: InputMaybe<Scalars['Datetime']['input']>;
   /** Checks for equality with the object’s `publishedUser` field. */
-  publishedUser?: InputMaybe<Scalars['String']>;
+  publishedUser?: InputMaybe<Scalars['String']['input']>;
   /** Checks for equality with the object’s `startDateTime` field. */
-  startDateTime?: InputMaybe<Scalars['Datetime']>;
+  startDateTime?: InputMaybe<Scalars['Datetime']['input']>;
   /** Checks for equality with the object’s `title` field. */
-  title?: InputMaybe<Scalars['String']>;
+  title?: InputMaybe<Scalars['String']['input']>;
   /** Checks for equality with the object’s `updatedDate` field. */
-  updatedDate?: InputMaybe<Scalars['Datetime']>;
+  updatedDate?: InputMaybe<Scalars['Datetime']['input']>;
   /** Checks for equality with the object’s `updatedUser` field. */
-  updatedUser?: InputMaybe<Scalars['String']>;
+  updatedUser?: InputMaybe<Scalars['String']['input']>;
 };
 
 /** A filter to be used against `Playlist` object types. All fields are combined with a logical ‘and.’ */
@@ -1524,7 +1527,7 @@ export type PlaylistFilter = {
   /** Filter by the object’s `programs` relation. */
   programs?: InputMaybe<PlaylistToManyProgramFilter>;
   /** Some related `programs` exist. */
-  programsExist?: InputMaybe<Scalars['Boolean']>;
+  programsExist?: InputMaybe<Scalars['Boolean']['input']>;
   /** Filter by the object’s `publicationState` field. */
   publicationState?: InputMaybe<PublicationStateFilter>;
   /** Filter by the object’s `publishedDate` field. */
@@ -1543,17 +1546,17 @@ export type PlaylistFilter = {
 
 /** An input for mutations affecting `Playlist` */
 export type PlaylistInput = {
-  calculatedDurationInSeconds: Scalars['Float'];
-  channelId: Scalars['UUID'];
-  startDateTime: Scalars['Datetime'];
-  title: Scalars['String'];
+  calculatedDurationInSeconds: Scalars['Float']['input'];
+  channelId: Scalars['UUID']['input'];
+  startDateTime: Scalars['Datetime']['input'];
+  title: Scalars['String']['input'];
 };
 
 /** Represents an update to a `Playlist`. Fields that are set will be updated. */
 export type PlaylistPatch = {
-  calculatedDurationInSeconds?: InputMaybe<Scalars['Float']>;
-  startDateTime?: InputMaybe<Scalars['Datetime']>;
-  title?: InputMaybe<Scalars['String']>;
+  calculatedDurationInSeconds?: InputMaybe<Scalars['Float']['input']>;
+  startDateTime?: InputMaybe<Scalars['Datetime']['input']>;
+  title?: InputMaybe<Scalars['String']['input']>;
 };
 
 /**
@@ -1569,14 +1572,14 @@ export type PlaylistsConnection = {
   /** Information to aid in pagination. */
   pageInfo: PageInfo;
   /** The count of *all* `Playlist` you could get from the connection. */
-  totalCount: Scalars['Int'];
+  totalCount: Scalars['Int']['output'];
 };
 
 /** A `Playlist` edge in the connection. */
 export type PlaylistsEdge = {
   __typename?: 'PlaylistsEdge';
   /** A cursor for use in pagination. */
-  cursor?: Maybe<Scalars['Cursor']>;
+  cursor?: Maybe<Scalars['Cursor']['output']>;
   /** The `Playlist` at the end of the edge. */
   node: Playlist;
 };
@@ -1624,9 +1627,9 @@ export enum PlaylistSubscriptionEventKey {
 export type PlaylistSubscriptionPayload = {
   __typename?: 'PlaylistSubscriptionPayload';
   /** @deprecated Use 'eventKey' instead. */
-  event?: Maybe<Scalars['String']>;
+  event?: Maybe<Scalars['String']['output']>;
   eventKey?: Maybe<PlaylistSubscriptionEventKey>;
-  id: Scalars['UUID'];
+  id: Scalars['UUID']['output'];
   playlist?: Maybe<Playlist>;
 };
 
@@ -1643,35 +1646,35 @@ export type PlaylistToManyProgramFilter = {
 /** @permissions: ADMIN,CHANNELS_EDIT,CHANNELS_VIEW */
 export type Program = {
   __typename?: 'Program';
-  createdDate: Scalars['Datetime'];
-  createdUser: Scalars['String'];
-  entityId: Scalars['String'];
+  createdDate: Scalars['Datetime']['output'];
+  createdUser: Scalars['String']['output'];
+  entityId: Scalars['String']['output'];
   entityType: EntityType;
-  id: Scalars['UUID'];
-  imageId?: Maybe<Scalars['UUID']>;
+  id: Scalars['UUID']['output'];
+  imageId?: Maybe<Scalars['UUID']['output']>;
   /** Reads a single `Playlist` that is related to this `Program`. */
   playlist?: Maybe<Playlist>;
-  playlistId: Scalars['UUID'];
+  playlistId: Scalars['UUID']['output'];
   /** Reads and enables pagination through a set of `ProgramCuePoint`. */
   programCuePoints: ProgramCuePointsConnection;
-  sortIndex: Scalars['Int'];
-  title: Scalars['String'];
-  updatedDate: Scalars['Datetime'];
-  updatedUser: Scalars['String'];
-  videoDurationInSeconds: Scalars['Float'];
-  videoId: Scalars['UUID'];
+  sortIndex: Scalars['Int']['output'];
+  title: Scalars['String']['output'];
+  updatedDate: Scalars['Datetime']['output'];
+  updatedUser: Scalars['String']['output'];
+  videoDurationInSeconds: Scalars['Float']['output'];
+  videoId: Scalars['UUID']['output'];
 };
 
 
 /** @permissions: ADMIN,CHANNELS_EDIT,CHANNELS_VIEW */
 export type ProgramProgramCuePointsArgs = {
-  after?: InputMaybe<Scalars['Cursor']>;
-  before?: InputMaybe<Scalars['Cursor']>;
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
   condition?: InputMaybe<ProgramCuePointCondition>;
   filter?: InputMaybe<ProgramCuePointFilter>;
-  first?: InputMaybe<Scalars['Int']>;
-  last?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Array<ProgramCuePointsOrderBy>>;
 };
 
@@ -1697,7 +1700,7 @@ export type ProgramBreakTypeFilter = {
   /** Included in the specified list. */
   in?: InputMaybe<Array<ProgramBreakType>>;
   /** Is null (if `true` is specified) or is not null (if `false` is specified). */
-  isNull?: InputMaybe<Scalars['Boolean']>;
+  isNull?: InputMaybe<Scalars['Boolean']['input']>;
   /** Less than the specified value. */
   lessThan?: InputMaybe<ProgramBreakType>;
   /** Less than or equal to the specified value. */
@@ -1713,62 +1716,62 @@ export type ProgramBreakTypeFilter = {
 /** A condition to be used against `Program` object types. All fields are tested for equality and combined with a logical ‘and.’ */
 export type ProgramCondition = {
   /** Checks for equality with the object’s `createdDate` field. */
-  createdDate?: InputMaybe<Scalars['Datetime']>;
+  createdDate?: InputMaybe<Scalars['Datetime']['input']>;
   /** Checks for equality with the object’s `createdUser` field. */
-  createdUser?: InputMaybe<Scalars['String']>;
+  createdUser?: InputMaybe<Scalars['String']['input']>;
   /** Checks for equality with the object’s `entityId` field. */
-  entityId?: InputMaybe<Scalars['String']>;
+  entityId?: InputMaybe<Scalars['String']['input']>;
   /** Checks for equality with the object’s `entityType` field. */
   entityType?: InputMaybe<EntityType>;
   /** Checks for equality with the object’s `id` field. */
-  id?: InputMaybe<Scalars['UUID']>;
+  id?: InputMaybe<Scalars['UUID']['input']>;
   /** Checks for equality with the object’s `imageId` field. */
-  imageId?: InputMaybe<Scalars['UUID']>;
+  imageId?: InputMaybe<Scalars['UUID']['input']>;
   /** Checks for equality with the object’s `playlistId` field. */
-  playlistId?: InputMaybe<Scalars['UUID']>;
+  playlistId?: InputMaybe<Scalars['UUID']['input']>;
   /** Checks for equality with the object’s `sortIndex` field. */
-  sortIndex?: InputMaybe<Scalars['Int']>;
+  sortIndex?: InputMaybe<Scalars['Int']['input']>;
   /** Checks for equality with the object’s `title` field. */
-  title?: InputMaybe<Scalars['String']>;
+  title?: InputMaybe<Scalars['String']['input']>;
   /** Checks for equality with the object’s `updatedDate` field. */
-  updatedDate?: InputMaybe<Scalars['Datetime']>;
+  updatedDate?: InputMaybe<Scalars['Datetime']['input']>;
   /** Checks for equality with the object’s `updatedUser` field. */
-  updatedUser?: InputMaybe<Scalars['String']>;
+  updatedUser?: InputMaybe<Scalars['String']['input']>;
   /** Checks for equality with the object’s `videoDurationInSeconds` field. */
-  videoDurationInSeconds?: InputMaybe<Scalars['Float']>;
+  videoDurationInSeconds?: InputMaybe<Scalars['Float']['input']>;
   /** Checks for equality with the object’s `videoId` field. */
-  videoId?: InputMaybe<Scalars['UUID']>;
+  videoId?: InputMaybe<Scalars['UUID']['input']>;
 };
 
 /** @permissions: ADMIN,CHANNELS_EDIT,CHANNELS_VIEW */
 export type ProgramCuePoint = {
   __typename?: 'ProgramCuePoint';
-  createdDate: Scalars['Datetime'];
-  createdUser: Scalars['String'];
+  createdDate: Scalars['Datetime']['output'];
+  createdUser: Scalars['String']['output'];
   /** Reads and enables pagination through a set of `CuePointSchedule`. */
   cuePointSchedules: CuePointSchedulesConnection;
-  id: Scalars['UUID'];
+  id: Scalars['UUID']['output'];
   /** Reads a single `Program` that is related to this `ProgramCuePoint`. */
   program?: Maybe<Program>;
-  programId: Scalars['UUID'];
-  timeInSeconds?: Maybe<Scalars['Float']>;
+  programId: Scalars['UUID']['output'];
+  timeInSeconds?: Maybe<Scalars['Float']['output']>;
   type: ProgramBreakType;
-  updatedDate: Scalars['Datetime'];
-  updatedUser: Scalars['String'];
-  value?: Maybe<Scalars['String']>;
-  videoCuePointId?: Maybe<Scalars['UUID']>;
+  updatedDate: Scalars['Datetime']['output'];
+  updatedUser: Scalars['String']['output'];
+  value?: Maybe<Scalars['String']['output']>;
+  videoCuePointId?: Maybe<Scalars['UUID']['output']>;
 };
 
 
 /** @permissions: ADMIN,CHANNELS_EDIT,CHANNELS_VIEW */
 export type ProgramCuePointCuePointSchedulesArgs = {
-  after?: InputMaybe<Scalars['Cursor']>;
-  before?: InputMaybe<Scalars['Cursor']>;
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
   condition?: InputMaybe<CuePointScheduleCondition>;
   filter?: InputMaybe<CuePointScheduleFilter>;
-  first?: InputMaybe<Scalars['Int']>;
-  last?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Array<CuePointSchedulesOrderBy>>;
 };
 
@@ -1778,25 +1781,25 @@ export type ProgramCuePointCuePointSchedulesArgs = {
  */
 export type ProgramCuePointCondition = {
   /** Checks for equality with the object’s `createdDate` field. */
-  createdDate?: InputMaybe<Scalars['Datetime']>;
+  createdDate?: InputMaybe<Scalars['Datetime']['input']>;
   /** Checks for equality with the object’s `createdUser` field. */
-  createdUser?: InputMaybe<Scalars['String']>;
+  createdUser?: InputMaybe<Scalars['String']['input']>;
   /** Checks for equality with the object’s `id` field. */
-  id?: InputMaybe<Scalars['UUID']>;
+  id?: InputMaybe<Scalars['UUID']['input']>;
   /** Checks for equality with the object’s `programId` field. */
-  programId?: InputMaybe<Scalars['UUID']>;
+  programId?: InputMaybe<Scalars['UUID']['input']>;
   /** Checks for equality with the object’s `timeInSeconds` field. */
-  timeInSeconds?: InputMaybe<Scalars['Float']>;
+  timeInSeconds?: InputMaybe<Scalars['Float']['input']>;
   /** Checks for equality with the object’s `type` field. */
   type?: InputMaybe<ProgramBreakType>;
   /** Checks for equality with the object’s `updatedDate` field. */
-  updatedDate?: InputMaybe<Scalars['Datetime']>;
+  updatedDate?: InputMaybe<Scalars['Datetime']['input']>;
   /** Checks for equality with the object’s `updatedUser` field. */
-  updatedUser?: InputMaybe<Scalars['String']>;
+  updatedUser?: InputMaybe<Scalars['String']['input']>;
   /** Checks for equality with the object’s `value` field. */
-  value?: InputMaybe<Scalars['String']>;
+  value?: InputMaybe<Scalars['String']['input']>;
   /** Checks for equality with the object’s `videoCuePointId` field. */
-  videoCuePointId?: InputMaybe<Scalars['UUID']>;
+  videoCuePointId?: InputMaybe<Scalars['UUID']['input']>;
 };
 
 /** A filter to be used against `ProgramCuePoint` object types. All fields are combined with a logical ‘and.’ */
@@ -1810,7 +1813,7 @@ export type ProgramCuePointFilter = {
   /** Filter by the object’s `cuePointSchedules` relation. */
   cuePointSchedules?: InputMaybe<ProgramCuePointToManyCuePointScheduleFilter>;
   /** Some related `cuePointSchedules` exist. */
-  cuePointSchedulesExist?: InputMaybe<Scalars['Boolean']>;
+  cuePointSchedulesExist?: InputMaybe<Scalars['Boolean']['input']>;
   /** Filter by the object’s `id` field. */
   id?: InputMaybe<UuidFilter>;
   /** Negates the expression. */
@@ -1837,20 +1840,20 @@ export type ProgramCuePointFilter = {
 
 /** An input for mutations affecting `ProgramCuePoint` */
 export type ProgramCuePointInput = {
-  programId: Scalars['UUID'];
-  timeInSeconds?: InputMaybe<Scalars['Float']>;
+  programId: Scalars['UUID']['input'];
+  timeInSeconds?: InputMaybe<Scalars['Float']['input']>;
   type: ProgramBreakType;
-  value?: InputMaybe<Scalars['String']>;
-  videoCuePointId?: InputMaybe<Scalars['UUID']>;
+  value?: InputMaybe<Scalars['String']['input']>;
+  videoCuePointId?: InputMaybe<Scalars['UUID']['input']>;
 };
 
 /** Represents an update to a `ProgramCuePoint`. Fields that are set will be updated. */
 export type ProgramCuePointPatch = {
-  programId?: InputMaybe<Scalars['UUID']>;
-  timeInSeconds?: InputMaybe<Scalars['Float']>;
+  programId?: InputMaybe<Scalars['UUID']['input']>;
+  timeInSeconds?: InputMaybe<Scalars['Float']['input']>;
   type?: InputMaybe<ProgramBreakType>;
-  value?: InputMaybe<Scalars['String']>;
-  videoCuePointId?: InputMaybe<Scalars['UUID']>;
+  value?: InputMaybe<Scalars['String']['input']>;
+  videoCuePointId?: InputMaybe<Scalars['UUID']['input']>;
 };
 
 /**
@@ -1866,14 +1869,14 @@ export type ProgramCuePointsConnection = {
   /** Information to aid in pagination. */
   pageInfo: PageInfo;
   /** The count of *all* `ProgramCuePoint` you could get from the connection. */
-  totalCount: Scalars['Int'];
+  totalCount: Scalars['Int']['output'];
 };
 
 /** A `ProgramCuePoint` edge in the connection. */
 export type ProgramCuePointsEdge = {
   __typename?: 'ProgramCuePointsEdge';
   /** A cursor for use in pagination. */
-  cursor?: Maybe<Scalars['Cursor']>;
+  cursor?: Maybe<Scalars['Cursor']['output']>;
   /** The `ProgramCuePoint` at the end of the edge. */
   node: ProgramCuePoint;
 };
@@ -1942,7 +1945,7 @@ export type ProgramFilter = {
   /** Filter by the object’s `programCuePoints` relation. */
   programCuePoints?: InputMaybe<ProgramToManyProgramCuePointFilter>;
   /** Some related `programCuePoints` exist. */
-  programCuePointsExist?: InputMaybe<Scalars['Boolean']>;
+  programCuePointsExist?: InputMaybe<Scalars['Boolean']['input']>;
   /** Filter by the object’s `sortIndex` field. */
   sortIndex?: InputMaybe<IntFilter>;
   /** Filter by the object’s `title` field. */
@@ -1959,20 +1962,20 @@ export type ProgramFilter = {
 
 /** An input for mutations affecting `Program` */
 export type ProgramInput = {
-  entityId: Scalars['String'];
+  entityId: Scalars['String']['input'];
   entityType: EntityType;
-  imageId?: InputMaybe<Scalars['UUID']>;
-  playlistId: Scalars['UUID'];
-  sortIndex: Scalars['Int'];
-  title: Scalars['String'];
-  videoDurationInSeconds: Scalars['Float'];
-  videoId: Scalars['UUID'];
+  imageId?: InputMaybe<Scalars['UUID']['input']>;
+  playlistId: Scalars['UUID']['input'];
+  sortIndex: Scalars['Int']['input'];
+  title: Scalars['String']['input'];
+  videoDurationInSeconds: Scalars['Float']['input'];
+  videoId: Scalars['UUID']['input'];
 };
 
 /** Represents an update to a `Program`. Fields that are set will be updated. */
 export type ProgramPatch = {
-  sortIndex?: InputMaybe<Scalars['Int']>;
-  title?: InputMaybe<Scalars['String']>;
+  sortIndex?: InputMaybe<Scalars['Int']['input']>;
+  title?: InputMaybe<Scalars['String']['input']>;
 };
 
 /**
@@ -1988,14 +1991,14 @@ export type ProgramsConnection = {
   /** Information to aid in pagination. */
   pageInfo: PageInfo;
   /** The count of *all* `Program` you could get from the connection. */
-  totalCount: Scalars['Int'];
+  totalCount: Scalars['Int']['output'];
 };
 
 /** A `Program` edge in the connection. */
 export type ProgramsEdge = {
   __typename?: 'ProgramsEdge';
   /** A cursor for use in pagination. */
-  cursor?: Maybe<Scalars['Cursor']>;
+  cursor?: Maybe<Scalars['Cursor']['output']>;
   /** The `Program` at the end of the edge. */
   node: Program;
 };
@@ -2065,7 +2068,7 @@ export type PublicationStateFilter = {
   /** Included in the specified list. */
   in?: InputMaybe<Array<PublicationState>>;
   /** Is null (if `true` is specified) or is not null (if `false` is specified). */
-  isNull?: InputMaybe<Scalars['Boolean']>;
+  isNull?: InputMaybe<Scalars['Boolean']['input']>;
   /** Less than the specified value. */
   lessThan?: InputMaybe<PublicationState>;
   /** Less than or equal to the specified value. */
@@ -2084,11 +2087,11 @@ export type PublishChannelInput = {
    * An arbitrary string value with no semantic meaning. Will be included in the
    * payload verbatim. May be used to track mutations by the client.
    */
-  clientMutationId?: InputMaybe<Scalars['String']>;
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
   /** Unique Identifier of the channel to publish. */
-  id: Scalars['UUID'];
+  id: Scalars['UUID']['input'];
   /** A publish hash to ensure no changes have occurred since the publish validation. */
-  publishHash: Scalars['String'];
+  publishHash: Scalars['String']['input'];
 };
 
 /** The published channel. */
@@ -2100,7 +2103,7 @@ export type PublishChannelPayload = {
    * The exact same `clientMutationId` that was provided in the mutation input,
    * unchanged and unused. May be used by a client to track mutations.
    */
-  clientMutationId?: Maybe<Scalars['String']>;
+  clientMutationId?: Maybe<Scalars['String']['output']>;
   query?: Maybe<Query>;
 };
 
@@ -2110,11 +2113,11 @@ export type PublishPlaylistInput = {
    * An arbitrary string value with no semantic meaning. Will be included in the
    * payload verbatim. May be used to track mutations by the client.
    */
-  clientMutationId?: InputMaybe<Scalars['String']>;
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
   /** Unique Identifier of the playlist to publish. */
-  id: Scalars['UUID'];
+  id: Scalars['UUID']['input'];
   /** A publish hash to ensure no changes have occurred since validation. */
-  publishHash: Scalars['String'];
+  publishHash: Scalars['String']['input'];
 };
 
 /** The playlist published in defined format. */
@@ -2124,7 +2127,7 @@ export type PublishPlaylistPayload = {
    * The exact same `clientMutationId` that was provided in the mutation input,
    * unchanged and unused. May be used by a client to track mutations.
    */
-  clientMutationId?: Maybe<Scalars['String']>;
+  clientMutationId?: Maybe<Scalars['String']['output']>;
   /** The published playlist. */
   playlist: Playlist;
   query?: Maybe<Query>;
@@ -2140,7 +2143,7 @@ export enum PublishValidationContext {
 export type PublishValidationMessage = {
   __typename?: 'PublishValidationMessage';
   context: PublishValidationContext;
-  message: Scalars['String'];
+  message: Scalars['String']['output'];
   severity: PublishValidationSeverity;
 };
 
@@ -2190,206 +2193,206 @@ export type Query = {
 
 /** The root query type which gives access points into the data universe. */
 export type QueryChannelArgs = {
-  id: Scalars['UUID'];
+  id: Scalars['UUID']['input'];
 };
 
 
 /** The root query type which gives access points into the data universe. */
 export type QueryChannelImageArgs = {
-  channelId: Scalars['UUID'];
+  channelId: Scalars['UUID']['input'];
   imageType: ChannelImageType;
 };
 
 
 /** The root query type which gives access points into the data universe. */
 export type QueryChannelImagesArgs = {
-  after?: InputMaybe<Scalars['Cursor']>;
-  before?: InputMaybe<Scalars['Cursor']>;
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
   condition?: InputMaybe<ChannelImageCondition>;
   filter?: InputMaybe<ChannelImageFilter>;
-  first?: InputMaybe<Scalars['Int']>;
-  last?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Array<ChannelImagesOrderBy>>;
 };
 
 
 /** The root query type which gives access points into the data universe. */
 export type QueryChannelsArgs = {
-  after?: InputMaybe<Scalars['Cursor']>;
-  before?: InputMaybe<Scalars['Cursor']>;
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
   condition?: InputMaybe<ChannelCondition>;
   filter?: InputMaybe<ChannelFilter>;
-  first?: InputMaybe<Scalars['Int']>;
-  last?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Array<ChannelsOrderBy>>;
 };
 
 
 /** The root query type which gives access points into the data universe. */
 export type QueryCuePointScheduleArgs = {
-  id: Scalars['UUID'];
+  id: Scalars['UUID']['input'];
 };
 
 
 /** The root query type which gives access points into the data universe. */
 export type QueryCuePointSchedulesArgs = {
-  after?: InputMaybe<Scalars['Cursor']>;
-  before?: InputMaybe<Scalars['Cursor']>;
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
   condition?: InputMaybe<CuePointScheduleCondition>;
   filter?: InputMaybe<CuePointScheduleFilter>;
-  first?: InputMaybe<Scalars['Int']>;
-  last?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Array<CuePointSchedulesOrderBy>>;
 };
 
 
 /** The root query type which gives access points into the data universe. */
 export type QueryPlaylistArgs = {
-  id: Scalars['UUID'];
+  id: Scalars['UUID']['input'];
 };
 
 
 /** The root query type which gives access points into the data universe. */
 export type QueryPlaylistsArgs = {
-  after?: InputMaybe<Scalars['Cursor']>;
-  before?: InputMaybe<Scalars['Cursor']>;
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
   condition?: InputMaybe<PlaylistCondition>;
   filter?: InputMaybe<PlaylistFilter>;
-  first?: InputMaybe<Scalars['Int']>;
-  last?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Array<PlaylistsOrderBy>>;
 };
 
 
 /** The root query type which gives access points into the data universe. */
 export type QueryProgramArgs = {
-  id: Scalars['UUID'];
+  id: Scalars['UUID']['input'];
 };
 
 
 /** The root query type which gives access points into the data universe. */
 export type QueryProgramCuePointArgs = {
-  id: Scalars['UUID'];
+  id: Scalars['UUID']['input'];
 };
 
 
 /** The root query type which gives access points into the data universe. */
 export type QueryProgramCuePointsArgs = {
-  after?: InputMaybe<Scalars['Cursor']>;
-  before?: InputMaybe<Scalars['Cursor']>;
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
   condition?: InputMaybe<ProgramCuePointCondition>;
   filter?: InputMaybe<ProgramCuePointFilter>;
-  first?: InputMaybe<Scalars['Int']>;
-  last?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Array<ProgramCuePointsOrderBy>>;
 };
 
 
 /** The root query type which gives access points into the data universe. */
 export type QueryProgramsArgs = {
-  after?: InputMaybe<Scalars['Cursor']>;
-  before?: InputMaybe<Scalars['Cursor']>;
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
   condition?: InputMaybe<ProgramCondition>;
   filter?: InputMaybe<ProgramFilter>;
-  first?: InputMaybe<Scalars['Int']>;
-  last?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Array<ProgramsOrderBy>>;
 };
 
 
 /** The root query type which gives access points into the data universe. */
 export type QueryValidateChannelArgs = {
-  id: Scalars['UUID'];
+  id: Scalars['UUID']['input'];
 };
 
 
 /** The root query type which gives access points into the data universe. */
 export type QueryValidatePlaylistArgs = {
-  id: Scalars['UUID'];
+  id: Scalars['UUID']['input'];
 };
 
 /** A filter to be used against String fields. All fields are combined with a logical ‘and.’ */
 export type StringFilter = {
   /** Not equal to the specified value, treating null like an ordinary value. */
-  distinctFrom?: InputMaybe<Scalars['String']>;
+  distinctFrom?: InputMaybe<Scalars['String']['input']>;
   /** Not equal to the specified value, treating null like an ordinary value (case-insensitive). */
-  distinctFromInsensitive?: InputMaybe<Scalars['String']>;
+  distinctFromInsensitive?: InputMaybe<Scalars['String']['input']>;
   /** Ends with the specified string (case-sensitive). */
-  endsWith?: InputMaybe<Scalars['String']>;
+  endsWith?: InputMaybe<Scalars['String']['input']>;
   /** Ends with the specified string (case-insensitive). */
-  endsWithInsensitive?: InputMaybe<Scalars['String']>;
+  endsWithInsensitive?: InputMaybe<Scalars['String']['input']>;
   /** Equal to the specified value. */
-  equalTo?: InputMaybe<Scalars['String']>;
+  equalTo?: InputMaybe<Scalars['String']['input']>;
   /** Equal to the specified value (case-insensitive). */
-  equalToInsensitive?: InputMaybe<Scalars['String']>;
+  equalToInsensitive?: InputMaybe<Scalars['String']['input']>;
   /** Greater than the specified value. */
-  greaterThan?: InputMaybe<Scalars['String']>;
+  greaterThan?: InputMaybe<Scalars['String']['input']>;
   /** Greater than the specified value (case-insensitive). */
-  greaterThanInsensitive?: InputMaybe<Scalars['String']>;
+  greaterThanInsensitive?: InputMaybe<Scalars['String']['input']>;
   /** Greater than or equal to the specified value. */
-  greaterThanOrEqualTo?: InputMaybe<Scalars['String']>;
+  greaterThanOrEqualTo?: InputMaybe<Scalars['String']['input']>;
   /** Greater than or equal to the specified value (case-insensitive). */
-  greaterThanOrEqualToInsensitive?: InputMaybe<Scalars['String']>;
+  greaterThanOrEqualToInsensitive?: InputMaybe<Scalars['String']['input']>;
   /** Included in the specified list. */
-  in?: InputMaybe<Array<Scalars['String']>>;
+  in?: InputMaybe<Array<Scalars['String']['input']>>;
   /** Contains the specified string (case-sensitive). */
-  includes?: InputMaybe<Scalars['String']>;
+  includes?: InputMaybe<Scalars['String']['input']>;
   /** Contains the specified string (case-insensitive). */
-  includesInsensitive?: InputMaybe<Scalars['String']>;
+  includesInsensitive?: InputMaybe<Scalars['String']['input']>;
   /** Included in the specified list (case-insensitive). */
-  inInsensitive?: InputMaybe<Array<Scalars['String']>>;
+  inInsensitive?: InputMaybe<Array<Scalars['String']['input']>>;
   /** Is null (if `true` is specified) or is not null (if `false` is specified). */
-  isNull?: InputMaybe<Scalars['Boolean']>;
+  isNull?: InputMaybe<Scalars['Boolean']['input']>;
   /** Less than the specified value. */
-  lessThan?: InputMaybe<Scalars['String']>;
+  lessThan?: InputMaybe<Scalars['String']['input']>;
   /** Less than the specified value (case-insensitive). */
-  lessThanInsensitive?: InputMaybe<Scalars['String']>;
+  lessThanInsensitive?: InputMaybe<Scalars['String']['input']>;
   /** Less than or equal to the specified value. */
-  lessThanOrEqualTo?: InputMaybe<Scalars['String']>;
+  lessThanOrEqualTo?: InputMaybe<Scalars['String']['input']>;
   /** Less than or equal to the specified value (case-insensitive). */
-  lessThanOrEqualToInsensitive?: InputMaybe<Scalars['String']>;
+  lessThanOrEqualToInsensitive?: InputMaybe<Scalars['String']['input']>;
   /** Matches the specified pattern (case-sensitive). An underscore (_) matches any single character; a percent sign (%) matches any sequence of zero or more characters. */
-  like?: InputMaybe<Scalars['String']>;
+  like?: InputMaybe<Scalars['String']['input']>;
   /** Matches the specified pattern (case-insensitive). An underscore (_) matches any single character; a percent sign (%) matches any sequence of zero or more characters. */
-  likeInsensitive?: InputMaybe<Scalars['String']>;
+  likeInsensitive?: InputMaybe<Scalars['String']['input']>;
   /** Equal to the specified value, treating null like an ordinary value. */
-  notDistinctFrom?: InputMaybe<Scalars['String']>;
+  notDistinctFrom?: InputMaybe<Scalars['String']['input']>;
   /** Equal to the specified value, treating null like an ordinary value (case-insensitive). */
-  notDistinctFromInsensitive?: InputMaybe<Scalars['String']>;
+  notDistinctFromInsensitive?: InputMaybe<Scalars['String']['input']>;
   /** Does not end with the specified string (case-sensitive). */
-  notEndsWith?: InputMaybe<Scalars['String']>;
+  notEndsWith?: InputMaybe<Scalars['String']['input']>;
   /** Does not end with the specified string (case-insensitive). */
-  notEndsWithInsensitive?: InputMaybe<Scalars['String']>;
+  notEndsWithInsensitive?: InputMaybe<Scalars['String']['input']>;
   /** Not equal to the specified value. */
-  notEqualTo?: InputMaybe<Scalars['String']>;
+  notEqualTo?: InputMaybe<Scalars['String']['input']>;
   /** Not equal to the specified value (case-insensitive). */
-  notEqualToInsensitive?: InputMaybe<Scalars['String']>;
+  notEqualToInsensitive?: InputMaybe<Scalars['String']['input']>;
   /** Not included in the specified list. */
-  notIn?: InputMaybe<Array<Scalars['String']>>;
+  notIn?: InputMaybe<Array<Scalars['String']['input']>>;
   /** Does not contain the specified string (case-sensitive). */
-  notIncludes?: InputMaybe<Scalars['String']>;
+  notIncludes?: InputMaybe<Scalars['String']['input']>;
   /** Does not contain the specified string (case-insensitive). */
-  notIncludesInsensitive?: InputMaybe<Scalars['String']>;
+  notIncludesInsensitive?: InputMaybe<Scalars['String']['input']>;
   /** Not included in the specified list (case-insensitive). */
-  notInInsensitive?: InputMaybe<Array<Scalars['String']>>;
+  notInInsensitive?: InputMaybe<Array<Scalars['String']['input']>>;
   /** Does not match the specified pattern (case-sensitive). An underscore (_) matches any single character; a percent sign (%) matches any sequence of zero or more characters. */
-  notLike?: InputMaybe<Scalars['String']>;
+  notLike?: InputMaybe<Scalars['String']['input']>;
   /** Does not match the specified pattern (case-insensitive). An underscore (_) matches any single character; a percent sign (%) matches any sequence of zero or more characters. */
-  notLikeInsensitive?: InputMaybe<Scalars['String']>;
+  notLikeInsensitive?: InputMaybe<Scalars['String']['input']>;
   /** Does not start with the specified string (case-sensitive). */
-  notStartsWith?: InputMaybe<Scalars['String']>;
+  notStartsWith?: InputMaybe<Scalars['String']['input']>;
   /** Does not start with the specified string (case-insensitive). */
-  notStartsWithInsensitive?: InputMaybe<Scalars['String']>;
+  notStartsWithInsensitive?: InputMaybe<Scalars['String']['input']>;
   /** Starts with the specified string (case-sensitive). */
-  startsWith?: InputMaybe<Scalars['String']>;
+  startsWith?: InputMaybe<Scalars['String']['input']>;
   /** Starts with the specified string (case-insensitive). */
-  startsWithInsensitive?: InputMaybe<Scalars['String']>;
+  startsWithInsensitive?: InputMaybe<Scalars['String']['input']>;
 };
 
 /** The root subscription type: contains realtime events you can subscribe to with the `subscription` operation. */
@@ -2407,9 +2410,9 @@ export type UnpublishChannelInput = {
    * An arbitrary string value with no semantic meaning. Will be included in the
    * payload verbatim. May be used to track mutations by the client.
    */
-  clientMutationId?: InputMaybe<Scalars['String']>;
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
   /** Unique Identifier of the channel to unpublish. */
-  id: Scalars['UUID'];
+  id: Scalars['UUID']['input'];
 };
 
 export type UnpublishChannelPayload = {
@@ -2420,7 +2423,7 @@ export type UnpublishChannelPayload = {
    * The exact same `clientMutationId` that was provided in the mutation input,
    * unchanged and unused. May be used by a client to track mutations.
    */
-  clientMutationId?: Maybe<Scalars['String']>;
+  clientMutationId?: Maybe<Scalars['String']['output']>;
   query?: Maybe<Query>;
 };
 
@@ -2430,9 +2433,9 @@ export type UnpublishPlaylistInput = {
    * An arbitrary string value with no semantic meaning. Will be included in the
    * payload verbatim. May be used to track mutations by the client.
    */
-  clientMutationId?: InputMaybe<Scalars['String']>;
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
   /** Unique Identifier of the playlist to unpublish. */
-  id: Scalars['UUID'];
+  id: Scalars['UUID']['input'];
 };
 
 export type UnpublishPlaylistPayload = {
@@ -2441,7 +2444,7 @@ export type UnpublishPlaylistPayload = {
    * The exact same `clientMutationId` that was provided in the mutation input,
    * unchanged and unused. May be used by a client to track mutations.
    */
-  clientMutationId?: Maybe<Scalars['String']>;
+  clientMutationId?: Maybe<Scalars['String']['output']>;
   /** The unpublished playlist. */
   playlist?: Maybe<Playlist>;
   query?: Maybe<Query>;
@@ -2453,11 +2456,11 @@ export type UpdateAdCuePointScheduleInput = {
    * An arbitrary string value with no semantic meaning. Will be included in the
    * payload verbatim. May be used to track mutations by the client.
    */
-  clientMutationId?: InputMaybe<Scalars['String']>;
-  durationInSeconds?: InputMaybe<Scalars['Float']>;
-  id?: InputMaybe<Scalars['UUID']>;
-  programCuePointId?: InputMaybe<Scalars['UUID']>;
-  sortIndex?: InputMaybe<Scalars['Int']>;
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
+  durationInSeconds?: InputMaybe<Scalars['Float']['input']>;
+  id?: InputMaybe<Scalars['UUID']['input']>;
+  programCuePointId?: InputMaybe<Scalars['UUID']['input']>;
+  sortIndex?: InputMaybe<Scalars['Int']['input']>;
 };
 
 /** The output of our `updateAdCuePointSchedule` mutation. */
@@ -2467,7 +2470,7 @@ export type UpdateAdCuePointSchedulePayload = {
    * The exact same `clientMutationId` that was provided in the mutation input,
    * unchanged and unused. May be used by a client to track mutations.
    */
-  clientMutationId?: Maybe<Scalars['String']>;
+  clientMutationId?: Maybe<Scalars['String']['output']>;
   cuePointSchedule?: Maybe<CuePointSchedule>;
   /** An edge for our `CuePointSchedule`. May be used by Relay 1. */
   cuePointScheduleEdge?: Maybe<CuePointSchedulesEdge>;
@@ -2488,12 +2491,12 @@ export type UpdateAdCuePointSchedulePayloadCuePointScheduleEdgeArgs = {
  * @permissions: ADMIN,CHANNELS_EDIT
  */
 export type UpdateChannelImageByChannelIdAndImageTypeInput = {
-  channelId: Scalars['UUID'];
+  channelId: Scalars['UUID']['input'];
   /**
    * An arbitrary string value with no semantic meaning. Will be included in the
    * payload verbatim. May be used to track mutations by the client.
    */
-  clientMutationId?: InputMaybe<Scalars['String']>;
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
   imageType: ChannelImageType;
   /** An object where the defined keys will be set on the `ChannelImage` being updated. */
   patch: ChannelImagePatch;
@@ -2504,13 +2507,13 @@ export type UpdateChannelImageByChannelIdAndImageTypeInput = {
  * @permissions: ADMIN,CHANNELS_EDIT
  */
 export type UpdateChannelImageInput = {
-  channelId: Scalars['UUID'];
+  channelId: Scalars['UUID']['input'];
   /**
    * An arbitrary string value with no semantic meaning. Will be included in the
    * payload verbatim. May be used to track mutations by the client.
    */
-  clientMutationId?: InputMaybe<Scalars['String']>;
-  imageId: Scalars['UUID'];
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
+  imageId: Scalars['UUID']['input'];
   /** An object where the defined keys will be set on the `ChannelImage` being updated. */
   patch: ChannelImagePatch;
 };
@@ -2528,7 +2531,7 @@ export type UpdateChannelImagePayload = {
    * The exact same `clientMutationId` that was provided in the mutation input,
    * unchanged and unused. May be used by a client to track mutations.
    */
-  clientMutationId?: Maybe<Scalars['String']>;
+  clientMutationId?: Maybe<Scalars['String']['output']>;
   /** Our root query field type. Allows us to run any query from our mutation payload. */
   query?: Maybe<Query>;
 };
@@ -2548,8 +2551,8 @@ export type UpdateChannelInput = {
    * An arbitrary string value with no semantic meaning. Will be included in the
    * payload verbatim. May be used to track mutations by the client.
    */
-  clientMutationId?: InputMaybe<Scalars['String']>;
-  id: Scalars['UUID'];
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
+  id: Scalars['UUID']['input'];
   /** An object where the defined keys will be set on the `Channel` being updated. */
   patch: ChannelPatch;
 };
@@ -2565,7 +2568,7 @@ export type UpdateChannelPayload = {
    * The exact same `clientMutationId` that was provided in the mutation input,
    * unchanged and unused. May be used by a client to track mutations.
    */
-  clientMutationId?: Maybe<Scalars['String']>;
+  clientMutationId?: Maybe<Scalars['String']['output']>;
   /** Our root query field type. Allows us to run any query from our mutation payload. */
   query?: Maybe<Query>;
 };
@@ -2585,8 +2588,8 @@ export type UpdatePlaylistInput = {
    * An arbitrary string value with no semantic meaning. Will be included in the
    * payload verbatim. May be used to track mutations by the client.
    */
-  clientMutationId?: InputMaybe<Scalars['String']>;
-  id: Scalars['UUID'];
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
+  id: Scalars['UUID']['input'];
   /** An object where the defined keys will be set on the `Playlist` being updated. */
   patch: PlaylistPatch;
 };
@@ -2600,7 +2603,7 @@ export type UpdatePlaylistPayload = {
    * The exact same `clientMutationId` that was provided in the mutation input,
    * unchanged and unused. May be used by a client to track mutations.
    */
-  clientMutationId?: Maybe<Scalars['String']>;
+  clientMutationId?: Maybe<Scalars['String']['output']>;
   /** The `Playlist` that was updated by this mutation. */
   playlist?: Maybe<Playlist>;
   /** An edge for our `Playlist`. May be used by Relay 1. */
@@ -2624,8 +2627,8 @@ export type UpdateProgramCuePointInput = {
    * An arbitrary string value with no semantic meaning. Will be included in the
    * payload verbatim. May be used to track mutations by the client.
    */
-  clientMutationId?: InputMaybe<Scalars['String']>;
-  id: Scalars['UUID'];
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
+  id: Scalars['UUID']['input'];
   /** An object where the defined keys will be set on the `ProgramCuePoint` being updated. */
   patch: ProgramCuePointPatch;
 };
@@ -2637,7 +2640,7 @@ export type UpdateProgramCuePointPayload = {
    * The exact same `clientMutationId` that was provided in the mutation input,
    * unchanged and unused. May be used by a client to track mutations.
    */
-  clientMutationId?: Maybe<Scalars['String']>;
+  clientMutationId?: Maybe<Scalars['String']['output']>;
   /** Reads a single `Program` that is related to this `ProgramCuePoint`. */
   program?: Maybe<Program>;
   /** The `ProgramCuePoint` that was updated by this mutation. */
@@ -2663,8 +2666,8 @@ export type UpdateProgramInput = {
    * An arbitrary string value with no semantic meaning. Will be included in the
    * payload verbatim. May be used to track mutations by the client.
    */
-  clientMutationId?: InputMaybe<Scalars['String']>;
-  id: Scalars['UUID'];
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
+  id: Scalars['UUID']['input'];
   /** An object where the defined keys will be set on the `Program` being updated. */
   patch: ProgramPatch;
 };
@@ -2676,7 +2679,7 @@ export type UpdateProgramPayload = {
    * The exact same `clientMutationId` that was provided in the mutation input,
    * unchanged and unused. May be used by a client to track mutations.
    */
-  clientMutationId?: Maybe<Scalars['String']>;
+  clientMutationId?: Maybe<Scalars['String']['output']>;
   /** Reads a single `Playlist` that is related to this `Program`. */
   playlist?: Maybe<Playlist>;
   /** The `Program` that was updated by this mutation. */
@@ -2699,10 +2702,10 @@ export type UpdateVideoCuePointScheduleInput = {
    * An arbitrary string value with no semantic meaning. Will be included in the
    * payload verbatim. May be used to track mutations by the client.
    */
-  clientMutationId?: InputMaybe<Scalars['String']>;
-  id?: InputMaybe<Scalars['UUID']>;
-  programCuePointId?: InputMaybe<Scalars['UUID']>;
-  sortIndex?: InputMaybe<Scalars['Int']>;
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
+  id?: InputMaybe<Scalars['UUID']['input']>;
+  programCuePointId?: InputMaybe<Scalars['UUID']['input']>;
+  sortIndex?: InputMaybe<Scalars['Int']['input']>;
 };
 
 /** The output of our `updateVideoCuePointSchedule` mutation. */
@@ -2712,7 +2715,7 @@ export type UpdateVideoCuePointSchedulePayload = {
    * The exact same `clientMutationId` that was provided in the mutation input,
    * unchanged and unused. May be used by a client to track mutations.
    */
-  clientMutationId?: Maybe<Scalars['String']>;
+  clientMutationId?: Maybe<Scalars['String']['output']>;
   cuePointSchedule?: Maybe<CuePointSchedule>;
   /** An edge for our `CuePointSchedule`. May be used by Relay 1. */
   cuePointScheduleEdge?: Maybe<CuePointSchedulesEdge>;
@@ -2731,33 +2734,33 @@ export type UpdateVideoCuePointSchedulePayloadCuePointScheduleEdgeArgs = {
 /** A filter to be used against UUID fields. All fields are combined with a logical ‘and.’ */
 export type UuidFilter = {
   /** Not equal to the specified value, treating null like an ordinary value. */
-  distinctFrom?: InputMaybe<Scalars['UUID']>;
+  distinctFrom?: InputMaybe<Scalars['UUID']['input']>;
   /** Equal to the specified value. */
-  equalTo?: InputMaybe<Scalars['UUID']>;
+  equalTo?: InputMaybe<Scalars['UUID']['input']>;
   /** Greater than the specified value. */
-  greaterThan?: InputMaybe<Scalars['UUID']>;
+  greaterThan?: InputMaybe<Scalars['UUID']['input']>;
   /** Greater than or equal to the specified value. */
-  greaterThanOrEqualTo?: InputMaybe<Scalars['UUID']>;
+  greaterThanOrEqualTo?: InputMaybe<Scalars['UUID']['input']>;
   /** Included in the specified list. */
-  in?: InputMaybe<Array<Scalars['UUID']>>;
+  in?: InputMaybe<Array<Scalars['UUID']['input']>>;
   /** Is null (if `true` is specified) or is not null (if `false` is specified). */
-  isNull?: InputMaybe<Scalars['Boolean']>;
+  isNull?: InputMaybe<Scalars['Boolean']['input']>;
   /** Less than the specified value. */
-  lessThan?: InputMaybe<Scalars['UUID']>;
+  lessThan?: InputMaybe<Scalars['UUID']['input']>;
   /** Less than or equal to the specified value. */
-  lessThanOrEqualTo?: InputMaybe<Scalars['UUID']>;
+  lessThanOrEqualTo?: InputMaybe<Scalars['UUID']['input']>;
   /** Equal to the specified value, treating null like an ordinary value. */
-  notDistinctFrom?: InputMaybe<Scalars['UUID']>;
+  notDistinctFrom?: InputMaybe<Scalars['UUID']['input']>;
   /** Not equal to the specified value. */
-  notEqualTo?: InputMaybe<Scalars['UUID']>;
+  notEqualTo?: InputMaybe<Scalars['UUID']['input']>;
   /** Not included in the specified list. */
-  notIn?: InputMaybe<Array<Scalars['UUID']>>;
+  notIn?: InputMaybe<Array<Scalars['UUID']['input']>>;
 };
 
 export type ValidationChannelPayload = {
   __typename?: 'ValidationChannelPayload';
   /** Hash of the channel payload for publication. */
-  publishHash?: Maybe<Scalars['String']>;
+  publishHash?: Maybe<Scalars['String']['output']>;
   query?: Maybe<Query>;
   /** List of validation messages. */
   validationMessages: Array<PublishValidationMessage>;
@@ -2768,7 +2771,7 @@ export type ValidationChannelPayload = {
 export type ValidationPlaylistPayload = {
   __typename?: 'ValidationPlaylistPayload';
   /** Hash of the playlist payload for publication. */
-  publishHash?: Maybe<Scalars['String']>;
+  publishHash?: Maybe<Scalars['String']['output']>;
   query?: Maybe<Query>;
   /** List of validation messages. */
   validationMessages: Array<PublishValidationMessage>;
@@ -2777,186 +2780,186 @@ export type ValidationPlaylistPayload = {
 };
 
 export type CreateChannelMutationVariables = Exact<{
-  input: CreateChannelInput;
+  input: Types.CreateChannelInput;
 }>;
 
 
-export type CreateChannelMutation = { __typename?: 'Mutation', createChannel?: { __typename?: 'CreateChannelPayload', channel?: { __typename?: 'Channel', id: any, title: string } | null } | null };
+export type CreateChannelMutation = { createChannel: { channel: { id: any, title: string } | null } | null };
 
 export type ChannelQueryVariables = Exact<{
-  id: Scalars['UUID'];
+  id: any;
 }>;
 
 
-export type ChannelQuery = { __typename?: 'Query', channel?: { __typename?: 'Channel', id: any, title: string, description?: string | null, dashStreamUrl?: string | null, hlsStreamUrl?: string | null, keyId?: string | null, isDrmProtected: boolean, updatedDate: any, updatedUser: string, createdDate: any, createdUser: string, publicationState: PublicationState, publishedDate?: any | null, publishedUser?: string | null, channelImages: { __typename?: 'ChannelImagesConnection', nodes: Array<{ __typename?: 'ChannelImage', imageId: any, imageType: ChannelImageType }> } } | null };
+export type ChannelQuery = { channel: { id: any, title: string, description: string | null, dashStreamUrl: string | null, hlsStreamUrl: string | null, keyId: string | null, isDrmProtected: boolean, updatedDate: any, updatedUser: string, createdDate: any, createdUser: string, publicationState: Types.PublicationState, publishedDate: any, publishedUser: string | null, channelImages: { nodes: Array<{ imageId: any, imageType: Types.ChannelImageType }> } } | null };
 
 export type ChannelTitleQueryVariables = Exact<{
-  id: Scalars['UUID'];
+  id: any;
 }>;
 
 
-export type ChannelTitleQuery = { __typename?: 'Query', channel?: { __typename?: 'Channel', id: any, title: string } | null };
+export type ChannelTitleQuery = { channel: { id: any, title: string } | null };
 
 export type UpdateChannelMutationVariables = Exact<{
-  input: UpdateChannelInput;
+  input: Types.UpdateChannelInput;
 }>;
 
 
-export type UpdateChannelMutation = { __typename?: 'Mutation', updateChannel?: { __typename?: 'UpdateChannelPayload', channel?: { __typename?: 'Channel', id: any } | null } | null };
+export type UpdateChannelMutation = { updateChannel: { channel: { id: any } | null } | null };
 
 export type DeleteChannelMutationVariables = Exact<{
-  input: DeleteChannelInput;
+  input: Types.DeleteChannelInput;
 }>;
 
 
-export type DeleteChannelMutation = { __typename?: 'Mutation', deleteChannel?: { __typename?: 'DeleteChannelPayload', channel?: { __typename?: 'Channel', id: any } | null } | null };
+export type DeleteChannelMutation = { deleteChannel: { channel: { id: any } | null } | null };
 
 export type UnpublishChannelMutationVariables = Exact<{
-  input: UnpublishChannelInput;
+  input: Types.UnpublishChannelInput;
 }>;
 
 
-export type UnpublishChannelMutation = { __typename?: 'Mutation', unpublishChannel?: { __typename?: 'UnpublishChannelPayload', channel?: { __typename?: 'Channel', id: any } | null } | null };
+export type UnpublishChannelMutation = { unpublishChannel: { channel: { id: any } | null } | null };
 
 export type ChannelImagesQueryVariables = Exact<{
-  id: Scalars['UUID'];
+  id: any;
 }>;
 
 
-export type ChannelImagesQuery = { __typename?: 'Query', channel?: { __typename?: 'Channel', id: any, channelImages: { __typename?: 'ChannelImagesConnection', nodes: Array<{ __typename?: 'ChannelImage', imageType: ChannelImageType, imageId: any }> } } | null };
+export type ChannelImagesQuery = { channel: { id: any, channelImages: { nodes: Array<{ imageType: Types.ChannelImageType, imageId: any }> } } | null };
 
 export type ValidateChannelQueryVariables = Exact<{
-  id: Scalars['UUID'];
+  id: any;
 }>;
 
 
-export type ValidateChannelQuery = { __typename?: 'Query', validateChannel?: { __typename?: 'ValidationChannelPayload', publishHash?: string | null, validationStatus: PublishValidationStatus, validationMessages: Array<{ __typename?: 'PublishValidationMessage', context: PublishValidationContext, message: string, severity: PublishValidationSeverity }> } | null };
+export type ValidateChannelQuery = { validateChannel: { publishHash: string | null, validationStatus: Types.PublishValidationStatus, validationMessages: Array<{ context: Types.PublishValidationContext, message: string, severity: Types.PublishValidationSeverity }> } | null };
 
 export type PublishChannelMutationVariables = Exact<{
-  id: Scalars['UUID'];
-  publishHash: Scalars['String'];
+  id: any;
+  publishHash: string;
 }>;
 
 
-export type PublishChannelMutation = { __typename?: 'Mutation', publishChannel: { __typename?: 'PublishChannelPayload', channel: { __typename?: 'Channel', id: any } } };
+export type PublishChannelMutation = { publishChannel: { channel: { id: any } } };
 
 export type ChannelVideoQueryVariables = Exact<{
-  id: Scalars['UUID'];
+  id: any;
 }>;
 
 
-export type ChannelVideoQuery = { __typename?: 'Query', channel?: { __typename?: 'Channel', placeholderVideoId?: any | null } | null };
+export type ChannelVideoQuery = { channel: { placeholderVideoId: any } | null };
 
 export type ChannelsQueryVariables = Exact<{
-  filter?: InputMaybe<ChannelFilter>;
-  orderBy?: InputMaybe<Array<ChannelsOrderBy> | ChannelsOrderBy>;
-  after?: InputMaybe<Scalars['Cursor']>;
+  filter?: Types.ChannelFilter | null | undefined;
+  orderBy?: Array<Types.ChannelsOrderBy> | Types.ChannelsOrderBy | null | undefined;
+  after?: any;
 }>;
 
 
-export type ChannelsQuery = { __typename?: 'Query', filtered?: { __typename?: 'ChannelsConnection', totalCount: number, pageInfo: { __typename?: 'PageInfo', hasNextPage: boolean, endCursor?: any | null }, nodes: Array<{ __typename?: 'Channel', id: any, title: string, createdDate: any, updatedDate: any, publicationState: PublicationState, publishedDate?: any | null, channelImages: { __typename?: 'ChannelImagesConnection', nodes: Array<{ __typename?: 'ChannelImage', imageId: any, imageType: ChannelImageType }> } }> } | null, nonFiltered?: { __typename?: 'ChannelsConnection', totalCount: number } | null };
+export type ChannelsQuery = { filtered: { totalCount: number, pageInfo: { hasNextPage: boolean, endCursor: any }, nodes: Array<{ id: any, title: string, createdDate: any, updatedDate: any, publicationState: Types.PublicationState, publishedDate: any, channelImages: { nodes: Array<{ imageId: any, imageType: Types.ChannelImageType }> } }> } | null, nonFiltered: { totalCount: number } | null };
 
 export type CreatePlaylistMutationVariables = Exact<{
-  input: CreatePlaylistInput;
+  input: Types.CreatePlaylistInput;
 }>;
 
 
-export type CreatePlaylistMutation = { __typename?: 'Mutation', createPlaylist?: { __typename?: 'CreatePlaylistPayload', playlist?: { __typename?: 'Playlist', id: any, channelId: any, title: string, startDateTime: any } | null } | null };
+export type CreatePlaylistMutation = { createPlaylist: { playlist: { id: any, channelId: any, title: string, startDateTime: any } | null } | null };
 
 export type PlaylistQueryVariables = Exact<{
-  id: Scalars['UUID'];
+  id: any;
 }>;
 
 
-export type PlaylistQuery = { __typename?: 'Query', playlist?: { __typename?: 'Playlist', id: any, title: string, startDateTime: any, calculatedDurationInSeconds: number, calculatedEndDateTime?: any | null, createdDate: any, createdUser: string, updatedDate: any, updatedUser: string, publishedDate?: any | null, publishedUser?: string | null, publicationState: PublicationState, programs: { __typename?: 'ProgramsConnection', nodes: Array<{ __typename?: 'Program', entityType: EntityType }> } } | null };
+export type PlaylistQuery = { playlist: { id: any, title: string, startDateTime: any, calculatedDurationInSeconds: number, calculatedEndDateTime: any, createdDate: any, createdUser: string, updatedDate: any, updatedUser: string, publishedDate: any, publishedUser: string | null, publicationState: Types.PublicationState, programs: { nodes: Array<{ entityType: Types.EntityType }> } } | null };
 
 export type UpdatePlaylistMutationVariables = Exact<{
-  input: UpdatePlaylistInput;
+  input: Types.UpdatePlaylistInput;
 }>;
 
 
-export type UpdatePlaylistMutation = { __typename?: 'Mutation', updatePlaylist?: { __typename?: 'UpdatePlaylistPayload', playlist?: { __typename?: 'Playlist', id: any } | null } | null };
+export type UpdatePlaylistMutation = { updatePlaylist: { playlist: { id: any } | null } | null };
 
 export type DeletePlaylistMutationVariables = Exact<{
-  input: DeletePlaylistInput;
+  input: Types.DeletePlaylistInput;
 }>;
 
 
-export type DeletePlaylistMutation = { __typename?: 'Mutation', deletePlaylist?: { __typename?: 'DeletePlaylistPayload', playlist?: { __typename?: 'Playlist', id: any } | null } | null };
+export type DeletePlaylistMutation = { deletePlaylist: { playlist: { id: any } | null } | null };
 
 export type UnpublishPlaylistMutationVariables = Exact<{
-  input: UnpublishPlaylistInput;
+  input: Types.UnpublishPlaylistInput;
 }>;
 
 
-export type UnpublishPlaylistMutation = { __typename?: 'Mutation', unpublishPlaylist?: { __typename?: 'UnpublishPlaylistPayload', playlist?: { __typename?: 'Playlist', id: any } | null } | null };
+export type UnpublishPlaylistMutation = { unpublishPlaylist: { playlist: { id: any } | null } | null };
 
 export type PlaylistTitleQueryVariables = Exact<{
-  id: Scalars['UUID'];
+  id: any;
 }>;
 
 
-export type PlaylistTitleQuery = { __typename?: 'Query', playlist?: { __typename?: 'Playlist', id: any, title: string } | null };
+export type PlaylistTitleQuery = { playlist: { id: any, title: string } | null };
 
 export type ValidatePlaylistQueryVariables = Exact<{
-  id: Scalars['UUID'];
+  id: any;
 }>;
 
 
-export type ValidatePlaylistQuery = { __typename?: 'Query', validatePlaylist?: { __typename?: 'ValidationPlaylistPayload', publishHash?: string | null, validationStatus: PublishValidationStatus, validationMessages: Array<{ __typename?: 'PublishValidationMessage', context: PublishValidationContext, message: string, severity: PublishValidationSeverity }> } | null };
+export type ValidatePlaylistQuery = { validatePlaylist: { publishHash: string | null, validationStatus: Types.PublishValidationStatus, validationMessages: Array<{ context: Types.PublishValidationContext, message: string, severity: Types.PublishValidationSeverity }> } | null };
 
 export type PublishPlaylistMutationVariables = Exact<{
-  id: Scalars['UUID'];
-  publishHash: Scalars['String'];
+  id: any;
+  publishHash: string;
 }>;
 
 
-export type PublishPlaylistMutation = { __typename?: 'Mutation', publishPlaylist: { __typename?: 'PublishPlaylistPayload', playlist: { __typename?: 'Playlist', id: any } } };
+export type PublishPlaylistMutation = { publishPlaylist: { playlist: { id: any } } };
 
 export type PlaylistsQueryVariables = Exact<{
-  filter?: InputMaybe<PlaylistFilter>;
-  orderBy?: InputMaybe<Array<PlaylistsOrderBy> | PlaylistsOrderBy>;
-  after?: InputMaybe<Scalars['Cursor']>;
-  channelId: Scalars['UUID'];
+  filter?: Types.PlaylistFilter | null | undefined;
+  orderBy?: Array<Types.PlaylistsOrderBy> | Types.PlaylistsOrderBy | null | undefined;
+  after?: any;
+  channelId: any;
 }>;
 
 
-export type PlaylistsQuery = { __typename?: 'Query', filtered?: { __typename?: 'PlaylistsConnection', totalCount: number, pageInfo: { __typename?: 'PageInfo', hasNextPage: boolean, endCursor?: any | null }, nodes: Array<{ __typename?: 'Playlist', id: any, startDateTime: any, calculatedDurationInSeconds: number, createdDate: any, updatedDate: any, publicationState: PublicationState, publishedDate?: any | null, programs: { __typename?: 'ProgramsConnection', totalCount: number } }> } | null, nonFiltered?: { __typename?: 'PlaylistsConnection', totalCount: number } | null };
+export type PlaylistsQuery = { filtered: { totalCount: number, pageInfo: { hasNextPage: boolean, endCursor: any }, nodes: Array<{ id: any, startDateTime: any, calculatedDurationInSeconds: number, createdDate: any, updatedDate: any, publicationState: Types.PublicationState, publishedDate: any, programs: { totalCount: number } }> } | null, nonFiltered: { totalCount: number } | null };
 
 export type ProgramQueryVariables = Exact<{
-  id: Scalars['UUID'];
+  id: any;
 }>;
 
 
-export type ProgramQuery = { __typename?: 'Query', program?: { __typename?: 'Program', id: any, title: string, updatedDate: any, updatedUser: string, createdDate: any, createdUser: string, imageId?: any | null } | null };
+export type ProgramQuery = { program: { id: any, title: string, updatedDate: any, updatedUser: string, createdDate: any, createdUser: string, imageId: any } | null };
 
 export type ProgramTitleQueryVariables = Exact<{
-  id: Scalars['UUID'];
+  id: any;
 }>;
 
 
-export type ProgramTitleQuery = { __typename?: 'Query', program?: { __typename?: 'Program', id: any, title: string } | null };
+export type ProgramTitleQuery = { program: { id: any, title: string } | null };
 
 export type UpdateProgramMutationVariables = Exact<{
-  input: UpdateProgramInput;
+  input: Types.UpdateProgramInput;
 }>;
 
 
-export type UpdateProgramMutation = { __typename?: 'Mutation', updateProgram?: { __typename?: 'UpdateProgramPayload', program?: { __typename?: 'Program', id: any } | null } | null };
+export type UpdateProgramMutation = { updateProgram: { program: { id: any } | null } | null };
 
 export type ProgramDetailsRootPathParamsQueryVariables = Exact<{
-  programId: Scalars['UUID'];
+  programId: any;
 }>;
 
 
-export type ProgramDetailsRootPathParamsQuery = { __typename?: 'Query', program?: { __typename?: 'Program', playlist?: { __typename?: 'Playlist', id: any, channel?: { __typename?: 'Channel', id: any } | null } | null } | null };
+export type ProgramDetailsRootPathParamsQuery = { program: { playlist: { id: any, channel: { id: any } | null } | null } | null };
 
 export type PlaylistProgramsQueryVariables = Exact<{
-  id: Scalars['UUID'];
+  id: any;
 }>;
 
 
-export type PlaylistProgramsQuery = { __typename?: 'Query', playlist?: { __typename?: 'Playlist', startDateTime: any, calculatedEndDateTime?: any | null, calculatedDurationInSeconds: number, programs: { __typename?: 'ProgramsConnection', nodes: Array<{ __typename?: 'Program', id: any, sortIndex: number, title: string, entityId: string, entityType: EntityType, videoDurationInSeconds: number, imageId?: any | null, videoId: any, programCuePoints: { __typename?: 'ProgramCuePointsConnection', nodes: Array<{ __typename?: 'ProgramCuePoint', id: any, videoCuePointId?: any | null, type: ProgramBreakType, timeInSeconds?: number | null, cuePointSchedules: { __typename?: 'CuePointSchedulesConnection', nodes: Array<{ __typename?: 'CuePointSchedule', id: any, type: CuePointScheduleType, durationInSeconds: number, videoId?: any | null, sortIndex: number, programCuePointId: any }> } }> } }> } } | null, channel?: { __typename?: 'Playlist', channelId: any } | null };
+export type PlaylistProgramsQuery = { playlist: { startDateTime: any, calculatedEndDateTime: any, calculatedDurationInSeconds: number, programs: { nodes: Array<{ id: any, sortIndex: number, title: string, entityId: string, entityType: Types.EntityType, videoDurationInSeconds: number, imageId: any, videoId: any, programCuePoints: { nodes: Array<{ id: any, videoCuePointId: any, type: Types.ProgramBreakType, timeInSeconds: number | null, cuePointSchedules: { nodes: Array<{ id: any, type: Types.CuePointScheduleType, durationInSeconds: number, videoId: any, sortIndex: number, programCuePointId: any }> } }> } }> } } | null, channel: { channelId: any } | null };
 
 
 export const CreateChannelDocument = gql`
@@ -3038,7 +3041,7 @@ export const ChannelDocument = gql`
  *   },
  * });
  */
-export function useChannelQuery(baseOptions: Apollo.QueryHookOptions<ChannelQuery, ChannelQueryVariables>) {
+export function useChannelQuery(baseOptions: Apollo.QueryHookOptions<ChannelQuery, ChannelQueryVariables> & ({ variables: ChannelQueryVariables; skip?: boolean; } | { skip: boolean; }) ) {
         const options = {...defaultOptions, ...baseOptions}
         return Apollo.useQuery<ChannelQuery, ChannelQueryVariables>(ChannelDocument, options);
       }
@@ -3046,8 +3049,16 @@ export function useChannelLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<Ch
           const options = {...defaultOptions, ...baseOptions}
           return Apollo.useLazyQuery<ChannelQuery, ChannelQueryVariables>(ChannelDocument, options);
         }
+// @ts-ignore
+export function useChannelSuspenseQuery(baseOptions?: Apollo.SuspenseQueryHookOptions<ChannelQuery, ChannelQueryVariables>): Apollo.UseSuspenseQueryResult<ChannelQuery, ChannelQueryVariables>;
+export function useChannelSuspenseQuery(baseOptions?: Apollo.SkipToken | Apollo.SuspenseQueryHookOptions<ChannelQuery, ChannelQueryVariables>): Apollo.UseSuspenseQueryResult<ChannelQuery | undefined, ChannelQueryVariables>;
+export function useChannelSuspenseQuery(baseOptions?: Apollo.SkipToken | Apollo.SuspenseQueryHookOptions<ChannelQuery, ChannelQueryVariables>) {
+          const options = baseOptions === Apollo.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<ChannelQuery, ChannelQueryVariables>(ChannelDocument, options);
+        }
 export type ChannelQueryHookResult = ReturnType<typeof useChannelQuery>;
 export type ChannelLazyQueryHookResult = ReturnType<typeof useChannelLazyQuery>;
+export type ChannelSuspenseQueryHookResult = ReturnType<typeof useChannelSuspenseQuery>;
 export type ChannelQueryResult = Apollo.QueryResult<ChannelQuery, ChannelQueryVariables>;
 export const ChannelTitleDocument = gql`
     query ChannelTitle($id: UUID!) {
@@ -3074,7 +3085,7 @@ export const ChannelTitleDocument = gql`
  *   },
  * });
  */
-export function useChannelTitleQuery(baseOptions: Apollo.QueryHookOptions<ChannelTitleQuery, ChannelTitleQueryVariables>) {
+export function useChannelTitleQuery(baseOptions: Apollo.QueryHookOptions<ChannelTitleQuery, ChannelTitleQueryVariables> & ({ variables: ChannelTitleQueryVariables; skip?: boolean; } | { skip: boolean; }) ) {
         const options = {...defaultOptions, ...baseOptions}
         return Apollo.useQuery<ChannelTitleQuery, ChannelTitleQueryVariables>(ChannelTitleDocument, options);
       }
@@ -3082,8 +3093,16 @@ export function useChannelTitleLazyQuery(baseOptions?: Apollo.LazyQueryHookOptio
           const options = {...defaultOptions, ...baseOptions}
           return Apollo.useLazyQuery<ChannelTitleQuery, ChannelTitleQueryVariables>(ChannelTitleDocument, options);
         }
+// @ts-ignore
+export function useChannelTitleSuspenseQuery(baseOptions?: Apollo.SuspenseQueryHookOptions<ChannelTitleQuery, ChannelTitleQueryVariables>): Apollo.UseSuspenseQueryResult<ChannelTitleQuery, ChannelTitleQueryVariables>;
+export function useChannelTitleSuspenseQuery(baseOptions?: Apollo.SkipToken | Apollo.SuspenseQueryHookOptions<ChannelTitleQuery, ChannelTitleQueryVariables>): Apollo.UseSuspenseQueryResult<ChannelTitleQuery | undefined, ChannelTitleQueryVariables>;
+export function useChannelTitleSuspenseQuery(baseOptions?: Apollo.SkipToken | Apollo.SuspenseQueryHookOptions<ChannelTitleQuery, ChannelTitleQueryVariables>) {
+          const options = baseOptions === Apollo.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<ChannelTitleQuery, ChannelTitleQueryVariables>(ChannelTitleDocument, options);
+        }
 export type ChannelTitleQueryHookResult = ReturnType<typeof useChannelTitleQuery>;
 export type ChannelTitleLazyQueryHookResult = ReturnType<typeof useChannelTitleLazyQuery>;
+export type ChannelTitleSuspenseQueryHookResult = ReturnType<typeof useChannelTitleSuspenseQuery>;
 export type ChannelTitleQueryResult = Apollo.QueryResult<ChannelTitleQuery, ChannelTitleQueryVariables>;
 export const UpdateChannelDocument = gql`
     mutation UpdateChannel($input: UpdateChannelInput!) {
@@ -3220,7 +3239,7 @@ export const ChannelImagesDocument = gql`
  *   },
  * });
  */
-export function useChannelImagesQuery(baseOptions: Apollo.QueryHookOptions<ChannelImagesQuery, ChannelImagesQueryVariables>) {
+export function useChannelImagesQuery(baseOptions: Apollo.QueryHookOptions<ChannelImagesQuery, ChannelImagesQueryVariables> & ({ variables: ChannelImagesQueryVariables; skip?: boolean; } | { skip: boolean; }) ) {
         const options = {...defaultOptions, ...baseOptions}
         return Apollo.useQuery<ChannelImagesQuery, ChannelImagesQueryVariables>(ChannelImagesDocument, options);
       }
@@ -3228,8 +3247,16 @@ export function useChannelImagesLazyQuery(baseOptions?: Apollo.LazyQueryHookOpti
           const options = {...defaultOptions, ...baseOptions}
           return Apollo.useLazyQuery<ChannelImagesQuery, ChannelImagesQueryVariables>(ChannelImagesDocument, options);
         }
+// @ts-ignore
+export function useChannelImagesSuspenseQuery(baseOptions?: Apollo.SuspenseQueryHookOptions<ChannelImagesQuery, ChannelImagesQueryVariables>): Apollo.UseSuspenseQueryResult<ChannelImagesQuery, ChannelImagesQueryVariables>;
+export function useChannelImagesSuspenseQuery(baseOptions?: Apollo.SkipToken | Apollo.SuspenseQueryHookOptions<ChannelImagesQuery, ChannelImagesQueryVariables>): Apollo.UseSuspenseQueryResult<ChannelImagesQuery | undefined, ChannelImagesQueryVariables>;
+export function useChannelImagesSuspenseQuery(baseOptions?: Apollo.SkipToken | Apollo.SuspenseQueryHookOptions<ChannelImagesQuery, ChannelImagesQueryVariables>) {
+          const options = baseOptions === Apollo.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<ChannelImagesQuery, ChannelImagesQueryVariables>(ChannelImagesDocument, options);
+        }
 export type ChannelImagesQueryHookResult = ReturnType<typeof useChannelImagesQuery>;
 export type ChannelImagesLazyQueryHookResult = ReturnType<typeof useChannelImagesLazyQuery>;
+export type ChannelImagesSuspenseQueryHookResult = ReturnType<typeof useChannelImagesSuspenseQuery>;
 export type ChannelImagesQueryResult = Apollo.QueryResult<ChannelImagesQuery, ChannelImagesQueryVariables>;
 export const ValidateChannelDocument = gql`
     query ValidateChannel($id: UUID!) {
@@ -3261,7 +3288,7 @@ export const ValidateChannelDocument = gql`
  *   },
  * });
  */
-export function useValidateChannelQuery(baseOptions: Apollo.QueryHookOptions<ValidateChannelQuery, ValidateChannelQueryVariables>) {
+export function useValidateChannelQuery(baseOptions: Apollo.QueryHookOptions<ValidateChannelQuery, ValidateChannelQueryVariables> & ({ variables: ValidateChannelQueryVariables; skip?: boolean; } | { skip: boolean; }) ) {
         const options = {...defaultOptions, ...baseOptions}
         return Apollo.useQuery<ValidateChannelQuery, ValidateChannelQueryVariables>(ValidateChannelDocument, options);
       }
@@ -3269,8 +3296,16 @@ export function useValidateChannelLazyQuery(baseOptions?: Apollo.LazyQueryHookOp
           const options = {...defaultOptions, ...baseOptions}
           return Apollo.useLazyQuery<ValidateChannelQuery, ValidateChannelQueryVariables>(ValidateChannelDocument, options);
         }
+// @ts-ignore
+export function useValidateChannelSuspenseQuery(baseOptions?: Apollo.SuspenseQueryHookOptions<ValidateChannelQuery, ValidateChannelQueryVariables>): Apollo.UseSuspenseQueryResult<ValidateChannelQuery, ValidateChannelQueryVariables>;
+export function useValidateChannelSuspenseQuery(baseOptions?: Apollo.SkipToken | Apollo.SuspenseQueryHookOptions<ValidateChannelQuery, ValidateChannelQueryVariables>): Apollo.UseSuspenseQueryResult<ValidateChannelQuery | undefined, ValidateChannelQueryVariables>;
+export function useValidateChannelSuspenseQuery(baseOptions?: Apollo.SkipToken | Apollo.SuspenseQueryHookOptions<ValidateChannelQuery, ValidateChannelQueryVariables>) {
+          const options = baseOptions === Apollo.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<ValidateChannelQuery, ValidateChannelQueryVariables>(ValidateChannelDocument, options);
+        }
 export type ValidateChannelQueryHookResult = ReturnType<typeof useValidateChannelQuery>;
 export type ValidateChannelLazyQueryHookResult = ReturnType<typeof useValidateChannelLazyQuery>;
+export type ValidateChannelSuspenseQueryHookResult = ReturnType<typeof useValidateChannelSuspenseQuery>;
 export type ValidateChannelQueryResult = Apollo.QueryResult<ValidateChannelQuery, ValidateChannelQueryVariables>;
 export const PublishChannelDocument = gql`
     mutation PublishChannel($id: UUID!, $publishHash: String!) {
@@ -3332,7 +3367,7 @@ export const ChannelVideoDocument = gql`
  *   },
  * });
  */
-export function useChannelVideoQuery(baseOptions: Apollo.QueryHookOptions<ChannelVideoQuery, ChannelVideoQueryVariables>) {
+export function useChannelVideoQuery(baseOptions: Apollo.QueryHookOptions<ChannelVideoQuery, ChannelVideoQueryVariables> & ({ variables: ChannelVideoQueryVariables; skip?: boolean; } | { skip: boolean; }) ) {
         const options = {...defaultOptions, ...baseOptions}
         return Apollo.useQuery<ChannelVideoQuery, ChannelVideoQueryVariables>(ChannelVideoDocument, options);
       }
@@ -3340,8 +3375,16 @@ export function useChannelVideoLazyQuery(baseOptions?: Apollo.LazyQueryHookOptio
           const options = {...defaultOptions, ...baseOptions}
           return Apollo.useLazyQuery<ChannelVideoQuery, ChannelVideoQueryVariables>(ChannelVideoDocument, options);
         }
+// @ts-ignore
+export function useChannelVideoSuspenseQuery(baseOptions?: Apollo.SuspenseQueryHookOptions<ChannelVideoQuery, ChannelVideoQueryVariables>): Apollo.UseSuspenseQueryResult<ChannelVideoQuery, ChannelVideoQueryVariables>;
+export function useChannelVideoSuspenseQuery(baseOptions?: Apollo.SkipToken | Apollo.SuspenseQueryHookOptions<ChannelVideoQuery, ChannelVideoQueryVariables>): Apollo.UseSuspenseQueryResult<ChannelVideoQuery | undefined, ChannelVideoQueryVariables>;
+export function useChannelVideoSuspenseQuery(baseOptions?: Apollo.SkipToken | Apollo.SuspenseQueryHookOptions<ChannelVideoQuery, ChannelVideoQueryVariables>) {
+          const options = baseOptions === Apollo.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<ChannelVideoQuery, ChannelVideoQueryVariables>(ChannelVideoDocument, options);
+        }
 export type ChannelVideoQueryHookResult = ReturnType<typeof useChannelVideoQuery>;
 export type ChannelVideoLazyQueryHookResult = ReturnType<typeof useChannelVideoLazyQuery>;
+export type ChannelVideoSuspenseQueryHookResult = ReturnType<typeof useChannelVideoSuspenseQuery>;
 export type ChannelVideoQueryResult = Apollo.QueryResult<ChannelVideoQuery, ChannelVideoQueryVariables>;
 export const ChannelsDocument = gql`
     query Channels($filter: ChannelFilter, $orderBy: [ChannelsOrderBy!], $after: Cursor) {
@@ -3398,8 +3441,16 @@ export function useChannelsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<C
           const options = {...defaultOptions, ...baseOptions}
           return Apollo.useLazyQuery<ChannelsQuery, ChannelsQueryVariables>(ChannelsDocument, options);
         }
+// @ts-ignore
+export function useChannelsSuspenseQuery(baseOptions?: Apollo.SuspenseQueryHookOptions<ChannelsQuery, ChannelsQueryVariables>): Apollo.UseSuspenseQueryResult<ChannelsQuery, ChannelsQueryVariables>;
+export function useChannelsSuspenseQuery(baseOptions?: Apollo.SkipToken | Apollo.SuspenseQueryHookOptions<ChannelsQuery, ChannelsQueryVariables>): Apollo.UseSuspenseQueryResult<ChannelsQuery | undefined, ChannelsQueryVariables>;
+export function useChannelsSuspenseQuery(baseOptions?: Apollo.SkipToken | Apollo.SuspenseQueryHookOptions<ChannelsQuery, ChannelsQueryVariables>) {
+          const options = baseOptions === Apollo.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<ChannelsQuery, ChannelsQueryVariables>(ChannelsDocument, options);
+        }
 export type ChannelsQueryHookResult = ReturnType<typeof useChannelsQuery>;
 export type ChannelsLazyQueryHookResult = ReturnType<typeof useChannelsLazyQuery>;
+export type ChannelsSuspenseQueryHookResult = ReturnType<typeof useChannelsSuspenseQuery>;
 export type ChannelsQueryResult = Apollo.QueryResult<ChannelsQuery, ChannelsQueryVariables>;
 export const CreatePlaylistDocument = gql`
     mutation CreatePlaylist($input: CreatePlaylistInput!) {
@@ -3479,7 +3530,7 @@ export const PlaylistDocument = gql`
  *   },
  * });
  */
-export function usePlaylistQuery(baseOptions: Apollo.QueryHookOptions<PlaylistQuery, PlaylistQueryVariables>) {
+export function usePlaylistQuery(baseOptions: Apollo.QueryHookOptions<PlaylistQuery, PlaylistQueryVariables> & ({ variables: PlaylistQueryVariables; skip?: boolean; } | { skip: boolean; }) ) {
         const options = {...defaultOptions, ...baseOptions}
         return Apollo.useQuery<PlaylistQuery, PlaylistQueryVariables>(PlaylistDocument, options);
       }
@@ -3487,8 +3538,16 @@ export function usePlaylistLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<P
           const options = {...defaultOptions, ...baseOptions}
           return Apollo.useLazyQuery<PlaylistQuery, PlaylistQueryVariables>(PlaylistDocument, options);
         }
+// @ts-ignore
+export function usePlaylistSuspenseQuery(baseOptions?: Apollo.SuspenseQueryHookOptions<PlaylistQuery, PlaylistQueryVariables>): Apollo.UseSuspenseQueryResult<PlaylistQuery, PlaylistQueryVariables>;
+export function usePlaylistSuspenseQuery(baseOptions?: Apollo.SkipToken | Apollo.SuspenseQueryHookOptions<PlaylistQuery, PlaylistQueryVariables>): Apollo.UseSuspenseQueryResult<PlaylistQuery | undefined, PlaylistQueryVariables>;
+export function usePlaylistSuspenseQuery(baseOptions?: Apollo.SkipToken | Apollo.SuspenseQueryHookOptions<PlaylistQuery, PlaylistQueryVariables>) {
+          const options = baseOptions === Apollo.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<PlaylistQuery, PlaylistQueryVariables>(PlaylistDocument, options);
+        }
 export type PlaylistQueryHookResult = ReturnType<typeof usePlaylistQuery>;
 export type PlaylistLazyQueryHookResult = ReturnType<typeof usePlaylistLazyQuery>;
+export type PlaylistSuspenseQueryHookResult = ReturnType<typeof usePlaylistSuspenseQuery>;
 export type PlaylistQueryResult = Apollo.QueryResult<PlaylistQuery, PlaylistQueryVariables>;
 export const UpdatePlaylistDocument = gql`
     mutation UpdatePlaylist($input: UpdatePlaylistInput!) {
@@ -3620,7 +3679,7 @@ export const PlaylistTitleDocument = gql`
  *   },
  * });
  */
-export function usePlaylistTitleQuery(baseOptions: Apollo.QueryHookOptions<PlaylistTitleQuery, PlaylistTitleQueryVariables>) {
+export function usePlaylistTitleQuery(baseOptions: Apollo.QueryHookOptions<PlaylistTitleQuery, PlaylistTitleQueryVariables> & ({ variables: PlaylistTitleQueryVariables; skip?: boolean; } | { skip: boolean; }) ) {
         const options = {...defaultOptions, ...baseOptions}
         return Apollo.useQuery<PlaylistTitleQuery, PlaylistTitleQueryVariables>(PlaylistTitleDocument, options);
       }
@@ -3628,8 +3687,16 @@ export function usePlaylistTitleLazyQuery(baseOptions?: Apollo.LazyQueryHookOpti
           const options = {...defaultOptions, ...baseOptions}
           return Apollo.useLazyQuery<PlaylistTitleQuery, PlaylistTitleQueryVariables>(PlaylistTitleDocument, options);
         }
+// @ts-ignore
+export function usePlaylistTitleSuspenseQuery(baseOptions?: Apollo.SuspenseQueryHookOptions<PlaylistTitleQuery, PlaylistTitleQueryVariables>): Apollo.UseSuspenseQueryResult<PlaylistTitleQuery, PlaylistTitleQueryVariables>;
+export function usePlaylistTitleSuspenseQuery(baseOptions?: Apollo.SkipToken | Apollo.SuspenseQueryHookOptions<PlaylistTitleQuery, PlaylistTitleQueryVariables>): Apollo.UseSuspenseQueryResult<PlaylistTitleQuery | undefined, PlaylistTitleQueryVariables>;
+export function usePlaylistTitleSuspenseQuery(baseOptions?: Apollo.SkipToken | Apollo.SuspenseQueryHookOptions<PlaylistTitleQuery, PlaylistTitleQueryVariables>) {
+          const options = baseOptions === Apollo.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<PlaylistTitleQuery, PlaylistTitleQueryVariables>(PlaylistTitleDocument, options);
+        }
 export type PlaylistTitleQueryHookResult = ReturnType<typeof usePlaylistTitleQuery>;
 export type PlaylistTitleLazyQueryHookResult = ReturnType<typeof usePlaylistTitleLazyQuery>;
+export type PlaylistTitleSuspenseQueryHookResult = ReturnType<typeof usePlaylistTitleSuspenseQuery>;
 export type PlaylistTitleQueryResult = Apollo.QueryResult<PlaylistTitleQuery, PlaylistTitleQueryVariables>;
 export const ValidatePlaylistDocument = gql`
     query ValidatePlaylist($id: UUID!) {
@@ -3661,7 +3728,7 @@ export const ValidatePlaylistDocument = gql`
  *   },
  * });
  */
-export function useValidatePlaylistQuery(baseOptions: Apollo.QueryHookOptions<ValidatePlaylistQuery, ValidatePlaylistQueryVariables>) {
+export function useValidatePlaylistQuery(baseOptions: Apollo.QueryHookOptions<ValidatePlaylistQuery, ValidatePlaylistQueryVariables> & ({ variables: ValidatePlaylistQueryVariables; skip?: boolean; } | { skip: boolean; }) ) {
         const options = {...defaultOptions, ...baseOptions}
         return Apollo.useQuery<ValidatePlaylistQuery, ValidatePlaylistQueryVariables>(ValidatePlaylistDocument, options);
       }
@@ -3669,8 +3736,16 @@ export function useValidatePlaylistLazyQuery(baseOptions?: Apollo.LazyQueryHookO
           const options = {...defaultOptions, ...baseOptions}
           return Apollo.useLazyQuery<ValidatePlaylistQuery, ValidatePlaylistQueryVariables>(ValidatePlaylistDocument, options);
         }
+// @ts-ignore
+export function useValidatePlaylistSuspenseQuery(baseOptions?: Apollo.SuspenseQueryHookOptions<ValidatePlaylistQuery, ValidatePlaylistQueryVariables>): Apollo.UseSuspenseQueryResult<ValidatePlaylistQuery, ValidatePlaylistQueryVariables>;
+export function useValidatePlaylistSuspenseQuery(baseOptions?: Apollo.SkipToken | Apollo.SuspenseQueryHookOptions<ValidatePlaylistQuery, ValidatePlaylistQueryVariables>): Apollo.UseSuspenseQueryResult<ValidatePlaylistQuery | undefined, ValidatePlaylistQueryVariables>;
+export function useValidatePlaylistSuspenseQuery(baseOptions?: Apollo.SkipToken | Apollo.SuspenseQueryHookOptions<ValidatePlaylistQuery, ValidatePlaylistQueryVariables>) {
+          const options = baseOptions === Apollo.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<ValidatePlaylistQuery, ValidatePlaylistQueryVariables>(ValidatePlaylistDocument, options);
+        }
 export type ValidatePlaylistQueryHookResult = ReturnType<typeof useValidatePlaylistQuery>;
 export type ValidatePlaylistLazyQueryHookResult = ReturnType<typeof useValidatePlaylistLazyQuery>;
+export type ValidatePlaylistSuspenseQueryHookResult = ReturnType<typeof useValidatePlaylistSuspenseQuery>;
 export type ValidatePlaylistQueryResult = Apollo.QueryResult<ValidatePlaylistQuery, ValidatePlaylistQueryVariables>;
 export const PublishPlaylistDocument = gql`
     mutation PublishPlaylist($id: UUID!, $publishHash: String!) {
@@ -3760,7 +3835,7 @@ export const PlaylistsDocument = gql`
  *   },
  * });
  */
-export function usePlaylistsQuery(baseOptions: Apollo.QueryHookOptions<PlaylistsQuery, PlaylistsQueryVariables>) {
+export function usePlaylistsQuery(baseOptions: Apollo.QueryHookOptions<PlaylistsQuery, PlaylistsQueryVariables> & ({ variables: PlaylistsQueryVariables; skip?: boolean; } | { skip: boolean; }) ) {
         const options = {...defaultOptions, ...baseOptions}
         return Apollo.useQuery<PlaylistsQuery, PlaylistsQueryVariables>(PlaylistsDocument, options);
       }
@@ -3768,8 +3843,16 @@ export function usePlaylistsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<
           const options = {...defaultOptions, ...baseOptions}
           return Apollo.useLazyQuery<PlaylistsQuery, PlaylistsQueryVariables>(PlaylistsDocument, options);
         }
+// @ts-ignore
+export function usePlaylistsSuspenseQuery(baseOptions?: Apollo.SuspenseQueryHookOptions<PlaylistsQuery, PlaylistsQueryVariables>): Apollo.UseSuspenseQueryResult<PlaylistsQuery, PlaylistsQueryVariables>;
+export function usePlaylistsSuspenseQuery(baseOptions?: Apollo.SkipToken | Apollo.SuspenseQueryHookOptions<PlaylistsQuery, PlaylistsQueryVariables>): Apollo.UseSuspenseQueryResult<PlaylistsQuery | undefined, PlaylistsQueryVariables>;
+export function usePlaylistsSuspenseQuery(baseOptions?: Apollo.SkipToken | Apollo.SuspenseQueryHookOptions<PlaylistsQuery, PlaylistsQueryVariables>) {
+          const options = baseOptions === Apollo.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<PlaylistsQuery, PlaylistsQueryVariables>(PlaylistsDocument, options);
+        }
 export type PlaylistsQueryHookResult = ReturnType<typeof usePlaylistsQuery>;
 export type PlaylistsLazyQueryHookResult = ReturnType<typeof usePlaylistsLazyQuery>;
+export type PlaylistsSuspenseQueryHookResult = ReturnType<typeof usePlaylistsSuspenseQuery>;
 export type PlaylistsQueryResult = Apollo.QueryResult<PlaylistsQuery, PlaylistsQueryVariables>;
 export const ProgramDocument = gql`
     query Program($id: UUID!) {
@@ -3801,7 +3884,7 @@ export const ProgramDocument = gql`
  *   },
  * });
  */
-export function useProgramQuery(baseOptions: Apollo.QueryHookOptions<ProgramQuery, ProgramQueryVariables>) {
+export function useProgramQuery(baseOptions: Apollo.QueryHookOptions<ProgramQuery, ProgramQueryVariables> & ({ variables: ProgramQueryVariables; skip?: boolean; } | { skip: boolean; }) ) {
         const options = {...defaultOptions, ...baseOptions}
         return Apollo.useQuery<ProgramQuery, ProgramQueryVariables>(ProgramDocument, options);
       }
@@ -3809,8 +3892,16 @@ export function useProgramLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<Pr
           const options = {...defaultOptions, ...baseOptions}
           return Apollo.useLazyQuery<ProgramQuery, ProgramQueryVariables>(ProgramDocument, options);
         }
+// @ts-ignore
+export function useProgramSuspenseQuery(baseOptions?: Apollo.SuspenseQueryHookOptions<ProgramQuery, ProgramQueryVariables>): Apollo.UseSuspenseQueryResult<ProgramQuery, ProgramQueryVariables>;
+export function useProgramSuspenseQuery(baseOptions?: Apollo.SkipToken | Apollo.SuspenseQueryHookOptions<ProgramQuery, ProgramQueryVariables>): Apollo.UseSuspenseQueryResult<ProgramQuery | undefined, ProgramQueryVariables>;
+export function useProgramSuspenseQuery(baseOptions?: Apollo.SkipToken | Apollo.SuspenseQueryHookOptions<ProgramQuery, ProgramQueryVariables>) {
+          const options = baseOptions === Apollo.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<ProgramQuery, ProgramQueryVariables>(ProgramDocument, options);
+        }
 export type ProgramQueryHookResult = ReturnType<typeof useProgramQuery>;
 export type ProgramLazyQueryHookResult = ReturnType<typeof useProgramLazyQuery>;
+export type ProgramSuspenseQueryHookResult = ReturnType<typeof useProgramSuspenseQuery>;
 export type ProgramQueryResult = Apollo.QueryResult<ProgramQuery, ProgramQueryVariables>;
 export const ProgramTitleDocument = gql`
     query ProgramTitle($id: UUID!) {
@@ -3837,7 +3928,7 @@ export const ProgramTitleDocument = gql`
  *   },
  * });
  */
-export function useProgramTitleQuery(baseOptions: Apollo.QueryHookOptions<ProgramTitleQuery, ProgramTitleQueryVariables>) {
+export function useProgramTitleQuery(baseOptions: Apollo.QueryHookOptions<ProgramTitleQuery, ProgramTitleQueryVariables> & ({ variables: ProgramTitleQueryVariables; skip?: boolean; } | { skip: boolean; }) ) {
         const options = {...defaultOptions, ...baseOptions}
         return Apollo.useQuery<ProgramTitleQuery, ProgramTitleQueryVariables>(ProgramTitleDocument, options);
       }
@@ -3845,8 +3936,16 @@ export function useProgramTitleLazyQuery(baseOptions?: Apollo.LazyQueryHookOptio
           const options = {...defaultOptions, ...baseOptions}
           return Apollo.useLazyQuery<ProgramTitleQuery, ProgramTitleQueryVariables>(ProgramTitleDocument, options);
         }
+// @ts-ignore
+export function useProgramTitleSuspenseQuery(baseOptions?: Apollo.SuspenseQueryHookOptions<ProgramTitleQuery, ProgramTitleQueryVariables>): Apollo.UseSuspenseQueryResult<ProgramTitleQuery, ProgramTitleQueryVariables>;
+export function useProgramTitleSuspenseQuery(baseOptions?: Apollo.SkipToken | Apollo.SuspenseQueryHookOptions<ProgramTitleQuery, ProgramTitleQueryVariables>): Apollo.UseSuspenseQueryResult<ProgramTitleQuery | undefined, ProgramTitleQueryVariables>;
+export function useProgramTitleSuspenseQuery(baseOptions?: Apollo.SkipToken | Apollo.SuspenseQueryHookOptions<ProgramTitleQuery, ProgramTitleQueryVariables>) {
+          const options = baseOptions === Apollo.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<ProgramTitleQuery, ProgramTitleQueryVariables>(ProgramTitleDocument, options);
+        }
 export type ProgramTitleQueryHookResult = ReturnType<typeof useProgramTitleQuery>;
 export type ProgramTitleLazyQueryHookResult = ReturnType<typeof useProgramTitleLazyQuery>;
+export type ProgramTitleSuspenseQueryHookResult = ReturnType<typeof useProgramTitleSuspenseQuery>;
 export type ProgramTitleQueryResult = Apollo.QueryResult<ProgramTitleQuery, ProgramTitleQueryVariables>;
 export const UpdateProgramDocument = gql`
     mutation UpdateProgram($input: UpdateProgramInput!) {
@@ -3912,7 +4011,7 @@ export const ProgramDetailsRootPathParamsDocument = gql`
  *   },
  * });
  */
-export function useProgramDetailsRootPathParamsQuery(baseOptions: Apollo.QueryHookOptions<ProgramDetailsRootPathParamsQuery, ProgramDetailsRootPathParamsQueryVariables>) {
+export function useProgramDetailsRootPathParamsQuery(baseOptions: Apollo.QueryHookOptions<ProgramDetailsRootPathParamsQuery, ProgramDetailsRootPathParamsQueryVariables> & ({ variables: ProgramDetailsRootPathParamsQueryVariables; skip?: boolean; } | { skip: boolean; }) ) {
         const options = {...defaultOptions, ...baseOptions}
         return Apollo.useQuery<ProgramDetailsRootPathParamsQuery, ProgramDetailsRootPathParamsQueryVariables>(ProgramDetailsRootPathParamsDocument, options);
       }
@@ -3920,8 +4019,16 @@ export function useProgramDetailsRootPathParamsLazyQuery(baseOptions?: Apollo.La
           const options = {...defaultOptions, ...baseOptions}
           return Apollo.useLazyQuery<ProgramDetailsRootPathParamsQuery, ProgramDetailsRootPathParamsQueryVariables>(ProgramDetailsRootPathParamsDocument, options);
         }
+// @ts-ignore
+export function useProgramDetailsRootPathParamsSuspenseQuery(baseOptions?: Apollo.SuspenseQueryHookOptions<ProgramDetailsRootPathParamsQuery, ProgramDetailsRootPathParamsQueryVariables>): Apollo.UseSuspenseQueryResult<ProgramDetailsRootPathParamsQuery, ProgramDetailsRootPathParamsQueryVariables>;
+export function useProgramDetailsRootPathParamsSuspenseQuery(baseOptions?: Apollo.SkipToken | Apollo.SuspenseQueryHookOptions<ProgramDetailsRootPathParamsQuery, ProgramDetailsRootPathParamsQueryVariables>): Apollo.UseSuspenseQueryResult<ProgramDetailsRootPathParamsQuery | undefined, ProgramDetailsRootPathParamsQueryVariables>;
+export function useProgramDetailsRootPathParamsSuspenseQuery(baseOptions?: Apollo.SkipToken | Apollo.SuspenseQueryHookOptions<ProgramDetailsRootPathParamsQuery, ProgramDetailsRootPathParamsQueryVariables>) {
+          const options = baseOptions === Apollo.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<ProgramDetailsRootPathParamsQuery, ProgramDetailsRootPathParamsQueryVariables>(ProgramDetailsRootPathParamsDocument, options);
+        }
 export type ProgramDetailsRootPathParamsQueryHookResult = ReturnType<typeof useProgramDetailsRootPathParamsQuery>;
 export type ProgramDetailsRootPathParamsLazyQueryHookResult = ReturnType<typeof useProgramDetailsRootPathParamsLazyQuery>;
+export type ProgramDetailsRootPathParamsSuspenseQueryHookResult = ReturnType<typeof useProgramDetailsRootPathParamsSuspenseQuery>;
 export type ProgramDetailsRootPathParamsQueryResult = Apollo.QueryResult<ProgramDetailsRootPathParamsQuery, ProgramDetailsRootPathParamsQueryVariables>;
 export const PlaylistProgramsDocument = gql`
     query PlaylistPrograms($id: UUID!) {
@@ -3982,7 +4089,7 @@ export const PlaylistProgramsDocument = gql`
  *   },
  * });
  */
-export function usePlaylistProgramsQuery(baseOptions: Apollo.QueryHookOptions<PlaylistProgramsQuery, PlaylistProgramsQueryVariables>) {
+export function usePlaylistProgramsQuery(baseOptions: Apollo.QueryHookOptions<PlaylistProgramsQuery, PlaylistProgramsQueryVariables> & ({ variables: PlaylistProgramsQueryVariables; skip?: boolean; } | { skip: boolean; }) ) {
         const options = {...defaultOptions, ...baseOptions}
         return Apollo.useQuery<PlaylistProgramsQuery, PlaylistProgramsQueryVariables>(PlaylistProgramsDocument, options);
       }
@@ -3990,6 +4097,14 @@ export function usePlaylistProgramsLazyQuery(baseOptions?: Apollo.LazyQueryHookO
           const options = {...defaultOptions, ...baseOptions}
           return Apollo.useLazyQuery<PlaylistProgramsQuery, PlaylistProgramsQueryVariables>(PlaylistProgramsDocument, options);
         }
+// @ts-ignore
+export function usePlaylistProgramsSuspenseQuery(baseOptions?: Apollo.SuspenseQueryHookOptions<PlaylistProgramsQuery, PlaylistProgramsQueryVariables>): Apollo.UseSuspenseQueryResult<PlaylistProgramsQuery, PlaylistProgramsQueryVariables>;
+export function usePlaylistProgramsSuspenseQuery(baseOptions?: Apollo.SkipToken | Apollo.SuspenseQueryHookOptions<PlaylistProgramsQuery, PlaylistProgramsQueryVariables>): Apollo.UseSuspenseQueryResult<PlaylistProgramsQuery | undefined, PlaylistProgramsQueryVariables>;
+export function usePlaylistProgramsSuspenseQuery(baseOptions?: Apollo.SkipToken | Apollo.SuspenseQueryHookOptions<PlaylistProgramsQuery, PlaylistProgramsQueryVariables>) {
+          const options = baseOptions === Apollo.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<PlaylistProgramsQuery, PlaylistProgramsQueryVariables>(PlaylistProgramsDocument, options);
+        }
 export type PlaylistProgramsQueryHookResult = ReturnType<typeof usePlaylistProgramsQuery>;
 export type PlaylistProgramsLazyQueryHookResult = ReturnType<typeof usePlaylistProgramsLazyQuery>;
+export type PlaylistProgramsSuspenseQueryHookResult = ReturnType<typeof usePlaylistProgramsSuspenseQuery>;
 export type PlaylistProgramsQueryResult = Apollo.QueryResult<PlaylistProgramsQuery, PlaylistProgramsQueryVariables>;

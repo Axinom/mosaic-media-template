@@ -18,7 +18,7 @@ import {
 
 type FormData = CreateCollectionMutationVariables['input']['collection'];
 
-type SubmitResponse = CreateCollectionMutation['createCollection'];
+type SubmitResponse = CreateCollectionMutation['createCollection'] | undefined;
 
 const collectionCreateSchema = Yup.object().shape<
   ObjectSchemaDefinition<FormData>

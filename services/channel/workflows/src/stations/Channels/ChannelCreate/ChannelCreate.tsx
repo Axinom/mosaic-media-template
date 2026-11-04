@@ -18,7 +18,7 @@ import { routes } from '../routes';
 
 type FormData = CreateChannelMutationVariables['input']['channel'];
 
-type SubmitResponse = CreateChannelMutation['createChannel'];
+type SubmitResponse = CreateChannelMutation['createChannel'] | undefined;
 
 const channelCreateSchema = Yup.object().shape<
   ObjectSchemaDefinition<FormData>

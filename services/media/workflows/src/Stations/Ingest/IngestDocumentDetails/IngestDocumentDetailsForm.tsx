@@ -11,7 +11,7 @@ import React, { useCallback } from 'react';
 import * as Yup from 'yup';
 import { client } from '../../../apolloClient';
 import {
-  IngestDocument,
+  IngestDocumentQuery,
   MutationUpdateIngestDocumentArgs,
   useIngestDocumentQuery,
   useUpdateIngestDocumentMutation,
@@ -81,7 +81,8 @@ export const IngestDocumentDetailsForm: React.FC<
 };
 
 const Form: React.FC = () => {
-  const { values } = useFormikContext<IngestDocument>();
+  const { values } =
+    useFormikContext<NonNullable<IngestDocumentQuery['ingestDocument']>>();
   return (
     <>
       <Field name="title" label="Title" as={SingleLineTextField} />

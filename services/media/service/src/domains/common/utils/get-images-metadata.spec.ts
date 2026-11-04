@@ -2,9 +2,12 @@ import { rejectionOf } from '@axinom/mosaic-service-common';
 import { CommonErrors } from '../../../common';
 import * as image from '../../../generated/graphql/image';
 import { GetImagesQuery } from '../../../generated/graphql/image';
+import type { GqlResultFixture } from '../../../tests/test-utils/gql-result-fixture';
 import { getImagesMetadata } from './get-images-metadata';
 
-type GqlImage = NonNullable<GetImagesQuery['images']>['nodes'][0];
+type GqlImage = GqlResultFixture<
+  NonNullable<GetImagesQuery['images']>['nodes'][0]
+>;
 
 let result: any = () => undefined;
 vi.spyOn(image, 'getSdk').mockImplementation(() => ({

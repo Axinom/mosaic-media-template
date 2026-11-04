@@ -1,25 +1,28 @@
-import { GraphQLClient } from 'graphql-request';
-import * as Dom from 'graphql-request/dist/types.dom';
-import { print } from 'graphql'
+/** Internal type. DO NOT USE DIRECTLY. */
+type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
+/** Internal type. DO NOT USE DIRECTLY. */
+export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
+import type * as Types from './image';
+
+import { GraphQLClient, type RequestOptions } from 'graphql-request';
+import { GraphQLError, print } from 'graphql'
 import gql from 'graphql-tag';
 export type Maybe<T> = T | null;
 export type InputMaybe<T> = Maybe<T>;
-export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
-export type MakeOptional<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]?: Maybe<T[SubKey]> };
-export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]: Maybe<T[SubKey]> };
+type GraphQLClientRequestHeaders = RequestOptions['requestHeaders'];
 /** All built-in and custom scalars, mapped to their actual values */
 export type Scalars = {
-  ID: string;
-  String: string;
-  Boolean: boolean;
-  Int: number;
-  Float: number;
-  BigFloat: any;
-  Cursor: any;
-  Date: any;
-  Datetime: any;
-  Upload: any;
-  UUID: any;
+  ID: { input: string; output: string; }
+  String: { input: string; output: string; }
+  Boolean: { input: boolean; output: boolean; }
+  Int: { input: number; output: number; }
+  Float: { input: number; output: number; }
+  BigFloat: { input: any; output: any; }
+  Cursor: { input: any; output: any; }
+  Date: { input: any; output: any; }
+  Datetime: { input: any; output: any; }
+  Upload: { input: any; output: any; }
+  UUID: { input: any; output: any; }
 };
 
 export enum AmazonS3Region {
@@ -90,7 +93,7 @@ export type AmazonS3RegionFilter = {
   /** Included in the specified list. */
   in?: InputMaybe<Array<AmazonS3Region>>;
   /** Is null (if `true` is specified) or is not null (if `false` is specified). */
-  isNull?: InputMaybe<Scalars['Boolean']>;
+  isNull?: InputMaybe<Scalars['Boolean']['input']>;
   /** Less than the specified value. */
   lessThan?: InputMaybe<AmazonS3Region>;
   /** Less than or equal to the specified value. */
@@ -106,67 +109,137 @@ export type AmazonS3RegionFilter = {
 /** A filter to be used against BigFloat fields. All fields are combined with a logical ‘and.’ */
 export type BigFloatFilter = {
   /** Not equal to the specified value, treating null like an ordinary value. */
-  distinctFrom?: InputMaybe<Scalars['BigFloat']>;
+  distinctFrom?: InputMaybe<Scalars['BigFloat']['input']>;
   /** Equal to the specified value. */
-  equalTo?: InputMaybe<Scalars['BigFloat']>;
+  equalTo?: InputMaybe<Scalars['BigFloat']['input']>;
   /** Greater than the specified value. */
-  greaterThan?: InputMaybe<Scalars['BigFloat']>;
+  greaterThan?: InputMaybe<Scalars['BigFloat']['input']>;
   /** Greater than or equal to the specified value. */
-  greaterThanOrEqualTo?: InputMaybe<Scalars['BigFloat']>;
+  greaterThanOrEqualTo?: InputMaybe<Scalars['BigFloat']['input']>;
   /** Included in the specified list. */
-  in?: InputMaybe<Array<Scalars['BigFloat']>>;
+  in?: InputMaybe<Array<Scalars['BigFloat']['input']>>;
   /** Is null (if `true` is specified) or is not null (if `false` is specified). */
-  isNull?: InputMaybe<Scalars['Boolean']>;
+  isNull?: InputMaybe<Scalars['Boolean']['input']>;
   /** Less than the specified value. */
-  lessThan?: InputMaybe<Scalars['BigFloat']>;
+  lessThan?: InputMaybe<Scalars['BigFloat']['input']>;
   /** Less than or equal to the specified value. */
-  lessThanOrEqualTo?: InputMaybe<Scalars['BigFloat']>;
+  lessThanOrEqualTo?: InputMaybe<Scalars['BigFloat']['input']>;
   /** Equal to the specified value, treating null like an ordinary value. */
-  notDistinctFrom?: InputMaybe<Scalars['BigFloat']>;
+  notDistinctFrom?: InputMaybe<Scalars['BigFloat']['input']>;
   /** Not equal to the specified value. */
-  notEqualTo?: InputMaybe<Scalars['BigFloat']>;
+  notEqualTo?: InputMaybe<Scalars['BigFloat']['input']>;
   /** Not included in the specified list. */
-  notIn?: InputMaybe<Array<Scalars['BigFloat']>>;
+  notIn?: InputMaybe<Array<Scalars['BigFloat']['input']>>;
 };
 
 /** A filter to be used against Boolean fields. All fields are combined with a logical ‘and.’ */
 export type BooleanFilter = {
   /** Not equal to the specified value, treating null like an ordinary value. */
-  distinctFrom?: InputMaybe<Scalars['Boolean']>;
+  distinctFrom?: InputMaybe<Scalars['Boolean']['input']>;
   /** Equal to the specified value. */
-  equalTo?: InputMaybe<Scalars['Boolean']>;
+  equalTo?: InputMaybe<Scalars['Boolean']['input']>;
   /** Greater than the specified value. */
-  greaterThan?: InputMaybe<Scalars['Boolean']>;
+  greaterThan?: InputMaybe<Scalars['Boolean']['input']>;
   /** Greater than or equal to the specified value. */
-  greaterThanOrEqualTo?: InputMaybe<Scalars['Boolean']>;
+  greaterThanOrEqualTo?: InputMaybe<Scalars['Boolean']['input']>;
   /** Included in the specified list. */
-  in?: InputMaybe<Array<Scalars['Boolean']>>;
+  in?: InputMaybe<Array<Scalars['Boolean']['input']>>;
   /** Is null (if `true` is specified) or is not null (if `false` is specified). */
-  isNull?: InputMaybe<Scalars['Boolean']>;
+  isNull?: InputMaybe<Scalars['Boolean']['input']>;
   /** Less than the specified value. */
-  lessThan?: InputMaybe<Scalars['Boolean']>;
+  lessThan?: InputMaybe<Scalars['Boolean']['input']>;
   /** Less than or equal to the specified value. */
-  lessThanOrEqualTo?: InputMaybe<Scalars['Boolean']>;
+  lessThanOrEqualTo?: InputMaybe<Scalars['Boolean']['input']>;
   /** Equal to the specified value, treating null like an ordinary value. */
-  notDistinctFrom?: InputMaybe<Scalars['Boolean']>;
+  notDistinctFrom?: InputMaybe<Scalars['Boolean']['input']>;
   /** Not equal to the specified value. */
-  notEqualTo?: InputMaybe<Scalars['Boolean']>;
+  notEqualTo?: InputMaybe<Scalars['Boolean']['input']>;
   /** Not included in the specified list. */
-  notIn?: InputMaybe<Array<Scalars['Boolean']>>;
+  notIn?: InputMaybe<Array<Scalars['Boolean']['input']>>;
+};
+
+export type BulkEditAsyncImageAddImagesTagInput = {
+  /** @notEmpty() */
+  name: Scalars['String']['input'];
+};
+
+export type BulkEditAsyncImageAddInput = {
+  imagesTags?: InputMaybe<Array<InputMaybe<BulkEditAsyncImageAddImagesTagInput>>>;
+};
+
+export type BulkEditAsyncImageClearInput = {
+  imagesTags?: InputMaybe<Scalars['Boolean']['input']>;
+};
+
+export type BulkEditAsyncImageRemoveImagesTagInput = {
+  /** @notEmpty() */
+  name: Scalars['String']['input'];
+};
+
+export type BulkEditAsyncImageRemoveInput = {
+  imagesTags?: InputMaybe<Array<InputMaybe<BulkEditAsyncImageRemoveImagesTagInput>>>;
+};
+
+export type BulkEditAsyncPayloadType = {
+  __typename?: 'BulkEditAsyncPayloadType';
+  filterMatchedIds?: Maybe<Array<Maybe<Scalars['String']['output']>>>;
 };
 
 /** Bulk mutation payload type. */
 export type BulkMutationUuidPayload = {
   __typename?: 'BulkMutationUuidPayload';
-  affectedIds?: Maybe<Array<Maybe<Scalars['UUID']>>>;
-  totalCount?: Maybe<Scalars['Int']>;
+  affectedIds?: Maybe<Array<Maybe<Scalars['UUID']['output']>>>;
+  totalCount?: Maybe<Scalars['Int']['output']>;
+};
+
+export type CheckAcquisitionAmazonS3Input = {
+  accessKeyId: Scalars['String']['input'];
+  bucketName: Scalars['String']['input'];
+  region: AmazonS3Region;
+  secretAccessKey?: InputMaybe<Scalars['String']['input']>;
+};
+
+export type CheckAcquisitionAzureBlobInput = {
+  accountKey?: InputMaybe<Scalars['String']['input']>;
+  accountName: Scalars['String']['input'];
+  containerName: Scalars['String']['input'];
+};
+
+export type CheckAcquisitionS3CompatibleInput = {
+  accessKeyId: Scalars['String']['input'];
+  bucketName: Scalars['String']['input'];
+  s3Endpoint: Scalars['String']['input'];
+  secretAccessKey?: InputMaybe<Scalars['String']['input']>;
+};
+
+export type CheckAcquisitionStorageConnectionInput = {
+  amazonS3?: InputMaybe<CheckAcquisitionAmazonS3Input>;
+  azureBlob?: InputMaybe<CheckAcquisitionAzureBlobInput>;
+  hostingAzure?: InputMaybe<CheckAcquisitionAzureBlobInput>;
+  /**
+   * When provided, stored credentials for this profile are used when a
+   * secret field is omitted from the input (e.g. editing an existing
+   * profile without retyping the secret).
+   */
+  profileId?: InputMaybe<Scalars['UUID']['input']>;
+  provider: StorageProvider;
+  rootFolderPath?: InputMaybe<Scalars['String']['input']>;
+  s3Compatible?: InputMaybe<CheckAcquisitionS3CompatibleInput>;
+};
+
+export type CheckStorageConnectionPayload = {
+  __typename?: 'CheckStorageConnectionPayload';
+  errorCode?: Maybe<Scalars['String']['output']>;
+  errorMessage?: Maybe<Scalars['String']['output']>;
+  ok: Scalars['Boolean']['output'];
+  query?: Maybe<Query>;
 };
 
 /** The deleted image upload webhook signing secret. */
 export type ClearImageUploadWebhookSecretPayload = {
   __typename?: 'ClearImageUploadWebhookSecretPayload';
   /** Boolean indicating if the secret was deleted */
-  deleted: Scalars['Boolean'];
+  deleted: Scalars['Boolean']['output'];
   query?: Maybe<Query>;
 };
 
@@ -179,7 +252,7 @@ export type CreateImagesTagInput = {
    * An arbitrary string value with no semantic meaning. Will be included in the
    * payload verbatim. May be used to track mutations by the client.
    */
-  clientMutationId?: InputMaybe<Scalars['String']>;
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
   /** The `ImagesTag` to be created by this mutation. */
   imagesTag: ImagesTagInput;
 };
@@ -191,7 +264,7 @@ export type CreateImagesTagPayload = {
    * The exact same `clientMutationId` that was provided in the mutation input,
    * unchanged and unused. May be used by a client to track mutations.
    */
-  clientMutationId?: Maybe<Scalars['String']>;
+  clientMutationId?: Maybe<Scalars['String']['output']>;
   /** Reads a single `Image` that is related to this `ImagesTag`. */
   image?: Maybe<Image>;
   /** The `ImagesTag` that was created by this mutation. */
@@ -211,53 +284,53 @@ export type CreateImagesTagPayloadImagesTagEdgeArgs = {
 /** A filter to be used against Date fields. All fields are combined with a logical ‘and.’ */
 export type DateFilter = {
   /** Not equal to the specified value, treating null like an ordinary value. */
-  distinctFrom?: InputMaybe<Scalars['Date']>;
+  distinctFrom?: InputMaybe<Scalars['Date']['input']>;
   /** Equal to the specified value. */
-  equalTo?: InputMaybe<Scalars['Date']>;
+  equalTo?: InputMaybe<Scalars['Date']['input']>;
   /** Greater than the specified value. */
-  greaterThan?: InputMaybe<Scalars['Date']>;
+  greaterThan?: InputMaybe<Scalars['Date']['input']>;
   /** Greater than or equal to the specified value. */
-  greaterThanOrEqualTo?: InputMaybe<Scalars['Date']>;
+  greaterThanOrEqualTo?: InputMaybe<Scalars['Date']['input']>;
   /** Included in the specified list. */
-  in?: InputMaybe<Array<Scalars['Date']>>;
+  in?: InputMaybe<Array<Scalars['Date']['input']>>;
   /** Is null (if `true` is specified) or is not null (if `false` is specified). */
-  isNull?: InputMaybe<Scalars['Boolean']>;
+  isNull?: InputMaybe<Scalars['Boolean']['input']>;
   /** Less than the specified value. */
-  lessThan?: InputMaybe<Scalars['Date']>;
+  lessThan?: InputMaybe<Scalars['Date']['input']>;
   /** Less than or equal to the specified value. */
-  lessThanOrEqualTo?: InputMaybe<Scalars['Date']>;
+  lessThanOrEqualTo?: InputMaybe<Scalars['Date']['input']>;
   /** Equal to the specified value, treating null like an ordinary value. */
-  notDistinctFrom?: InputMaybe<Scalars['Date']>;
+  notDistinctFrom?: InputMaybe<Scalars['Date']['input']>;
   /** Not equal to the specified value. */
-  notEqualTo?: InputMaybe<Scalars['Date']>;
+  notEqualTo?: InputMaybe<Scalars['Date']['input']>;
   /** Not included in the specified list. */
-  notIn?: InputMaybe<Array<Scalars['Date']>>;
+  notIn?: InputMaybe<Array<Scalars['Date']['input']>>;
 };
 
 /** A filter to be used against Datetime fields. All fields are combined with a logical ‘and.’ */
 export type DatetimeFilter = {
   /** Not equal to the specified value, treating null like an ordinary value. */
-  distinctFrom?: InputMaybe<Scalars['Datetime']>;
+  distinctFrom?: InputMaybe<Scalars['Datetime']['input']>;
   /** Equal to the specified value. */
-  equalTo?: InputMaybe<Scalars['Datetime']>;
+  equalTo?: InputMaybe<Scalars['Datetime']['input']>;
   /** Greater than the specified value. */
-  greaterThan?: InputMaybe<Scalars['Datetime']>;
+  greaterThan?: InputMaybe<Scalars['Datetime']['input']>;
   /** Greater than or equal to the specified value. */
-  greaterThanOrEqualTo?: InputMaybe<Scalars['Datetime']>;
+  greaterThanOrEqualTo?: InputMaybe<Scalars['Datetime']['input']>;
   /** Included in the specified list. */
-  in?: InputMaybe<Array<Scalars['Datetime']>>;
+  in?: InputMaybe<Array<Scalars['Datetime']['input']>>;
   /** Is null (if `true` is specified) or is not null (if `false` is specified). */
-  isNull?: InputMaybe<Scalars['Boolean']>;
+  isNull?: InputMaybe<Scalars['Boolean']['input']>;
   /** Less than the specified value. */
-  lessThan?: InputMaybe<Scalars['Datetime']>;
+  lessThan?: InputMaybe<Scalars['Datetime']['input']>;
   /** Less than or equal to the specified value. */
-  lessThanOrEqualTo?: InputMaybe<Scalars['Datetime']>;
+  lessThanOrEqualTo?: InputMaybe<Scalars['Datetime']['input']>;
   /** Equal to the specified value, treating null like an ordinary value. */
-  notDistinctFrom?: InputMaybe<Scalars['Datetime']>;
+  notDistinctFrom?: InputMaybe<Scalars['Datetime']['input']>;
   /** Not equal to the specified value. */
-  notEqualTo?: InputMaybe<Scalars['Datetime']>;
+  notEqualTo?: InputMaybe<Scalars['Datetime']['input']>;
   /** Not included in the specified list. */
-  notIn?: InputMaybe<Array<Scalars['Datetime']>>;
+  notIn?: InputMaybe<Array<Scalars['Datetime']['input']>>;
 };
 
 /**
@@ -269,8 +342,8 @@ export type DeleteImageInput = {
    * An arbitrary string value with no semantic meaning. Will be included in the
    * payload verbatim. May be used to track mutations by the client.
    */
-  clientMutationId?: InputMaybe<Scalars['String']>;
-  id: Scalars['UUID'];
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
+  id: Scalars['UUID']['input'];
 };
 
 /** The output of our delete `Image` mutation. */
@@ -280,7 +353,7 @@ export type DeleteImagePayload = {
    * The exact same `clientMutationId` that was provided in the mutation input,
    * unchanged and unused. May be used by a client to track mutations.
    */
-  clientMutationId?: Maybe<Scalars['String']>;
+  clientMutationId?: Maybe<Scalars['String']['output']>;
   /** The `Image` that was deleted by this mutation. */
   image?: Maybe<Image>;
   /** An edge for our `Image`. May be used by Relay 1. */
@@ -306,10 +379,10 @@ export type DeleteImagesTagInput = {
    * An arbitrary string value with no semantic meaning. Will be included in the
    * payload verbatim. May be used to track mutations by the client.
    */
-  clientMutationId?: InputMaybe<Scalars['String']>;
-  imageId: Scalars['UUID'];
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
+  imageId: Scalars['UUID']['input'];
   /** @notEmpty() */
-  name: Scalars['String'];
+  name: Scalars['String']['input'];
 };
 
 /** The output of our delete `ImagesTag` mutation. */
@@ -319,7 +392,7 @@ export type DeleteImagesTagPayload = {
    * The exact same `clientMutationId` that was provided in the mutation input,
    * unchanged and unused. May be used by a client to track mutations.
    */
-  clientMutationId?: Maybe<Scalars['String']>;
+  clientMutationId?: Maybe<Scalars['String']['output']>;
   /** Reads a single `Image` that is related to this `ImagesTag`. */
   image?: Maybe<Image>;
   /** The `ImagesTag` that was deleted by this mutation. */
@@ -339,7 +412,7 @@ export type DeleteImagesTagPayloadImagesTagEdgeArgs = {
 /** Response when an image upload webhook configuration is deleted. */
 export type DeleteImageUploadWebhookConfigurationPayload = {
   __typename?: 'DeleteImageUploadWebhookConfigurationPayload';
-  deleted: Scalars['Boolean'];
+  deleted: Scalars['Boolean']['output'];
   query?: Maybe<Query>;
 };
 
@@ -361,16 +434,16 @@ export enum ErrorCodesEnum {
   AcquisitionUpdateForNonAmazonS3Provider = 'ACQUISITION_UPDATE_FOR_NON_AMAZON_S3_PROVIDER',
   /** Unable to update Acquisition Profile because the current storage provider is %s and not AZURE_BLOB. */
   AcquisitionUpdateForNonAzureBlobProvider = 'ACQUISITION_UPDATE_FOR_NON_AZURE_BLOB_PROVIDER',
+  /** The Access Key from Acquisition Profile is invalid. */
+  AmazonS3InvalidAccessKey = 'AMAZON_S3_INVALID_ACCESS_KEY',
   /** The Bucket Name from Acquisition Profile is invalid. */
   AmazonS3InvalidBucketName = 'AMAZON_S3_INVALID_BUCKET_NAME',
-  /** The image was not found in acquisition storage. Please confirm that the image file exists and that path is correct. Amazon S3 storage paths are case sensitive. */
+  /** The image in path [%s] was not found in acquisition storage. Please confirm that the image file exists and that path is correct. Amazon S3 storage paths are case sensitive. */
   AmazonS3InvalidImagePath = 'AMAZON_S3_INVALID_IMAGE_PATH',
   /** The Region from Acquisition Profile is invalid. Please make sure it matches the account details. */
   AmazonS3InvalidRegion = 'AMAZON_S3_INVALID_REGION',
-  /** Either Region or Access Key Id from Acquisition Profile is invalid. */
+  /** The Access Key ID or the Region from Acquisition Profile is invalid. Please make sure they match your account details. */
   AmazonS3InvalidRegionOrAccessKeyId = 'AMAZON_S3_INVALID_REGION_OR_ACCESS_KEY_ID',
-  /** The Secret Access Key from Acquisition Profile is invalid. */
-  AmazonS3InvalidSecretAccessKeyId = 'AMAZON_S3_INVALID_SECRET_ACCESS_KEY_ID',
   /** The assertion check for the identifier %s failed. */
   AssertionFailed = 'ASSERTION_FAILED',
   /** Auth config is invalid. */
@@ -381,9 +454,9 @@ export enum ErrorCodesEnum {
   AuthenticatedManagementSubjectNotFound = 'AUTHENTICATED_MANAGEMENT_SUBJECT_NOT_FOUND',
   /** A Permission Definition or an EndUserAuthorizationConfig was not found to be passed into Postgraphile build options. This is a development time issue. */
   AuthorizationOptionsMisconfigured = 'AUTHORIZATION_OPTIONS_MISCONFIGURED',
-  /** Unable to authenticate access to the Azure Blob Storage. The Account Key from Acquisition Profile might be invalid. */
+  /** Unable to authenticate the Storage Account. Please check if the Storage Account Key is correct. */
   AzureBlobAuthenticationFailed = 'AZURE_BLOB_AUTHENTICATION_FAILED',
-  /** The image was not found in acquisition storage. Please confirm that the image file exists and that path is correct. Azure blob storage paths are case sensitive. */
+  /** The image in path [%s] was not found in acquisition storage. Please confirm that the image file exists and that path is correct. Azure blob storage paths are case sensitive. */
   AzureBlobBlobNotFound = 'AZURE_BLOB_BLOB_NOT_FOUND',
   /** The creation of the blob storage container has failed. Please contact Axinom support. */
   AzureBlobContainerCreationFailed = 'AZURE_BLOB_CONTAINER_CREATION_FAILED',
@@ -443,6 +516,8 @@ export enum ErrorCodesEnum {
   ImageUnsupportedFormat = 'IMAGE_UNSUPPORTED_FORMAT',
   /** The upload the image and preview files has failed. Please contact Axinom support. */
   ImageUploadError = 'IMAGE_UPLOAD_ERROR',
+  /** At least one of the following permissions is required to perform this action: %s. */
+  InsufficientPermissions = 'INSUFFICIENT_PERMISSIONS',
   /** An unhandled and unexpected error has occurred. Please contact the service support. */
   InternalServerError = 'INTERNAL_SERVER_ERROR',
   /** Unable to decode tenantId or environmentId values. */
@@ -475,6 +550,10 @@ export enum ErrorCodesEnum {
   NotManagementAuthenticationContext = 'NOT_MANAGEMENT_AUTHENTICATION_CONTEXT',
   /** The %s is missing required properties: %s. */
   ObjectIsMissingProperties = 'OBJECT_IS_MISSING_PROPERTIES',
+  /** The Access Key ID from Acquisition Profile is invalid. Please make sure it matches your account details. */
+  S3CompatibleInvalidAccessKeyId = 'S3_COMPATIBLE_INVALID_ACCESS_KEY_ID',
+  /** The S3 Endpoint from Acquisition Profile is invalid. Please make sure it is correct. */
+  S3CompatibleInvalidEndpoint = 'S3_COMPATIBLE_INVALID_ENDPOINT',
   /** Unable to set the general settings because no input values were provided. */
   SetSettingsInputIsEmpty = 'SET_SETTINGS_INPUT_IS_EMPTY',
   /** Could not find a matching signing key to verify the access token. The signing key used to create the token may have been revoked or the Tenant/Environment/Application configuration is erroneous. */
@@ -514,12 +593,12 @@ export enum ErrorCodesEnum {
 /** @permissions: SETTINGS_VIEW,SETTINGS_EDIT,ADMIN */
 export type GeneralSetting = {
   __typename?: 'GeneralSetting';
-  createdDate: Scalars['Datetime'];
-  createdUser: Scalars['String'];
-  imageUploadWebhookSecretIsSet: Scalars['Boolean'];
-  imageUploadWebhookUrl?: Maybe<Scalars['String']>;
-  updatedDate: Scalars['Datetime'];
-  updatedUser: Scalars['String'];
+  createdDate: Scalars['Datetime']['output'];
+  createdUser: Scalars['String']['output'];
+  imageUploadWebhookSecretIsSet: Scalars['Boolean']['output'];
+  imageUploadWebhookUrl?: Maybe<Scalars['String']['output']>;
+  updatedDate: Scalars['Datetime']['output'];
+  updatedUser: Scalars['String']['output'];
 };
 
 /** The generated image upload webhook signing secret. */
@@ -527,16 +606,16 @@ export type GenerateImageUploadWebhookSecretPayload = {
   __typename?: 'GenerateImageUploadWebhookSecretPayload';
   query?: Maybe<Query>;
   /** Generated secret. */
-  secret: Scalars['String'];
+  secret: Scalars['String']['output'];
 };
 
 /** A `String` edge in the connection. */
 export type GetImagesTagsValueEdge = {
   __typename?: 'GetImagesTagsValueEdge';
   /** A cursor for use in pagination. */
-  cursor?: Maybe<Scalars['Cursor']>;
+  cursor?: Maybe<Scalars['Cursor']['output']>;
   /** The `String` at the end of the edge. */
-  node?: Maybe<Scalars['String']>;
+  node?: Maybe<Scalars['String']['output']>;
 };
 
 /** A connection to a list of `String` values. */
@@ -545,68 +624,68 @@ export type GetImagesTagsValuesConnection = {
   /** A list of edges which contains the `String` and cursor to aid in pagination. */
   edges: Array<GetImagesTagsValueEdge>;
   /** A list of `String` objects. */
-  nodes: Array<Maybe<Scalars['String']>>;
+  nodes: Array<Maybe<Scalars['String']['output']>>;
   /** The count of *all* `String` you could get from the connection. */
-  totalCount: Scalars['Int'];
+  totalCount: Scalars['Int']['output'];
 };
 
 /** @permissions: IMAGES_VIEW,IMAGES_EDIT,ADMIN */
 export type Image = {
   __typename?: 'Image';
-  altText?: Maybe<Scalars['String']>;
-  createdDate: Scalars['Datetime'];
-  createdUser: Scalars['String'];
-  filename: Scalars['String'];
-  fileSizeInBytes?: Maybe<Scalars['Int']>;
-  focalX?: Maybe<Scalars['BigFloat']>;
-  focalY?: Maybe<Scalars['BigFloat']>;
-  height?: Maybe<Scalars['Int']>;
-  id: Scalars['UUID'];
+  altText?: Maybe<Scalars['String']['output']>;
+  createdDate: Scalars['Datetime']['output'];
+  createdUser: Scalars['String']['output'];
+  filename: Scalars['String']['output'];
+  fileSizeInBytes?: Maybe<Scalars['Int']['output']>;
+  focalX?: Maybe<Scalars['BigFloat']['output']>;
+  focalY?: Maybe<Scalars['BigFloat']['output']>;
+  height?: Maybe<Scalars['Int']['output']>;
+  id: Scalars['UUID']['output'];
   /** Reads and enables pagination through a set of `ImagesTag`. */
   imagesTags: ImagesTagsConnection;
   /** Reads a single `ImageType` that is related to this `Image`. */
   imageType?: Maybe<ImageType>;
-  imageTypeKey: Scalars['String'];
-  isArchived: Scalars['Boolean'];
-  originalSourceLocation?: Maybe<Scalars['String']>;
-  previewPath: Scalars['String'];
-  sourceFileName: Scalars['String'];
-  sourceFileType: Scalars['String'];
-  thumbnailPath: Scalars['String'];
-  title: Scalars['String'];
-  transformationPath: Scalars['String'];
-  updatedDate: Scalars['Datetime'];
-  updatedUser: Scalars['String'];
-  width?: Maybe<Scalars['Int']>;
+  imageTypeKey: Scalars['String']['output'];
+  isArchived: Scalars['Boolean']['output'];
+  originalSourceLocation?: Maybe<Scalars['String']['output']>;
+  previewPath: Scalars['String']['output'];
+  sourceFileName: Scalars['String']['output'];
+  sourceFileType: Scalars['String']['output'];
+  thumbnailPath: Scalars['String']['output'];
+  title: Scalars['String']['output'];
+  transformationPath: Scalars['String']['output'];
+  updatedDate: Scalars['Datetime']['output'];
+  updatedUser: Scalars['String']['output'];
+  width?: Maybe<Scalars['Int']['output']>;
 };
 
 
 /** @permissions: IMAGES_VIEW,IMAGES_EDIT,ADMIN */
 export type ImageImagesTagsArgs = {
-  after?: InputMaybe<Scalars['Cursor']>;
-  before?: InputMaybe<Scalars['Cursor']>;
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
   condition?: InputMaybe<ImagesTagCondition>;
   filter?: InputMaybe<ImagesTagFilter>;
-  first?: InputMaybe<Scalars['Int']>;
-  last?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Array<ImagesTagsOrderBy>>;
 };
 
 /** @permissions: SETTINGS_VIEW,SETTINGS_EDIT,IMAGES_EDIT,ADMIN */
 export type ImageAcquisitionAmazonS3Setting = {
   __typename?: 'ImageAcquisitionAmazonS3Setting';
-  accessKeyId: Scalars['String'];
-  bucketName: Scalars['String'];
-  createdDate: Scalars['Datetime'];
-  createdUser: Scalars['String'];
+  accessKeyId: Scalars['String']['output'];
+  bucketName: Scalars['String']['output'];
+  createdDate: Scalars['Datetime']['output'];
+  createdUser: Scalars['String']['output'];
   /** Reads a single `ImageAcquisitionProfile` that is related to this `ImageAcquisitionAmazonS3Setting`. */
   imageAcquisitionProfile?: Maybe<ImageAcquisitionProfile>;
-  imageAcquisitionProfileId: Scalars['UUID'];
+  imageAcquisitionProfileId: Scalars['UUID']['output'];
   region: AmazonS3Region;
-  rootFolderPath?: Maybe<Scalars['String']>;
-  updatedDate: Scalars['Datetime'];
-  updatedUser: Scalars['String'];
+  rootFolderPath?: Maybe<Scalars['String']['output']>;
+  updatedDate: Scalars['Datetime']['output'];
+  updatedUser: Scalars['String']['output'];
 };
 
 /** A filter to be used against `ImageAcquisitionAmazonS3Setting` object types. All fields are combined with a logical ‘and.’ */
@@ -642,16 +721,16 @@ export type ImageAcquisitionAmazonS3SettingFilter = {
 /** @permissions: SETTINGS_VIEW,SETTINGS_EDIT,IMAGES_EDIT,ADMIN */
 export type ImageAcquisitionAzureBlobSetting = {
   __typename?: 'ImageAcquisitionAzureBlobSetting';
-  accountName: Scalars['String'];
-  containerName: Scalars['String'];
-  createdDate: Scalars['Datetime'];
-  createdUser: Scalars['String'];
+  accountName: Scalars['String']['output'];
+  containerName: Scalars['String']['output'];
+  createdDate: Scalars['Datetime']['output'];
+  createdUser: Scalars['String']['output'];
   /** Reads a single `ImageAcquisitionProfile` that is related to this `ImageAcquisitionAzureBlobSetting`. */
   imageAcquisitionProfile?: Maybe<ImageAcquisitionProfile>;
-  imageAcquisitionProfileId: Scalars['UUID'];
-  rootFolderPath?: Maybe<Scalars['String']>;
-  updatedDate: Scalars['Datetime'];
-  updatedUser: Scalars['String'];
+  imageAcquisitionProfileId: Scalars['UUID']['output'];
+  rootFolderPath?: Maybe<Scalars['String']['output']>;
+  updatedDate: Scalars['Datetime']['output'];
+  updatedUser: Scalars['String']['output'];
 };
 
 /** A filter to be used against `ImageAcquisitionAzureBlobSetting` object types. All fields are combined with a logical ‘and.’ */
@@ -685,18 +764,18 @@ export type ImageAcquisitionAzureBlobSettingFilter = {
 /** @permissions: SETTINGS_VIEW,SETTINGS_EDIT,ADMIN */
 export type ImageAcquisitionHostingAzureSetting = {
   __typename?: 'ImageAcquisitionHostingAzureSetting';
-  accountName: Scalars['String'];
-  containerName: Scalars['String'];
-  createdDate: Scalars['Datetime'];
-  createdUser: Scalars['String'];
+  accountName: Scalars['String']['output'];
+  containerName: Scalars['String']['output'];
+  createdDate: Scalars['Datetime']['output'];
+  createdUser: Scalars['String']['output'];
   /** Reads a single `ImageAcquisitionProfile` that is related to this `ImageAcquisitionHostingAzureSetting`. */
   imageAcquisitionProfile?: Maybe<ImageAcquisitionProfile>;
-  imageAcquisitionProfileId: Scalars['UUID'];
-  readSasToken: Scalars['String'];
-  readSasTokenValidUntil: Scalars['Date'];
-  rootFolderPath?: Maybe<Scalars['String']>;
-  updatedDate: Scalars['Datetime'];
-  updatedUser: Scalars['String'];
+  imageAcquisitionProfileId: Scalars['UUID']['output'];
+  readSasToken: Scalars['String']['output'];
+  readSasTokenValidUntil: Scalars['Date']['output'];
+  rootFolderPath?: Maybe<Scalars['String']['output']>;
+  updatedDate: Scalars['Datetime']['output'];
+  updatedUser: Scalars['String']['output'];
 };
 
 /** A filter to be used against `ImageAcquisitionHostingAzureSetting` object types. All fields are combined with a logical ‘and.’ */
@@ -738,15 +817,17 @@ export type ImageAcquisitionProfile = {
   amazonS3Setting?: Maybe<ImageAcquisitionAmazonS3Setting>;
   /** Reads a single `ImageAcquisitionAzureBlobSetting` that is related to this `ImageAcquisitionProfile`. */
   azureBlobSetting?: Maybe<ImageAcquisitionAzureBlobSetting>;
-  createdDate: Scalars['Datetime'];
-  createdUser: Scalars['String'];
+  createdDate: Scalars['Datetime']['output'];
+  createdUser: Scalars['String']['output'];
   /** Reads a single `ImageAcquisitionHostingAzureSetting` that is related to this `ImageAcquisitionProfile`. */
   hostingAzureSetting?: Maybe<ImageAcquisitionHostingAzureSetting>;
-  id: Scalars['UUID'];
+  id: Scalars['UUID']['output'];
   provider: StorageProvider;
-  title: Scalars['String'];
-  updatedDate: Scalars['Datetime'];
-  updatedUser: Scalars['String'];
+  /** Reads a single `ImageAcquisitionS3CompatibleSetting` that is related to this `ImageAcquisitionProfile`. */
+  S3CompatibleSetting?: Maybe<ImageAcquisitionS3CompatibleSetting>;
+  title: Scalars['String']['output'];
+  updatedDate: Scalars['Datetime']['output'];
+  updatedUser: Scalars['String']['output'];
 };
 
 /**
@@ -755,11 +836,11 @@ export type ImageAcquisitionProfile = {
  */
 export type ImageAcquisitionProfileCondition = {
   /** Checks for equality with the object’s `createdDate` field. */
-  createdDate?: InputMaybe<Scalars['Datetime']>;
+  createdDate?: InputMaybe<Scalars['Datetime']['input']>;
   /** Checks for equality with the object’s `createdUser` field. */
-  createdUser?: InputMaybe<Scalars['String']>;
+  createdUser?: InputMaybe<Scalars['String']['input']>;
   /** Checks for equality with the object’s `id` field. */
-  id?: InputMaybe<Scalars['UUID']>;
+  id?: InputMaybe<Scalars['UUID']['input']>;
   /** Checks for equality with the object’s `provider` field. */
   provider?: InputMaybe<StorageProvider>;
   /**
@@ -768,11 +849,11 @@ export type ImageAcquisitionProfileCondition = {
    * @maxLength(100)
    * @notEmpty()
    */
-  title?: InputMaybe<Scalars['String']>;
+  title?: InputMaybe<Scalars['String']['input']>;
   /** Checks for equality with the object’s `updatedDate` field. */
-  updatedDate?: InputMaybe<Scalars['Datetime']>;
+  updatedDate?: InputMaybe<Scalars['Datetime']['input']>;
   /** Checks for equality with the object’s `updatedUser` field. */
-  updatedUser?: InputMaybe<Scalars['String']>;
+  updatedUser?: InputMaybe<Scalars['String']['input']>;
 };
 
 /** A filter to be used against `ImageAcquisitionProfile` object types. All fields are combined with a logical ‘and.’ */
@@ -780,13 +861,13 @@ export type ImageAcquisitionProfileFilter = {
   /** Filter by the object’s `amazonS3Setting` relation. */
   amazonS3Setting?: InputMaybe<ImageAcquisitionAmazonS3SettingFilter>;
   /** A related `amazonS3Setting` exists. */
-  amazonS3SettingExists?: InputMaybe<Scalars['Boolean']>;
+  amazonS3SettingExists?: InputMaybe<Scalars['Boolean']['input']>;
   /** Checks for all expressions in this list. */
   and?: InputMaybe<Array<ImageAcquisitionProfileFilter>>;
   /** Filter by the object’s `azureBlobSetting` relation. */
   azureBlobSetting?: InputMaybe<ImageAcquisitionAzureBlobSettingFilter>;
   /** A related `azureBlobSetting` exists. */
-  azureBlobSettingExists?: InputMaybe<Scalars['Boolean']>;
+  azureBlobSettingExists?: InputMaybe<Scalars['Boolean']['input']>;
   /** Filter by the object’s `createdDate` field. */
   createdDate?: InputMaybe<DatetimeFilter>;
   /** Filter by the object’s `createdUser` field. */
@@ -794,7 +875,7 @@ export type ImageAcquisitionProfileFilter = {
   /** Filter by the object’s `hostingAzureSetting` relation. */
   hostingAzureSetting?: InputMaybe<ImageAcquisitionHostingAzureSettingFilter>;
   /** A related `hostingAzureSetting` exists. */
-  hostingAzureSettingExists?: InputMaybe<Scalars['Boolean']>;
+  hostingAzureSettingExists?: InputMaybe<Scalars['Boolean']['input']>;
   /** Filter by the object’s `id` field. */
   id?: InputMaybe<UuidFilter>;
   /** Negates the expression. */
@@ -803,6 +884,10 @@ export type ImageAcquisitionProfileFilter = {
   or?: InputMaybe<Array<ImageAcquisitionProfileFilter>>;
   /** Filter by the object’s `provider` field. */
   provider?: InputMaybe<StorageProviderFilter>;
+  /** Filter by the object’s `S3CompatibleSetting` relation. */
+  S3CompatibleSetting?: InputMaybe<ImageAcquisitionS3CompatibleSettingFilter>;
+  /** A related `S3CompatibleSetting` exists. */
+  S3CompatibleSettingExists?: InputMaybe<Scalars['Boolean']['input']>;
   /** Filter by the object’s `title` field. */
   title?: InputMaybe<StringFilter>;
   /** Filter by the object’s `updatedDate` field. */
@@ -824,14 +909,14 @@ export type ImageAcquisitionProfilesConnection = {
   /** Information to aid in pagination. */
   pageInfo: PageInfo;
   /** The count of *all* `ImageAcquisitionProfile` you could get from the connection. */
-  totalCount: Scalars['Int'];
+  totalCount: Scalars['Int']['output'];
 };
 
 /** A `ImageAcquisitionProfile` edge in the connection. */
 export type ImageAcquisitionProfilesEdge = {
   __typename?: 'ImageAcquisitionProfilesEdge';
   /** A cursor for use in pagination. */
-  cursor?: Maybe<Scalars['Cursor']>;
+  cursor?: Maybe<Scalars['Cursor']['output']>;
   /** The `ImageAcquisitionProfile` at the end of the edge. */
   node: ImageAcquisitionProfile;
 };
@@ -902,6 +987,26 @@ export enum ImageAcquisitionProfilesOrderBy {
   ImageAcquisitionHostingAzureSettingByImageAcquisitionProfileIdUpdatedDateDesc = 'IMAGE_ACQUISITION_HOSTING_AZURE_SETTING_BY_IMAGE_ACQUISITION_PROFILE_ID__UPDATED_DATE_DESC',
   ImageAcquisitionHostingAzureSettingByImageAcquisitionProfileIdUpdatedUserAsc = 'IMAGE_ACQUISITION_HOSTING_AZURE_SETTING_BY_IMAGE_ACQUISITION_PROFILE_ID__UPDATED_USER_ASC',
   ImageAcquisitionHostingAzureSettingByImageAcquisitionProfileIdUpdatedUserDesc = 'IMAGE_ACQUISITION_HOSTING_AZURE_SETTING_BY_IMAGE_ACQUISITION_PROFILE_ID__UPDATED_USER_DESC',
+  ImageAcquisitionS3CompatibleSettingByImageAcquisitionProfileIdAccessKeyIdAsc = 'IMAGE_ACQUISITION_S3_COMPATIBLE_SETTING_BY_IMAGE_ACQUISITION_PROFILE_ID__ACCESS_KEY_ID_ASC',
+  ImageAcquisitionS3CompatibleSettingByImageAcquisitionProfileIdAccessKeyIdDesc = 'IMAGE_ACQUISITION_S3_COMPATIBLE_SETTING_BY_IMAGE_ACQUISITION_PROFILE_ID__ACCESS_KEY_ID_DESC',
+  ImageAcquisitionS3CompatibleSettingByImageAcquisitionProfileIdBucketNameAsc = 'IMAGE_ACQUISITION_S3_COMPATIBLE_SETTING_BY_IMAGE_ACQUISITION_PROFILE_ID__BUCKET_NAME_ASC',
+  ImageAcquisitionS3CompatibleSettingByImageAcquisitionProfileIdBucketNameDesc = 'IMAGE_ACQUISITION_S3_COMPATIBLE_SETTING_BY_IMAGE_ACQUISITION_PROFILE_ID__BUCKET_NAME_DESC',
+  ImageAcquisitionS3CompatibleSettingByImageAcquisitionProfileIdCreatedDateAsc = 'IMAGE_ACQUISITION_S3_COMPATIBLE_SETTING_BY_IMAGE_ACQUISITION_PROFILE_ID__CREATED_DATE_ASC',
+  ImageAcquisitionS3CompatibleSettingByImageAcquisitionProfileIdCreatedDateDesc = 'IMAGE_ACQUISITION_S3_COMPATIBLE_SETTING_BY_IMAGE_ACQUISITION_PROFILE_ID__CREATED_DATE_DESC',
+  ImageAcquisitionS3CompatibleSettingByImageAcquisitionProfileIdCreatedUserAsc = 'IMAGE_ACQUISITION_S3_COMPATIBLE_SETTING_BY_IMAGE_ACQUISITION_PROFILE_ID__CREATED_USER_ASC',
+  ImageAcquisitionS3CompatibleSettingByImageAcquisitionProfileIdCreatedUserDesc = 'IMAGE_ACQUISITION_S3_COMPATIBLE_SETTING_BY_IMAGE_ACQUISITION_PROFILE_ID__CREATED_USER_DESC',
+  ImageAcquisitionS3CompatibleSettingByImageAcquisitionProfileIdImageAcquisitionProfileIdAsc = 'IMAGE_ACQUISITION_S3_COMPATIBLE_SETTING_BY_IMAGE_ACQUISITION_PROFILE_ID__IMAGE_ACQUISITION_PROFILE_ID_ASC',
+  ImageAcquisitionS3CompatibleSettingByImageAcquisitionProfileIdImageAcquisitionProfileIdDesc = 'IMAGE_ACQUISITION_S3_COMPATIBLE_SETTING_BY_IMAGE_ACQUISITION_PROFILE_ID__IMAGE_ACQUISITION_PROFILE_ID_DESC',
+  ImageAcquisitionS3CompatibleSettingByImageAcquisitionProfileIdRootFolderPathAsc = 'IMAGE_ACQUISITION_S3_COMPATIBLE_SETTING_BY_IMAGE_ACQUISITION_PROFILE_ID__ROOT_FOLDER_PATH_ASC',
+  ImageAcquisitionS3CompatibleSettingByImageAcquisitionProfileIdRootFolderPathDesc = 'IMAGE_ACQUISITION_S3_COMPATIBLE_SETTING_BY_IMAGE_ACQUISITION_PROFILE_ID__ROOT_FOLDER_PATH_DESC',
+  ImageAcquisitionS3CompatibleSettingByImageAcquisitionProfileIdS3EndpointAsc = 'IMAGE_ACQUISITION_S3_COMPATIBLE_SETTING_BY_IMAGE_ACQUISITION_PROFILE_ID__S3_ENDPOINT_ASC',
+  ImageAcquisitionS3CompatibleSettingByImageAcquisitionProfileIdS3EndpointDesc = 'IMAGE_ACQUISITION_S3_COMPATIBLE_SETTING_BY_IMAGE_ACQUISITION_PROFILE_ID__S3_ENDPOINT_DESC',
+  ImageAcquisitionS3CompatibleSettingByImageAcquisitionProfileIdSecretAccessKeyAsc = 'IMAGE_ACQUISITION_S3_COMPATIBLE_SETTING_BY_IMAGE_ACQUISITION_PROFILE_ID__SECRET_ACCESS_KEY_ASC',
+  ImageAcquisitionS3CompatibleSettingByImageAcquisitionProfileIdSecretAccessKeyDesc = 'IMAGE_ACQUISITION_S3_COMPATIBLE_SETTING_BY_IMAGE_ACQUISITION_PROFILE_ID__SECRET_ACCESS_KEY_DESC',
+  ImageAcquisitionS3CompatibleSettingByImageAcquisitionProfileIdUpdatedDateAsc = 'IMAGE_ACQUISITION_S3_COMPATIBLE_SETTING_BY_IMAGE_ACQUISITION_PROFILE_ID__UPDATED_DATE_ASC',
+  ImageAcquisitionS3CompatibleSettingByImageAcquisitionProfileIdUpdatedDateDesc = 'IMAGE_ACQUISITION_S3_COMPATIBLE_SETTING_BY_IMAGE_ACQUISITION_PROFILE_ID__UPDATED_DATE_DESC',
+  ImageAcquisitionS3CompatibleSettingByImageAcquisitionProfileIdUpdatedUserAsc = 'IMAGE_ACQUISITION_S3_COMPATIBLE_SETTING_BY_IMAGE_ACQUISITION_PROFILE_ID__UPDATED_USER_ASC',
+  ImageAcquisitionS3CompatibleSettingByImageAcquisitionProfileIdUpdatedUserDesc = 'IMAGE_ACQUISITION_S3_COMPATIBLE_SETTING_BY_IMAGE_ACQUISITION_PROFILE_ID__UPDATED_USER_DESC',
   Natural = 'NATURAL',
   PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
   PrimaryKeyDesc = 'PRIMARY_KEY_DESC',
@@ -915,51 +1020,97 @@ export enum ImageAcquisitionProfilesOrderBy {
   UpdatedUserDesc = 'UPDATED_USER_DESC'
 }
 
+/** @permissions: SETTINGS_VIEW,SETTINGS_EDIT,IMAGES_EDIT,ADMIN */
+export type ImageAcquisitionS3CompatibleSetting = {
+  __typename?: 'ImageAcquisitionS3CompatibleSetting';
+  accessKeyId: Scalars['String']['output'];
+  bucketName: Scalars['String']['output'];
+  createdDate: Scalars['Datetime']['output'];
+  createdUser: Scalars['String']['output'];
+  /** Reads a single `ImageAcquisitionProfile` that is related to this `ImageAcquisitionS3CompatibleSetting`. */
+  imageAcquisitionProfile?: Maybe<ImageAcquisitionProfile>;
+  imageAcquisitionProfileId: Scalars['UUID']['output'];
+  rootFolderPath?: Maybe<Scalars['String']['output']>;
+  s3Endpoint: Scalars['String']['output'];
+  updatedDate: Scalars['Datetime']['output'];
+  updatedUser: Scalars['String']['output'];
+};
+
+/** A filter to be used against `ImageAcquisitionS3CompatibleSetting` object types. All fields are combined with a logical ‘and.’ */
+export type ImageAcquisitionS3CompatibleSettingFilter = {
+  /** Filter by the object’s `accessKeyId` field. */
+  accessKeyId?: InputMaybe<StringFilter>;
+  /** Checks for all expressions in this list. */
+  and?: InputMaybe<Array<ImageAcquisitionS3CompatibleSettingFilter>>;
+  /** Filter by the object’s `bucketName` field. */
+  bucketName?: InputMaybe<StringFilter>;
+  /** Filter by the object’s `createdDate` field. */
+  createdDate?: InputMaybe<DatetimeFilter>;
+  /** Filter by the object’s `createdUser` field. */
+  createdUser?: InputMaybe<StringFilter>;
+  /** Filter by the object’s `imageAcquisitionProfile` relation. */
+  imageAcquisitionProfile?: InputMaybe<ImageAcquisitionProfileFilter>;
+  /** Filter by the object’s `imageAcquisitionProfileId` field. */
+  imageAcquisitionProfileId?: InputMaybe<UuidFilter>;
+  /** Negates the expression. */
+  not?: InputMaybe<ImageAcquisitionS3CompatibleSettingFilter>;
+  /** Checks for any expressions in this list. */
+  or?: InputMaybe<Array<ImageAcquisitionS3CompatibleSettingFilter>>;
+  /** Filter by the object’s `rootFolderPath` field. */
+  rootFolderPath?: InputMaybe<StringFilter>;
+  /** Filter by the object’s `s3Endpoint` field. */
+  s3Endpoint?: InputMaybe<StringFilter>;
+  /** Filter by the object’s `updatedDate` field. */
+  updatedDate?: InputMaybe<DatetimeFilter>;
+  /** Filter by the object’s `updatedUser` field. */
+  updatedUser?: InputMaybe<StringFilter>;
+};
+
 /** A condition to be used against `Image` object types. All fields are tested for equality and combined with a logical ‘and.’ */
 export type ImageCondition = {
   /**
    * Checks for equality with the object’s `altText` field.
    * @maxLength(1000)
    */
-  altText?: InputMaybe<Scalars['String']>;
+  altText?: InputMaybe<Scalars['String']['input']>;
   /** Checks for equality with the object’s `createdDate` field. */
-  createdDate?: InputMaybe<Scalars['Datetime']>;
+  createdDate?: InputMaybe<Scalars['Datetime']['input']>;
   /** Checks for equality with the object’s `createdUser` field. */
-  createdUser?: InputMaybe<Scalars['String']>;
+  createdUser?: InputMaybe<Scalars['String']['input']>;
   /** Checks for equality with the object’s `filename` field. */
-  filename?: InputMaybe<Scalars['String']>;
+  filename?: InputMaybe<Scalars['String']['input']>;
   /** Checks for equality with the object’s `fileSizeInBytes` field. */
-  fileSizeInBytes?: InputMaybe<Scalars['Int']>;
+  fileSizeInBytes?: InputMaybe<Scalars['Int']['input']>;
   /** Checks for equality with the object’s `focalX` field. */
-  focalX?: InputMaybe<Scalars['BigFloat']>;
+  focalX?: InputMaybe<Scalars['BigFloat']['input']>;
   /** Checks for equality with the object’s `focalY` field. */
-  focalY?: InputMaybe<Scalars['BigFloat']>;
+  focalY?: InputMaybe<Scalars['BigFloat']['input']>;
   /** Checks for equality with the object’s `height` field. */
-  height?: InputMaybe<Scalars['Int']>;
+  height?: InputMaybe<Scalars['Int']['input']>;
   /** Checks for equality with the object’s `id` field. */
-  id?: InputMaybe<Scalars['UUID']>;
+  id?: InputMaybe<Scalars['UUID']['input']>;
   /** Checks for equality with the object’s `imageTypeKey` field. */
-  imageTypeKey?: InputMaybe<Scalars['String']>;
+  imageTypeKey?: InputMaybe<Scalars['String']['input']>;
   /** Checks for equality with the object’s `isArchived` field. */
-  isArchived?: InputMaybe<Scalars['Boolean']>;
+  isArchived?: InputMaybe<Scalars['Boolean']['input']>;
   /** Checks for equality with the object’s `originalSourceLocation` field. */
-  originalSourceLocation?: InputMaybe<Scalars['String']>;
+  originalSourceLocation?: InputMaybe<Scalars['String']['input']>;
   /** Checks for equality with the object’s `sourceFileName` field. */
-  sourceFileName?: InputMaybe<Scalars['String']>;
+  sourceFileName?: InputMaybe<Scalars['String']['input']>;
   /** Checks for equality with the object’s `sourceFileType` field. */
-  sourceFileType?: InputMaybe<Scalars['String']>;
+  sourceFileType?: InputMaybe<Scalars['String']['input']>;
   /**
    * Checks for equality with the object’s `title` field.
    * @maxLength(100)
    * @notEmpty()
    */
-  title?: InputMaybe<Scalars['String']>;
+  title?: InputMaybe<Scalars['String']['input']>;
   /** Checks for equality with the object’s `updatedDate` field. */
-  updatedDate?: InputMaybe<Scalars['Datetime']>;
+  updatedDate?: InputMaybe<Scalars['Datetime']['input']>;
   /** Checks for equality with the object’s `updatedUser` field. */
-  updatedUser?: InputMaybe<Scalars['String']>;
+  updatedUser?: InputMaybe<Scalars['String']['input']>;
   /** Checks for equality with the object’s `width` field. */
-  width?: InputMaybe<Scalars['Int']>;
+  width?: InputMaybe<Scalars['Int']['input']>;
 };
 
 /** A filter to be used against `Image` object types. All fields are combined with a logical ‘and.’ */
@@ -987,7 +1138,7 @@ export type ImageFilter = {
   /** Filter by the object’s `imagesTags` relation. */
   imagesTags?: InputMaybe<ImageToManyImagesTagFilter>;
   /** Some related `imagesTags` exist. */
-  imagesTagsExist?: InputMaybe<Scalars['Boolean']>;
+  imagesTagsExist?: InputMaybe<Scalars['Boolean']['input']>;
   /** Filter by the object’s `imageType` relation. */
   imageType?: InputMaybe<ImageTypeFilter>;
   /** Filter by the object’s `imageTypeKey` field. */
@@ -1017,15 +1168,15 @@ export type ImageFilter = {
 /** Represents an update to a `Image`. Fields that are set will be updated. */
 export type ImagePatch = {
   /** @maxLength(1000) */
-  altText?: InputMaybe<Scalars['String']>;
-  focalX?: InputMaybe<Scalars['BigFloat']>;
-  focalY?: InputMaybe<Scalars['BigFloat']>;
-  isArchived?: InputMaybe<Scalars['Boolean']>;
+  altText?: InputMaybe<Scalars['String']['input']>;
+  focalX?: InputMaybe<Scalars['BigFloat']['input']>;
+  focalY?: InputMaybe<Scalars['BigFloat']['input']>;
+  isArchived?: InputMaybe<Scalars['Boolean']['input']>;
   /**
    * @maxLength(100)
    * @notEmpty()
    */
-  title?: InputMaybe<Scalars['String']>;
+  title?: InputMaybe<Scalars['String']['input']>;
 };
 
 /**
@@ -1041,14 +1192,14 @@ export type ImagesConnection = {
   /** Information to aid in pagination. */
   pageInfo: PageInfo;
   /** The count of *all* `Image` you could get from the connection. */
-  totalCount: Scalars['Int'];
+  totalCount: Scalars['Int']['output'];
 };
 
 /** A `Image` edge in the connection. */
 export type ImagesEdge = {
   __typename?: 'ImagesEdge';
   /** A cursor for use in pagination. */
-  cursor?: Maybe<Scalars['Cursor']>;
+  cursor?: Maybe<Scalars['Cursor']['output']>;
   /** The `Image` at the end of the edge. */
   node: Image;
 };
@@ -1119,8 +1270,8 @@ export type ImagesTag = {
   __typename?: 'ImagesTag';
   /** Reads a single `Image` that is related to this `ImagesTag`. */
   image?: Maybe<Image>;
-  imageId: Scalars['UUID'];
-  name: Scalars['String'];
+  imageId: Scalars['UUID']['output'];
+  name: Scalars['String']['output'];
 };
 
 /**
@@ -1129,12 +1280,12 @@ export type ImagesTag = {
  */
 export type ImagesTagCondition = {
   /** Checks for equality with the object’s `imageId` field. */
-  imageId?: InputMaybe<Scalars['UUID']>;
+  imageId?: InputMaybe<Scalars['UUID']['input']>;
   /**
    * Checks for equality with the object’s `name` field.
    * @notEmpty()
    */
-  name?: InputMaybe<Scalars['String']>;
+  name?: InputMaybe<Scalars['String']['input']>;
 };
 
 /** A filter to be used against `ImagesTag` object types. All fields are combined with a logical ‘and.’ */
@@ -1155,15 +1306,15 @@ export type ImagesTagFilter = {
 
 /** An input for mutations affecting `ImagesTag` */
 export type ImagesTagInput = {
-  imageId: Scalars['UUID'];
+  imageId: Scalars['UUID']['input'];
   /** @notEmpty() */
-  name: Scalars['String'];
+  name: Scalars['String']['input'];
 };
 
 /** Represents an update to a `ImagesTag`. Fields that are set will be updated. */
 export type ImagesTagPatch = {
   /** @notEmpty() */
-  name?: InputMaybe<Scalars['String']>;
+  name?: InputMaybe<Scalars['String']['input']>;
 };
 
 /**
@@ -1179,14 +1330,14 @@ export type ImagesTagsConnection = {
   /** Information to aid in pagination. */
   pageInfo: PageInfo;
   /** The count of *all* `ImagesTag` you could get from the connection. */
-  totalCount: Scalars['Int'];
+  totalCount: Scalars['Int']['output'];
 };
 
 /** A `ImagesTag` edge in the connection. */
 export type ImagesTagsEdge = {
   __typename?: 'ImagesTagsEdge';
   /** A cursor for use in pagination. */
-  cursor?: Maybe<Scalars['Cursor']>;
+  cursor?: Maybe<Scalars['Cursor']['output']>;
   /** The `ImagesTag` at the end of the edge. */
   node: ImagesTag;
 };
@@ -1250,9 +1401,9 @@ export enum ImageSubscriptionEventKey {
 export type ImageSubscriptionPayload = {
   __typename?: 'ImageSubscriptionPayload';
   /** @deprecated Use 'eventKey' instead. */
-  event?: Maybe<Scalars['String']>;
+  event?: Maybe<Scalars['String']['output']>;
   eventKey?: Maybe<ImageSubscriptionEventKey>;
-  id: Scalars['UUID'];
+  id: Scalars['UUID']['output'];
   image?: Maybe<Image>;
 };
 
@@ -1269,28 +1420,28 @@ export type ImageToManyImagesTagFilter = {
 /** @permissions: IMAGES_VIEW,IMAGES_EDIT,ADMIN,IMAGE_TYPES_DECLARE */
 export type ImageType = {
   __typename?: 'ImageType';
-  createdDate: Scalars['Datetime'];
-  createdUser: Scalars['String'];
+  createdDate: Scalars['Datetime']['output'];
+  createdUser: Scalars['String']['output'];
   /** Reads and enables pagination through a set of `Image`. */
   images: ImagesConnection;
-  imageType: Scalars['String'];
-  isArchived: Scalars['Boolean'];
-  serviceId: Scalars['String'];
-  title: Scalars['String'];
-  updatedDate: Scalars['Datetime'];
-  updatedUser: Scalars['String'];
+  imageType: Scalars['String']['output'];
+  isArchived: Scalars['Boolean']['output'];
+  serviceId: Scalars['String']['output'];
+  title: Scalars['String']['output'];
+  updatedDate: Scalars['Datetime']['output'];
+  updatedUser: Scalars['String']['output'];
 };
 
 
 /** @permissions: IMAGES_VIEW,IMAGES_EDIT,ADMIN,IMAGE_TYPES_DECLARE */
 export type ImageTypeImagesArgs = {
-  after?: InputMaybe<Scalars['Cursor']>;
-  before?: InputMaybe<Scalars['Cursor']>;
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
   condition?: InputMaybe<ImageCondition>;
   filter?: InputMaybe<ImageFilter>;
-  first?: InputMaybe<Scalars['Int']>;
-  last?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Array<ImagesOrderBy>>;
 };
 
@@ -1300,25 +1451,25 @@ export type ImageTypeImagesArgs = {
  */
 export type ImageTypeCondition = {
   /** Checks for equality with the object’s `createdDate` field. */
-  createdDate?: InputMaybe<Scalars['Datetime']>;
+  createdDate?: InputMaybe<Scalars['Datetime']['input']>;
   /** Checks for equality with the object’s `createdUser` field. */
-  createdUser?: InputMaybe<Scalars['String']>;
+  createdUser?: InputMaybe<Scalars['String']['input']>;
   /**
    * Checks for equality with the object’s `imageType` field.
    * @isTrimmed()
    * @notEmpty()
    */
-  imageType?: InputMaybe<Scalars['String']>;
+  imageType?: InputMaybe<Scalars['String']['input']>;
   /** Checks for equality with the object’s `isArchived` field. */
-  isArchived?: InputMaybe<Scalars['Boolean']>;
+  isArchived?: InputMaybe<Scalars['Boolean']['input']>;
   /** Checks for equality with the object’s `serviceId` field. */
-  serviceId?: InputMaybe<Scalars['String']>;
+  serviceId?: InputMaybe<Scalars['String']['input']>;
   /** Checks for equality with the object’s `title` field. */
-  title?: InputMaybe<Scalars['String']>;
+  title?: InputMaybe<Scalars['String']['input']>;
   /** Checks for equality with the object’s `updatedDate` field. */
-  updatedDate?: InputMaybe<Scalars['Datetime']>;
+  updatedDate?: InputMaybe<Scalars['Datetime']['input']>;
   /** Checks for equality with the object’s `updatedUser` field. */
-  updatedUser?: InputMaybe<Scalars['String']>;
+  updatedUser?: InputMaybe<Scalars['String']['input']>;
 };
 
 /** A filter to be used against `ImageType` object types. All fields are combined with a logical ‘and.’ */
@@ -1332,7 +1483,7 @@ export type ImageTypeFilter = {
   /** Filter by the object’s `images` relation. */
   images?: InputMaybe<ImageTypeToManyImageFilter>;
   /** Some related `images` exist. */
-  imagesExist?: InputMaybe<Scalars['Boolean']>;
+  imagesExist?: InputMaybe<Scalars['Boolean']['input']>;
   /** Filter by the object’s `imageType` field. */
   imageType?: InputMaybe<StringFilter>;
   /** Filter by the object’s `isArchived` field. */
@@ -1364,14 +1515,14 @@ export type ImageTypesConnection = {
   /** Information to aid in pagination. */
   pageInfo: PageInfo;
   /** The count of *all* `ImageType` you could get from the connection. */
-  totalCount: Scalars['Int'];
+  totalCount: Scalars['Int']['output'];
 };
 
 /** A `ImageType` edge in the connection. */
 export type ImageTypesEdge = {
   __typename?: 'ImageTypesEdge';
   /** A cursor for use in pagination. */
-  cursor?: Maybe<Scalars['Cursor']>;
+  cursor?: Maybe<Scalars['Cursor']['output']>;
   /** The `ImageType` at the end of the edge. */
   node: ImageType;
 };
@@ -1414,33 +1565,35 @@ export type ImageTypeToManyImageFilter = {
 /** A filter to be used against Int fields. All fields are combined with a logical ‘and.’ */
 export type IntFilter = {
   /** Not equal to the specified value, treating null like an ordinary value. */
-  distinctFrom?: InputMaybe<Scalars['Int']>;
+  distinctFrom?: InputMaybe<Scalars['Int']['input']>;
   /** Equal to the specified value. */
-  equalTo?: InputMaybe<Scalars['Int']>;
+  equalTo?: InputMaybe<Scalars['Int']['input']>;
   /** Greater than the specified value. */
-  greaterThan?: InputMaybe<Scalars['Int']>;
+  greaterThan?: InputMaybe<Scalars['Int']['input']>;
   /** Greater than or equal to the specified value. */
-  greaterThanOrEqualTo?: InputMaybe<Scalars['Int']>;
+  greaterThanOrEqualTo?: InputMaybe<Scalars['Int']['input']>;
   /** Included in the specified list. */
-  in?: InputMaybe<Array<Scalars['Int']>>;
+  in?: InputMaybe<Array<Scalars['Int']['input']>>;
   /** Is null (if `true` is specified) or is not null (if `false` is specified). */
-  isNull?: InputMaybe<Scalars['Boolean']>;
+  isNull?: InputMaybe<Scalars['Boolean']['input']>;
   /** Less than the specified value. */
-  lessThan?: InputMaybe<Scalars['Int']>;
+  lessThan?: InputMaybe<Scalars['Int']['input']>;
   /** Less than or equal to the specified value. */
-  lessThanOrEqualTo?: InputMaybe<Scalars['Int']>;
+  lessThanOrEqualTo?: InputMaybe<Scalars['Int']['input']>;
   /** Equal to the specified value, treating null like an ordinary value. */
-  notDistinctFrom?: InputMaybe<Scalars['Int']>;
+  notDistinctFrom?: InputMaybe<Scalars['Int']['input']>;
   /** Not equal to the specified value. */
-  notEqualTo?: InputMaybe<Scalars['Int']>;
+  notEqualTo?: InputMaybe<Scalars['Int']['input']>;
   /** Not included in the specified list. */
-  notIn?: InputMaybe<Array<Scalars['Int']>>;
+  notIn?: InputMaybe<Array<Scalars['Int']['input']>>;
 };
 
 /** The root mutation type which contains root level fields which mutate data. */
 export type Mutation = {
   __typename?: 'Mutation';
   archiveImages?: Maybe<BulkMutationUuidPayload>;
+  bulkEditImagesAsync?: Maybe<BulkEditAsyncPayloadType>;
+  checkAcquisitionStorageConnection: CheckStorageConnectionPayload;
   /** Clear image upload webhook secret for signing. */
   clearImageUploadWebhookSecret: ClearImageUploadWebhookSecretPayload;
   /** Creates a single `ImagesTag`. */
@@ -1458,6 +1611,7 @@ export type Mutation = {
   /** Mutation to set General Settings in Image Service. */
   setGeneralSettings: GeneralSetting;
   setHostingAzureAcquisitionProfile: ImageAcquisitionProfile;
+  setS3CompatibleAcquisitionProfile: ImageAcquisitionProfile;
   startImagesDeletion?: Maybe<BulkMutationUuidPayload>;
   unarchiveImages?: Maybe<BulkMutationUuidPayload>;
   updateAmazonS3AcquisitionProfile: ImageAcquisitionProfile;
@@ -1467,6 +1621,7 @@ export type Mutation = {
   updateImage?: Maybe<UpdateImagePayload>;
   /** Updates a single `ImagesTag` using a unique key and a patch. */
   updateImagesTag?: Maybe<UpdateImagesTagPayload>;
+  updateS3CompatibleAcquisitionProfile: ImageAcquisitionProfile;
   uploadImage?: Maybe<UploadImagePayload>;
 };
 
@@ -1474,6 +1629,22 @@ export type Mutation = {
 /** The root mutation type which contains root level fields which mutate data. */
 export type MutationArchiveImagesArgs = {
   filter?: InputMaybe<ImageFilter>;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationBulkEditImagesAsyncArgs = {
+  filter?: InputMaybe<ImageFilter>;
+  relatedEntitiesToAdd?: InputMaybe<BulkEditAsyncImageAddInput>;
+  relatedEntitiesToClear?: InputMaybe<BulkEditAsyncImageClearInput>;
+  relatedEntitiesToRemove?: InputMaybe<BulkEditAsyncImageRemoveInput>;
+  set?: InputMaybe<ImagePatch>;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationCheckAcquisitionStorageConnectionArgs = {
+  input: CheckAcquisitionStorageConnectionInput;
 };
 
 
@@ -1520,6 +1691,12 @@ export type MutationSetHostingAzureAcquisitionProfileArgs = {
 
 
 /** The root mutation type which contains root level fields which mutate data. */
+export type MutationSetS3CompatibleAcquisitionProfileArgs = {
+  input: SetS3CompatibleAcquisitionProfileInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
 export type MutationStartImagesDeletionArgs = {
   filter?: InputMaybe<ImageFilter>;
 };
@@ -1562,6 +1739,12 @@ export type MutationUpdateImagesTagArgs = {
 
 
 /** The root mutation type which contains root level fields which mutate data. */
+export type MutationUpdateS3CompatibleAcquisitionProfileArgs = {
+  input: UpdateS3CompatibleAcquisitionProfileInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
 export type MutationUploadImageArgs = {
   input: UploadImageInput;
 };
@@ -1570,13 +1753,13 @@ export type MutationUploadImageArgs = {
 export type PageInfo = {
   __typename?: 'PageInfo';
   /** When paginating forwards, the cursor to continue. */
-  endCursor?: Maybe<Scalars['Cursor']>;
+  endCursor?: Maybe<Scalars['Cursor']['output']>;
   /** When paginating forwards, are there more items? */
-  hasNextPage: Scalars['Boolean'];
+  hasNextPage: Scalars['Boolean']['output'];
   /** When paginating backwards, are there more items? */
-  hasPreviousPage: Scalars['Boolean'];
+  hasPreviousPage: Scalars['Boolean']['output'];
   /** When paginating backwards, the cursor to continue. */
-  startCursor?: Maybe<Scalars['Cursor']>;
+  startCursor?: Maybe<Scalars['Cursor']['output']>;
 };
 
 /** The root query type which gives access points into the data universe. */
@@ -1606,118 +1789,127 @@ export type Query = {
 
 /** The root query type which gives access points into the data universe. */
 export type QueryGetImagesTagsValuesArgs = {
-  after?: InputMaybe<Scalars['Cursor']>;
-  before?: InputMaybe<Scalars['Cursor']>;
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
   filter?: InputMaybe<StringFilter>;
-  first?: InputMaybe<Scalars['Int']>;
-  last?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
 };
 
 
 /** The root query type which gives access points into the data universe. */
 export type QueryImageArgs = {
-  id: Scalars['UUID'];
+  id: Scalars['UUID']['input'];
 };
 
 
 /** The root query type which gives access points into the data universe. */
 export type QueryImageAcquisitionProfileArgs = {
-  id: Scalars['UUID'];
+  id: Scalars['UUID']['input'];
 };
 
 
 /** The root query type which gives access points into the data universe. */
 export type QueryImageAcquisitionProfilesArgs = {
-  after?: InputMaybe<Scalars['Cursor']>;
-  before?: InputMaybe<Scalars['Cursor']>;
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
   condition?: InputMaybe<ImageAcquisitionProfileCondition>;
   filter?: InputMaybe<ImageAcquisitionProfileFilter>;
-  first?: InputMaybe<Scalars['Int']>;
-  last?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Array<ImageAcquisitionProfilesOrderBy>>;
 };
 
 
 /** The root query type which gives access points into the data universe. */
 export type QueryImagesArgs = {
-  after?: InputMaybe<Scalars['Cursor']>;
-  before?: InputMaybe<Scalars['Cursor']>;
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
   condition?: InputMaybe<ImageCondition>;
   filter?: InputMaybe<ImageFilter>;
-  first?: InputMaybe<Scalars['Int']>;
-  last?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Array<ImagesOrderBy>>;
 };
 
 
 /** The root query type which gives access points into the data universe. */
 export type QueryImagesTagArgs = {
-  imageId: Scalars['UUID'];
-  name: Scalars['String'];
+  imageId: Scalars['UUID']['input'];
+  name: Scalars['String']['input'];
 };
 
 
 /** The root query type which gives access points into the data universe. */
 export type QueryImagesTagsArgs = {
-  after?: InputMaybe<Scalars['Cursor']>;
-  before?: InputMaybe<Scalars['Cursor']>;
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
   condition?: InputMaybe<ImagesTagCondition>;
   filter?: InputMaybe<ImagesTagFilter>;
-  first?: InputMaybe<Scalars['Int']>;
-  last?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Array<ImagesTagsOrderBy>>;
 };
 
 
 /** The root query type which gives access points into the data universe. */
 export type QueryImageTypeArgs = {
-  imageType: Scalars['String'];
+  imageType: Scalars['String']['input'];
 };
 
 
 /** The root query type which gives access points into the data universe. */
 export type QueryImageTypesArgs = {
-  after?: InputMaybe<Scalars['Cursor']>;
-  before?: InputMaybe<Scalars['Cursor']>;
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
   condition?: InputMaybe<ImageTypeCondition>;
   filter?: InputMaybe<ImageTypeFilter>;
-  first?: InputMaybe<Scalars['Int']>;
-  last?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Array<ImageTypesOrderBy>>;
 };
 
 export type SetAmazonS3AcquisitionProfileInput = {
-  accessKeyId: Scalars['String'];
-  bucketName: Scalars['String'];
+  accessKeyId: Scalars['String']['input'];
+  bucketName: Scalars['String']['input'];
   region: AmazonS3Region;
-  rootFolderPath?: InputMaybe<Scalars['String']>;
-  secretAccessKey: Scalars['String'];
-  title: Scalars['String'];
+  rootFolderPath?: InputMaybe<Scalars['String']['input']>;
+  secretAccessKey: Scalars['String']['input'];
+  title: Scalars['String']['input'];
 };
 
 export type SetAzureBlobAcquisitionProfileInput = {
-  accountKey: Scalars['String'];
-  accountName: Scalars['String'];
-  containerName: Scalars['String'];
-  rootFolderPath?: InputMaybe<Scalars['String']>;
-  title: Scalars['String'];
+  accountKey: Scalars['String']['input'];
+  accountName: Scalars['String']['input'];
+  containerName: Scalars['String']['input'];
+  rootFolderPath?: InputMaybe<Scalars['String']['input']>;
+  title: Scalars['String']['input'];
 };
 
 /** Input for setting General Settings in Image Service. */
 export type SetGeneralSettingsInput = {
-  imageUploadWebhookUrl?: InputMaybe<Scalars['String']>;
+  imageUploadWebhookUrl?: InputMaybe<Scalars['String']['input']>;
 };
 
 export type SetHostingAzureAcquisitionProfileInput = {
-  accountName: Scalars['String'];
-  containerName: Scalars['String'];
-  rootFolderPath?: InputMaybe<Scalars['String']>;
-  title: Scalars['String'];
+  accountName: Scalars['String']['input'];
+  containerName: Scalars['String']['input'];
+  rootFolderPath?: InputMaybe<Scalars['String']['input']>;
+  title: Scalars['String']['input'];
+};
+
+export type SetS3CompatibleAcquisitionProfileInput = {
+  accessKeyId: Scalars['String']['input'];
+  bucketName: Scalars['String']['input'];
+  rootFolderPath?: InputMaybe<Scalars['String']['input']>;
+  s3Endpoint: Scalars['String']['input'];
+  secretAccessKey: Scalars['String']['input'];
+  title: Scalars['String']['input'];
 };
 
 export enum StorageProvider {
@@ -1726,7 +1918,9 @@ export enum StorageProvider {
   /** Azure Blob */
   AzureBlob = 'AZURE_BLOB',
   /** Mosaic Hosting Service - Azure */
-  HostingServiceAzure = 'HOSTING_SERVICE_AZURE'
+  HostingServiceAzure = 'HOSTING_SERVICE_AZURE',
+  /** S3 Compatible */
+  S3Compatible = 'S3_COMPATIBLE'
 }
 
 /** A filter to be used against StorageProvider fields. All fields are combined with a logical ‘and.’ */
@@ -1742,7 +1936,7 @@ export type StorageProviderFilter = {
   /** Included in the specified list. */
   in?: InputMaybe<Array<StorageProvider>>;
   /** Is null (if `true` is specified) or is not null (if `false` is specified). */
-  isNull?: InputMaybe<Scalars['Boolean']>;
+  isNull?: InputMaybe<Scalars['Boolean']['input']>;
   /** Less than the specified value. */
   lessThan?: InputMaybe<StorageProvider>;
   /** Less than or equal to the specified value. */
@@ -1758,79 +1952,79 @@ export type StorageProviderFilter = {
 /** A filter to be used against String fields. All fields are combined with a logical ‘and.’ */
 export type StringFilter = {
   /** Not equal to the specified value, treating null like an ordinary value. */
-  distinctFrom?: InputMaybe<Scalars['String']>;
+  distinctFrom?: InputMaybe<Scalars['String']['input']>;
   /** Not equal to the specified value, treating null like an ordinary value (case-insensitive). */
-  distinctFromInsensitive?: InputMaybe<Scalars['String']>;
+  distinctFromInsensitive?: InputMaybe<Scalars['String']['input']>;
   /** Ends with the specified string (case-sensitive). */
-  endsWith?: InputMaybe<Scalars['String']>;
+  endsWith?: InputMaybe<Scalars['String']['input']>;
   /** Ends with the specified string (case-insensitive). */
-  endsWithInsensitive?: InputMaybe<Scalars['String']>;
+  endsWithInsensitive?: InputMaybe<Scalars['String']['input']>;
   /** Equal to the specified value. */
-  equalTo?: InputMaybe<Scalars['String']>;
+  equalTo?: InputMaybe<Scalars['String']['input']>;
   /** Equal to the specified value (case-insensitive). */
-  equalToInsensitive?: InputMaybe<Scalars['String']>;
+  equalToInsensitive?: InputMaybe<Scalars['String']['input']>;
   /** Greater than the specified value. */
-  greaterThan?: InputMaybe<Scalars['String']>;
+  greaterThan?: InputMaybe<Scalars['String']['input']>;
   /** Greater than the specified value (case-insensitive). */
-  greaterThanInsensitive?: InputMaybe<Scalars['String']>;
+  greaterThanInsensitive?: InputMaybe<Scalars['String']['input']>;
   /** Greater than or equal to the specified value. */
-  greaterThanOrEqualTo?: InputMaybe<Scalars['String']>;
+  greaterThanOrEqualTo?: InputMaybe<Scalars['String']['input']>;
   /** Greater than or equal to the specified value (case-insensitive). */
-  greaterThanOrEqualToInsensitive?: InputMaybe<Scalars['String']>;
+  greaterThanOrEqualToInsensitive?: InputMaybe<Scalars['String']['input']>;
   /** Included in the specified list. */
-  in?: InputMaybe<Array<Scalars['String']>>;
+  in?: InputMaybe<Array<Scalars['String']['input']>>;
   /** Contains the specified string (case-sensitive). */
-  includes?: InputMaybe<Scalars['String']>;
+  includes?: InputMaybe<Scalars['String']['input']>;
   /** Contains the specified string (case-insensitive). */
-  includesInsensitive?: InputMaybe<Scalars['String']>;
+  includesInsensitive?: InputMaybe<Scalars['String']['input']>;
   /** Included in the specified list (case-insensitive). */
-  inInsensitive?: InputMaybe<Array<Scalars['String']>>;
+  inInsensitive?: InputMaybe<Array<Scalars['String']['input']>>;
   /** Is null (if `true` is specified) or is not null (if `false` is specified). */
-  isNull?: InputMaybe<Scalars['Boolean']>;
+  isNull?: InputMaybe<Scalars['Boolean']['input']>;
   /** Less than the specified value. */
-  lessThan?: InputMaybe<Scalars['String']>;
+  lessThan?: InputMaybe<Scalars['String']['input']>;
   /** Less than the specified value (case-insensitive). */
-  lessThanInsensitive?: InputMaybe<Scalars['String']>;
+  lessThanInsensitive?: InputMaybe<Scalars['String']['input']>;
   /** Less than or equal to the specified value. */
-  lessThanOrEqualTo?: InputMaybe<Scalars['String']>;
+  lessThanOrEqualTo?: InputMaybe<Scalars['String']['input']>;
   /** Less than or equal to the specified value (case-insensitive). */
-  lessThanOrEqualToInsensitive?: InputMaybe<Scalars['String']>;
+  lessThanOrEqualToInsensitive?: InputMaybe<Scalars['String']['input']>;
   /** Matches the specified pattern (case-sensitive). An underscore (_) matches any single character; a percent sign (%) matches any sequence of zero or more characters. */
-  like?: InputMaybe<Scalars['String']>;
+  like?: InputMaybe<Scalars['String']['input']>;
   /** Matches the specified pattern (case-insensitive). An underscore (_) matches any single character; a percent sign (%) matches any sequence of zero or more characters. */
-  likeInsensitive?: InputMaybe<Scalars['String']>;
+  likeInsensitive?: InputMaybe<Scalars['String']['input']>;
   /** Equal to the specified value, treating null like an ordinary value. */
-  notDistinctFrom?: InputMaybe<Scalars['String']>;
+  notDistinctFrom?: InputMaybe<Scalars['String']['input']>;
   /** Equal to the specified value, treating null like an ordinary value (case-insensitive). */
-  notDistinctFromInsensitive?: InputMaybe<Scalars['String']>;
+  notDistinctFromInsensitive?: InputMaybe<Scalars['String']['input']>;
   /** Does not end with the specified string (case-sensitive). */
-  notEndsWith?: InputMaybe<Scalars['String']>;
+  notEndsWith?: InputMaybe<Scalars['String']['input']>;
   /** Does not end with the specified string (case-insensitive). */
-  notEndsWithInsensitive?: InputMaybe<Scalars['String']>;
+  notEndsWithInsensitive?: InputMaybe<Scalars['String']['input']>;
   /** Not equal to the specified value. */
-  notEqualTo?: InputMaybe<Scalars['String']>;
+  notEqualTo?: InputMaybe<Scalars['String']['input']>;
   /** Not equal to the specified value (case-insensitive). */
-  notEqualToInsensitive?: InputMaybe<Scalars['String']>;
+  notEqualToInsensitive?: InputMaybe<Scalars['String']['input']>;
   /** Not included in the specified list. */
-  notIn?: InputMaybe<Array<Scalars['String']>>;
+  notIn?: InputMaybe<Array<Scalars['String']['input']>>;
   /** Does not contain the specified string (case-sensitive). */
-  notIncludes?: InputMaybe<Scalars['String']>;
+  notIncludes?: InputMaybe<Scalars['String']['input']>;
   /** Does not contain the specified string (case-insensitive). */
-  notIncludesInsensitive?: InputMaybe<Scalars['String']>;
+  notIncludesInsensitive?: InputMaybe<Scalars['String']['input']>;
   /** Not included in the specified list (case-insensitive). */
-  notInInsensitive?: InputMaybe<Array<Scalars['String']>>;
+  notInInsensitive?: InputMaybe<Array<Scalars['String']['input']>>;
   /** Does not match the specified pattern (case-sensitive). An underscore (_) matches any single character; a percent sign (%) matches any sequence of zero or more characters. */
-  notLike?: InputMaybe<Scalars['String']>;
+  notLike?: InputMaybe<Scalars['String']['input']>;
   /** Does not match the specified pattern (case-insensitive). An underscore (_) matches any single character; a percent sign (%) matches any sequence of zero or more characters. */
-  notLikeInsensitive?: InputMaybe<Scalars['String']>;
+  notLikeInsensitive?: InputMaybe<Scalars['String']['input']>;
   /** Does not start with the specified string (case-sensitive). */
-  notStartsWith?: InputMaybe<Scalars['String']>;
+  notStartsWith?: InputMaybe<Scalars['String']['input']>;
   /** Does not start with the specified string (case-insensitive). */
-  notStartsWithInsensitive?: InputMaybe<Scalars['String']>;
+  notStartsWithInsensitive?: InputMaybe<Scalars['String']['input']>;
   /** Starts with the specified string (case-sensitive). */
-  startsWith?: InputMaybe<Scalars['String']>;
+  startsWith?: InputMaybe<Scalars['String']['input']>;
   /** Starts with the specified string (case-insensitive). */
-  startsWithInsensitive?: InputMaybe<Scalars['String']>;
+  startsWithInsensitive?: InputMaybe<Scalars['String']['input']>;
 };
 
 /** The root subscription type: contains realtime events you can subscribe to with the `subscription` operation. */
@@ -1841,26 +2035,26 @@ export type Subscription = {
 };
 
 export type UpdateAmazonS3AcquisitionProfileInput = {
-  accessKeyId?: InputMaybe<Scalars['String']>;
-  bucketName?: InputMaybe<Scalars['String']>;
+  accessKeyId?: InputMaybe<Scalars['String']['input']>;
+  bucketName?: InputMaybe<Scalars['String']['input']>;
   region?: InputMaybe<AmazonS3Region>;
-  rootFolderPath?: InputMaybe<Scalars['String']>;
-  secretAccessKey?: InputMaybe<Scalars['String']>;
-  title?: InputMaybe<Scalars['String']>;
+  rootFolderPath?: InputMaybe<Scalars['String']['input']>;
+  secretAccessKey?: InputMaybe<Scalars['String']['input']>;
+  title?: InputMaybe<Scalars['String']['input']>;
 };
 
 export type UpdateAzureBlobAcquisitionProfileInput = {
-  accountKey?: InputMaybe<Scalars['String']>;
-  accountName?: InputMaybe<Scalars['String']>;
-  containerName?: InputMaybe<Scalars['String']>;
-  rootFolderPath?: InputMaybe<Scalars['String']>;
-  title?: InputMaybe<Scalars['String']>;
+  accountKey?: InputMaybe<Scalars['String']['input']>;
+  accountName?: InputMaybe<Scalars['String']['input']>;
+  containerName?: InputMaybe<Scalars['String']['input']>;
+  rootFolderPath?: InputMaybe<Scalars['String']['input']>;
+  title?: InputMaybe<Scalars['String']['input']>;
 };
 
 export type UpdateHostingAzureAcquisitionProfileInput = {
-  containerName?: InputMaybe<Scalars['String']>;
-  rootFolderPath?: InputMaybe<Scalars['String']>;
-  title?: InputMaybe<Scalars['String']>;
+  containerName?: InputMaybe<Scalars['String']['input']>;
+  rootFolderPath?: InputMaybe<Scalars['String']['input']>;
+  title?: InputMaybe<Scalars['String']['input']>;
 };
 
 /**
@@ -1872,8 +2066,8 @@ export type UpdateImageInput = {
    * An arbitrary string value with no semantic meaning. Will be included in the
    * payload verbatim. May be used to track mutations by the client.
    */
-  clientMutationId?: InputMaybe<Scalars['String']>;
-  id: Scalars['UUID'];
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
+  id: Scalars['UUID']['input'];
   /** An object where the defined keys will be set on the `Image` being updated. */
   patch: ImagePatch;
 };
@@ -1885,7 +2079,7 @@ export type UpdateImagePayload = {
    * The exact same `clientMutationId` that was provided in the mutation input,
    * unchanged and unused. May be used by a client to track mutations.
    */
-  clientMutationId?: Maybe<Scalars['String']>;
+  clientMutationId?: Maybe<Scalars['String']['output']>;
   /** The `Image` that was updated by this mutation. */
   image?: Maybe<Image>;
   /** An edge for our `Image`. May be used by Relay 1. */
@@ -1911,10 +2105,10 @@ export type UpdateImagesTagInput = {
    * An arbitrary string value with no semantic meaning. Will be included in the
    * payload verbatim. May be used to track mutations by the client.
    */
-  clientMutationId?: InputMaybe<Scalars['String']>;
-  imageId: Scalars['UUID'];
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
+  imageId: Scalars['UUID']['input'];
   /** @notEmpty() */
-  name: Scalars['String'];
+  name: Scalars['String']['input'];
   /** An object where the defined keys will be set on the `ImagesTag` being updated. */
   patch: ImagesTagPatch;
 };
@@ -1926,7 +2120,7 @@ export type UpdateImagesTagPayload = {
    * The exact same `clientMutationId` that was provided in the mutation input,
    * unchanged and unused. May be used by a client to track mutations.
    */
-  clientMutationId?: Maybe<Scalars['String']>;
+  clientMutationId?: Maybe<Scalars['String']['output']>;
   /** Reads a single `Image` that is related to this `ImagesTag`. */
   image?: Maybe<Image>;
   /** The `ImagesTag` that was updated by this mutation. */
@@ -1943,9 +2137,18 @@ export type UpdateImagesTagPayloadImagesTagEdgeArgs = {
   orderBy?: InputMaybe<Array<ImagesTagsOrderBy>>;
 };
 
+export type UpdateS3CompatibleAcquisitionProfileInput = {
+  accessKeyId?: InputMaybe<Scalars['String']['input']>;
+  bucketName?: InputMaybe<Scalars['String']['input']>;
+  rootFolderPath?: InputMaybe<Scalars['String']['input']>;
+  s3Endpoint?: InputMaybe<Scalars['String']['input']>;
+  secretAccessKey?: InputMaybe<Scalars['String']['input']>;
+  title?: InputMaybe<Scalars['String']['input']>;
+};
+
 export type UploadImageInput = {
-  file: Scalars['Upload'];
-  imageType: Scalars['String'];
+  file: Scalars['Upload']['input'];
+  imageType: Scalars['String']['input'];
 };
 
 export type UploadImagePayload = {
@@ -1957,35 +2160,35 @@ export type UploadImagePayload = {
 /** A filter to be used against UUID fields. All fields are combined with a logical ‘and.’ */
 export type UuidFilter = {
   /** Not equal to the specified value, treating null like an ordinary value. */
-  distinctFrom?: InputMaybe<Scalars['UUID']>;
+  distinctFrom?: InputMaybe<Scalars['UUID']['input']>;
   /** Equal to the specified value. */
-  equalTo?: InputMaybe<Scalars['UUID']>;
+  equalTo?: InputMaybe<Scalars['UUID']['input']>;
   /** Greater than the specified value. */
-  greaterThan?: InputMaybe<Scalars['UUID']>;
+  greaterThan?: InputMaybe<Scalars['UUID']['input']>;
   /** Greater than or equal to the specified value. */
-  greaterThanOrEqualTo?: InputMaybe<Scalars['UUID']>;
+  greaterThanOrEqualTo?: InputMaybe<Scalars['UUID']['input']>;
   /** Included in the specified list. */
-  in?: InputMaybe<Array<Scalars['UUID']>>;
+  in?: InputMaybe<Array<Scalars['UUID']['input']>>;
   /** Is null (if `true` is specified) or is not null (if `false` is specified). */
-  isNull?: InputMaybe<Scalars['Boolean']>;
+  isNull?: InputMaybe<Scalars['Boolean']['input']>;
   /** Less than the specified value. */
-  lessThan?: InputMaybe<Scalars['UUID']>;
+  lessThan?: InputMaybe<Scalars['UUID']['input']>;
   /** Less than or equal to the specified value. */
-  lessThanOrEqualTo?: InputMaybe<Scalars['UUID']>;
+  lessThanOrEqualTo?: InputMaybe<Scalars['UUID']['input']>;
   /** Equal to the specified value, treating null like an ordinary value. */
-  notDistinctFrom?: InputMaybe<Scalars['UUID']>;
+  notDistinctFrom?: InputMaybe<Scalars['UUID']['input']>;
   /** Not equal to the specified value. */
-  notEqualTo?: InputMaybe<Scalars['UUID']>;
+  notEqualTo?: InputMaybe<Scalars['UUID']['input']>;
   /** Not included in the specified list. */
-  notIn?: InputMaybe<Array<Scalars['UUID']>>;
+  notIn?: InputMaybe<Array<Scalars['UUID']['input']>>;
 };
 
 export type GetImagesQueryVariables = Exact<{
-  filter?: InputMaybe<ImageFilter>;
+  filter?: Types.ImageFilter | null | undefined;
 }>;
 
 
-export type GetImagesQuery = { __typename?: 'Query', images?: { __typename?: 'ImagesConnection', nodes: Array<{ __typename?: 'Image', id: any, height?: number | null, width?: number | null, imageTypeKey: string, transformationPath: string, altText?: string | null }> } | null };
+export type GetImagesQuery = { images: { nodes: Array<{ id: any, height: number | null, width: number | null, imageTypeKey: string, transformationPath: string, altText: string | null }> } | null };
 
 
 export const GetImagesDocument = gql`
@@ -2003,15 +2206,15 @@ export const GetImagesDocument = gql`
 }
     `;
 
-export type SdkFunctionWrapper = <T>(action: (requestHeaders?:Record<string, string>) => Promise<T>, operationName: string, operationType?: string) => Promise<T>;
+export type SdkFunctionWrapper = <T>(action: (requestHeaders?:Record<string, string>) => Promise<T>, operationName: string, operationType?: string, variables?: any) => Promise<T>;
 
 
-const defaultWrapper: SdkFunctionWrapper = (action, _operationName, _operationType) => action();
+const defaultWrapper: SdkFunctionWrapper = (action, _operationName, _operationType, _variables) => action();
 const GetImagesDocumentString = print(GetImagesDocument);
 export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = defaultWrapper) {
   return {
-    GetImages(variables?: GetImagesQueryVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<{ data: GetImagesQuery; extensions?: any; headers: Dom.Headers; status: number; }> {
-        return withWrapper((wrappedRequestHeaders) => client.rawRequest<GetImagesQuery>(GetImagesDocumentString, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'GetImages', 'query');
+    GetImages(variables?: GetImagesQueryVariables, requestHeaders?: GraphQLClientRequestHeaders): Promise<{ data: GetImagesQuery; errors?: GraphQLError[]; extensions?: any; headers: Headers; status: number; }> {
+        return withWrapper((wrappedRequestHeaders) => client.rawRequest<GetImagesQuery>(GetImagesDocumentString, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'GetImages', 'query', variables);
     }
   };
 }

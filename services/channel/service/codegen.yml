@@ -1,4 +1,11 @@
 overwrite: true
+config:
+  # Since @graphql-codegen/typescript-operations v6 the operations plugin emits its
+  # own Input/Enum types. Each output below also runs the `typescript` plugin, so
+  # every target points `importSchemaTypesFrom` at its own file to reuse those
+  # schema types instead of emitting duplicates.
+  # Keep `any` for custom scalars (the v6 default changed to `unknown`).
+  defaultScalarType: any
 generates:
   src/generated/graphql/image.ts:
     schema: '${IMAGE_SERVICE_BASE_URL}/graphql'
@@ -8,6 +15,7 @@ generates:
       - 'typescript-operations'
       - 'typescript-graphql-request'
     config:
+      importSchemaTypesFrom: 'src/generated/graphql/image.ts'
       rawRequest: true
       withHOC: false
       withComponent: false
@@ -20,6 +28,7 @@ generates:
       - 'typescript-operations'
       - 'typescript-graphql-request'
     config:
+      importSchemaTypesFrom: 'src/generated/graphql/video.ts'
       rawRequest: true
       withHOC: false
       withComponent: false
@@ -32,6 +41,7 @@ generates:
       - 'typescript-operations'
       - 'typescript-graphql-request'
     config:
+      importSchemaTypesFrom: 'src/generated/graphql/localization.ts'
       rawRequest: true
       withHOC: false
       withComponent: false
@@ -44,6 +54,7 @@ generates:
       - 'typescript-operations'
       - 'typescript-graphql-request'
     config:
+      importSchemaTypesFrom: 'src/generated/graphql/id.ts'
       rawRequest: true
       withHOC: false
       withComponent: false

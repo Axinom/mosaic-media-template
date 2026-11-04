@@ -16,6 +16,16 @@ The goal is to minimize resolutions and remove them when no longer needed.
 - **Commit**: `197ee4eb` — *"[AB#47252] fix: bumping several packages to address CVEs (#443)"*
 - **Can be removed when**: `@asyncapi/multi-parser` drops its `@asyncapi/parser@2.x` / `3.0.0-next-major-spec.x` legacy parsers, or those releases update `jsonpath-plus` to `^10.x`
 
+### @graphql-tools/utils
+
+- **Forced version**: `^12.0.3` for the `^11.0.0` selector only (`"@graphql-tools/utils@^11.0.0": "^12.0.3"`); currently resolves to 12.1.0, the same version the `^12.x` consumers already use
+- **Reason**: Prototype Pollution in `mergeDeep` (GHSA-7mx3-vvmw-hjmv, high; affects `<=12.0.0`, patched in 12.0.1)
+- **Parent packages**: `@graphql-codegen/plugin-helpers@6.3.0` and `@graphql-codegen/visitor-plugin-common@6.3.0`, pulled by the community plugins `@graphql-codegen/typescript-graphql-request@7.1.0` and `@graphql-codegen/typescript-react-apollo@5.0.0` (both latest stable; only an `8.0.0-alpha` of `typescript-graphql-request` exists). Dev-only (code generation), not present in any deployed service runtime.
+- **Original selector**: `^11.0.0`
+- **Safety check**: with the resolution in place, `yarn codegen` output was byte-identical to the unforced 11.2.2 output for all generated files
+- **Date added**: 2026-11-04
+- **Can be removed when**: `typescript-graphql-request` and `typescript-react-apollo` ship stable releases on `@graphql-codegen/plugin-helpers@^7` (which uses `@graphql-tools/utils@^12`)
+
 ## Waiting for Upstream Fix
 
 ### ajv@5.x / 6.5.2
@@ -28,16 +38,6 @@ The goal is to minimize resolutions and remove them when no longer needed.
 - **Last verified**: 2026-11-03
 - **Check again when**: `@asyncapi/multi-parser` drops the legacy `@asyncapi/parser@2.x` chain, or `webapi-parser` releases a version without the exact `6.5.2` pin
 
-### lodash@4.17.23 via tilde ranges
-
-- **Vulnerability**: Prototype Pollution via array path bypass in `_.unset`/`_.omit` (medium), Code Injection via `_.template` imports key names (high)
-- **Current version**: 4.17.23
-- **Patched in**: 4.18.0
-- **Blocked by**: `@graphql-codegen/plugin-helpers@2.7.2` and `@5.0.3` use `~4.17.0` (tilde ranges cap at 4.17.x). They are pulled by the `@graphql-codegen/cli@^4` / `typescript@^2` / `typescript-operations@^2` / `typescript-graphql-request@^4` / `typescript-react-apollo@^3` devDependencies, whose ranges do not admit newer helpers. The `@stoplight/spectral-*` consumers were re-resolved on 2026-11-03 to `spectral-functions@1.11.0` / `spectral-rulesets@1.23.0`, which use `^4.18.1`; the `^4.17.x` consumers already resolve to 4.18.1.
-- **Date**: 2026-04-14
-- **Last verified**: 2026-11-03
-- **Check again when**: the `@graphql-codegen/*` devDependencies are migrated to current majors (`@graphql-codegen/plugin-helpers@7.x` uses `lodash@^4.18.1`) — this is our own migration work rather than a pending upstream release
-
 ### serialize-javascript
 
 - **Vulnerability**: RCE via `RegExp.flags` / `Date.prototype.toISOString` (high), CPU Exhaustion DoS via crafted array-like objects (medium)
@@ -47,16 +47,6 @@ The goal is to minimize resolutions and remove them when no longer needed.
 - **Date**: 2026-03-03
 - **Last verified**: 2026-11-03
 - **Check again when**: `piral-cli-webpack5` accepts `css-minimizer-webpack-plugin@^8`, or `css-minimizer-webpack-plugin@7.x` ships with `serialize-javascript@^7`
-
-### immutable@~3.7.6
-
-- **Vulnerability**: Prototype Pollution (high), Hash-collision algorithmic complexity DoS (high)
-- **Current version**: 3.7.6
-- **Patched in**: 3.8.3 / 3.8.4
-- **Blocked by**: `@ardatan/relay-compiler@12.0.0` tilde-pins `immutable@~3.7.6` (allows only 3.7.x). `@graphql-tools/relay-operation-optimizer@7.1.3` uses `@ardatan/relay-compiler@^13.0.1` (fixed), but `@graphql-codegen/visitor-plugin-common@2.x` requires `^6.5.0` of relay-operation-optimizer. The `^4.0.0` consumers already resolve to the patched 4.3.9.
-- **Date**: 2026-03-12
-- **Last verified**: 2026-11-03
-- **Check again when**: the `@graphql-codegen/*` devDependencies are migrated to current majors — `@graphql-codegen/visitor-plugin-common@7.x` already uses `@graphql-tools/relay-operation-optimizer@^7.1.12` (→ `@ardatan/relay-compiler@^13`), so this is now our own migration work rather than a pending upstream release
 
 ## Deferred (Tolerated For Now)
 
@@ -74,16 +64,6 @@ not dismissed and not passively "waiting for upstream".
 - **Date**: 2026-06-09
 - **Last verified**: 2026-11-03
 - **Next step / done when**: Bump the `@axinom/mosaic-*` libraries (and other consumers) so they accept `uuid@^11`, then drop any need for a resolution. Until then the alert stays open.
-
-### tmp
-
-- **Vulnerability**: Arbitrary temp file/dir write via symlink `dir` parameter (low); path traversal via unsanitized prefix/postfix (high)
-- **Current version**: 0.0.33
-- **Patched in**: 0.2.4 / 0.2.6 — both major-line jumps with API changes
-- **Why deferred**: `tmp@0.0.33` is dev-only — pulled solely via `external-editor@3.1.0` (`@graphql-codegen/cli` → `inquirer@8`), not present in any deployed service runtime. `external-editor@3.1.0` (latest, unreleased since) pins `tmp@^0.0.33`; reaching 0.2.6 needs either a forced resolution that risks breaking `external-editor`'s use of the old `tmp` API, or migrating off the `inquirer@8` toolchain. Worth doing eventually, so the alert stays open.
-- **Date**: 2026-06-09
-- **Last verified**: 2026-11-03
-- **Next step / done when**: `@graphql-codegen/cli` is migrated off 4.x — current `@graphql-codegen/cli@7.x` uses `@inquirer/prompts` instead of `inquirer@8`, which drops `external-editor`/`tmp@0.0.33` entirely. Alternatively a vetted forced resolution to `tmp@^0.2.6` confirmed safe for `external-editor`.
 
 ## Ignored Vulnerabilities
 
