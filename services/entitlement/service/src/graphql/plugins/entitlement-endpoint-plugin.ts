@@ -7,7 +7,12 @@ import { gql, makeExtendSchemaPlugin } from 'graphile-utils';
 import maxmind, { CountryResponse, Reader } from 'maxmind';
 import path from 'path';
 import { CommonErrors } from '../../common';
-import { ENABLE_VIDEOS_DOWNLOAD, validClaims } from '../../domains';
+import {
+  ENABLE_VIDEOS_DOWNLOAD,
+  getCommunicationKey,
+  getDrmSettings,
+  validClaims,
+} from '../../domains';
 import {
   generateEntitlementMessageJwt,
   getEntityType,
@@ -85,10 +90,15 @@ export const EntitlementEndpointPlugin = makeExtendSchemaPlugin(() => {
                   args.input.allowPersistence), // Allow download only for entity types other than 'channel' and if explicitly requested
             );
 
+            // `getVideoKeyIds` throws for videos without key IDs, so clear
+            // content never reaches the DRM settings lookup.
+            const communicationKey = getCommunicationKey(
+              await getDrmSettings(config),
+            );
             const entitlementMessageJwt = generateEntitlementMessageJwt(
               keyIds,
               claims,
-              config,
+              communicationKey,
               config.isDev ? 'DEV' : 'DEFAULT',
             );
             return { entitlementMessageJwt, claims };

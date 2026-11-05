@@ -89,16 +89,6 @@ spec:
               value: bac4d986-2b9c-4964-a101-76c71f190893
             - name: MOSAIC_TESTING_IP_ENABLED
               value: 'true'
-            - name: DRM_LICENSE_COMMUNICATION_KEY
-              valueFrom:
-                secretKeyRef:
-                  name: key-vault-entitlement
-                  key: drm-license-communication-key
-            - name: DRM_LICENSE_COMMUNICATION_KEY_ID
-              valueFrom:
-                secretKeyRef:
-                  name: key-vault-entitlement
-                  key: drm-license-communication-key-id
             - name: GEOLITE2_LICENSE_KEY
               valueFrom:
                 secretKeyRef:
@@ -124,11 +114,11 @@ spec:
               value: ''
             - name: MANIFEST_WEBHOOK_SECRET
               value: ''
-            - name: WIDEVINE_LICENSE_SERVICE_URL
+            - name: DRM_SERVICE_BASE_URL
+              value: https://drm.service.perf.axinom.net
+            - name: LICENSE_SERVICE_WIDEVINE_URL
               value: https://drm-widevine-licensing.axtest.net/AcquireLicense
-            - name: PLAYREADY_LICENSE_SERVICE_URL
+            - name: LICENSE_SERVICE_PLAYREADY_URL
               value: https://drm-playready-licensing.axtest.net/AcquireLicense
-            - name: FAIRPLAY_LICENSE_SERVICE_URL
+            - name: LICENSE_SERVICE_FAIRPLAY_URL
               value: https://drm-fairplay-licensing.axtest.net/AcquireLicense
-            - name: FAIRPLAY_STREAMING_CERTIFICATE_URL
-              value: https://vtb.axinom.com/FPScert/fairplay.cer

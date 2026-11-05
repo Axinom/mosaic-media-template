@@ -31,6 +31,7 @@ import express from 'express';
 import { PoolConfig } from 'pg';
 import { applyMigrations, getFullConfig } from './common';
 import {
+  preloadDrmSettings,
   setupEntitlementWebhookEndpoint,
   setupManifestWebhookEndpoint,
 } from './domains';
@@ -58,6 +59,9 @@ async function bootstrap(): Promise<void> {
   if (!(await isServiceAvailable(config.idServiceAuthBaseUrl))) {
     throw new MosaicError(IdGuardErrors.IdentityServiceNotAccessible);
   }
+
+  // Load the DRM settings in the background (best effort, doesn't block or fail the startup)
+  preloadDrmSettings(config);
 
   // Register service health endpoint
   setupServiceHealthEndpoint(app);

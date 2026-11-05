@@ -12,6 +12,42 @@ const catalogStub = {
 const catalogMock = vi.mocked(getCatalogSdk);
 catalogMock.mockReturnValue(catalogStub);
 
+// mock the DRM Service SDK and the service account token request
+const communicationKeyId = '34fd9c80-3ea9-4f35-8ca2-af19007d5728';
+const defaultDrmResponse = () => ({
+  data: {
+    communicationKeys: [
+      {
+        id: communicationKeyId,
+        data: Buffer.from('secret_key').toString('base64'),
+        created: '2022-09-23T07:36:21.0359502+00:00',
+      },
+    ],
+    serviceConfigurations: {
+      nodes: [
+        {
+          drmTenantId: 'ee3eef1f-70da-45de-97c1-c861ae55b304',
+          axinomFairPlayCertificateUsageExpires: null,
+        },
+      ],
+    },
+    fairPlayDatasets: [],
+  },
+});
+let drmCall: () => unknown = defaultDrmResponse;
+const drmCallSpy = vi.fn(() => drmCall());
+vi.mock('../../generated/graphql/drm');
+vi.mocked(getDrmSdk).mockReturnValue({
+  GetDrmSettings: drmCallSpy,
+} as unknown as DrmSdk);
+vi.mock('@axinom/mosaic-id-link-be', () => ({
+  getServiceAccountToken: vi.fn(async () => ({
+    accessToken: 'service_account_token',
+    expiresInSeconds: 3600,
+    tokenType: 'Bearer',
+  })),
+}));
+
 let countryCode: string | undefined = 'LK';
 // Mock maxmind-country. Which is used in entitlement-endpoint.
 vi.mock('maxmind', () => {
@@ -39,10 +75,15 @@ import { ClientError } from 'graphql-request';
 import gql from 'graphql-tag';
 import { v4 as uuid } from 'uuid';
 import { CommonErrors } from '../../common';
+import { resetDrmSettingsCache } from '../../domains';
 import {
   getSdk as getCatalogSdk,
   Sdk as CatalogSdk,
 } from '../../generated/graphql/catalog';
+import {
+  getSdk as getDrmSdk,
+  Sdk as DrmSdk,
+} from '../../generated/graphql/drm';
 import {
   createTestContext,
   createTestEndUser,
@@ -129,11 +170,9 @@ describe('EntitlementEndpointPlugin', () => {
   beforeAll(async () => {
     ctx = await createTestContext({
       MOSAIC_TESTING_IP_ENABLED: 'false',
-      DRM_LICENSE_COMMUNICATION_KEY: 'secret_key',
     });
     ipTestCtx = await createTestContext({
       MOSAIC_TESTING_IP_ENABLED: 'true',
-      DRM_LICENSE_COMMUNICATION_KEY: 'secret_key',
     });
     defaultRequestContext = {
       ip: '95.235.33.161', // IT
@@ -146,7 +185,7 @@ describe('EntitlementEndpointPlugin', () => {
     const policy = getPolicy('DEFAULT');
     expectedJwtPayload = (persistence: boolean, keyIds = [keyId1, keyId2]) => ({
       version: 1,
-      com_key_id: ctx.config.drmLicenseCommunicationKeyId,
+      com_key_id: communicationKeyId,
       message: {
         type: 'entitlement_message',
         version: 2,
@@ -180,6 +219,9 @@ describe('EntitlementEndpointPlugin', () => {
       .spyOn(console, 'debug')
       .mockImplementation((obj) => JSON.parse(obj));
     catalogCall = () => undefined;
+    drmCall = defaultDrmResponse;
+    drmCallSpy.mockClear();
+    resetDrmSettingsCache();
   });
 
   afterEach(async () => {
@@ -595,8 +637,64 @@ describe('EntitlementEndpointPlugin', () => {
             "The requested video for the movie with ID 'movie-1' is not protected. An entitlement message to receive a DRM license is therefore not required.",
           loglevel: 'WARN',
         });
+        // Clear content doesn't need the DRM Service
+        expect(drmCallSpy).not.toHaveBeenCalled();
       },
     );
+
+    it.each([
+      [
+        'DRM Service unavailable and no settings loaded yet',
+        () => {
+          throw new Error('connect ECONNREFUSED');
+        },
+        CommonErrors.DrmServiceRequestFailed,
+      ],
+      [
+        'DRM Service returns no service configuration',
+        () => {
+          const response = defaultDrmResponse();
+          response.data.serviceConfigurations.nodes = [];
+          return response;
+        },
+        CommonErrors.NoDrmTenantFound,
+      ],
+      [
+        'DRM Service returns no communication key',
+        () => {
+          const response = defaultDrmResponse();
+          response.data.communicationKeys = [];
+          return response;
+        },
+        CommonErrors.NoCommunicationKeysAvailable,
+      ],
+    ])('%s -> error thrown and logged as ERROR', async (_name, call, error) => {
+      // Arrange
+      catalogCall = () => ({
+        data: {
+          movie: { videos: { nodes: [{ isProtected: true, videoStreams }] } },
+        },
+      });
+      drmCall = call;
+
+      // Act
+      const resp = await ctx.runGqlQuery(
+        ENTITLEMENT_REQUEST,
+        { input: { entityId: 'movie-1' } },
+        defaultRequestContext,
+      );
+
+      // Assert
+      expect(resp.data?.entitlement).toBeFalsy();
+      expect(resp.errors).toMatchObject([
+        { message: error.message, code: error.code, path: ['entitlement'] },
+      ]);
+      const loggedObject = getFirstMockResult<any>(errorOverride);
+      expect(loggedObject).toMatchObject({
+        message: error.message,
+        loglevel: 'ERROR',
+      });
+    });
 
     it.each(['ECONNREFUSED', 'ENOTFOUND'])(
       'Request to catalog service which is down or incorrectly configured -> error thrown and logged as WARN',
@@ -909,6 +1007,44 @@ describe('EntitlementEndpointPlugin', () => {
         expect(JSON.parse(jwtParts[1])).toEqual(expectedJwtPayload(false));
       },
     );
+
+    it('several communication keys -> signed with the newest key that is at least 10 minutes old', async () => {
+      // Arrange
+      catalogCall = () => ({
+        data: {
+          movie: { videos: { nodes: [{ isProtected: true, videoStreams }] } },
+        },
+      });
+      const minutesAgo = (minutes: number): string =>
+        new Date(Date.now() - minutes * 60 * 1000).toISOString();
+      drmCall = () => {
+        const response = defaultDrmResponse();
+        const data = response.data.communicationKeys[0].data;
+        response.data.communicationKeys = [
+          { id: 'old', data, created: minutesAgo(60 * 24) },
+          { id: 'active', data, created: minutesAgo(30) },
+          { id: 'too-young', data, created: minutesAgo(2) },
+        ];
+        return response;
+      };
+
+      // Act
+      const resp = await ctx.runGqlQuery(
+        ENTITLEMENT_REQUEST,
+        { input: { entityId: 'movie-1' } },
+        defaultRequestContext,
+      );
+
+      // Assert
+      expect(resp.errors).toBeFalsy();
+      const payload = JSON.parse(
+        Buffer.from(
+          resp?.data?.entitlement.entitlementMessageJwt.split('.')[1],
+          'base64',
+        ).toString(),
+      );
+      expect(payload.com_key_id).toBe('active');
+    });
 
     it.each([true, false])(
       'valid response received from catalog in prod mode for channel - no error, expected jwt returned',

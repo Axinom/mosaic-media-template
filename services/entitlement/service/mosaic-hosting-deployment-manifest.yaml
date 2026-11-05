@@ -8,8 +8,13 @@
 # GEOLITE2_LICENSE_KEY
 # GEOLITE2_DOWNLOAD_URL
 # MAXMIND_ACCOUNT_ID
-# DRM_LICENSE_COMMUNICATION_KEY
-# DRM_LICENSE_COMMUNICATION_KEY_ID
+#
+# The service reads the DRM settings (communication key, DRM tenant, FairPlay
+# certificate) of the environment from the DRM Service at runtime, using the
+# service account below. Enable the DRM Service for the environment and create a
+# communication key before deploying.
+# The DRM_SERVICE_BASE_URL and LICENSE_SERVICE_*_URL values below are for the
+# production Mosaic stage (eu).
 
 version: '1.0'
 serviceId: 'entitlement-service'
@@ -83,11 +88,14 @@ regularVariables:
   # Custom Service URLs
   CATALOG_SERVICE_BASE_URL: 'https://${__ax_hosted__.dns.catalog-service.api}'
 
-  # DRM License Service URLs
-  WIDEVINE_LICENSE_SERVICE_URL: 'https://drm-widevine-licensing.axprod.net/AcquireLicense'
-  PLAYREADY_LICENSE_SERVICE_URL: 'https://drm-playready-licensing.axprod.net/AcquireLicense'
-  FAIRPLAY_LICENSE_SERVICE_URL: 'https://drm-fairplay-licensing.axprod.net/AcquireLicense'
-  FAIRPLAY_STREAMING_CERTIFICATE_URL: 'https://vtb.axinom.com/FPScert/fairplay.cer'
+  # DRM Service, from which the DRM settings of the environment are read
+  DRM_SERVICE_BASE_URL: 'https://drm.service.eu.axinom.net'
+
+  # DRM License Service URLs. The service puts the first block of the DRM tenant
+  # ID in front of the host.
+  LICENSE_SERVICE_WIDEVINE_URL: 'https://drm-widevine-licensing.axprod.net/AcquireLicense'
+  LICENSE_SERVICE_PLAYREADY_URL: 'https://drm-playready-licensing.axprod.net/AcquireLicense'
+  LICENSE_SERVICE_FAIRPLAY_URL: 'https://drm-fairplay-licensing.axprod.net/AcquireLicense'
 
 secureVariables:
   # Use this section to store any custom environment variables which contain sensitive data.
@@ -97,15 +105,21 @@ secureVariables:
   MAXMIND_ACCOUNT_ID: 'REPLACE_WITH_VALID_MAXMIND_ACCOUNT_ID'
   GEOLITE2_DOWNLOAD_URL: 'https://download.maxmind.com/app/geoip_download'
 
-  # DRM License Communication Key and ID
-  DRM_LICENSE_COMMUNICATION_KEY: 'REPLACE_WITH_VALID_DRM_LICENSE_COMMUNICATION_KEY'
-  DRM_LICENSE_COMMUNICATION_KEY_ID: 'REPLACE_WITH_VALID_DRM_LICENSE_COMMUNICATION_KEY_ID'
+  # Service account credentials, provided by the Hosting Service
+  SERVICE_ACCOUNT_CLIENT_ID: '${__ax_hosted__.sa.client_id.primary}'
+  SERVICE_ACCOUNT_CLIENT_SECRET: '${__ax_hosted__.sa.client_secret.primary}'
 
   # Webhook Secret
   MANIFEST_WEBHOOK_SECRET: 'REPLACE_WITH_VALID_MANIFEST_WEBHOOK_SECRET'
   ENTITLEMENT_WEBHOOK_SECRET: 'REPLACE_WITH_VALID_ENTITLEMENT_WEBHOOK_SECRET'
 
-serviceAccounts: []
+serviceAccounts:
+  # Reads the DRM settings of the environment from the DRM Service
+  - name: 'primary'
+    permissionStructure:
+      - serviceId: 'ax-drm-service'
+        permissions:
+          - 'ADMIN'
 
 pilets:
   # Defines the pilets (i.e. micro-frontends) associated with the service, and the required key-value pairs to run the pilet.

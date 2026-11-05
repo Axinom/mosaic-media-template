@@ -112,8 +112,6 @@ jobs:
     secrets:
       managed-service-client-id: ${{ secrets.MOSAIC_CB_MANAGED_SERVICE_CLIENT_ID }}
       managed-service-client-secret: ${{ secrets.MOSAIC_CB_MANAGED_SERVICE_CLIENT_SECRET }}
-      entitlement-drm-license-communication-key: ${{ secrets.MOSAIC_CB_ENTITLEMENT_DRM_LICENSE_COMMUNICATION_KEY }}
-      entitlement-drm-license-communication-key-id: ${{ secrets.MOSAIC_CB_ENTITLEMENT_DRM_LICENSE_COMMUNICATION_KEY_ID }}
       entitlement-entitlement-webhook-secret: ${{ secrets.MOSAIC_CB_ENTITLEMENT_ENTITLEMENT_WEBHOOK_SECRET }}
       entitlement-geolite2-license-key: ${{ secrets.MOSAIC_CB_ENTITLEMENT_GEOLITE2_LICENSE_KEY }}
       vod2live-api-key: ${{ secrets.MOSAIC_CB_VOD2LIVE_API_KEY }}
@@ -127,6 +125,10 @@ jobs:
       service-definition-id-catalog: 09a35c0b-3223-42e2-8a14-b4b8eb269fc0
       service-definition-id-entitlement: 9f70aff1-c9f7-4de4-832b-e5aa03e7624d
       service-definition-id-media: 32db51f2-28a0-43fc-b588-e2e78b9ac77b
+      drm-service-base-url: "https://drm.service.cb.axinom.net"
+      license-service-widevine-url: "https://drm-widevine-licensing-cb.axtest.net/AcquireLicense"
+      license-service-playready-url: "https://drm-playready-licensing-cb.axtest.net/AcquireLicense"
+      license-service-fairplay-url: "https://drm-fairplay-licensing-cb.axtest.net/AcquireLicense"
 
   fetch_slack_thread:
     if: github.event_name == 'schedule' || github.actor == 'github-actions[bot]' && always()

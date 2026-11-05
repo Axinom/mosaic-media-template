@@ -8,7 +8,14 @@ mutation CreateAxinomServiceConfigEntitlement {
           version: "1.0"
           dnsMappedPorts: [{ name: "api", port: 11600 }]
           pilets: []
-          serviceAccounts: []
+          serviceAccounts: [
+            {
+              name: "primary"
+              permissionStructure: [
+                { serviceId: "ax-drm-service", permissions: ["ADMIN"] }
+              ]
+            }
+          ]
           secureVariables: {
             POSTGRESQL_HOST: "${__ax_hosted__.pg.host}"
             POSTGRESQL_PORT: "${__ax_hosted__.pg.port}"
@@ -29,8 +36,8 @@ mutation CreateAxinomServiceConfigEntitlement {
             RABBITMQ_VHOST: "${__ax_hosted__.rmq.vhost}"
             RABBITMQ_USER: "${__ax_hosted__.rmq.username}"
             RABBITMQ_PASSWORD: "${__ax_hosted__.rmq.password}"
-            DRM_LICENSE_COMMUNICATION_KEY: "#{drmLicenseCommunicationKey}#"
-            DRM_LICENSE_COMMUNICATION_KEY_ID: "#{drmLicenseCommunicationKeyId}#"
+            SERVICE_ACCOUNT_CLIENT_ID: "${__ax_hosted__.sa.client_id.primary}"
+            SERVICE_ACCOUNT_CLIENT_SECRET: "${__ax_hosted__.sa.client_secret.primary}"
             GEOLITE2_LICENSE_KEY: "DownloadFromStorageAcc-NoLicenseNeeded"
             MAXMIND_ACCOUNT_ID: "DownloadFromStorageAcc-NoMaxmindAccountNeeded"
           }
@@ -46,6 +53,10 @@ mutation CreateAxinomServiceConfigEntitlement {
             ID_SERVICE_AUTH_BASE_URL: "${__ax_hosted__.svc.ax-id-service.auth_base_url}"
             USER_SERVICE_AUTH_BASE_URL: "${__ax_hosted__.svc.ax-user-service.auth_base_url}"
             CATALOG_SERVICE_BASE_URL: "https://${__ax_hosted__.dns.ax-catalog-service.api}"
+            DRM_SERVICE_BASE_URL: "#{drmServiceBaseUrl}#"
+            LICENSE_SERVICE_WIDEVINE_URL: "#{licenseServiceWidevineUrl}#"
+            LICENSE_SERVICE_PLAYREADY_URL: "#{licenseServicePlayreadyUrl}#"
+            LICENSE_SERVICE_FAIRPLAY_URL: "#{licenseServiceFairplayUrl}#"
             GEOLITE2_DOWNLOAD_URL: "#{geoLite2DownloadUrl}#"
             MAXMIND_ACCOUNT_ID: "-"
             PG_POOL_MAX_CONNECTIONS: "25"

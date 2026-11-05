@@ -29,6 +29,27 @@ export const CommonErrors = {
     code: 'UNABLE_TO_PLAYBACK_VIDEO',
   },
 
+  DrmServiceRequestFailed: {
+    message:
+      'The DRM settings could not be loaded from the DRM Service. Please make sure that the DRM Service is enabled for this environment and that the service account of the Entitlement Service has the DRM Service ADMIN permission.',
+    code: 'DRM_SERVICE_REQUEST_FAILED',
+  },
+  NoDrmTenantFound: {
+    message:
+      'No DRM tenant was found for this environment. Please make sure that the DRM Service is enabled for this environment.',
+    code: 'NO_DRM_TENANT_FOUND',
+  },
+  NoCommunicationKeysAvailable: {
+    message:
+      'No communication key is available to sign the entitlement message. Please create one in the Management System under Settings / DRM Service / Communication Keys.',
+    code: 'NO_COMMUNICATION_KEYS_AVAILABLE',
+  },
+  NoFairplayCertificateAvailable: {
+    message:
+      'No valid FairPlay certificate is available. Please add a FairPlay dataset in the DRM Service settings.',
+    code: 'NO_FAIRPLAY_CERTIFICATE_AVAILABLE',
+  },
+
   // Debug level
   LicenseIsNotValid: {
     message:

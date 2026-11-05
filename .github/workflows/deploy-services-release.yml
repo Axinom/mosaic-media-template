@@ -152,8 +152,6 @@ jobs:
     secrets:
       managed-service-client-id: ${{ secrets.MOSAIC_TEST_MANAGED_SERVICE_CLIENT_ID }}
       managed-service-client-secret: ${{ secrets.MOSAIC_TEST_MANAGED_SERVICE_CLIENT_SECRET }}
-      entitlement-drm-license-communication-key: ${{ secrets.MOSAIC_TEST_ENTITLEMENT_DRM_LICENSE_COMMUNICATION_KEY }}
-      entitlement-drm-license-communication-key-id: ${{ secrets.MOSAIC_TEST_ENTITLEMENT_DRM_LICENSE_COMMUNICATION_KEY_ID }}
       entitlement-entitlement-webhook-secret: ${{ secrets.MOSAIC_TEST_ENTITLEMENT_ENTITLEMENT_WEBHOOK_SECRET }}
       entitlement-geolite2-license-key: ${{ secrets.MOSAIC_TEST_ENTITLEMENT_GEOLITE2_LICENSE_KEY }}
       vod2live-api-key: ${{ secrets.MOSAIC_TEST_VOD2LIVE_API_KEY }}
@@ -169,6 +167,10 @@ jobs:
       service-definition-id-entitlement: b6bea17f-a41c-4fe7-9836-e45b52b46659
       service-definition-id-media: bd7de7ce-5ea1-4cc8-b61b-c0405f6a3752
       service-definition-id-vod-to-live: 0a3d74b7-e427-49e5-a938-918912be628a
+      drm-service-base-url: "https://drm.service.test.axinom.net"
+      license-service-widevine-url: "https://drm-widevine-licensing.axtest.net/AcquireLicense"
+      license-service-playready-url: "https://drm-playready-licensing.axtest.net/AcquireLicense"
+      license-service-fairplay-url: "https://drm-fairplay-licensing.axtest.net/AcquireLicense"
       geolite2-download-url: "https://mosaick8sprod.blob.core.windows.net/geolite/downloads/geolite-latest.tar.gz"
       drm-key-seed-id: 6e451fb3-93e0-47fb-add4-aed000a97f16
       virtual-channel-management-api-base-url: "https://navy-streaming-api.axtest.net"
@@ -315,8 +317,6 @@ jobs:
     secrets:
       managed-service-client-id: ${{ secrets.MOSAIC_PROD_MANAGED_SERVICE_CLIENT_ID }}
       managed-service-client-secret: ${{ secrets.MOSAIC_PROD_MANAGED_SERVICE_CLIENT_SECRET }}
-      entitlement-drm-license-communication-key: ${{ secrets.MOSAIC_PROD_ENTITLEMENT_DRM_LICENSE_COMMUNICATION_KEY }}
-      entitlement-drm-license-communication-key-id: ${{ secrets.MOSAIC_PROD_ENTITLEMENT_DRM_LICENSE_COMMUNICATION_KEY_ID }}
       entitlement-entitlement-webhook-secret: ${{ secrets.MOSAIC_PROD_ENTITLEMENT_ENTITLEMENT_WEBHOOK_SECRET }}
       entitlement-geolite2-license-key: ${{ secrets.MOSAIC_PROD_ENTITLEMENT_GEOLITE2_LICENSE_KEY }}
       vod2live-api-key: ${{ secrets.MOSAIC_PROD_VOD2LIVE_API_KEY }}
@@ -332,6 +332,10 @@ jobs:
       service-definition-id-entitlement: 692740ef-3d48-4fa8-8da2-64f02a0d76e5
       service-definition-id-media: 74d52b22-5c71-4441-b5e6-4e2a81b7d83c
       service-definition-id-vod-to-live: 14ab72df-006b-4530-a787-2a6786f2436f
+      drm-service-base-url: "https://drm.service.eu.axinom.net"
+      license-service-widevine-url: "https://drm-widevine-licensing.axprod.net/AcquireLicense"
+      license-service-playready-url: "https://drm-playready-licensing.axprod.net/AcquireLicense"
+      license-service-fairplay-url: "https://drm-fairplay-licensing.axprod.net/AcquireLicense"
       geolite2-download-url: "https://mosaick8sprod.blob.core.windows.net/geolite/downloads/geolite-latest.tar.gz"
       drm-key-seed-id: 6e451fb3-93e0-47fb-add4-aed000a97f16
       virtual-channel-management-api-base-url: "https://mosaic-streaming-api.axprod.net"

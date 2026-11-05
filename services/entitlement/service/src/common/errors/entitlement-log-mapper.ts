@@ -19,6 +19,10 @@ export const entitlementLogMapper: WriteLogMapper = (
     case CommonErrors.CatalogConnectionFailed.code:
     case CommonErrors.MultipleMainVideos.code:
     case CommonErrors.UnableToPlaybackVideo.code:
+    case CommonErrors.DrmServiceRequestFailed.code:
+    case CommonErrors.NoDrmTenantFound.code:
+    case CommonErrors.NoCommunicationKeysAvailable.code:
+    case CommonErrors.NoFairplayCertificateAvailable.code:
       logger.error(error, log);
       break;
 

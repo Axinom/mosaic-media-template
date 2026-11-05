@@ -35,6 +35,10 @@ export const createTestConfig = (
     MAXMIND_ACCOUNT_ID:
       'Fake value to satisfy required validation, since during tests isDev is false',
     SECURE_LOGGING_MODE: 'SECRETS_HIDDEN',
+    // Tests mock the DRM Service, so these only satisfy the required validation.
+    DRM_SERVICE_BASE_URL: 'http://drm-service.test.invalid',
+    SERVICE_ACCOUNT_CLIENT_ID: 'test-service-account-client-id',
+    SERVICE_ACCOUNT_CLIENT_SECRET: 'test-service-account-client-secret',
   };
 
   return getValidatedConfig(

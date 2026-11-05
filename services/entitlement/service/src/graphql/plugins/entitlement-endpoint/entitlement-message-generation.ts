@@ -1,7 +1,6 @@
 import { Dict, UnreachableCaseError } from '@axinom/mosaic-service-common';
 import jwt from 'jsonwebtoken';
-import { Config } from '../../../common';
-import { ENABLE_VIDEOS_DOWNLOAD } from '../../../domains';
+import { CommunicationKey, ENABLE_VIDEOS_DOWNLOAD } from '../../../domains';
 
 type PolicyMode = 'DEFAULT' | 'DEV' | 'STRICT';
 
@@ -63,16 +62,21 @@ export const getPolicy = (mode: PolicyMode): Dict<unknown> => {
   }
 };
 
+/**
+ * Generates the entitlement message and signs it with the communication key.
+ * @param communicationKey the communication key of the environment, see
+ * `getCommunicationKey`
+ */
 export const generateEntitlementMessageJwt = (
   keyIds: string[],
   claims: string[],
-  config: Config,
+  communicationKey: Pick<CommunicationKey, 'id' | 'data'>,
   policyMode: PolicyMode,
 ): string => {
   const policy = getPolicy(policyMode);
   const envelope = {
     version: 1,
-    com_key_id: config.drmLicenseCommunicationKeyId,
+    com_key_id: communicationKey.id,
     message: {
       version: 2,
       type: 'entitlement_message',
@@ -93,7 +97,7 @@ export const generateEntitlementMessageJwt = (
       ],
     },
   };
-  return jwt.sign(envelope, config.drmLicenseCommunicationKeyBuffer, {
+  return jwt.sign(envelope, Buffer.from(communicationKey.data, 'base64'), {
     algorithm: 'HS256',
     noTimestamp: true,
   });
