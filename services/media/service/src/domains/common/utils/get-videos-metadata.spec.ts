@@ -1,4 +1,5 @@
 import { rejectionOf } from '@axinom/mosaic-service-common';
+import { Format } from 'media-messages';
 import { CommonErrors } from '../../../common';
 import * as video from '../../../generated/graphql/video';
 import {
@@ -1330,5 +1331,191 @@ describe('getVideosMetadata', () => {
     // Assert
     expect(error).toMatchObject(CommonErrors.PublishVideosMetadataRequestError);
     expect(error.details).toBeFalsy();
+  });
+
+  describe('unsupported video formats', () => {
+    // Simulates a future Video Service that returns an output format which is
+    // neither in the generated GraphQL enum nor allowed by the publish message
+    // schema.
+    const futureFormat = 'FUTURE_FORMAT' as OutputFormat;
+
+    type GqlVideoStream = GqlVideo['videoStreams']['nodes'][0];
+    const createStream = (
+      format: OutputFormat,
+      file: string,
+      type: VideoStreamType = VideoStreamType.Video,
+    ): GqlVideoStream => ({
+      keyId: 'key-1',
+      iv: 'iv',
+      file,
+      bitrateInKbps: 400,
+      label: 'HD',
+      format,
+      type,
+    });
+    const createVideo = (
+      id: string,
+      outputFormat: OutputFormat,
+      streams: GqlVideoStream[],
+    ): GqlVideo => ({
+      id,
+      title: 'Test Video',
+      outputFormat,
+      encodingState: EncodingState.Ready,
+      previewStatus: PreviewStatus.Approved,
+      audioLanguages: [],
+      subtitleLanguages: [],
+      captionLanguages: [],
+      isProtected: true,
+      videosTags: { nodes: [] },
+      videoStreams: { nodes: streams },
+      cuePoints: { nodes: [] },
+    });
+    const toPublishStream = (
+      s: GqlVideoStream,
+    ): Record<string, unknown> => ({
+      key_id: s.keyId,
+      iv: s.iv,
+      file: s.file,
+      format: s.format,
+      label: s.label,
+      bitrate_in_kbps: s.bitrateInKbps,
+      language_code: s.languageCode,
+      codecs: s.codecs,
+      display_aspect_ratio: s.displayAspectRatio,
+      file_template: s.fileTemplate,
+      frame_rate: s.frameRate,
+      height: s.height,
+      language_name: s.languageName,
+      pixel_aspect_ratio: s.pixelAspectRatio,
+      sampling_rate: s.samplingRate,
+      type: s.type,
+      width: s.width,
+    });
+
+    // Listed from the message schema, not the GraphQL enum, which may contain
+    // more values once regenerated against a newer Video Service.
+    const supportedFormats: Format[] = [
+      'DASH',
+      'HLS',
+      'DASH_HLS',
+      'CMAF',
+      'DASH_ON_DEMAND',
+      'MPEG2_TS',
+    ];
+
+    it.each(supportedFormats)(
+      'Video and streams with supported format %s -> published unchanged without warning',
+      async (messageFormat) => {
+        // Arrange
+        const format = messageFormat as OutputFormat;
+        const stream = createStream(format, 'video.m3u8');
+        const video1 = createVideo(videoId1, format, [stream]);
+        result = () => createApiObject([video1]);
+
+        // Act
+        const meta = await getVideosMetadata(endpoint, authToken, videoId1, []);
+
+        // Assert
+        expect(meta.validation).toEqual([]);
+        expect(meta.result).toHaveLength(1);
+        expect(meta.result[0].output_format).toBe(format);
+        expect(meta.result[0].video_streams).toEqual([toPublishStream(stream)]);
+      },
+    );
+
+    it('Main video with an unsupported stream among supported ones -> stream dropped with warning', async () => {
+      // Arrange
+      const supportedVideoStream = createStream(OutputFormat.Cmaf, 'video.mp4');
+      const unsupportedVideoStream = createStream(futureFormat, 'video.ts');
+      const unsupportedAudioStream = createStream(
+        futureFormat,
+        'audio.ts',
+        VideoStreamType.Audio,
+      );
+      const supportedAudioStream = createStream(
+        OutputFormat.Cmaf,
+        'audio.mp4',
+        VideoStreamType.Audio,
+      );
+      const video1 = createVideo(videoId1, OutputFormat.Cmaf, [
+        supportedVideoStream,
+        unsupportedVideoStream,
+        unsupportedAudioStream,
+        supportedAudioStream,
+      ]);
+      result = () => createApiObject([video1]);
+
+      // Act
+      const meta = await getVideosMetadata(endpoint, authToken, videoId1, []);
+
+      // Assert
+      expect(meta.result).toHaveLength(1);
+      expect(meta.result[0].output_format).toBe(OutputFormat.Cmaf);
+      expect(meta.result[0].video_streams).toEqual([
+        toPublishStream(supportedVideoStream),
+        toPublishStream(supportedAudioStream),
+      ]);
+      expect(meta.validation).toEqual([
+        {
+          context: 'VIDEO',
+          message: `Main video with id '${videoId1}' has streams with unsupported format(s) 'FUTURE_FORMAT'. These streams are not published.`,
+          severity: 'WARNING',
+        },
+      ]);
+    });
+
+    it('Trailer video with unsupported output format -> video skipped with warning, main video published', async () => {
+      // Arrange
+      const mainVideo = createVideo(videoId1, OutputFormat.Cmaf, [
+        createStream(OutputFormat.Cmaf, 'video.mp4'),
+      ]);
+      const trailer = createVideo(videoId2, futureFormat, [
+        createStream(futureFormat, 'video.ts'),
+      ]);
+      result = () => createApiObject([mainVideo, trailer]);
+
+      // Act
+      const meta = await getVideosMetadata(endpoint, authToken, videoId1, [
+        { video_id: videoId2, movie_id: 1 },
+      ]);
+
+      // Assert
+      expect(meta.result).toHaveLength(1);
+      expect(meta.result[0]).toMatchObject({
+        type: 'MAIN',
+        output_format: OutputFormat.Cmaf,
+      });
+      expect(meta.validation).toEqual([
+        {
+          context: 'VIDEO',
+          message: `Trailer video with id '${videoId2}' has the unsupported output format 'FUTURE_FORMAT' and is not published.`,
+          severity: 'WARNING',
+        },
+      ]);
+    });
+
+    it('Main video with unsupported output format -> video skipped with warning', async () => {
+      // Arrange
+      const video1 = createVideo(videoId1, futureFormat, [
+        createStream(futureFormat, 'video.ts'),
+      ]);
+      result = () => createApiObject([video1]);
+
+      // Act
+      const meta = await getVideosMetadata(endpoint, authToken, videoId1, []);
+
+      // Assert
+      expect(meta).toEqual({
+        result: [],
+        validation: [
+          {
+            context: 'VIDEO',
+            message: `Main video with id '${videoId1}' has the unsupported output format 'FUTURE_FORMAT' and is not published.`,
+            severity: 'WARNING',
+          },
+        ],
+      });
+    });
   });
 });

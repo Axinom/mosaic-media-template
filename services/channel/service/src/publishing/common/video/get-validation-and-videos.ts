@@ -1,6 +1,6 @@
 import { mosaicErrorMappingFactory } from '@axinom/mosaic-service-common';
 import { GraphQLClient } from 'graphql-request';
-import { DetailedVideo } from 'media-messages';
+import { DetailedVideo, Stream, VideoOutputFormat } from 'media-messages';
 import urljoin from 'url-join';
 import { CommonErrors } from '../../../common';
 import {
@@ -13,6 +13,7 @@ import {
   createValidationWarning,
   PublishValidationMessage,
 } from '../../models';
+import { isSupportedVideoOutputFormat } from './supported-video-formats';
 
 export type GqlVideo = NonNullable<GetVideosQuery['videos']>['nodes'][0];
 
@@ -121,7 +122,29 @@ export const getValidationAndVideos = async (
         );
       }
 
-      videosDetails.push(toDetailedVideo(gqlVideo));
+      // The Video Service may return formats that the channel message schema
+      // does not allow yet. An unsupported output format is
+      // already reported as an ERROR by the 'CMAF' check above, which blocks
+      // publishing. The video is left out so the payload never carries it.
+      const outputFormat: string = gqlVideo.outputFormat;
+      if (!isSupportedVideoOutputFormat(outputFormat)) {
+        continue;
+      }
+
+      const unsupportedStreamFormats = getUnsupportedStreamFormats(gqlVideo);
+      if (unsupportedStreamFormats.length > 0) {
+        validations.push(
+          createValidationWarning(
+            `Video "${gqlVideo.title}" with ID ${gqlVideo.id} has streams with unsupported format(s) ${unsupportedStreamFormats
+              .map((f) => `'${f}'`)
+              .join(', ')}. These streams are not published.`,
+            'VIDEOS',
+            source,
+          ),
+        );
+      }
+
+      videosDetails.push(toDetailedVideo(gqlVideo, outputFormat));
     }
 
     return {
@@ -165,7 +188,53 @@ const getCustomMappedError = mosaicErrorMappingFactory(
   },
 );
 
-export const toDetailedVideo = (video: GqlVideo): DetailedVideo => {
+type GqlVideoStream = GqlVideo['videoStreams']['nodes'][0];
+
+const getUnsupportedStreamFormats = (video: GqlVideo): string[] => [
+  ...new Set(
+    video.videoStreams.nodes
+      .map((s): string => s.format)
+      .filter((format) => !isSupportedVideoOutputFormat(format)),
+  ),
+];
+
+const toStream = (
+  s: GqlVideoStream,
+): Stream | undefined => {
+  const format: string = s.format;
+  if (!isSupportedVideoOutputFormat(format)) {
+    return undefined;
+  }
+  return {
+    key_id: s.keyId,
+    iv: s.iv,
+    format,
+    file: s.file,
+    label: s.label,
+    language_code: s.languageCode,
+    bitrate_in_kbps: s.bitrateInKbps,
+    type: s.type,
+    file_template: s.fileTemplate,
+    codecs: s.codecs,
+    frame_rate: s.frameRate,
+    height: s.height,
+    width: s.width,
+    display_aspect_ratio: s.displayAspectRatio,
+    pixel_aspect_ratio: s.pixelAspectRatio,
+    sampling_rate: s.samplingRate,
+    language_name: s.languageName,
+  };
+};
+
+/**
+ * Maps a Video Service video to the channel message format. The output format
+ * must already be checked against the message schema. Streams with an
+ * unsupported format are dropped.
+ */
+export const toDetailedVideo = (
+  video: GqlVideo,
+  outputFormat: VideoOutputFormat,
+): DetailedVideo => {
   return {
     id: video.id,
     title: video.title,
@@ -181,7 +250,7 @@ export const toDetailedVideo = (video: GqlVideo): DetailedVideo => {
       title: video.title,
       is_protected: video.isProtected,
       encoding_state: video.encodingState,
-      output_format: video.outputFormat,
+      output_format: outputFormat,
       output_location: video.outputLocation,
       dash_size_in_bytes: video.dashSizeInBytes,
       hls_size_in_bytes: video.hlsSizeInBytes,
@@ -195,27 +264,7 @@ export const toDetailedVideo = (video: GqlVideo): DetailedVideo => {
       finished_date: video.finishedDate,
       preview_status: video.previewStatus,
       preview_comment: video.previewComment,
-      video_streams: video.videoStreams.nodes.map((s) => {
-        return {
-          key_id: s.keyId,
-          iv: s.iv,
-          format: s.format,
-          file: s.file,
-          label: s.label,
-          language_code: s.languageCode,
-          bitrate_in_kbps: s.bitrateInKbps,
-          type: s.type,
-          file_template: s.fileTemplate,
-          codecs: s.codecs,
-          frame_rate: s.frameRate,
-          height: s.height,
-          width: s.width,
-          display_aspect_ratio: s.displayAspectRatio,
-          pixel_aspect_ratio: s.pixelAspectRatio,
-          sampling_rate: s.samplingRate,
-          language_name: s.languageName,
-        };
-      }),
+      video_streams: video.videoStreams.nodes.flatMap((s) => toStream(s) ?? []),
     },
   };
 };

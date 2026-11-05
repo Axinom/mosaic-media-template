@@ -1,5 +1,6 @@
 import { rejectionOf } from '@axinom/mosaic-service-common';
 import { ClientError } from 'graphql-request';
+import { VideoOutputFormat } from 'media-messages';
 import { CommonErrors } from '../../../common';
 import * as video from '../../../generated/graphql/video';
 import { createValidationError, createValidationWarning } from '../../models';
@@ -140,7 +141,7 @@ describe('getValidationAndVideos', () => {
     );
 
     // Assert
-    expect(videos).toEqual([toDetailedVideo(video1)]);
+    expect(videos).toEqual([toDetailedVideo(video1, 'CMAF')]);
     expect(validations).toHaveLength(0);
   });
 
@@ -161,7 +162,7 @@ describe('getValidationAndVideos', () => {
     );
 
     // Assert
-    expect(videos).toEqual([toDetailedVideo(video1), toDetailedVideo(video2)]);
+    expect(videos).toEqual([toDetailedVideo(video1, 'CMAF'), toDetailedVideo(video2, 'CMAF')]);
     expect(validations).toHaveLength(0);
   });
 
@@ -241,6 +242,110 @@ describe('getValidationAndVideos', () => {
     expect(error).toMatchObject({
       ...CommonErrors.UnableRetrieveVideoDetails,
       details: { errors },
+    });
+  });
+
+  describe('unsupported video formats', () => {
+    // Simulates a future Video Service that returns an output format which is
+    // neither in the generated GraphQL enum nor allowed by the channel message
+    // schema.
+    const futureFormat = 'FUTURE_FORMAT' as video.OutputFormat;
+
+    // Listed from the message schema, not the GraphQL enum, which may contain
+    // more values once regenerated against a newer Video Service.
+    const supportedFormats: VideoOutputFormat[] = [
+      'HLS',
+      'DASH',
+      'DASH_HLS',
+      'CMAF',
+      'DASH_ON_DEMAND',
+      'MPEG2_TS',
+    ];
+
+    it.each(supportedFormats)(
+      'Video streams with supported format %s -> all streams kept without warning',
+      async (messageFormat) => {
+        // Arrange
+        const format = messageFormat as video.OutputFormat;
+        const gqlVideo = createGqlVideo(videoId1);
+        gqlVideo.videoStreams.nodes.forEach((s) => (s.format = format));
+        result = () => createApiObject([gqlVideo]);
+
+        // Act
+        const { videos, validations } = await getValidationAndVideos(
+          endpoint,
+          authToken,
+          [{ videoId: videoId1 }],
+          true,
+        );
+
+        // Assert
+        expect(validations).toHaveLength(0);
+        expect(videos).toHaveLength(1);
+        expect(videos[0].video_encoding.video_streams).toHaveLength(2);
+        expect(
+          videos[0].video_encoding.video_streams.map((s) => s.format),
+        ).toEqual([messageFormat, messageFormat]);
+      },
+    );
+
+    it('Video with an unsupported stream among supported ones -> stream dropped with warning', async () => {
+      // Arrange
+      const gqlVideo = createGqlVideo(videoId1);
+      const [audio, sd] = gqlVideo.videoStreams.nodes;
+      gqlVideo.videoStreams.nodes = [
+        audio,
+        { ...sd, label: 'TS', file: 'video.ts', format: futureFormat },
+        sd,
+      ];
+      result = () => createApiObject([gqlVideo]);
+
+      // Act
+      const { videos, validations } = await getValidationAndVideos(
+        endpoint,
+        authToken,
+        [{ videoId: videoId1, source: 'Program 1.' }],
+        true,
+      );
+
+      // Assert
+      expect(videos).toHaveLength(1);
+      expect(videos[0].video_encoding.output_format).toBe('CMAF');
+      expect(
+        videos[0].video_encoding.video_streams.map((s) => s.label),
+      ).toEqual(['audio', 'SD']);
+      expect(validations).toEqual([
+        createValidationWarning(
+          `Video "${gqlVideo.title}" with ID ${videoId1} has streams with unsupported format(s) 'FUTURE_FORMAT'. These streams are not published.`,
+          'VIDEOS',
+          'Program 1.',
+        ),
+      ]);
+    });
+
+    it('Video with unsupported output format -> video skipped with error', async () => {
+      // Arrange
+      const unsupported = createGqlVideo(videoId1);
+      unsupported.outputFormat = futureFormat;
+      const supported = createGqlVideo(videoId2);
+      result = () => createApiObject([unsupported, supported]);
+
+      // Act
+      const { videos, validations } = await getValidationAndVideos(
+        endpoint,
+        authToken,
+        [{ videoId: videoId1 }, { videoId: videoId2 }],
+        false,
+      );
+
+      // Assert
+      expect(videos).toEqual([toDetailedVideo(supported, 'CMAF')]);
+      expect(validations).toEqual([
+        createValidationError(
+          `The output format of the video "${unsupported.title}" with ID ${videoId1} is 'FUTURE_FORMAT'. Expected output format 'CMAF'.`,
+          'VIDEOS',
+        ),
+      ]);
     });
   });
 });
