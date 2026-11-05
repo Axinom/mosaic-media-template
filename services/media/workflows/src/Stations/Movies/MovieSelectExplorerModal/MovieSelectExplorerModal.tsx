@@ -21,6 +21,7 @@ export const useMovieSelectExplorerModal = ({
       actions={[
         {
           label: 'New',
+          icon: IconName.NewTabCreate,
           openInNewTab: true,
           path: '/movies/create',
         },
