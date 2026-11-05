@@ -21,6 +21,7 @@ export function register(app: PiletApi): void {
         actions={[
           {
             label: 'New',
+            icon: IconName.NewTabCreate,
             openInNewTab: true,
             path: '/movies/create',
           },
@@ -63,6 +64,7 @@ export function register(app: PiletApi): void {
         actions={[
           {
             label: 'New',
+            icon: IconName.NewTabCreate,
             openInNewTab: true,
             path: '/episodes/create',
           },

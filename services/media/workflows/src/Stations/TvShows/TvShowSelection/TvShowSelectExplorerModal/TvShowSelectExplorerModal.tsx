@@ -22,6 +22,7 @@ export const useTvShowSelectExplorerModal = ({
       actions={[
         {
           label: 'New',
+          icon: IconName.NewTabCreate,
           openInNewTab: true,
           path: '/tvshows/create',
         },

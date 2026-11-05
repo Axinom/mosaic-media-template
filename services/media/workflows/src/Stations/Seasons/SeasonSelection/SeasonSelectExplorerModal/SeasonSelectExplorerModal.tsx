@@ -22,6 +22,7 @@ export const useSeasonSelectExplorerModal = ({
       actions={[
         {
           label: 'New',
+          icon: IconName.NewTabCreate,
           openInNewTab: true,
           path: '/seasons/create',
         },

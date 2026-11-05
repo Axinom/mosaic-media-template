@@ -21,6 +21,7 @@ export const useEpisodeSelectExplorerModal = ({
       actions={[
         {
           label: 'New',
+          icon: IconName.NewTabCreate,
           openInNewTab: true,
           path: '/episodes/create',
         },
