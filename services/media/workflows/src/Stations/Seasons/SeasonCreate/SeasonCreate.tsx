@@ -14,7 +14,7 @@ import {
 
 type FormData = CreateSeasonMutationVariables['input']['season'];
 
-type SubmitResponse = CreateSeasonMutation['createSeason'];
+type SubmitResponse = CreateSeasonMutation['createSeason'] | undefined;
 
 const tvShowCreateSchema = Yup.object().shape<ObjectSchemaDefinition<FormData>>(
   {

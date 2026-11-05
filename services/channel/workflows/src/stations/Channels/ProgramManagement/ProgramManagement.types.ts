@@ -212,14 +212,14 @@ export type ProgramEntity = Pick<
 export type ProgramCuePointPayLoad = Pick<
   ProgramCuePoint,
   'videoCuePointId' | 'type' | 'timeInSeconds' | 'value'
-> & { programId?: Scalars['UUID']; id?: Scalars['UUID'] };
+> & { programId?: Scalars['UUID']['output']; id?: Scalars['UUID']['output'] };
 
 export type CuePointSchedulePayLoad = Pick<
   CuePointSchedule,
   'sortIndex' | 'type' | 'durationInSeconds' | 'videoId'
 > & {
-  programCuePointId?: Scalars['UUID'];
-  id?: Scalars['UUID'];
+  programCuePointId?: Scalars['UUID']['output'];
+  id?: Scalars['UUID']['output'];
 };
 
 export interface ProgramDetailsResolverArgs {

@@ -23,7 +23,9 @@ import {
 
 type FormData = MutationCreateSeasonsLicenseArgs['input']['seasonsLicense'];
 
-type SubmitResponse = CreateSeasonsLicenseMutation['createSeasonsLicense'];
+type SubmitResponse =
+  | CreateSeasonsLicenseMutation['createSeasonsLicense']
+  | undefined;
 
 const licenseSchema = Yup.object().shape<ObjectSchemaDefinition<FormData>>({
   seasonId: Yup.number().required(),

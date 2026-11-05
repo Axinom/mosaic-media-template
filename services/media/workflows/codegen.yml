@@ -11,3 +11,9 @@ generates:
       withHOC: false
       withComponent: false
       withHooks: true
+      # Since @graphql-codegen/typescript-operations v6 the operations plugin emits
+      # its own Input/Enum types. The `typescript` plugin already writes all schema
+      # types into this file, so reuse them instead of emitting duplicates.
+      importSchemaTypesFrom: 'src/generated/graphql.tsx'
+      # Keep `any` for custom scalars (the v6 default changed to `unknown`).
+      defaultScalarType: any

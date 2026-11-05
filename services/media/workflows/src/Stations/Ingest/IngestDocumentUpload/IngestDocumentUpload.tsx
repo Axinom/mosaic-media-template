@@ -19,7 +19,7 @@ interface FormData {
   ingest: FileUpload;
 }
 
-type SubmitResponse = IngestDocumentUploadMutation['startIngest'];
+type SubmitResponse = IngestDocumentUploadMutation['startIngest'] | undefined;
 
 const movieCreateSchema = Yup.object().shape<ObjectSchemaDefinition<FormData>>({
   ingest: Yup.mixed().required('Select a file to continue'),

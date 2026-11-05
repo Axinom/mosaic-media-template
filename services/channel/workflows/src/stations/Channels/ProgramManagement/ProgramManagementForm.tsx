@@ -79,7 +79,9 @@ export const ProgramManagementForm: React.FC<ProgramManagementFormProps> = ({
     ? {
         ...data?.playlist,
         programs: {
-          ...sortPrograms(data?.playlist?.programs as ProgramsConnection),
+          ...(sortPrograms(
+            data?.playlist?.programs as ProgramsConnection,
+          ) as FormData['programs']),
         },
       }
     : data?.playlist;
@@ -182,8 +184,8 @@ export const ProgramManagementForm: React.FC<ProgramManagementFormProps> = ({
       // #region program and playlist mutations
       const patch: PlaylistPatch = createUpdateDto(formData, initialData.data);
 
-      const deletedProgramIds: Scalars['UUID'][] = [];
-      const deletedCuePointIds: Scalars['UUID'][] = [];
+      const deletedProgramIds: Scalars['UUID']['output'][] = [];
+      const deletedCuePointIds: Scalars['UUID']['output'][] = [];
 
       const programMutations = generateProgramMutations(
         formData?.programs.nodes as ProgramProps[],

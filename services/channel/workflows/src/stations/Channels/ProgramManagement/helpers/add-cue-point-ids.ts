@@ -21,7 +21,7 @@ type CuePointForMapping = Pick<
   'id' | 'type' | 'timeInSeconds'
 > & {
   program: {
-    sortIndex: Scalars['UUID'];
+    sortIndex: Scalars['UUID']['output'];
   };
 };
 interface CPData {
@@ -118,7 +118,7 @@ export const addCuePointIdsToCuePointsSchedules = (
 
 const pushScheduleToType = (
   cps: CuePointSchedulePayLoad,
-  programId: Scalars['UUID'],
+  programId: Scalars['UUID']['output'],
   adSchedules: CuePointSchedulePayLoad[],
   videoSchedules: CuePointSchedulePayLoad[],
 ): void => {
