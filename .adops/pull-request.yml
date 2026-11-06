@@ -5,7 +5,6 @@ pr:
     exclude:
       - .adops/backend-service-build.yml
       - .adops/workflow-build.yml
-      - .adops/pr-name-validation.yml
   branches:
     include:
       - dev
