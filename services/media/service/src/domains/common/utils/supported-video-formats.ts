@@ -13,7 +13,6 @@ const supportedPublishFormats: Record<Format, true> = {
   DASH_HLS: true,
   CMAF: true,
   DASH_ON_DEMAND: true,
-  MPEG2_TS: true,
 };
 
 /**

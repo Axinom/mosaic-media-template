@@ -201,8 +201,7 @@
                 "DASH",
                 "DASH_HLS",
                 "CMAF",
-                "DASH_ON_DEMAND",
-                "MPEG2_TS"
+                "DASH_ON_DEMAND"
               ],
               "description": "Output format."
             },
@@ -341,8 +340,7 @@
                       "DASH",
                       "DASH_HLS",
                       "CMAF",
-                      "DASH_ON_DEMAND",
-                      "MPEG2_TS"
+                      "DASH_ON_DEMAND"
                     ],
                     "description": "Output format."
                   },
