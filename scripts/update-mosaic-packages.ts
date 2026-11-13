@@ -87,7 +87,10 @@ function updateMosaicDeps(
   for (const packageName of mosaicDependencies) {
     const distTags = getPackageDistTags(packageName);
     const currentVersion = depsObject[packageName];
-    const newVersion = distTags[tag];
+    // Mosaic libraries depend on each other with caret ranges. Using `^x.y.z-rc.n` instead of
+    // `x.y.z-rc.n` resolves the workspaces to the same version as those libraries. Once `x.y.z`
+    // is published, both resolve to `x.y.z` instead of one staying on `x.y.z-rc.n`.
+    const newVersion = `^${distTags[tag]}`;
     if (currentVersion !== newVersion) {
       console.log(` |  ${packageName}@${currentVersion} > ${newVersion}`);
       depsObject[packageName] = newVersion;
