@@ -14,7 +14,6 @@ const supportedVideoOutputFormats: Record<VideoOutputFormat, true> = {
   DASH_HLS: true,
   CMAF: true,
   DASH_ON_DEMAND: true,
-  MPEG2_TS: true,
 };
 
 /**

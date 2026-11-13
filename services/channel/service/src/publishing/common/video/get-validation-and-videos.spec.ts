@@ -256,10 +256,10 @@ describe('getValidationAndVideos', () => {
   });
 
   describe('unsupported video formats', () => {
-    // Simulates a future Video Service that returns an output format which is
-    // neither in the generated GraphQL enum nor allowed by the channel message
-    // schema.
-    const futureFormat = 'FUTURE_FORMAT' as video.OutputFormat;
+    // The Video Service still offers MPEG2_TS, but the channel message schema
+    // does not allow it. The cast keeps this compiling whether or not the
+    // generated GraphQL enum contains the value.
+    const unsupportedFormat = 'MPEG2_TS' as video.OutputFormat;
 
     // Listed from the message schema, not the GraphQL enum, which may contain
     // more values once regenerated against a newer Video Service.
@@ -269,7 +269,6 @@ describe('getValidationAndVideos', () => {
       'DASH_HLS',
       'CMAF',
       'DASH_ON_DEMAND',
-      'MPEG2_TS',
     ];
 
     it.each(supportedFormats)(
@@ -305,7 +304,7 @@ describe('getValidationAndVideos', () => {
       const [audio, sd] = gqlVideo.videoStreams.nodes;
       gqlVideo.videoStreams.nodes = [
         audio,
-        { ...sd, label: 'TS', file: 'video.ts', format: futureFormat },
+        { ...sd, label: 'TS', file: 'video.ts', format: unsupportedFormat },
         sd,
       ];
       result = () => createApiObject([gqlVideo]);
@@ -326,7 +325,7 @@ describe('getValidationAndVideos', () => {
       ).toEqual(['audio', 'SD']);
       expect(validations).toEqual([
         createValidationWarning(
-          `Video "${gqlVideo.title}" with ID ${videoId1} has streams with unsupported format(s) 'FUTURE_FORMAT'. These streams are not published.`,
+          `Video "${gqlVideo.title}" with ID ${videoId1} has streams with unsupported format(s) 'MPEG2_TS'. These streams are not published.`,
           'VIDEOS',
           'Program 1.',
         ),
@@ -336,7 +335,7 @@ describe('getValidationAndVideos', () => {
     it('Video with unsupported output format -> video skipped with error', async () => {
       // Arrange
       const unsupported = createGqlVideo(videoId1);
-      unsupported.outputFormat = futureFormat;
+      unsupported.outputFormat = unsupportedFormat;
       const supported = createGqlVideo(videoId2);
       result = () => createApiObject([unsupported, supported]);
 
@@ -352,7 +351,7 @@ describe('getValidationAndVideos', () => {
       expect(videos).toEqual([toDetailedVideo(supported, 'CMAF')]);
       expect(validations).toEqual([
         createValidationError(
-          `The output format of the video "${unsupported.title}" with ID ${videoId1} is 'FUTURE_FORMAT'. Expected output format 'CMAF'.`,
+          `The output format of the video "${unsupported.title}" with ID ${videoId1} is 'MPEG2_TS'. Expected output format 'CMAF'.`,
           'VIDEOS',
         ),
       ]);
