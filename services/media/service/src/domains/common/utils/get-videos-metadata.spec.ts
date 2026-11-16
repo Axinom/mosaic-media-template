@@ -1340,10 +1340,10 @@ describe('getVideosMetadata', () => {
   });
 
   describe('unsupported video formats', () => {
-    // Simulates a future Video Service that returns an output format which is
-    // neither in the generated GraphQL enum nor allowed by the publish message
-    // schema.
-    const futureFormat = 'FUTURE_FORMAT' as OutputFormat;
+    // The Video Service still offers MPEG2_TS, but the publish message schema
+    // does not allow it. The cast keeps this compiling whether or not the
+    // generated GraphQL enum contains the value.
+    const unsupportedFormat = 'MPEG2_TS' as OutputFormat;
 
     type GqlVideoStream = GqlVideo['videoStreams']['nodes'][0];
     const createStream = (
@@ -1407,7 +1407,6 @@ describe('getVideosMetadata', () => {
       'DASH_HLS',
       'CMAF',
       'DASH_ON_DEMAND',
-      'MPEG2_TS',
     ];
 
     it.each(supportedFormats)(
@@ -1433,9 +1432,9 @@ describe('getVideosMetadata', () => {
     it('Main video with an unsupported stream among supported ones -> stream dropped with warning', async () => {
       // Arrange
       const supportedVideoStream = createStream(OutputFormat.Cmaf, 'video.mp4');
-      const unsupportedVideoStream = createStream(futureFormat, 'video.ts');
+      const unsupportedVideoStream = createStream(unsupportedFormat, 'video.ts');
       const unsupportedAudioStream = createStream(
-        futureFormat,
+        unsupportedFormat,
         'audio.ts',
         VideoStreamType.Audio,
       );
@@ -1465,7 +1464,7 @@ describe('getVideosMetadata', () => {
       expect(meta.validation).toEqual([
         {
           context: 'VIDEO',
-          message: `Main video with id '${videoId1}' has streams with unsupported format(s) 'FUTURE_FORMAT'. These streams are not published.`,
+          message: `Main video with id '${videoId1}' has streams with unsupported format(s) 'MPEG2_TS'. These streams are not published.`,
           severity: 'WARNING',
         },
       ]);
@@ -1476,8 +1475,8 @@ describe('getVideosMetadata', () => {
       const mainVideo = createVideo(videoId1, OutputFormat.Cmaf, [
         createStream(OutputFormat.Cmaf, 'video.mp4'),
       ]);
-      const trailer = createVideo(videoId2, futureFormat, [
-        createStream(futureFormat, 'video.ts'),
+      const trailer = createVideo(videoId2, unsupportedFormat, [
+        createStream(unsupportedFormat, 'video.ts'),
       ]);
       result = () => createApiObject([mainVideo, trailer]);
 
@@ -1495,7 +1494,7 @@ describe('getVideosMetadata', () => {
       expect(meta.validation).toEqual([
         {
           context: 'VIDEO',
-          message: `Trailer video with id '${videoId2}' has the unsupported output format 'FUTURE_FORMAT' and is not published.`,
+          message: `Trailer video with id '${videoId2}' has the unsupported output format 'MPEG2_TS' and is not published.`,
           severity: 'WARNING',
         },
       ]);
@@ -1503,8 +1502,8 @@ describe('getVideosMetadata', () => {
 
     it('Main video with unsupported output format -> video skipped with warning', async () => {
       // Arrange
-      const video1 = createVideo(videoId1, futureFormat, [
-        createStream(futureFormat, 'video.ts'),
+      const video1 = createVideo(videoId1, unsupportedFormat, [
+        createStream(unsupportedFormat, 'video.ts'),
       ]);
       result = () => createApiObject([video1]);
 
@@ -1517,7 +1516,7 @@ describe('getVideosMetadata', () => {
         validation: [
           {
             context: 'VIDEO',
-            message: `Main video with id '${videoId1}' has the unsupported output format 'FUTURE_FORMAT' and is not published.`,
+            message: `Main video with id '${videoId1}' has the unsupported output format 'MPEG2_TS' and is not published.`,
             severity: 'WARNING',
           },
         ],
