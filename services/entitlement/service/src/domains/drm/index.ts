@@ -10,6 +10,7 @@ export {
 export {
   getDrmSettings,
   loadDrmSettings,
-  preloadDrmSettings,
-  resetDrmSettingsCache,
+  startDrmSettingsRefresh,
+  stopDrmSettingsRefresh,
+  waitForDrmSettings,
 } from './drm-settings';

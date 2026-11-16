@@ -1,9 +1,8 @@
-import { ensureError, Logger } from '@axinom/mosaic-service-common';
 import { GraphQLClient } from 'graphql-request';
 import urljoin from 'url-join';
 import { Config, requestServiceAccountToken } from '../../common';
 import { getSdk } from '../../generated/graphql/drm';
-import { createDrmSettingsCache } from './drm-settings-cache';
+import { createDrmSettingsCache, DrmSettingsCache } from './drm-settings-cache';
 import { DrmSettings } from './drm-settings-helpers';
 
 /** Timeout of a single request to the DRM Service. */
@@ -54,37 +53,50 @@ export const loadDrmSettings = async (
   };
 };
 
-let sharedCache: ReturnType<typeof createDrmSettingsCache> | undefined;
+let sharedCache: DrmSettingsCache | undefined;
 
-/**
- * Returns the DRM settings of the environment from the shared cache.
- */
-export const getDrmSettings = (
-  config: DrmSettingsConfig,
-): Promise<DrmSettings> => {
+const getSharedCache = (config: DrmSettingsConfig): DrmSettingsCache => {
   if (!sharedCache) {
     sharedCache = createDrmSettingsCache({
       load: () => loadDrmSettings(config),
     });
+    sharedCache.start();
   }
-  return sharedCache.get();
+  return sharedCache;
 };
 
 /**
- * Loads the DRM settings once at startup, so a running instance has them before
- * the DRM Service may become unavailable. Doesn't block and doesn't fail the
- * startup: the DRM Service may be enabled for the environment later.
+ * Returns the DRM settings of the environment from the shared cache, without
+ * waiting for a refresh. Fails with `DRM_SERVICE_REQUEST_FAILED` only if no
+ * settings could be loaded yet.
  */
-export const preloadDrmSettings = (config: DrmSettingsConfig): void => {
-  getDrmSettings(config).catch((error) => {
-    new Logger({ context: 'DrmSettings' }).warn(ensureError(error), {
-      message:
-        'The DRM settings could not be loaded at startup. Protected content can be played only once the DRM Service is enabled for this environment and reachable.',
-    });
-  });
+export const getDrmSettings = (
+  config: DrmSettingsConfig,
+): Promise<DrmSettings> => getSharedCache(config).get();
+
+/**
+ * Starts loading and refreshing the DRM settings in the background. Doesn't
+ * block and doesn't fail the startup: the DRM Service may be enabled for the
+ * environment later.
+ */
+export const startDrmSettingsRefresh = (config: DrmSettingsConfig): void => {
+  getSharedCache(config);
 };
 
-/** Only for tests: drops the shared cache. */
-export const resetDrmSettingsCache = (): void => {
+/**
+ * Resolves `true` once the DRM settings are loaded, or `false` after the
+ * timeout. Never rejects.
+ */
+export const waitForDrmSettings = (
+  config: DrmSettingsConfig,
+  timeoutInMs: number,
+): Promise<boolean> => getSharedCache(config).waitForSettings(timeoutInMs);
+
+/**
+ * Stops the background refresh and drops the shared cache. Used on shutdown
+ * and between tests.
+ */
+export const stopDrmSettingsRefresh = (): void => {
+  sharedCache?.stop();
   sharedCache = undefined;
 };

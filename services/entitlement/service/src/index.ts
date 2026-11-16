@@ -31,8 +31,10 @@ import express from 'express';
 import { PoolConfig } from 'pg';
 import { applyMigrations, getFullConfig } from './common';
 import {
-  preloadDrmSettings,
   setupEntitlementWebhookEndpoint,
+  startDrmSettingsRefresh,
+  stopDrmSettingsRefresh,
+  waitForDrmSettings,
   setupManifestWebhookEndpoint,
 } from './domains';
 import { setupPostGraphile } from './graphql/postgraphile-middleware';
@@ -40,6 +42,9 @@ import { registerMessaging } from './messaging/register-messaging';
 import { updateGeoDatabase } from './update-geo-database';
 
 const logger = new Logger({ context: 'bootstrap' });
+
+/** Longest time the readiness waits for the first DRM settings load. */
+const DRM_SETTINGS_READINESS_TIMEOUT_IN_MS = 15 * 1000;
 
 // Entry point for the service. For annotated version please see /services/media/service/src/index.ts.
 async function bootstrap(): Promise<void> {
@@ -60,8 +65,8 @@ async function bootstrap(): Promise<void> {
     throw new MosaicError(IdGuardErrors.IdentityServiceNotAccessible);
   }
 
-  // Load the DRM settings in the background (best effort, doesn't block or fail the startup)
-  preloadDrmSettings(config);
+  // Load and refresh the DRM settings in the background (doesn't block or fail the startup)
+  startDrmSettingsRefresh(config);
 
   // Register service health endpoint
   setupServiceHealthEndpoint(app);
@@ -69,6 +74,7 @@ async function bootstrap(): Promise<void> {
   await applyMigrations(config);
 
   const shutdownActions = setupShutdownActions(app, logger);
+  shutdownActions.push(stopDrmSettingsRefresh);
   const poolConfig: PoolConfig = { max: config.pgPoolMaxConnections };
   const ownerPgPool = setupOwnerPgPool(
     app,
@@ -128,7 +134,20 @@ async function bootstrap(): Promise<void> {
       logger.log('App is ready!');
     }
 
-    readiness.setState(true);
+    // Become ready once the DRM settings are loaded, so new instances of a
+    // rolling deployment can sign entitlement messages right away. Become
+    // ready anyway after the timeout: the DRM Service may be disabled or
+    // unavailable, and clear content doesn't need it.
+    void waitForDrmSettings(config, DRM_SETTINGS_READINESS_TIMEOUT_IN_MS).then(
+      (loaded) => {
+        if (!loaded) {
+          logger.warn(
+            `The DRM settings were not loaded within ${DRM_SETTINGS_READINESS_TIMEOUT_IN_MS} ms. The service is ready anyway and keeps loading them in the background.`,
+          );
+        }
+        readiness.setState(true);
+      },
+    );
   });
 
   shutdownActions.push(closeHttpServer(server, logger));

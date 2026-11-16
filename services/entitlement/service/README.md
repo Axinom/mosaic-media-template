@@ -64,11 +64,16 @@ Service at runtime, with its own service account:
   first FairPlay dataset, or the Axinom test certificate while it may still be
   used.
 
-The settings are cached for 5 minutes. If the DRM Service is unavailable, the
-service keeps using the last known settings and retries with backoff. It returns
-the error `DRM_SERVICE_REQUEST_FAILED` only if it could not load the settings
-since it started. Clear content (videos without key IDs) doesn't need the DRM
-Service.
+The settings are loaded at startup and refreshed in the background every 5
+minutes. Requests always use the current settings and never wait for a refresh.
+If a refresh fails, the service keeps the last known settings and retries with
+backoff.
+
+At startup, the service reports itself ready once the settings are loaded, or
+after 15 seconds at the latest, so it also starts in environments without the
+DRM Service. Until the settings are loaded, protected content fails with the
+error `DRM_SERVICE_REQUEST_FAILED`, and the service retries at least every 30
+seconds. Clear content (videos without key IDs) doesn't need the DRM Service.
 
 ## Development and Testing notes
 

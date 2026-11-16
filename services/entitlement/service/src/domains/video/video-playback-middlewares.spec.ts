@@ -17,7 +17,7 @@ import { Server } from 'http';
 import { CommonErrors, Config } from '../../common';
 import { getSdk, Sdk } from '../../generated/graphql/drm';
 import { createTestConfig } from '../../tests/test-utils/test-config';
-import { resetDrmSettingsCache } from '../drm';
+import { stopDrmSettingsRefresh } from '../drm';
 import { setupEntitlementWebhookEndpoint } from './video-playback-middlewares';
 
 const drmTenantId = 'ee3eef1f-70da-45de-97c1-c861ae55b304';
@@ -119,7 +119,7 @@ describe('Entitlement webhook', () => {
   });
 
   beforeEach(() => {
-    resetDrmSettingsCache();
+    stopDrmSettingsRefresh();
     drmCalls = 0;
     drmCall = () => drmResponse();
     vi.spyOn(console, 'error').mockImplementation(() => undefined);
