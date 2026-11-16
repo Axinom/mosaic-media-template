@@ -27,8 +27,8 @@ export const loadDrmSettings = async (
   const client = new GraphQLClient(
     urljoin(config.drmServiceBaseUrl, 'graphql'),
     {
-      // A short timeout, so a slow DRM Service doesn't block entitlement requests
-      // that the last known settings can answer.
+      // Bounds the request, so every background refresh ends within a known
+      // time and the next one gets scheduled.
       fetch: (input: RequestInfo | URL, init?: RequestInit) =>
         fetch(input, {
           ...init,

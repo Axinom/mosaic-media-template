@@ -12,12 +12,13 @@ const DRM_SETTINGS_REFRESH_INTERVAL_IN_MS = 5 * 60 * 1000;
 const DRM_SETTINGS_RETRY_BASE_DELAY_IN_MS = 10 * 1000;
 /**
  * Longest retry delay while no settings were loaded yet. Kept short, so
- * protected content plays again soon after the DRM Service recovers.
+ * protected content can be played soon after the DRM Service is enabled for
+ * the environment.
  */
 const DRM_SETTINGS_MAX_RETRY_DELAY_WITHOUT_SETTINGS_IN_MS = 30 * 1000;
 /**
- * Upper bound for one load (service account token and DRM Service call), so a
- * hanging call can't stop the refresh loop.
+ * Upper bound for one load (service account token and DRM Service call), so
+ * every load ends and the next one always gets scheduled.
  */
 const DRM_SETTINGS_LOAD_TIMEOUT_IN_MS = 15 * 1000;
 
@@ -124,7 +125,7 @@ export const createDrmSettingsCache = ({
           logger.warn(lastError, {
             message: settings
               ? 'Refreshing the DRM settings failed. The last known settings are used until a later refresh succeeds.'
-              : 'Loading the DRM settings failed. Protected content can be played only once the DRM Service is enabled for this environment and reachable.',
+              : 'Loading the DRM settings failed. Protected content can be played only once the settings are loaded. Please make sure that the DRM Service is enabled for this environment.',
             details: { failedAttempts, retryInMs: retryDelay },
           });
           scheduleNextLoad(retryDelay);

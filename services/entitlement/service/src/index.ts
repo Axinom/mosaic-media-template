@@ -136,8 +136,8 @@ async function bootstrap(): Promise<void> {
 
     // Become ready once the DRM settings are loaded, so new instances of a
     // rolling deployment can sign entitlement messages right away. Become
-    // ready anyway after the timeout: the DRM Service may be disabled or
-    // unavailable, and clear content doesn't need it.
+    // ready anyway after the timeout: the DRM Service may not be enabled for
+    // the environment yet, and clear content doesn't need it.
     void waitForDrmSettings(config, DRM_SETTINGS_READINESS_TIMEOUT_IN_MS).then(
       (loaded) => {
         if (!loaded) {
