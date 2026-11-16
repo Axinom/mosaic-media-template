@@ -577,7 +577,7 @@ describe('publishingSeasonProcessor', () => {
         },
         {
           context: 'METADATA',
-          message: `Property 'output_format' of the first video should be one of the following values: DASH, HLS, DASH_HLS, CMAF, DASH_ON_DEMAND, MPEG2_TS.`,
+          message: `Property 'output_format' of the first video should be one of the following values: DASH, HLS, DASH_HLS, CMAF, DASH_ON_DEMAND.`,
           severity: 'ERROR',
         },
         {

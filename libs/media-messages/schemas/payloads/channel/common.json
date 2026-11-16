@@ -158,7 +158,7 @@
             "output_format": {
               "type": "string",
               "title": "video_output_format",
-              "enum": ["HLS", "DASH", "DASH_HLS", "CMAF", "DASH_ON_DEMAND", "MPEG2_TS"],
+              "enum": ["HLS", "DASH", "DASH_HLS", "CMAF", "DASH_ON_DEMAND"],
               "description": "Output format."
             },
             "output_location": {
@@ -256,8 +256,7 @@
                       "DASH",
                       "DASH_HLS",
                       "CMAF",
-                      "DASH_ON_DEMAND",
-                      "MPEG2_TS"
+                      "DASH_ON_DEMAND"
                     ],
                     "description": "Output format."
                   },
