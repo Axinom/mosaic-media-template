@@ -23,7 +23,8 @@ during service runtime. Please have a look at their EULA
 ## Setup and Startup
 
 - Prerequisite: enable the DRM Service for your environment in the Management
-  System (Settings / DRM Service) and create a communication key there.
+  System (Settings / Admin Settings / DRM Service) and create a communication
+  key there.
 - Check the root `README.md` file and follow the setup instructions. The
   `yarn setup` script creates a service account for this service with the
   `ax-drm-service: ADMIN` permission, writes its credentials

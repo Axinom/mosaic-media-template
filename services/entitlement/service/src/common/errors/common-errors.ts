@@ -41,7 +41,7 @@ export const CommonErrors = {
   },
   NoCommunicationKeysAvailable: {
     message:
-      'No communication key is available to sign the entitlement message. Please create one in the Management System under Settings / DRM Service / Communication Keys.',
+      'No communication key is available to sign the entitlement message. Please create one in the Management System under Settings / Admin Settings / DRM Service / Communication Keys.',
     code: 'NO_COMMUNICATION_KEYS_AVAILABLE',
   },
   NoFairplayCertificateAvailable: {

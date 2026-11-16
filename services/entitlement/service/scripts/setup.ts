@@ -73,19 +73,19 @@ const checkDrmService = async (
     settings = await loadDrmSettings(config);
   } catch (error) {
     throw new Error(
-      `The DRM settings could not be read from the DRM Service at '${config.drmServiceBaseUrl}'. Please make sure that the DRM Service is enabled for this environment in the Management System (Settings / DRM Service). Error: ${(error as Error).message}`,
+      `The DRM settings could not be read from the DRM Service at '${config.drmServiceBaseUrl}'. Please make sure that the DRM Service is enabled for this environment in the Management System (Settings / Admin Settings / DRM Service). Error: ${(error as Error).message}`,
     );
   }
 
   if (!settings.drmTenantId) {
     throw new Error(
-      'The DRM Service returned no DRM tenant. Please make sure that the DRM Service is enabled for this environment in the Management System (Settings / DRM Service).',
+      'The DRM Service returned no DRM tenant. Please make sure that the DRM Service is enabled for this environment in the Management System (Settings / Admin Settings / DRM Service).',
     );
   }
 
   if (settings.communicationKeys.length === 0) {
     console.warn(
-      'The DRM Service is enabled, but has no communication key yet. Create one in the Management System under Settings / DRM Service / Communication Keys, otherwise protected content cannot be played.',
+      'The DRM Service is enabled, but has no communication key yet. Create one in the Management System under Settings / Admin Settings / DRM Service / Communication Keys, otherwise protected content cannot be played.',
     );
   } else {
     console.log('The DRM Service is enabled and has a communication key.');
