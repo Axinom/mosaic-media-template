@@ -194,16 +194,22 @@ describe('Entitlement webhook', () => {
     );
   });
 
-  it('clear content without key IDs -> empty payload, DRM Service not called', async () => {
-    drmCall = () => {
-      throw new Error('The DRM Service must not be called');
-    };
-
+  it('no key IDs -> signed JWT without keys and license URLs, as before', async () => {
+    // The Video Service calls the webhook only for protected videos, so this
+    // happens only for inconsistent data. The managed Entitlement Service
+    // answers the same way.
     const { status, body } = await post([null, null]);
 
     expect(status).toBe(200);
-    expect(body.payload).toEqual({});
-    expect(drmCalls).toBe(0);
+    expect(
+      decodeJwtPayload(body.payload.entitlement_message_jwt),
+    ).toMatchObject({
+      com_key_id: communicationKeyId,
+      message: { content_keys_source: { inline: [] } },
+    });
+    expect(body.payload.widevine_license_service_url).toBe(
+      'https://ee3eef1f.drm-widevine-licensing.axprod.net/AcquireLicense',
+    );
   });
 
   it('DRM Service unavailable and nothing loaded yet -> DRM_SERVICE_REQUEST_FAILED', async () => {

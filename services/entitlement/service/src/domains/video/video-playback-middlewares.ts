@@ -130,17 +130,6 @@ export const setupEntitlementWebhookEndpoint = (
             (s) => s.key_id,
           ),
         );
-        // Clear content has no key IDs and needs neither an entitlement
-        // message nor the DRM settings.
-        if (keyIds.length === 0) {
-          res.status(200).send(
-            generateWebhookResponse<EntitlementWebhookResponsePayload>({
-              payload: {},
-            }),
-          );
-          return;
-        }
-
         const settings = await getDrmSettings(config);
         const communicationKey = getCommunicationKey(settings);
         // `getCommunicationKey` ensures that the DRM tenant exists.

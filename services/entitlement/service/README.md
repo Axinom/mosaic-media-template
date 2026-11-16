@@ -73,7 +73,9 @@ At startup, the service reports itself ready once the settings are loaded, or
 after 15 seconds at the latest, so it also starts in environments without the
 DRM Service. Until the settings are loaded, protected content fails with the
 error `DRM_SERVICE_REQUEST_FAILED`, and the service retries at least every 30
-seconds. Clear content (videos without key IDs) doesn't need the DRM Service.
+seconds. Clear content doesn't need the DRM Service: the GraphQL `entitlement`
+query rejects it before the lookup, and the Video Service calls the
+`/entitlement` webhook only for protected videos.
 
 ## Development and Testing notes
 
