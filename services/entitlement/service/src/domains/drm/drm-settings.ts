@@ -93,10 +93,19 @@ export const waitForDrmSettings = (
 ): Promise<boolean> => getSharedCache(config).waitForSettings(timeoutInMs);
 
 /**
- * Stops the background refresh and drops the shared cache. Used on shutdown
- * and between tests.
+ * Stops the background refresh on shutdown. The shared cache is kept, so
+ * requests that are still being handled keep using the loaded settings and
+ * don't start a new refresh loop.
  */
 export const stopDrmSettingsRefresh = (): void => {
+  sharedCache?.stop();
+};
+
+/**
+ * Only for tests: stops the background refresh and drops the shared cache, so
+ * the next call creates a new one.
+ */
+export const resetDrmSettingsCacheForTests = (): void => {
   sharedCache?.stop();
   sharedCache = undefined;
 };

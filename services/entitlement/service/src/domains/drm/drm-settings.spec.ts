@@ -10,7 +10,12 @@ vi.mock('@axinom/mosaic-id-link-be', () => ({
 }));
 
 import { getSdk, Sdk } from '../../generated/graphql/drm';
-import { loadDrmSettings } from './drm-settings';
+import {
+  getDrmSettings,
+  loadDrmSettings,
+  resetDrmSettingsCacheForTests,
+  stopDrmSettingsRefresh,
+} from './drm-settings';
 
 describe('loadDrmSettings', () => {
   const config = {
@@ -82,5 +87,58 @@ describe('loadDrmSettings', () => {
       axinomFairPlayCertificateUsageExpires: undefined,
       fairPlayCertificateUrl: undefined,
     });
+  });
+});
+
+describe('stopDrmSettingsRefresh', () => {
+  const config = {
+    drmServiceBaseUrl: 'https://drm.service.test.invalid',
+    idServiceAuthBaseUrl: 'https://id.service.test.invalid',
+    serviceAccountClientId: 'client-id',
+    serviceAccountClientSecret: 'client-secret',
+  };
+  const response = {
+    data: {
+      communicationKeys: [{ id: 'key-1', data: 'YQ==', created: null }],
+      serviceConfigurations: {
+        nodes: [
+          {
+            drmTenantId: 'ee3eef1f-70da-45de-97c1-c861ae55b304',
+            axinomFairPlayCertificateUsageExpires: null,
+          },
+        ],
+      },
+      fairPlayDatasets: [],
+    },
+  };
+
+  afterEach(() => {
+    resetDrmSettingsCacheForTests();
+  });
+
+  it('requests after a stop (e.g. during shutdown) keep the loaded settings and start no new load', async () => {
+    const GetDrmSettings = vi.fn(async () => response);
+    vi.mocked(getSdk).mockReturnValue({ GetDrmSettings } as unknown as Sdk);
+    const loaded = await getDrmSettings(config);
+
+    stopDrmSettingsRefresh();
+
+    expect(await getDrmSettings(config)).toBe(loaded);
+    expect(GetDrmSettings).toHaveBeenCalledTimes(1);
+  });
+
+  it('requests after a stop without loaded settings fail at once and start no new load', async () => {
+    const GetDrmSettings = vi.fn(async () => {
+      throw new Error('connect ECONNREFUSED');
+    });
+    vi.mocked(getSdk).mockReturnValue({ GetDrmSettings } as unknown as Sdk);
+    await expect(getDrmSettings(config)).rejects.toThrow();
+
+    stopDrmSettingsRefresh();
+
+    await expect(getDrmSettings(config)).rejects.toMatchObject({
+      code: 'DRM_SERVICE_REQUEST_FAILED',
+    });
+    expect(GetDrmSettings).toHaveBeenCalledTimes(1);
   });
 });

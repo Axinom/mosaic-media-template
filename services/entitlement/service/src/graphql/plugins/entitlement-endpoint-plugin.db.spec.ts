@@ -75,7 +75,7 @@ import { ClientError } from 'graphql-request';
 import gql from 'graphql-tag';
 import { v4 as uuid } from 'uuid';
 import { CommonErrors } from '../../common';
-import { stopDrmSettingsRefresh } from '../../domains';
+import { resetDrmSettingsCacheForTests } from '../../domains';
 import {
   getSdk as getCatalogSdk,
   Sdk as CatalogSdk,
@@ -221,7 +221,7 @@ describe('EntitlementEndpointPlugin', () => {
     catalogCall = () => undefined;
     drmCall = defaultDrmResponse;
     drmCallSpy.mockClear();
-    stopDrmSettingsRefresh();
+    resetDrmSettingsCacheForTests();
   });
 
   afterEach(async () => {
