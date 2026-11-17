@@ -62,7 +62,7 @@
     "yarn:de-dupe": "npx yarn-deduplicate yarn.lock"
   },
   "devDependencies": {
-    "@axinom/mosaic-cli": "0.61.1",
+    "@axinom/mosaic-cli": "0.62.0",
     "@types/node": "^22.12.0",
     "@types/prompts": "^2.4.4",
     "@types/rimraf": "^3.0.2",

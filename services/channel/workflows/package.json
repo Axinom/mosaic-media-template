@@ -37,9 +37,9 @@
   ],
   "dependencies": {
     "@apollo/client": "^3.7.10",
-    "@axinom/mosaic-managed-workflow-integration": "0.36.0",
-    "@axinom/mosaic-ui": "0.78.0-rc.15",
-    "@axinom/mosaic-video-workflow-integration": "0.6.3",
+    "@axinom/mosaic-managed-workflow-integration": "0.37.0",
+    "@axinom/mosaic-ui": "0.78.0",
+    "@axinom/mosaic-video-workflow-integration": "0.6.4",
     "clsx": "^1.2.1",
     "env-cmd": "^10.1.0",
     "formik": "^2.2.9",
@@ -51,7 +51,7 @@
     "yup": "^0.32.11"
   },
   "devDependencies": {
-    "@axinom/mosaic-portal": "0.52.1",
+    "@axinom/mosaic-portal": "0.53.0",
     "@graphql-codegen/cli": "^7.4.6",
     "@graphql-codegen/typescript": "^6.1.2",
     "@graphql-codegen/typescript-operations": "^6.2.0",
