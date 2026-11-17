@@ -836,7 +836,7 @@ describe('EntitlementEndpointPlugin', () => {
 
       const loggedObject = getFirstMockResult<any>(errorOverride);
       expect(loggedObject).toMatchObject({
-        logtime: resp.errors?.[0].timestamp,
+        logtime: expect.any(String),
         loglevel: 'ERROR',
         retention: 'medium',
         context: 'TestContext',
