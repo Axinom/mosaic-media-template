@@ -1,3 +1,4 @@
+import { BasicConfig, Logger } from '@axinom/mosaic-service-common';
 import { GraphQLClient } from 'graphql-request';
 import urljoin from 'url-join';
 import { Config, requestServiceAccountToken } from '../../common';
@@ -14,7 +15,8 @@ type DrmSettingsConfig = Pick<
   | 'idServiceAuthBaseUrl'
   | 'serviceAccountClientId'
   | 'serviceAccountClientSecret'
->;
+> &
+  Partial<BasicConfig>;
 
 /**
  * Loads the DRM settings of the environment from the DRM Service, using the
@@ -59,6 +61,7 @@ const getSharedCache = (config: DrmSettingsConfig): DrmSettingsCache => {
   if (!sharedCache) {
     sharedCache = createDrmSettingsCache({
       load: () => loadDrmSettings(config),
+      logger: new Logger({ config, context: 'DrmSettingsCache' }),
     });
     sharedCache.start();
   }
