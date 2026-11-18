@@ -1,3 +1,4 @@
+import { IndexedSearchPluginFactory } from '@axinom/mosaic-graphql-common';
 import { makePluginByCombiningPlugins } from 'graphile-utils';
 import { BulkDeletePluginFactory } from '../../../graphql';
 import {
@@ -11,6 +12,10 @@ import { SmartTagsPlugin } from './smart-tags-plugin';
 
 export const AllCollectionPlugins = makePluginByCombiningPlugins(
   SmartTagsPlugin,
+  IndexedSearchPluginFactory([
+    { table: 'collections', column: 'title' },
+    { table: 'collections_tags', column: 'name' },
+  ]),
   BulkCreateSnapshotsPluginFactory('collections'),
   BulkPublishingPluginFactory('collections'),
   BulkUnpublishingPluginFactory('collections'),
