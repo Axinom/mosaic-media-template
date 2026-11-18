@@ -1,0 +1,16 @@
+query GetDrmSettings {
+  communicationKeys {
+    id
+    data
+    created
+  }
+  serviceConfigurations {
+    nodes {
+      drmTenantId
+      axinomFairPlayCertificateUsageExpires
+    }
+  }
+  fairPlayDatasets {
+    url
+  }
+}

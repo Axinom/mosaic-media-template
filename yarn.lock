@@ -9633,6 +9633,7 @@ __metadata:
     "@axinom/mosaic-db-common": "npm:0.63.0"
     "@axinom/mosaic-graphql-common": "npm:0.39.0"
     "@axinom/mosaic-id-guard": "npm:0.54.1"
+    "@axinom/mosaic-id-link-be": "npm:0.45.0"
     "@axinom/mosaic-id-utils": "npm:0.33.1"
     "@axinom/mosaic-message-bus": "npm:0.56.0"
     "@axinom/mosaic-service-common": "npm:0.75.0"

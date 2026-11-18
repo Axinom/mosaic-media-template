@@ -20,3 +20,16 @@ generates:
       withHOC: false
       withComponent: false
       withMutationFn: false
+  src/generated/graphql/drm.ts:
+    schema: ${DRM_SERVICE_BASE_URL}/graphql
+    documents: 'src/graphql/documents/drm-*.graphql'
+    plugins:
+      - 'typescript'
+      - 'typescript-operations'
+      - 'typescript-graphql-request'
+    config:
+      importSchemaTypesFrom: 'src/generated/graphql/drm.ts'
+      rawRequest: true
+      withHOC: false
+      withComponent: false
+      withMutationFn: false

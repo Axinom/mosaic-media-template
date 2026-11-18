@@ -43,11 +43,21 @@ export const getConfigDefinitions = (
     catalogServiceBaseUrl: () =>
       env.get('CATALOG_SERVICE_BASE_URL').required().asUrlString(),
 
-    drmLicenseCommunicationKeyId: () =>
-      env.get('DRM_LICENSE_COMMUNICATION_KEY_ID').required().asString(),
+    /**
+     * Base URL of the Mosaic DRM Service. The communication key, DRM tenant and
+     * FairPlay settings of the environment are read from it at runtime.
+     */
+    drmServiceBaseUrl: () =>
+      env.get('DRM_SERVICE_BASE_URL').required().asUrlString(),
 
-    drmLicenseCommunicationKey: () =>
-      env.get('DRM_LICENSE_COMMUNICATION_KEY').required().asString(),
+    /**
+     * Service account of the Entitlement Service. It needs the
+     * `ax-drm-service: ADMIN` permission to read the DRM settings.
+     */
+    serviceAccountClientId: () =>
+      env.get('SERVICE_ACCOUNT_CLIENT_ID').required().asString(),
+    serviceAccountClientSecret: () =>
+      env.get('SERVICE_ACCOUNT_CLIENT_SECRET').required().asString(),
 
     mosaicTestingIpEnabled: () =>
       env.get('MOSAIC_TESTING_IP_ENABLED').default('false').asBoolStrict(),
@@ -62,23 +72,41 @@ export const getConfigDefinitions = (
       return env.get(MAXMIND_ACCOUNT_ID).required(!this.isDev()).asString();
     },
 
-    drmLicenseCommunicationKeyBuffer: function () {
-      return Buffer.from(this.drmLicenseCommunicationKey(), 'base64');
-    },
-
     entitlementWebhookSecret: () =>
       env.get('ENTITLEMENT_WEBHOOK_SECRET').asString(),
 
     manifestWebhookSecret: () => env.get('MANIFEST_WEBHOOK_SECRET').asString(),
 
-    widevineLicenseServiceUrl: () =>
-      env.get('WIDEVINE_LICENSE_SERVICE_URL').asUrlString(),
-    playreadyLicenseServiceUrl: () =>
-      env.get('PLAYREADY_LICENSE_SERVICE_URL').asUrlString(),
-    fairplayLicenseServiceUrl: () =>
-      env.get('FAIRPLAY_LICENSE_SERVICE_URL').asUrlString(),
-    fairplayStreamingCertificateUrl: () =>
-      env.get('FAIRPLAY_STREAMING_CERTIFICATE_URL').asUrlString(),
+    /**
+     * License Service URLs returned by the `/entitlement` webhook. The first
+     * block of the environment's DRM tenant ID is put in front of the host,
+     * e.g. `https://<id-prefix>.drm-widevine-licensing.axprod.net/...`.
+     */
+    licenseServiceWidevineUrl: () =>
+      env
+        .get('LICENSE_SERVICE_WIDEVINE_URL')
+        .default('https://drm-widevine-licensing.axprod.net/AcquireLicense')
+        .asUrlString(),
+    licenseServicePlayreadyUrl: () =>
+      env
+        .get('LICENSE_SERVICE_PLAYREADY_URL')
+        .default('https://drm-playready-licensing.axprod.net/AcquireLicense')
+        .asUrlString(),
+    licenseServiceFairplayUrl: () =>
+      env
+        .get('LICENSE_SERVICE_FAIRPLAY_URL')
+        .default('https://drm-fairplay-licensing.axprod.net/AcquireLicense')
+        .asUrlString(),
+    /**
+     * Axinom FairPlay test certificate, returned by the `/entitlement` webhook
+     * while the environment has no FairPlay dataset of its own and the test
+     * certificate may still be used.
+     */
+    fairplayTestCertUrl: () =>
+      env
+        .get('FAIRPLAY_TEST_CERT_URL')
+        .default('https://tools.axinom.com/FPScert/fairplay.cer')
+        .asUrlString(),
 
     /**
      * Optional User Service GraphQL Endpoint, used to get user auth token

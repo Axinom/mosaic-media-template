@@ -9,12 +9,6 @@ on:
       managed-service-client-secret:
         required: true
         description: Client secret for managed service account authentication
-      entitlement-drm-license-communication-key:
-        required: false
-        description: DRM license communication key for entitlement service
-      entitlement-drm-license-communication-key-id:
-        required: false
-        description: DRM license communication key ID for entitlement service
       entitlement-entitlement-webhook-secret:
         required: false
         description: Entitlement webhook secret for entitlement service
@@ -75,6 +69,22 @@ on:
         required: false
         type: string
         description: Download URL for the GeoLite2 database
+      drm-service-base-url:
+        required: false
+        type: string
+        description: Base URL of the Mosaic DRM Service of the stage (entitlement service)
+      license-service-widevine-url:
+        required: false
+        type: string
+        description: Widevine License Service URL of the stage (entitlement service)
+      license-service-playready-url:
+        required: false
+        type: string
+        description: PlayReady License Service URL of the stage (entitlement service)
+      license-service-fairplay-url:
+        required: false
+        type: string
+        description: FairPlay License Service URL of the stage (entitlement service)
       drm-key-seed-id:
         required: false
         type: string
@@ -121,11 +131,13 @@ jobs:
         env:
           managedServiceClientId: ${{ secrets.managed-service-client-id }}
           managedServiceClientSecret: ${{ secrets.managed-service-client-secret }}
-          drmLicenseCommunicationKey: ${{ secrets.entitlement-drm-license-communication-key }}
-          drmLicenseCommunicationKeyId: ${{ secrets.entitlement-drm-license-communication-key-id }}
           entitlementWebhookSecret: ${{ secrets.entitlement-entitlement-webhook-secret }}
           geolite2LicenseKey: ${{ secrets.entitlement-geolite2-license-key }}
           geoLite2DownloadUrl: ${{ inputs.geolite2-download-url }}
+          drmServiceBaseUrl: ${{ inputs.drm-service-base-url }}
+          licenseServiceWidevineUrl: ${{ inputs.license-service-widevine-url }}
+          licenseServicePlayreadyUrl: ${{ inputs.license-service-playready-url }}
+          licenseServiceFairplayUrl: ${{ inputs.license-service-fairplay-url }}
           drmKeySeedId: ${{ inputs.drm-key-seed-id }}
           virtualChannelManagementApiBaseUrl: ${{ inputs.virtual-channel-management-api-base-url }}
           virtualChannelOriginBaseUrl: ${{ inputs.virtual-channel-origin-base-url }}

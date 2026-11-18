@@ -20,6 +20,12 @@ import addFormats from 'ajv-formats';
 import { Express, json, NextFunction, Request, Response } from 'express';
 import { CommonErrors, Config, sanitizeStringArray } from '../../common';
 import { generateEntitlementMessageJwt } from '../../graphql/plugins/entitlement-endpoint/entitlement-message-generation';
+import {
+  getCommunicationKey,
+  getDrmSettings,
+  getDrmTenantUrl,
+  getFairPlayCertificateUrl,
+} from '../drm';
 
 // Feel free to adjust the implementation of this middleware to something more
 // fitting to your business rules.
@@ -124,21 +130,36 @@ export const setupEntitlementWebhookEndpoint = (
             (s) => s.key_id,
           ),
         );
+        const settings = await getDrmSettings(config);
+        const communicationKey = getCommunicationKey(settings);
+        // `getCommunicationKey` ensures that the DRM tenant exists.
+        const drmTenantId = settings.drmTenantId as string;
         const jwt = generateEntitlementMessageJwt(
           keyIds,
           [],
-          config,
+          communicationKey,
           config.isDev ? 'DEV' : 'STRICT',
         );
         const response =
           generateWebhookResponse<EntitlementWebhookResponsePayload>({
             payload: {
               entitlement_message_jwt: jwt,
-              widevine_license_service_url: config.widevineLicenseServiceUrl,
-              playready_license_service_url: config.playreadyLicenseServiceUrl,
-              fairplay_license_service_url: config.fairplayLicenseServiceUrl,
-              fairplay_streaming_certificate_url:
-                config.fairplayStreamingCertificateUrl,
+              widevine_license_service_url: getDrmTenantUrl(
+                config.licenseServiceWidevineUrl,
+                drmTenantId,
+              ),
+              playready_license_service_url: getDrmTenantUrl(
+                config.licenseServicePlayreadyUrl,
+                drmTenantId,
+              ),
+              fairplay_license_service_url: getDrmTenantUrl(
+                config.licenseServiceFairplayUrl,
+                drmTenantId,
+              ),
+              fairplay_streaming_certificate_url: getFairPlayCertificateUrl(
+                settings,
+                config.fairplayTestCertUrl,
+              ),
             },
           });
         res.status(200).send(response);
