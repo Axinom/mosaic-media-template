@@ -28,6 +28,14 @@ The goal is to minimize resolutions and remove them when no longer needed.
 
 ## Waiting for Upstream Fix
 
+### minimatch@10.x via @typescript-eslint (age gate)
+
+- **Vulnerability**: GHSA-g3hv-75wg-m249 — denial of service via globparts amplification (medium). Affects `>=7.0.0 <11.0.1`, patched only in 11.0.1 (major).
+- **Current versions**: 10.2.4 (via `@typescript-eslint/typescript-estree@8.56.1` / `8.63.0`, pulled by the root devDependencies `@typescript-eslint/parser` / `@typescript-eslint/eslint-plugin@^8.0.0` and by `@typescript-eslint/utils@^8.58.0`)
+- **Blocked by**: the repo's 7-day npm age gate (`npmMinimalAgeGate: '7d'`). The first `typescript-estree` release on `minimatch@^11` is **8.73.0, published 2026-11-16T17:06Z**; every earlier 8.x (up to 8.72.0) still requires `minimatch@^10.2.2`. The `^8.0.0` ranges already admit 8.73.0, so no manifest change is needed.
+- **Date**: 2026-11-22
+- **Check again when**: **2026-11-23, after 17:07 UTC** (published 2026-11-16T17:06Z + 7 days) — then delete the `@typescript-eslint/*` lockfile entries and re-run `yarn install`. Lint-only tooling, not in any deployed runtime. Note: the same alert also covers `minimatch@10.2.6` via `graphql-config`, which is not age-gated (even `graphql-config@6.0.0` still requires `minimatch@^10`) and is pending a separate decision, so the alert stays open until both paths are fixed.
+
 ### ajv@5.x / 6.5.2
 
 - **Vulnerability**: Prototype Pollution (medium, GHSA — patched 6.12.3), ReDoS via `$data` (medium)
