@@ -130,14 +130,19 @@ jobs:
   trigger_deploy:
     name: Trigger Service Deployment
     needs: [ collect_results ]
-    if: github.event_name == 'schedule' && always()
+    if: always()
     runs-on: ubicloud-standard-2
     steps:
       - name: Trigger service deployment
         env:
           GH_TOKEN: ${{ github.token }}
+          GH_REF: ${{ github.ref }}
         run: |
-          WORKFLOW="deploy-services-prerelease.yml"
+          if [[ "$GH_REF" == refs/heads/releases/* ]]; then
+            WORKFLOW="deploy-services-release.yml"
+          else
+            WORKFLOW="deploy-services-prerelease.yml"
+          fi
           gh workflow run "$WORKFLOW" \
             --repo "${{ github.repository }}" \
             --ref "${{ github.ref }}"

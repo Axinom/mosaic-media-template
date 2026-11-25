@@ -1,7 +1,7 @@
 name: Deploy Services Release (Test -> Production)
 # Stages:
 # - Pre-check
-# - Approval: TEST
+# - Approval: TEST (only outside releases/ branches)
 # - Deployment: TEST (all services in parallel)
 # - Update Hosting: TEST
 # - Post-check: TEST
@@ -90,6 +90,7 @@ jobs:
       issues: write
     steps:
       - name: Request approval for Test deployment
+        if: ${{ !startsWith(github.ref, 'refs/heads/releases/') }}
         uses: trstringer/manual-approval@v1
         with:
           secret: ${{ github.TOKEN }}
