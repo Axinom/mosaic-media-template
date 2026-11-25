@@ -1,7 +1,7 @@
 # -------------------------------- Docker image versions/tags for Prod K8s Deployments -------------------------------- #
 
-catalog: "20261118.1045"
-channel: "20261118.1045"
-entitlement: "20261118.1045"
-media: "20261118.1045"
-vod-to-live: "20261118.1045"
+catalog: "20261125.0753"
+channel: "20261125.0753"
+entitlement: "20261125.0753"
+media: "20261125.0753"
+vod-to-live: "20261125.0753"
