@@ -28,6 +28,15 @@ The goal is to minimize resolutions and remove them when no longer needed.
 
 ## Waiting for Upstream Fix
 
+### minimatch@10.x via graphql-config
+
+- **Vulnerability**: GHSA-g3hv-75wg-m249 — denial of service via globparts amplification (medium). Affects `>=7.0.0 <11.0.1`, patched only in 11.0.1 (major).
+- **Current version**: 10.2.6
+- **Blocked by**: `graphql-config` — `@graphql-codegen/cli@^7.4.6` requires `graphql-config@^5.1.8`, which requires `minimatch@^10.0.0`. Even the latest `graphql-config@6.0.0` (used by `@graphql-codegen/cli@8.0.0`) still requires `minimatch@^10`, so neither bumping codegen nor graphql-config helps.
+- **Exposure**: dev-only code generation (`yarn codegen`), not in any deployed service runtime or the shipped pilet bundle. The glob patterns come from this repo's own codegen configs, never from untrusted input.
+- **Date**: 2026-11-25
+- **Check again when**: `graphql-config` releases a version on `minimatch@^11`
+
 ### ajv@5.x / 6.5.2
 
 - **Vulnerability**: Prototype Pollution (medium, GHSA — patched 6.12.3), ReDoS via `$data` (medium)
