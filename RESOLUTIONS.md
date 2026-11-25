@@ -49,12 +49,12 @@ The goal is to minimize resolutions and remove them when no longer needed.
 
 ### serialize-javascript
 
-- **Vulnerability**: RCE via `RegExp.flags` / `Date.prototype.toISOString` (high), CPU Exhaustion DoS via crafted array-like objects (medium)
+- **Vulnerability**: RCE via `RegExp.flags` / `Date.prototype.toISOString` (high), CPU Exhaustion DoS via crafted array-like objects (medium), XSS via unescaped `</script` at the end of a serialized function body (low, GHSA-m5mm-p8h7-m29v, added 2026-11-25)
 - **Current version**: 6.0.2
-- **Patched in**: 7.0.3 / 7.0.5
-- **Blocked by**: `css-minimizer-webpack-plugin` — every 5.x and 7.x release (latest 7.0.4) requires `serialize-javascript@^6.0.x`; only `css-minimizer-webpack-plugin@8.0.0` moves to `^7.0.3`. `piral-cli-webpack5` (locked 1.5.3; every release since 1.8.0, latest 1.12.4) requires `css-minimizer-webpack-plugin@^7`, so bumping piral alone does not help.
+- **Patched in**: 7.0.3 / 7.0.5 / 7.1.3
+- **Blocked by**: `css-minimizer-webpack-plugin` — every 5.x and 7.x release (latest 7.0.4) requires `serialize-javascript@^6.0.x`; only `css-minimizer-webpack-plugin@8.0.0` moves to `^7.0.3`. `piral-cli-webpack5` (locked 1.5.3; every release since 1.8.0, latest 1.12.5) requires `css-minimizer-webpack-plugin@^7`, so bumping piral alone does not help.
 - **Date**: 2026-03-03
-- **Last verified**: 2026-11-03
+- **Last verified**: 2026-11-25
 - **Check again when**: `piral-cli-webpack5` accepts `css-minimizer-webpack-plugin@^8`, or `css-minimizer-webpack-plugin@7.x` ships with `serialize-javascript@^7`
 
 ## Deferred (Tolerated For Now)
