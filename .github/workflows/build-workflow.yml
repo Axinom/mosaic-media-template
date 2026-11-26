@@ -73,14 +73,19 @@ jobs:
   trigger_deploy:
     name: Trigger Workflow Deployment
     needs: [ collect_results ]
-    if: github.event_name == 'schedule' && always()
+    if: always()
     runs-on: ubicloud-standard-2
     steps:
       - name: Trigger workflow deployment
         env:
           GH_TOKEN: ${{ github.token }}
+          GH_REF: ${{ github.ref }}
         run: |
-          WORKFLOW="deploy-workflows-prerelease.yml"
+          if [[ "$GH_REF" == refs/heads/releases/* ]]; then
+            WORKFLOW="deploy-workflows-release.yml"
+          else
+            WORKFLOW="deploy-workflows-prerelease.yml"
+          fi
           gh workflow run "$WORKFLOW" \
             --repo "${{ github.repository }}" \
             --ref "${{ github.ref }}"

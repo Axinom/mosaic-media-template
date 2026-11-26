@@ -7,7 +7,6 @@ spec:
     spec:
       nodeSelector:
         mosaic.axinom.com/workload_type: customizable-services
-        mosaic.axinom.com/hosting_node_pool: basic_balanced_axinom_owned
       tolerations:
         - key: 'mosaic.axinom.com/customizable-services'
           operator: 'Equal'

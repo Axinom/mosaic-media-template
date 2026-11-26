@@ -1,7 +1,7 @@
 name: Deploy Workflows Release (Test -> Production)
 # Stages:
 # - Pre-check
-# - Approval: TEST
+# - Approval: TEST (only outside releases/ branches)
 # - Deployment: TEST (all workflows in parallel)
 # - Post-check: TEST
 # - Approval: PRODUCTION
@@ -68,6 +68,7 @@ jobs:
       issues: write
     steps:
       - name: Request approval for Test deployment
+        if: ${{ !startsWith(github.ref, 'refs/heads/releases/') }}
         uses: trstringer/manual-approval@v1
         with:
           secret: ${{ github.TOKEN }}
