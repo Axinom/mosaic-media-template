@@ -2,6 +2,7 @@
 import { execFileSync } from 'child_process';
 import * as fs from 'fs';
 import * as path from 'path';
+import * as semver from 'semver';
 
 interface YarnWorkspace {
   location: string;
@@ -46,17 +47,43 @@ function getYarnWorkspaces(): YarnWorkspaces {
   return ws;
 }
 
+const MAX_ATTEMPTS = 3;
+const distTagsCache = new Map<string, PackageDistTags>();
+
+function sleep(ms: number): void {
+  Atomics.wait(new Int32Array(new SharedArrayBuffer(4)), 0, 0, ms);
+}
+
 function getPackageDistTags(packageName: string): PackageDistTags {
-  const stdout = runYarnCommand([
-    'npm',
-    'info',
-    packageName,
-    '--fields',
-    'dist-tags',
-    '--json',
-  ]);
-  const info = JSON.parse(stdout);
-  return info['dist-tags'] as PackageDistTags;
+  const cached = distTagsCache.get(packageName);
+  if (cached) {
+    return cached;
+  }
+
+  // Retry so that a transient registry or DNS error does not abort the run halfway.
+  for (let attempt = 1; ; attempt++) {
+    try {
+      const stdout = runYarnCommand([
+        'npm',
+        'info',
+        packageName,
+        '--fields',
+        'dist-tags',
+        '--json',
+      ]);
+      const distTags = JSON.parse(stdout)['dist-tags'] as PackageDistTags;
+      distTagsCache.set(packageName, distTags);
+      return distTags;
+    } catch (error) {
+      if (attempt >= MAX_ATTEMPTS) {
+        throw error;
+      }
+      console.warn(
+        ` |  failed to read dist-tags of ${packageName} (attempt ${attempt}/${MAX_ATTEMPTS}), retrying`,
+      );
+      sleep(attempt * 2000);
+    }
+  }
 }
 
 interface PackageJson {
@@ -87,10 +114,19 @@ function updateMosaicDeps(
   for (const packageName of mosaicDependencies) {
     const distTags = getPackageDistTags(packageName);
     const currentVersion = depsObject[packageName];
+    // Never downgrade: a workspace may intentionally use a prerelease that is newer than
+    // `latest` (e.g. `0.63.0-rc.11` while `latest` is `0.62.0`). Keep that version instead.
+    const current = semver.validRange(currentVersion)
+      ? semver.minVersion(currentVersion)
+      : null;
+    const target =
+      current && semver.gt(current, distTags[tag])
+        ? current.version
+        : distTags[tag];
     // Mosaic libraries depend on each other with caret ranges. Using `^x.y.z-rc.n` instead of
     // `x.y.z-rc.n` resolves the workspaces to the same version as those libraries. Once `x.y.z`
     // is published, both resolve to `x.y.z` instead of one staying on `x.y.z-rc.n`.
-    const newVersion = `^${distTags[tag]}`;
+    const newVersion = `^${target}`;
     if (currentVersion !== newVersion) {
       console.log(` |  ${packageName}@${currentVersion} > ${newVersion}`);
       depsObject[packageName] = newVersion;
@@ -98,16 +134,25 @@ function updateMosaicDeps(
   }
 }
 
-function updatePackageJson(wsPath: string, tag: DistTagType): void {
+interface PendingWrite {
+  packageJsonPath: string;
+  content: string;
+}
+
+function updatePackageJson(wsPath: string, tag: DistTagType): PendingWrite {
   const packageJsonPath = path.join(wsPath, 'package.json');
-  const packageJson = JSON.parse(
-    fs.readFileSync(packageJsonPath, 'utf-8'),
-  ) as PackageJson;
+  const original = fs.readFileSync(packageJsonPath, 'utf-8');
+  const packageJson = JSON.parse(original) as PackageJson;
 
   updateMosaicDeps(packageJson, 'dependencies', tag);
   updateMosaicDeps(packageJson, 'devDependencies', tag);
 
-  fs.writeFileSync(packageJsonPath, JSON.stringify(packageJson, null, 2));
+  // Keep the trailing newline the file had, so untouched lines don't show up in the diff.
+  const trailingNewline = original.endsWith('\n') ? '\n' : '';
+  return {
+    packageJsonPath,
+    content: JSON.stringify(packageJson, null, 2) + trailingNewline,
+  };
 }
 
 /**
@@ -118,9 +163,15 @@ function run(tag: DistTagType = 'prerelease'): void {
   const workspaces = getYarnWorkspaces();
 
   console.log('Bumping mosaic packages');
+  // Resolve every version before writing anything, so a failed lookup leaves no
+  // half-updated workspaces behind.
+  const pendingWrites: PendingWrite[] = [];
   for (const [wsName, wsData] of Object.entries(workspaces)) {
     console.log(`${wsName}`);
-    updatePackageJson(wsData.location, tag);
+    pendingWrites.push(updatePackageJson(wsData.location, tag));
+  }
+  for (const { packageJsonPath, content } of pendingWrites) {
+    fs.writeFileSync(packageJsonPath, content);
   }
   console.log('Updating yarn.lock');
   runYarnCommand(['install']);

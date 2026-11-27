@@ -85,7 +85,7 @@
     "eslint-plugin-react": "^7.37.0",
     "eslint-plugin-react-hooks": "^5.0.0",
     "eslint-plugin-unused-imports": "^4.4.1",
-    "glob": "^13.0.6",
+    "glob": "^14.0.3",
     "globals": "^17.3.0",
     "graphql": "^15.4.0",
     "graphql-tag": "^2.12.6",

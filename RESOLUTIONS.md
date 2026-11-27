@@ -28,6 +28,15 @@ The goal is to minimize resolutions and remove them when no longer needed.
 
 ## Waiting for Upstream Fix
 
+### minimatch@10.x via graphql-config
+
+- **Vulnerability**: GHSA-g3hv-75wg-m249 — denial of service via globparts amplification (medium). Affects `>=7.0.0 <11.0.1`, patched only in 11.0.1 (major).
+- **Current version**: 10.2.6
+- **Blocked by**: `graphql-config` — `@graphql-codegen/cli@^7.4.6` requires `graphql-config@^5.1.8`, which requires `minimatch@^10.0.0`. Even the latest `graphql-config@6.0.0` (used by `@graphql-codegen/cli@8.0.0`) still requires `minimatch@^10`, so neither bumping codegen nor graphql-config helps.
+- **Exposure**: dev-only code generation (`yarn codegen`), not in any deployed service runtime or the shipped pilet bundle. The glob patterns come from this repo's own codegen configs, never from untrusted input.
+- **Date**: 2026-11-25
+- **Check again when**: `graphql-config` releases a version on `minimatch@^11`
+
 ### ajv@5.x / 6.5.2
 
 - **Vulnerability**: Prototype Pollution (medium, GHSA — patched 6.12.3), ReDoS via `$data` (medium)
@@ -40,12 +49,12 @@ The goal is to minimize resolutions and remove them when no longer needed.
 
 ### serialize-javascript
 
-- **Vulnerability**: RCE via `RegExp.flags` / `Date.prototype.toISOString` (high), CPU Exhaustion DoS via crafted array-like objects (medium)
+- **Vulnerability**: RCE via `RegExp.flags` / `Date.prototype.toISOString` (high), CPU Exhaustion DoS via crafted array-like objects (medium), XSS via unescaped `</script` at the end of a serialized function body (low, GHSA-m5mm-p8h7-m29v, added 2026-11-25)
 - **Current version**: 6.0.2
-- **Patched in**: 7.0.3 / 7.0.5
-- **Blocked by**: `css-minimizer-webpack-plugin` — every 5.x and 7.x release (latest 7.0.4) requires `serialize-javascript@^6.0.x`; only `css-minimizer-webpack-plugin@8.0.0` moves to `^7.0.3`. `piral-cli-webpack5` (locked 1.5.3; every release since 1.8.0, latest 1.12.4) requires `css-minimizer-webpack-plugin@^7`, so bumping piral alone does not help.
+- **Patched in**: 7.0.3 / 7.0.5 / 7.1.3
+- **Blocked by**: `css-minimizer-webpack-plugin` — every 5.x and 7.x release (latest 7.0.4) requires `serialize-javascript@^6.0.x`; only `css-minimizer-webpack-plugin@8.0.0` moves to `^7.0.3`. `piral-cli-webpack5` (locked 1.5.3; every release since 1.8.0, latest 1.12.5) requires `css-minimizer-webpack-plugin@^7`, so bumping piral alone does not help.
 - **Date**: 2026-03-03
-- **Last verified**: 2026-11-03
+- **Last verified**: 2026-11-25
 - **Check again when**: `piral-cli-webpack5` accepts `css-minimizer-webpack-plugin@^8`, or `css-minimizer-webpack-plugin@7.x` ships with `serialize-javascript@^7`
 
 ## Deferred (Tolerated For Now)
